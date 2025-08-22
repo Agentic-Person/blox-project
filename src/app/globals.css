@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-blox-medium-blue-gray;
+  }
+  
+  body {
+    @apply bg-blox-black-blue text-blox-white;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .glass-effect {
+    @apply bg-blox-glass-teal backdrop-blur-sm border border-blox-glass-border;
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-blox-teal-light to-blox-teal bg-clip-text text-transparent;
+  }
+  
+  .card-hover {
+    @apply transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blox-teal/20;
+  }
+  
+  .btn-primary {
+    @apply bg-gradient-to-r from-blox-teal to-blox-teal-dark text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:shadow-blox-teal/30 transition-all duration-300;
+  }
+  
+  .btn-secondary {
+    @apply bg-blox-second-dark-blue text-blox-off-white border border-blox-medium-blue-gray px-6 py-3 rounded-lg font-semibold hover:border-blox-teal transition-all duration-300;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #001D39;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #36B0D9;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2A8CB0;
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
