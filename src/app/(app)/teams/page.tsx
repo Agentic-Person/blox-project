@@ -1,7 +1,10 @@
+'use client'
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Users, Plus, Search, Filter, Crown, User } from 'lucide-react'
+import { Users, Plus, Search, Filter, Crown, User, Info } from 'lucide-react'
 import Link from 'next/link'
+import TeamBetaBadge from '@/components/teams/TeamBetaBadge'
 
 export default function TeamsPage() {
   const teams = [
@@ -63,9 +66,12 @@ export default function TeamsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-blox-white mb-2">
-            Teams
-          </h1>
+          <div className="flex items-center gap-3 mb-2">
+            <h1 className="text-3xl font-bold text-blox-white">
+              Teams
+            </h1>
+            <TeamBetaBadge size="md" />
+          </div>
           <p className="text-blox-off-white">
             Collaborate with other developers and build amazing games together
           </p>
@@ -77,6 +83,24 @@ export default function TeamsPage() {
           </Button>
         </Link>
       </div>
+
+      {/* Beta Notice */}
+      <Card className="glass-card border-blox-purple/30 bg-blox-purple/5 mb-6">
+        <CardContent className="p-4">
+          <div className="flex items-start gap-3">
+            <Info className="h-5 w-5 text-blox-purple mt-0.5" />
+            <div className="flex-1">
+              <p className="text-sm text-blox-white font-medium mb-1">
+                Teams Feature Preview
+              </p>
+              <p className="text-xs text-blox-off-white">
+                You're viewing a preview of the upcoming Teams feature. Full functionality including team creation, 
+                Discord integration, and project management will be available soon. Join the waitlist to be notified when we launch!
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Search and Filter */}
       <Card>
@@ -148,8 +172,8 @@ export default function TeamsPage() {
                       {team.projects} active project{team.projects !== 1 ? 's' : ''}
                     </div>
                     <Link href={`/teams/${team.id}`}>
-                      <Button className="w-full">
-                        View Team
+                      <Button className="w-full" variant="secondary">
+                        Preview Dashboard
                       </Button>
                     </Link>
                   </div>
@@ -211,11 +235,11 @@ export default function TeamsPage() {
                   <div className="flex gap-2">
                     <Link href={`/teams/${team.id}`} className="flex-1">
                       <Button variant="secondary" className="w-full">
-                        View
+                        Preview
                       </Button>
                     </Link>
-                    <Button className="flex-1">
-                      Join Team
+                    <Button className="flex-1" disabled>
+                      Join (Coming Soon)
                     </Button>
                   </div>
                 </div>
