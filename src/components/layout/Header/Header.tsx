@@ -1,42 +1,87 @@
 'use client'
 
-import { Bell, Search } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Clock, Zap, User, LogOut } from 'lucide-react'
+import { useAuth } from '@/lib/providers'
+import { useLearningStore } from '@/store/learningStore'
+import { useState, useEffect, useRef } from 'react'
 
 export function Header() {
+  const { user, signOut } = useAuth()
+  const { totalHoursWatched, totalXP } = useLearningStore()
+  const [showDropdown, setShowDropdown] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   return (
-    <header className="h-16 bg-blox-second-dark-blue border-b border-blox-medium-blue-gray flex items-center justify-between px-6">
-      {/* Search Bar */}
-      <div className="flex-1 max-w-lg">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blox-medium-blue-gray" />
-          <input
-            type="text"
-            placeholder="Search courses, teams, or help..."
-            className="w-full bg-blox-black-blue border border-blox-medium-blue-gray rounded-lg pl-10 pr-4 py-2 text-blox-white placeholder-blox-medium-blue-gray focus:outline-none focus:border-blox-teal focus:ring-1 focus:ring-blox-teal"
-          />
-        </div>
+    <header className="flex items-center justify-between px-6 py-4 bg-blox-second-dark-blue border-b border-blox-glass-border">
+      <div>
+        <h1 className="text-2xl font-bold text-blox-white">
+          Welcome back, Builder! 👋
+        </h1>
+        <p className="text-blox-medium-blue-gray text-sm mt-1">
+          Ready to continue your Roblox development journey? Let's build something amazing today.
+        </p>
       </div>
 
-      {/* Right Section */}
-      <div className="flex items-center space-x-4">
-        {/* Notifications */}
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-5 w-5" />
-          <span className="absolute -top-1 -right-1 h-3 w-3 bg-blox-teal rounded-full text-xs flex items-center justify-center text-white">
-            3
-          </span>
-        </Button>
+      <div className="flex items-center gap-6">
+        {/* Stats */}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-blox-teal" />
+            <span className="text-sm text-blox-off-white">{totalHoursWatched}h watched</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Zap className="w-4 h-4 text-blox-success" />
+            <span className="text-sm text-blox-off-white">{totalXP} XP</span>
+          </div>
+        </div>
 
         {/* User Menu */}
-        <div className="flex items-center space-x-3">
-          <div className="text-right">
-            <p className="text-sm font-medium text-blox-white">BloxBuilder123</p>
-            <p className="text-xs text-blox-off-white">12 day streak 🔥</p>
-          </div>
-          <div className="w-8 h-8 bg-gradient-to-r from-blox-teal to-blox-teal-dark rounded-full flex items-center justify-center">
-            <span className="text-white font-semibold text-sm">AB</span>
-          </div>
+        <div className="relative" ref={dropdownRef}>
+          <button 
+            onClick={() => setShowDropdown(!showDropdown)}
+            className="flex items-center gap-2 p-2 rounded-lg hover:bg-blox-glass-bg transition-colors"
+          >
+            {user?.avatar ? (
+              <img 
+                src={user.avatar} 
+                alt={user.username || 'User'} 
+                className="w-8 h-8 rounded-full"
+              />
+            ) : (
+              <div className="w-8 h-8 bg-blox-teal rounded-full flex items-center justify-center">
+                <User className="w-4 h-4 text-white" />
+              </div>
+            )}
+          </button>
+          
+          {showDropdown && (
+            <div className="absolute right-0 mt-2 w-48 bg-blox-second-dark-blue border border-blox-glass-border rounded-lg shadow-xl z-50">
+              <div className="p-3 border-b border-blox-glass-border">
+                <p className="text-sm font-medium text-blox-white">{user?.username || 'User'}</p>
+                <p className="text-xs text-blox-medium-blue-gray">{user?.email}</p>
+              </div>
+              <button
+                onClick={signOut}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm text-blox-off-white hover:bg-blox-glass-bg transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                Sign Out
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>

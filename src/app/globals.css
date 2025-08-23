@@ -3,83 +3,242 @@
 @tailwind utilities;
 
 @layer base {
-  * {
-    @apply border-blox-medium-blue-gray;
+  :root {
+    /* Blox Buddy Color Variables */
+    --blox-teal-light: 74 196 232;
+    --blox-teal: 54 176 217;
+    --blox-teal-dark: 42 140 176;
+    --blox-black-blue: 0 28 56;
+    --blox-very-dark-blue: 0 29 57;
+    --blox-second-dark-blue: 0 34 70;
+    --blox-white: 255 255 255;
+    --blox-off-white: 221 221 221;
+    --blox-light-blue-gray: 154 182 224;
+    --blox-medium-blue-gray: 89 109 140;
+    --blox-success: 16 185 129;
+    --vh: 1vh;
   }
-  
+
+  * {
+    @apply border-blox-glass-border;
+  }
+
   body {
-    @apply bg-blox-black-blue text-blox-white;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    @apply bg-blox-very-dark-blue text-blox-off-white;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   }
   
   html {
     scroll-behavior: smooth;
   }
+  
+  /* Mobile viewport height fix */
+  .h-viewport {
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+  }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-blox-second-dark-blue;
+    border-radius: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-blox-teal/30;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-blox-teal/50;
+  }
+
+  /* Focus styles */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-blox-teal ring-offset-2 ring-offset-blox-very-dark-blue;
+  }
+  
+  /* Firefox scrollbar */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.blox-medium-blue-gray') theme('colors.blox-very-dark-blue');
+  }
 }
 
 @layer components {
-  .glass-effect {
-    @apply bg-blox-glass-teal backdrop-blur-sm border border-blox-glass-border;
+  /* Glass morphism cards */
+  .glass-card {
+    @apply bg-blox-very-dark-blue/80 backdrop-blur-md border border-blox-glass-border;
+    @apply shadow-card hover:shadow-card-hover transition-all duration-300;
   }
-  
+
+  .glass-card-teal {
+    @apply bg-blox-glass-teal backdrop-blur-lg border border-blox-glass-border;
+    @apply hover:border-blox-teal/40 transition-all duration-300;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    @apply bg-teal-gradient text-blox-white font-semibold px-6 py-3 rounded-lg;
+    @apply shadow-teal-glow hover:shadow-teal-glow-lg;
+    @apply transform hover:scale-105 transition-all duration-300;
+  }
+
+  .btn-secondary {
+    @apply bg-blox-second-dark-blue text-blox-off-white font-medium px-6 py-3 rounded-lg;
+    @apply border border-blox-teal/30 hover:border-blox-teal;
+    @apply hover:bg-blox-teal/10 transition-all duration-300;
+  }
+
+  .btn-ghost {
+    @apply text-blox-off-white/80 hover:text-blox-teal;
+    @apply hover:bg-blox-glass-light px-4 py-2 rounded-lg;
+    @apply transition-all duration-300;
+  }
+
+  /* Progress bars */
+  .progress-bar {
+    @apply relative h-2 bg-blox-second-dark-blue rounded-full overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply absolute inset-y-0 left-0 bg-teal-gradient rounded-full;
+    @apply shadow-teal-glow transition-all duration-500 ease-out;
+  }
+
+  /* Navigation items */
+  .nav-item {
+    @apply text-blox-off-white/80 hover:text-blox-teal;
+    @apply hover:bg-blox-glass-light px-3 py-2 rounded-lg;
+    @apply transition-all duration-300 cursor-pointer;
+  }
+
+  .nav-item-active {
+    @apply text-blox-teal bg-blox-glass-teal;
+    @apply border-l-2 border-blox-teal;
+  }
+
+  /* Text styles */
+  .heading-primary {
+    @apply text-blox-white text-4xl md:text-5xl font-bold;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blox-white to-blox-off-white;
+  }
+
+  .heading-secondary {
+    @apply text-blox-white text-2xl md:text-3xl font-semibold;
+  }
+
+  .text-muted {
+    @apply text-blox-medium-blue-gray;
+  }
+
+  .text-accent {
+    @apply text-blox-teal hover:text-blox-teal-light transition-colors duration-300;
+  }
+
+  /* XP and Level badges */
+  .xp-badge {
+    @apply inline-flex items-center gap-1 px-2 py-1 rounded-full;
+    @apply bg-blox-success/20 text-blox-success text-xs font-semibold;
+    @apply border border-blox-success/30;
+  }
+
+  .level-badge {
+    @apply inline-flex items-center gap-1 px-3 py-1 rounded-full;
+    @apply bg-teal-gradient text-blox-white text-sm font-bold;
+    @apply shadow-teal-glow;
+  }
+
+  /* Card hover effects */
+  .card-hover-glow {
+    @apply hover:shadow-teal-glow-lg hover:border-blox-teal/50;
+    @apply transform hover:-translate-y-1 transition-all duration-300;
+  }
+
+  /* Input styles */
+  .input-field {
+    @apply bg-blox-second-dark-blue text-blox-off-white;
+    @apply border border-blox-glass-border rounded-lg px-4 py-2;
+    @apply focus:border-blox-teal focus:bg-blox-very-dark-blue;
+    @apply placeholder-blox-medium-blue-gray transition-all duration-300;
+  }
+
+  /* Legacy support */
+  .glass-effect {
+    @apply glass-card;
+  }
+
   .gradient-text {
     @apply bg-gradient-to-r from-blox-teal-light to-blox-teal bg-clip-text text-transparent;
   }
-  
+
   .card-hover {
-    @apply transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blox-teal/20;
-  }
-  
-  .btn-primary {
-    @apply bg-gradient-to-r from-blox-teal to-blox-teal-dark text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:shadow-blox-teal/30 transition-all duration-300;
-  }
-  
-  .btn-secondary {
-    @apply bg-blox-second-dark-blue text-blox-off-white border border-blox-medium-blue-gray px-6 py-3 rounded-lg font-semibold hover:border-blox-teal transition-all duration-300;
+    @apply card-hover-glow;
   }
 }
 
 @layer utilities {
+  /* Animations */
+  @keyframes slideIn {
+    from {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes glowPulse {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(54, 176, 217, 0.5);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(54, 176, 217, 0.8);
+    }
+  }
+
+  @keyframes tealGlow {
+    from {
+      filter: drop-shadow(0 0 10px rgba(54, 176, 217, 0.3));
+    }
+    to {
+      filter: drop-shadow(0 0 20px rgba(54, 176, 217, 0.6));
+    }
+  }
+
+  /* Utility classes */
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .teal-glow-text {
+    text-shadow: 0 0 20px rgba(54, 176, 217, 0.5);
+  }
+
+  .glass-blur {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
   .text-balance {
     text-wrap: balance;
   }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #001D39;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #36B0D9;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #2A8CB0;
-}
-
-/* Animation keyframes */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateY(10px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}

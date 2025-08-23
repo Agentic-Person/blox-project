@@ -26,11 +26,6 @@ export function Providers({ children }: ProvidersProps) {
         <ConnectionProvider>
           <WalletProvider>
             <StripeProvider>
-              {showDevIndicator && (
-                <div className="fixed top-4 right-4 bg-blue-500/20 text-blue-400 text-xs px-3 py-1.5 rounded-md z-50 backdrop-blur-sm border border-blue-500/30">
-                  🔧 Development Mode
-                </div>
-              )}
               {children}
             </StripeProvider>
           </WalletProvider>

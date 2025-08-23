@@ -2,42 +2,45 @@ export interface Module {
   id: string
   title: string
   description: string
-  order: number
+  order?: number
   weeks: Week[]
   thumbnail?: string
-  estimatedHours: number
+  totalHours: number
+  totalXP: number
 }
 
 export interface Week {
   id: string
-  moduleId: string
+  moduleId?: string
   title: string
   description: string
-  order: number
+  order?: number
   days: Day[]
 }
 
 export interface Day {
   id: string
-  weekId: string
+  weekId?: string
   title: string
-  description: string
-  order: number
+  description?: string
+  order?: number
   videos: Video[]
-  practiceTask?: PracticeTask
+  practiceTask?: string | PracticeTask
+  estimatedTime?: string
 }
 
 export interface Video {
   id: string
-  dayId: string
+  dayId?: string
   title: string
-  description: string
+  description?: string
   youtubeId: string
-  duration: number // in seconds
-  order: number
-  thumbnail: string
-  channel: string
-  tags: string[]
+  duration: string // duration as string (e.g., "25:00")
+  order?: number
+  thumbnail?: string
+  channel?: string
+  tags?: string[]
+  xpReward: number
 }
 
 export interface PracticeTask {

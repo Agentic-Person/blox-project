@@ -27,6 +27,11 @@ const config: Config = {
             DEFAULT: '#10B981',
             dark: '#059669'
           },
+          purple: {
+            light: '#A78BFA',
+            DEFAULT: '#8B5CF6',
+            dark: '#7C3AED'
+          },
           glass: {
             teal: 'rgba(54, 176, 217, 0.1)',
             light: 'rgba(54, 176, 217, 0.05)',
@@ -40,9 +45,20 @@ const config: Config = {
         'dark-gradient': 'linear-gradient(135deg, #001D39 0%, #002246 100%)'
       },
       animation: {
-        'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-in': 'slideIn 0.3s ease-out',
+        'fade-in': 'fadeIn 0.3s ease-out',
+        'glow-pulse': 'glowPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'teal-glow': 'tealGlow 2s ease-in-out infinite alternate',
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
+      boxShadow: {
+        'teal-glow': '0 0 20px rgba(54, 176, 217, 0.5)',
+        'teal-glow-lg': '0 0 40px rgba(54, 176, 217, 0.6)',
+        'card': '0 4px 20px rgba(0, 29, 57, 0.5)',
+        'card-hover': '0 8px 30px rgba(54, 176, 217, 0.3)',
+      },
+      backdropBlur: {
+        xs: '2px',
       }
     }
   },

@@ -8,8 +8,8 @@ export const APP_CONFIG = {
 
 export const CURRICULUM_CONFIG = {
   totalModules: 6,
-  totalWeeks: 24,
-  avgVideosPerWeek: 3,
+  totalDays: 120,
+  avgVideosPerDay: 2,
   maxProgressPercentage: 100,
 }
 

@@ -1,5 +1,9 @@
+'use client'
+
+import { motion } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { BookOpen, Users, TrendingUp, Zap } from 'lucide-react'
+import { BookOpen, Users, TrendingUp, Zap, Video } from 'lucide-react'
+import { fadeInUp, staggerChildren } from '@/styles/animations'
 import { ContinueLearning } from '@/components/dashboard/ContinueLearning'
 import { LearningProgress } from '@/components/dashboard/LearningProgress'
 import { QuickActions } from '@/components/dashboard/QuickActions'
@@ -21,69 +25,67 @@ export default function DashboardPage() {
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
       {/* Welcome Section */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-blox-white mb-2">
+      <motion.div 
+        className="mb-8"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h1 className="heading-primary text-3xl">
           Welcome back, Builder! 👋
         </h1>
-        <p className="text-blox-off-white">
-          Ready to continue your Roblox development journey? Let's build something amazing today.
+        <p className="text-blox-light-blue-gray text-sm mt-1">
+          Ready to continue your Roblox development journey?
         </p>
-      </div>
+      </motion.div>
 
       {/* Enhanced Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="card-hover">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Videos Watched</CardTitle>
-            <BookOpen className="h-4 w-4 text-blox-teal" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-blox-white">39</div>
-            <p className="text-xs text-blox-off-white">
-              +3 from last week
-            </p>
-          </CardContent>
-        </Card>
+      <motion.div 
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        variants={staggerChildren}
+        initial="initial"
+        animate="animate"
+      >
+        <motion.div variants={fadeInUp} className="glass-card p-4 rounded-lg card-hover-glow">
+          <div className="flex items-center gap-3">
+            <Video className="w-5 h-5 text-blox-teal" />
+            <div>
+              <p className="text-2xl font-bold text-blox-white">39</p>
+              <p className="text-xs text-blox-light-blue-gray">Videos Watched</p>
+            </div>
+          </div>
+        </motion.div>
 
-        <Card className="card-hover">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">XP Earned</CardTitle>
-            <Zap className="h-4 w-4 text-blox-teal" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-blox-white">1,140</div>
-            <p className="text-xs text-blox-off-white">
-              +125 this week
-            </p>
-          </CardContent>
-        </Card>
+        <motion.div variants={fadeInUp} className="glass-card p-4 rounded-lg card-hover-glow">
+          <div className="flex items-center gap-3">
+            <Zap className="w-5 h-5 text-blox-teal" />
+            <div>
+              <p className="text-2xl font-bold text-blox-white">1,140</p>
+              <p className="text-xs text-blox-light-blue-gray">XP Earned</p>
+            </div>
+          </div>
+        </motion.div>
 
-        <Card className="card-hover">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Modules Complete</CardTitle>
-            <TrendingUp className="h-4 w-4 text-blox-success" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-blox-white">2</div>
-            <p className="text-xs text-blox-off-white">
-              33% of course
-            </p>
-          </CardContent>
-        </Card>
+        <motion.div variants={fadeInUp} className="glass-card p-4 rounded-lg card-hover-glow">
+          <div className="flex items-center gap-3">
+            <TrendingUp className="w-5 h-5 text-blox-success" />
+            <div>
+              <p className="text-2xl font-bold text-blox-white">2</p>
+              <p className="text-xs text-blox-light-blue-gray">Modules Complete</p>
+            </div>
+          </div>
+        </motion.div>
 
-        <Card className="card-hover">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Current Streak</CardTitle>
-            <Users className="h-4 w-4 text-blox-success" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-blox-white">7</div>
-            <p className="text-xs text-blox-off-white">
-              days in a row! 🔥
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+        <motion.div variants={fadeInUp} className="glass-card p-4 rounded-lg card-hover-glow">
+          <div className="flex items-center gap-3">
+            <Users className="w-5 h-5 text-blox-success" />
+            <div>
+              <p className="text-2xl font-bold text-blox-white">7</p>
+              <p className="text-xs text-blox-light-blue-gray">Day Streak 🔥</p>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
 
       {/* Main Dashboard Grid */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
