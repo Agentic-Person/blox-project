@@ -4,12 +4,60 @@ import { Clock, Zap, User, LogOut } from 'lucide-react'
 import { useAuth } from '@/lib/providers'
 import { useLearningStore } from '@/store/learningStore'
 import { useState, useEffect, useRef } from 'react'
+import { usePathname } from 'next/navigation'
 
 export function Header() {
   const { user, signOut } = useAuth()
   const { totalHoursWatched, totalXP } = useLearningStore()
   const [showDropdown, setShowDropdown] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  const pathname = usePathname()
+
+  // Get contextual content based on current page
+  const getPageContext = () => {
+    if (pathname === '/dashboard' || pathname === '/') {
+      return {
+        title: 'Welcome back, Builder! 👋',
+        subtitle: 'Ready to continue your Roblox development journey? Let\'s build something amazing today.'
+      }
+    }
+    if (pathname.startsWith('/learning')) {
+      return {
+        title: 'Learning Path 📚',
+        subtitle: 'Master Roblox development through structured video lessons and hands-on practice.'
+      }
+    }
+    if (pathname.startsWith('/teams')) {
+      return {
+        title: 'Team Collaboration 🤝',
+        subtitle: 'Connect with other builders and work together on amazing Roblox projects.'
+      }
+    }
+    if (pathname.startsWith('/projects')) {
+      return {
+        title: 'My Projects 🚀',
+        subtitle: 'Showcase your creations and get feedback from the community.'
+      }
+    }
+    if (pathname.startsWith('/community')) {
+      return {
+        title: 'Community Hub 🌟',
+        subtitle: 'Connect with fellow developers and join the Blox Buddy community.'
+      }
+    }
+    if (pathname.startsWith('/notes')) {
+      return {
+        title: 'My Workspace 📝',
+        subtitle: 'Organize your ideas and collaborate on your creative canvas.'
+      }
+    }
+    return {
+      title: 'Blox Buddy 🎯',
+      subtitle: 'Your journey to Roblox mastery continues here.'
+    }
+  }
+
+  const { title, subtitle } = getPageContext()
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -26,12 +74,12 @@ export function Header() {
 
   return (
     <header className="flex items-center justify-between px-6 py-4 bg-blox-second-dark-blue border-b border-blox-glass-border">
-      <div>
+      <div className="transition-all duration-300 ease-in-out">
         <h1 className="text-2xl font-bold text-blox-white">
-          Welcome back, Builder! 👋
+          {title}
         </h1>
         <p className="text-blox-medium-blue-gray text-sm mt-1">
-          Ready to continue your Roblox development journey? Let's build something amazing today.
+          {subtitle}
         </p>
       </div>
 

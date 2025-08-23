@@ -47,13 +47,33 @@
 ## 🚧 Current Focus - Stage 3
 
 ### Stage 3.1 - Complete Layout & Structure (2-3 hours)
-- [ ] **Add sidebar animation** transitions
-- [ ] **Create responsive sidebar** behavior for mobile
-- [ ] **Test sidebar on mobile** devices
-- [ ] **Create title block** at top of right viewport
-- [ ] **Add responsive breakpoints** for layout
-- [ ] **Test layout consistency** across screen sizes
+
+#### 🐛 CRITICAL BUG FIX - Sidebar Navigation Alignment
+**Issue Identified**: From screenshot analysis, the "Learning Path" nav item has misaligned icon/text with background highlighting.
+**Root Cause**: Missing `flex items-center` class in SidebarNav.tsx line 58-61
+**Files**: `src/components/layout/Sidebar/SidebarNav.tsx`
+- [ ] **Fix Learning Path navigation alignment** - Add `flex items-center` to match other nav items
+- [ ] **Verify all nav items** have consistent flexbox alignment
+
+#### 📱 Mobile & Responsive Enhancements
+- [ ] **Add sidebar animation** transitions with improved easing
+- [ ] **Create responsive sidebar** behavior for mobile auto-collapse
+- [ ] **Add touch gesture support** for mobile sidebar interaction
+- [ ] **Test sidebar on mobile** devices (320px - 768px)
+- [ ] **Create title block** at top of right viewport with contextual content
+- [ ] **Add responsive breakpoints** for tablet/desktop transitions
+- [ ] **Test layout consistency** across screen sizes (320px - 2560px)
+
+#### ✅ Final Steps
+- [ ] **Comprehensive testing** across all breakpoints and devices
 - [ ] **Commit changes** with "Stage 3.1: Complete responsive layout"
+
+**Priority Order**: 
+1. Fix navigation alignment (IMMEDIATE - critical visual bug)
+2. Mobile sidebar improvements 
+3. Title block addition
+4. Responsive breakpoints refinement
+5. Comprehensive testing and commit
 
 ### Stage 3.2 - Learning Paths Enhancement (3-4 hours)
 - [ ] **Add navigation state management** for learning tree

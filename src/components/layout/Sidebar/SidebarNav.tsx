@@ -31,7 +31,7 @@ export function SidebarNav() {
       <div>
         <button
           onClick={() => toggleSection('main')}
-          className="flex items-center justify-between w-full px-2 py-1 mb-2 text-xs font-semibold text-blox-off-white uppercase tracking-wider hover:text-blox-white transition-colors"
+          className="flex items-center justify-between w-full px-2 py-1 mb-2 text-xs font-semibold text-blox-off-white uppercase tracking-wider hover:text-blox-white transition-all duration-200 ease-in-out"
         >
           <span>Main Menu</span>
           {expandedSections.has('main') ? (
@@ -42,7 +42,7 @@ export function SidebarNav() {
         </button>
         
         <div className={cn(
-          "space-y-1 transition-all duration-300",
+          "space-y-1 transition-all duration-400 ease-in-out",
           expandedSections.has('main') ? "opacity-100" : "opacity-0 h-0 overflow-hidden"
         )}>
           {MAIN_NAV.map((item) => {
@@ -56,7 +56,7 @@ export function SidebarNav() {
                   <Link
                     href={item.href}
                     className={cn(
-                      "nav-item w-full text-left",
+                      "nav-item w-full text-left flex items-center",
                       isActive && "nav-item-active"
                     )}
                   >
@@ -105,7 +105,7 @@ export function SidebarNav() {
       <div className="pt-4 border-t border-blox-glass-border">
         <button
           onClick={() => toggleSection('secondary')}
-          className="flex items-center justify-between w-full px-2 py-1 mb-2 text-xs font-semibold text-blox-off-white uppercase tracking-wider hover:text-blox-white transition-colors"
+          className="flex items-center justify-between w-full px-2 py-1 mb-2 text-xs font-semibold text-blox-off-white uppercase tracking-wider hover:text-blox-white transition-all duration-200 ease-in-out"
         >
           <span>Resources</span>
           {expandedSections.has('secondary') ? (
@@ -116,7 +116,7 @@ export function SidebarNav() {
         </button>
         
         <div className={cn(
-          "space-y-1 transition-all duration-300",
+          "space-y-1 transition-all duration-400 ease-in-out",
           expandedSections.has('secondary') ? "opacity-100" : "opacity-0 h-0 overflow-hidden"
         )}>
           {SECONDARY_NAV.map((item) => {
