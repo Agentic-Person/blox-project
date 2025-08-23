@@ -5,6 +5,7 @@ import { useAuth } from '@/lib/providers'
 import { useLearningStore } from '@/store/learningStore'
 import { useState, useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
+import { WalletButton } from '@/components/wallet'
 
 export function Header() {
   const { user, signOut } = useAuth()
@@ -78,9 +79,6 @@ export function Header() {
         <h1 className="text-2xl font-bold text-blox-white">
           {title}
         </h1>
-        <p className="text-blox-medium-blue-gray text-sm mt-1">
-          {subtitle}
-        </p>
       </div>
 
       <div className="flex items-center gap-6">
@@ -95,6 +93,9 @@ export function Header() {
             <span className="text-sm text-blox-off-white">{totalXP} XP</span>
           </div>
         </div>
+
+        {/* Wallet Button */}
+        <WalletButton />
 
         {/* User Menu */}
         <div className="relative" ref={dropdownRef}>

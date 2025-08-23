@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Play, Pause, Volume2, SkipBack, SkipForward, CheckCircle, Clock, Zap, Book, Award } from 'lucide-react'
 import * as Progress from '@radix-ui/react-progress'
 import { useLearningStore } from '@/store/learningStore'
+import { Breadcrumb } from './Breadcrumb'
 // import { toast } from 'sonner'
 
 interface VideoPlayerProps {
@@ -101,10 +102,8 @@ export function VideoPlayer({
     <div className="h-full flex flex-col bg-blox-very-dark-blue">
       {/* Header with breadcrumb */}
       <div className="p-6 border-b border-blox-medium-blue-gray">
-        <div className="flex items-center space-x-2 text-sm text-blox-off-white mb-2">
-          {moduleInfo && <span>{moduleInfo.title}</span>}
-          {moduleInfo && dayInfo && <span>•</span>}
-          {dayInfo && <span>{dayInfo.title}</span>}
+        <div className="mb-3">
+          <Breadcrumb />
         </div>
         
         <div className="flex items-start justify-between">

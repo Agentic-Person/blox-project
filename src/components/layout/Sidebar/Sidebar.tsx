@@ -8,12 +8,20 @@ import { UserProgress } from './UserProgress'
 import { SidebarNav } from './SidebarNav'
 import { UpgradeCard } from './UpgradeCard'
 import { UserInfo } from './UserInfo'
+import { QuickStats } from './QuickStats'
 
 export function Sidebar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  // Ensure component is mounted before showing client-specific content
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Auto-collapse on mobile when clicking outside or navigating
   useEffect(() => {
+    if (!mounted) return
     const handleResize = () => {
       if (window.innerWidth >= 1024 && isMobileOpen) {
         setIsMobileOpen(false)
@@ -33,10 +41,11 @@ export function Sidebar() {
       window.removeEventListener('resize', handleResize)
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [isMobileOpen])
+  }, [isMobileOpen, mounted])
 
   // Touch gesture support for mobile
   useEffect(() => {
+    if (!mounted) return
     let startX: number
     let startY: number
 
@@ -75,7 +84,7 @@ export function Sidebar() {
       document.removeEventListener('touchstart', handleTouchStart)
       document.removeEventListener('touchend', handleTouchEnd)
     }
-  }, [isMobileOpen])
+  }, [isMobileOpen, mounted])
 
   return (
     <>
@@ -117,9 +126,13 @@ export function Sidebar() {
           <UserProgress />
         </div>
 
-        {/* Navigation */}
-        <SidebarNav />
+        {/* Main scrollable content area */}
+        <div className="flex-1 overflow-y-auto">
+          {/* Navigation */}
+          <SidebarNav />
+        </div>
 
+        {/* Bottom fixed sections */}
         {/* Upgrade to Pro */}
         <div className="p-4">
           <UpgradeCard />
@@ -129,15 +142,21 @@ export function Sidebar() {
         <div className="p-4 border-t border-blox-glass-border">
           <UserInfo />
         </div>
+
+        {/* Quick Stats - At very bottom */}
+        <div className="p-4 border-t border-blox-glass-border">
+          <QuickStats />
+        </div>
       </div>
 
       {/* Mobile Overlay */}
-      {isMobileOpen && (
-        <div
-          className="lg:hidden fixed inset-0 bg-black/50 z-30 transition-opacity duration-300 ease-in-out"
-          onClick={() => setIsMobileOpen(false)}
-        />
-      )}
+      <div
+        className={cn(
+          "lg:hidden fixed inset-0 bg-black/50 z-30 transition-opacity duration-300 ease-in-out",
+          isMobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        )}
+        onClick={() => setIsMobileOpen(false)}
+      />
     </>
   )
 }

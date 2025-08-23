@@ -11,7 +11,7 @@ export const FEATURES = {
   USE_DISCORD_INTEGRATION: false,
   USE_TEAM_FEATURES: true,
   USE_NOTES_FEATURE: true,
-  USE_AI_ASSISTANT: false,
+  USE_AI_ASSISTANT: true,
   USE_STRIPE_PAYMENTS: false,
   USE_SOLANA_WALLET: false,
   

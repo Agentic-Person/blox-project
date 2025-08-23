@@ -1,4 +1,4 @@
-import { BookOpen, Users, TrendingUp, MessageCircle, FileText, User, Settings, HelpCircle, Home } from 'lucide-react'
+import { BookOpen, Users, TrendingUp, MessageCircle, FileText, User, Settings, HelpCircle, Home, Bot } from 'lucide-react'
 
 export interface NavItem {
   title: string
@@ -44,6 +44,13 @@ export const MAIN_NAV: NavItem[] = [
     href: '/notes',
     icon: FileText,
     description: 'Your learning notes',
+  },
+  {
+    title: 'Blox Wizard',
+    href: '/ai-assistant',
+    icon: Bot,
+    description: 'AI learning companion',
+    badge: 'AI',
   },
 ]
 

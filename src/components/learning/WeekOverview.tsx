@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { ChevronDown, Play, CheckCircle, Clock, ChevronLeft, ChevronRight } from 'lucide-react'
 import * as Select from '@radix-ui/react-select'
 import Image from 'next/image'
+import { useLearningStore } from '@/store/learningStore'
 
 interface VideoItem {
   id: string
@@ -53,6 +54,7 @@ export function WeekOverview({
 }: WeekOverviewProps) {
   const [selectedWeek, setSelectedWeek] = useState(currentWeek || weeks[0]?.id || '')
   const currentWeekData = weeks.find(w => w.id === selectedWeek) || weeks[0]
+  const { getWeekProgress } = useLearningStore()
 
   const handleWeekChange = (weekId: string) => {
     setSelectedWeek(weekId)
@@ -115,7 +117,18 @@ export function WeekOverview({
           <h2 className="text-sm font-semibold text-blox-white">Week Overview</h2>
           
           <div className="flex items-center space-x-1">
-            <Button variant="ghost" size="sm" className="p-1 h-6 w-6">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="p-1 h-6 w-6"
+              onClick={() => {
+                const currentIndex = weeks.findIndex(w => w.id === selectedWeek)
+                if (currentIndex > 0) {
+                  handleWeekChange(weeks[currentIndex - 1].id)
+                }
+              }}
+              disabled={weeks.findIndex(w => w.id === selectedWeek) === 0}
+            >
               <ChevronLeft className="h-3 w-3" />
             </Button>
             
@@ -141,14 +154,14 @@ export function WeekOverview({
                             <span className="text-blox-white">
                               {week.title}
                             </span>
-                            {week.completed && (
+                            {getWeekProgress(week.id) === 100 && (
                               <CheckCircle className="h-3 w-3 text-blox-light-green" />
                             )}
                           </div>
                         </Select.ItemText>
-                        {week.progress > 0 && !week.completed && (
+                        {getWeekProgress(week.id) > 0 && getWeekProgress(week.id) < 100 && (
                           <span className="text-xs text-blox-light-green ml-4">
-                            {week.progress}%
+                            {getWeekProgress(week.id)}%
                           </span>
                         )}
                       </Select.Item>
@@ -158,7 +171,18 @@ export function WeekOverview({
               </Select.Portal>
             </Select.Root>
             
-            <Button variant="ghost" size="sm" className="p-1 h-6 w-6">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="p-1 h-6 w-6"
+              onClick={() => {
+                const currentIndex = weeks.findIndex(w => w.id === selectedWeek)
+                if (currentIndex < weeks.length - 1) {
+                  handleWeekChange(weeks[currentIndex + 1].id)
+                }
+              }}
+              disabled={weeks.findIndex(w => w.id === selectedWeek) === weeks.length - 1}
+            >
               <ChevronRight className="h-3 w-3" />
             </Button>
           </div>
@@ -233,11 +257,14 @@ export function WeekOverview({
                   </span>
                   <span className="text-blox-off-white/60">• {totalVideos} videos</span>
                 </div>
-                {week.progress > 0 && (
-                  <div className="text-xs text-blox-light-green">
-                    {week.progress}%
-                  </div>
-                )}
+                {(() => {
+                  const progress = getWeekProgress(week.id)
+                  return progress > 0 ? (
+                    <div className="text-xs text-blox-light-green">
+                      {progress}%
+                    </div>
+                  ) : null
+                })()}
               </div>
             </div>
           )

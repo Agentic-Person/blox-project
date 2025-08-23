@@ -1,0 +1,166 @@
+| Day | Video Title                                | Creator     | YouTube Link                                         |
+| --- | ------------------------------------------ | ----------- | ---------------------------------------------------- |
+| 1   | Roblox Studio 2024 Complete Beginner Guide | TheDevKing  | [Watch](https://www.youtube.com/watch?v=K0lDWlGMK94) |
+| 1   | New Creator Hub Tutorial 2024              | BrawlDev    | [Watch](https://www.youtube.com/watch?v=AKz_60c2v_A) |
+| 1   | How to Navigate Roblox Studio 2024         | AlvinBlox   | [Watch](https://www.youtube.com/watch?v=SpvjB0wS3cc) |
+| 2   | Modern Studio Interface 2024               | AlvinBlox   | [Watch](https://www.youtube.com/watch?v=OYwWs5s1KYY) |
+| 2   | Essential Tools in Roblox Studio           | ByteBlox    | [Watch](https://www.youtube.com/watch?v=bBN8Y95k54k) |
+| 2   | Workspace Organization Tutorial            | B Ricey     | [Watch](https://www.youtube.com/watch?v=9FQKSU2PFeQ) |
+| 2   | Camera Controls and Views                  | HowToRoblox | [Watch](https://www.youtube.com/watch?v=F9lFk4CemXw) |
+| 3   | 2024 Beginner Scripting Series Episode 1   | ByteBlox    | [Watch](https://www.youtube.com/watch?v=UyO1tWYswHc) |
+| 3   | Properties and Attributes 2024             | Suphi Kaner | [Watch](https://www.youtube.com/watch?v=QX7Tgo3-7nI) |
+| 3   | Working with Parts Tutorial                | TheDevKing  | [Watch](https://www.youtube.com/watch?v=JvIzWQ5Lk0w) |
+| 3   | Material Service Guide 2024                | BrawlDev    | [Watch](https://www.youtube.com/watch?v=2bHcCCxwAtE) |
+| 4   | Modern Building Techniques 2024 Part 1     | B Ricey     | [Watch](https://www.youtube.com/watch?v=tbUBhJfrJIM) |
+| 4   | Basic Building Tools Tutorial              | AlvinBlox   | [Watch](https://www.youtube.com/watch?v=OvSB0bR-3Dc) |
+| 4   | Anchoring and CanCollide Explained         | DasKairo    | [Watch](https://www.youtube.com/watch?v=fC3mtYcSyJw) |
+| 4   | Color and Material Properties              | ByteBlox    | [Watch](https://www.youtube.com/watch?v=wHfya1WYN3g) |
+| 5   | Terrain Tools 2024 Update                  | HowToRoblox | [Watch](https://www.youtube.com/watch?v=1A1fZwC3XiI) |
+| 5   | Creating Realistic Terrain                 | TheDevKing  | [Watch](https://www.youtube.com/watch?v=p3EnRjt7wFo) |
+| 5   | Water and Environment Effects              | B Ricey     | [Watch](https://www.youtube.com/watch?v=RUI-7hkY2Es) |
+| 5   | Terrain Materials Guide                    | BrawlDev    | [Watch](https://www.youtube.com/watch?v=ehSCwP7U8iA) |
+
+| Day | Video Title                          | Creator         | YouTube Link                                         |
+| --- | ------------------------------------ | --------------- | ---------------------------------------------------- |
+| 6   | Models vs Groups vs Folders          | AlvinBlox       | [Watch](https://www.youtube.com/watch?v=_umkW6z3Zqg) |
+| 6   | Organizing Your Workspace            | ByteBlox        | [Watch](https://www.youtube.com/watch?v=rPCm5gQZkgY) |
+| 6   | Model Hierarchy Best Practices       | Suphi Kaner     | [Watch](https://www.youtube.com/watch?v=GE55QhfiAps) |
+| 6   | Naming Conventions Guide             | DasKairo        | [Watch](https://www.youtube.com/watch?v=ia9twQtwmm4) |
+| 7   | Physics Constraints Complete Guide   | TheDevKing      | [Watch](https://www.youtube.com/watch?v=rtFV_K5d5Ew) |
+| 7   | Hinges, Springs, and Ropes Tutorial  | B Ricey         | [Watch](https://www.youtube.com/watch?v=6V2_kYcK5E4) |
+| 7   | Creating Moving Parts                | AlvinBlox       | [Watch](https://www.youtube.com/watch?v=bBA-jt9wOLQ) |
+| 7   | Collision Groups Explained           | Suphi Kaner     | [Watch](https://www.youtube.com/watch?v=QojA4w79fVU) |
+| 8   | Future is Bright Phase 4             | Roblox Official | [Watch](https://www.youtube.com/watch?v=AxSdH46r0j8) |
+| 8   | Lighting Types and Uses              | TheDevKing      | [Watch](https://www.youtube.com/watch?v=yOY3rSNCWk0) |
+| 8   | Atmosphere and Skybox 2024           | B Ricey         | [Watch](https://www.youtube.com/watch?v=kd2nd-yj2NM) |
+| 8   | Basic Lighting Setup                 | ByteBlox        | [Watch](https://www.youtube.com/watch?v=-t_8m1k4KPI) |
+| 9   | UI Design Basics 2024                | AlvinBlox       | [Watch](https://www.youtube.com/watch?v=rYG0P3kTnYw) |
+| 9   | ScreenGui vs BillboardGui            | ByteBlox        | [Watch](https://www.youtube.com/watch?v=xKjDrM05fEU) |
+| 9   | Creating Your First GUI              | TheDevKing      | [Watch](https://www.youtube.com/watch?v=O1p9jV6KylM) |
+| 9   | UI Scaling and Positioning           | DasKairo        | [Watch](https://www.youtube.com/watch?v=iyB7e4KfukA) |
+| 10  | Building Your First Game Environment | GnomeCode       | [Watch](https://www.youtube.com/watch?v=pkr8jaTScz0) |
+| 10  | Showcase Lighting Setup              | B Ricey         | [Watch](https://www.youtube.com/watch?v=_yEBsQ64D98) |
+| 10  | Publishing Your First Place          | AlvinBlox       | [Watch](https://www.youtube.com/watch?v=n6Q6bnQWj4w) |
+
+| Day | Video Title                               | Creator        | YouTube Link                                         |
+| --- | ----------------------------------------- | -------------- | ---------------------------------------------------- |
+| 11  | Donut Tutorial 4.0 Version Part 1         | Blender Guru   | [Watch](https://www.youtube.com/watch?v=TPrnSACiTJ4) |
+| 11  | Blender 4.1 for Beginners                 | Joey Carlino   | [Watch](https://www.youtube.com/watch?v=65ecUxmTT8A) |
+| 11  | What's New in Blender 4.1                 | CGDive         | [Watch](https://www.youtube.com/watch?v=CTpvQvLU_Qk) |
+| 11  | Interface Customization                   | Grant Abbitt   | [Watch](https://www.youtube.com/watch?v=ldOqY7RP6vE) |
+| 12  | Donut Tutorial 4.0 Version Part 2         | Blender Guru   | [Watch](https://www.youtube.com/watch?v=mH7e2FzG9D4) |
+| 12  | Viewport Navigation Mastery               | CGDive         | [Watch](https://www.youtube.com/watch?v=nq6V1gkk-TI) |
+| 12  | Essential Shortcuts for Beginners         | Grant Abbitt   | [Watch](https://www.youtube.com/watch?v=I6j8TGDw7Zo) |
+| 12  | 3D Cursor Basics                          | Joey Carlino   | [Watch](https://www.youtube.com/watch?v=7pQXEM7niD0) |
+| 13  | Blender 4.0 Game Asset Creation Episode 1 | Grant Abbitt   | [Watch](https://www.youtube.com/watch?v=rV7wjBpqXS8) |
+| 13  | Edit Mode Fundamentals                    | Joey Carlino   | [Watch](https://www.youtube.com/watch?v=uh1gWvCj61E) |
+| 13  | Basic Modeling Tools                      | SouthernShotty | [Watch](https://www.youtube.com/watch?v=7f5fr4sDZho) |
+| 13  | Selecting and Transforming                | CGDive         | [Watch](https://www.youtube.com/watch?v=FQdiqWtcEp8) |
+| 14  | Blender 4.0 Game Asset Creation Episode 2 | Grant Abbitt   | [Watch](https://www.youtube.com/watch?v=_48MIh8bMJE) |
+| 14  | Understanding Object vs Edit Mode         | CGDive         | [Watch](https://www.youtube.com/watch?v=btEDUlDR00o) |
+| 14  | Basic Transformations                     | SouthernShotty | [Watch](https://www.youtube.com/watch?v=Otu_jja-mAo) |
+| 14  | Origin Points Explained                   | Joey Carlino   | [Watch](https://www.youtube.com/watch?v=uwOsjqx_5wA) |
+| 15  | 10-minute modeling 2024 Episode 1         | Imphenzia      | [Watch](https://www.youtube.com/watch?v=Q7AOvWpIVHU) |
+| 15  | 10-minute modeling 2024 Episode 2         | Imphenzia      | [Watch](https://www.youtube.com/watch?v=Os8-QLp5L6c) |
+| 15  | Low Poly Modeling 2024                    | SouthernShotty | [Watch](https://www.youtube.com/watch?v=JxfmYXXlOtA) |
+| 15  | Creating Game-Ready Props                 | Grant Abbitt   | [Watch](https://www.youtube.com/watch?v=q8Eo1QhW3sE) |
+| 15  | Optimization Basics                       | CGDive         | [Watch](https://www.youtube.com/watch?v=LSGbwo7BrPU) |
+| Day | Video Title                       | Creator            | YouTube Link                                         |
+| --- | --------------------------------- | ------------------ | ---------------------------------------------------- |
+| 16  | Meshy v3 Complete Guide 2024      | Meshy Official     | [Watch](https://www.youtube.com/watch?v=gAJvj5Hg_Y0) |
+| 16  | Creating Game Assets with Meshy   | Indian GameDev     | [Watch](https://www.youtube.com/watch?v=k9Ypa1oVIJQ) |
+| 16  | Text to 3D Workflow               | Captain Creativity | [Watch](https://www.youtube.com/watch?v=YEvLcp6tkb4) |
+| 16  | Meshy Settings Explained          | AI Game Dev        | [Watch](https://www.youtube.com/watch?v=dkb7dK5R7vU) |
+| 17  | Kaedim 2.0 Game Asset Creation    | Kaedim Official    | [Watch](https://www.youtube.com/watch?v=JGvDJm37keQ) |
+| 17  | Bezi AI Collaborative 3D Tutorial | Bezi Official      | [Watch](https://www.youtube.com/watch?v=2Mfr1b8BFTQ) |
+| 17  | Luma AI Genie Mobile Guide        | Two Minute Papers  | [Watch](https://www.youtube.com/watch?v=3H2mZTP7Mkc) |
+| 17  | Spline 3D Quick Start             | School of Motion   | [Watch](https://www.youtube.com/watch?v=8LQ-HGOXkWc) |
+| 18  | Claude 3 for 3D Prompting         | AI Game Dev        | [Watch](https://www.youtube.com/watch?v=J5e6PioK6zQ) |
+| 18  | GPT-4 Vision for 3D Reference     | Matt Wolfe         | [Watch](https://www.youtube.com/watch?v=OTzOtcWfydk) |
+| 18  | Effective 3D Prompts Guide        | Captain Creativity | [Watch](https://www.youtube.com/watch?v=bQjAU8n-6Is) |
+| 18  | Prompt Engineering Basics         | Fireship           | [Watch](https://www.youtube.com/watch?v=gQOjK8I7YFo) |
+| 19  | Cleaning AI Models in Blender 4.1 | Grant Abbitt       | [Watch](https://www.youtube.com/watch?v=gDbnN2YswIE) |
+| 19  | Optimizing AI-Generated Meshes    | CGDive             | [Watch](https://www.youtube.com/watch?v=cKSKHfI-UjA) |
+| 19  | Retopology Basics for AI Models   | SouthernShotty     | [Watch](https://www.youtube.com/watch?v=0jhn3o6Wv3U) |
+| 20  | AI to Roblox Pipeline 2024        | ByteBlox           | [Watch](https://www.youtube.com/watch?v=5jZZRAGG3pY) |
+| 20  | Importing Custom Models           | TheDevKing         | [Watch](https://www.youtube.com/watch?v=vDQQubcWZzE) |
+| 20  | Scale and Optimization Tips       | B Ricey            | [Watch](https://www.youtube.com/watch?v=ImlT8oAgiEk) |
+
+Month 2
+
+| Day | Video Title                        | Creator             | YouTube Link                                         |
+| --- | ---------------------------------- | ------------------- | ---------------------------------------------------- |
+| 21  | UV Unwrapping Blender 4.0+ Part 1  | Grant Abbitt        | [Watch](https://www.youtube.com/watch?v=pbWE9dqG9NM) |
+| 21  | Understanding UV Coordinates       | CGDive              | [Watch](https://www.youtube.com/watch?v=V6FqLr3G9J4) |
+| 21  | Why UVs Matter for Games           | SouthernShotty      | [Watch](https://www.youtube.com/watch?v=54yRwv-6A8o) |
+| 21  | UV Editor Interface                | Joey Carlino        | [Watch](https://www.youtube.com/watch?v=I-EjH2e_v9c) |
+| 22  | UV Unwrapping Blender 4.0+ Part 2  | Grant Abbitt        | [Watch](https://www.youtube.com/watch?v=F0C0w6u3-1E) |
+| 22  | Smart UV Project Guide             | CGDive              | [Watch](https://www.youtube.com/watch?v=8jWqkSJQYiA) |
+| 22  | Seams Placement Strategy           | SouthernShotty      | [Watch](https://www.youtube.com/watch?v=d-yN3TX9BOg) |
+| 23  | UV Unwrapping Blender 4.0+ Part 3  | Grant Abbitt        | [Watch](https://www.youtube.com/watch?v=6E2eKlOd7Rk) |
+| 23  | UDIM Workflow for Games 2024       | CGDive              | [Watch](https://www.youtube.com/watch?v=_YxQw6XkqEk) |
+| 23  | Texture Density Guide              | Joey Carlino        | [Watch](https://www.youtube.com/watch?v=9RxiBlb0u08) |
+| 23  | UV Packing Tips                    | SouthernShotty      | [Watch](https://www.youtube.com/watch?v=wISQpVfGQyE) |
+| 24  | UV Unwrapping Common Objects       | Grant Abbitt        | [Watch](https://www.youtube.com/watch?v=gfi6qKGlGZE) |
+| 24  | Troubleshooting UV Issues          | CGDive              | [Watch](https://www.youtube.com/watch?v=WTsp3JbfGSo) |
+| 24  | Quick UV Tips                      | Imphenzia           | [Watch](https://www.youtube.com/watch?v=-RfEpWJ0oxg) |
+| 25  | Preparing UVs for Texturing        | Grant Abbitt        | [Watch](https://www.youtube.com/watch?v=pDt2gDWWdAw) |
+| 25  | UV Layout Export                   | CGDive              | [Watch](https://www.youtube.com/watch?v=dPXSlwD8wCw) |
+| 25  | Texture Resolution Guide           | SouthernShotty      | [Watch](https://www.youtube.com/watch?v=Fx9FoRuwdwI) |
+| 25  | Blender to Roblox UV Tips          | ByteBlox            | [Watch](https://www.youtube.com/watch?v=GEwjOpy5Dew) |
+| 26  | Blender 4.1 Shader Nodes for Games | CGDive              | [Watch](https://www.youtube.com/watch?v=cT2Kk7ZtlpE) |
+| 26  | Principled BSDF v2 Guide           | Grant Abbitt        | [Watch](https://www.youtube.com/watch?v=IVq-S2k8eDo) |
+| 26  | Node Editor Basics                 | Default Cube        | [Watch](https://www.youtube.com/watch?v=9bJ2bD5iQx4) |
+| 26  | Material Properties                | Joey Carlino        | [Watch](https://www.youtube.com/watch?v=ytYc7nldZ84) |
+| 27  | Texture Painting in Blender        | Grant Abbitt        | [Watch](https://www.youtube.com/watch?v=8N5m1cyu3ys) |
+| 27  | Procedural Texturing 2024          | Default Cube        | [Watch](https://www.youtube.com/watch?v=RnbBIRdF6co) |
+| 27  | Image Textures Setup               | CGDive              | [Watch](https://www.youtube.com/watch?v=5pPpyL6kgkQ) |
+| 28  | PBR Texturing Workflows            | Grant Abbitt        | [Watch](https://www.youtube.com/watch?v=Yc7i-mq8S1U) |
+| 28  | Understanding PBR Maps             | CGDive              | [Watch](https://www.youtube.com/watch?v=2DgFWGFgPlw) |
+| 28  | Roughness and Metallic             | SouthernShotty      | [Watch](https://www.youtube.com/watch?v=YhUeUxN8gVM) |
+| 28  | Normal Maps Explained              | Default Cube        | [Watch](https://www.youtube.com/watch?v=JQaP9znK7lE) |
+| 29  | Magnific AI Pro Features 2024      | Two Minute Papers   | [Watch](https://www.youtube.com/watch?v=quA87e3D6r8) |
+| 29  | Adobe Firefly 3D Textures          | Adobe Official      | [Watch](https://www.youtube.com/watch?v=0z5j8d0fBgU) |
+| 29  | Stability AI Material Generator    | Matt Wolfe          | [Watch](https://www.youtube.com/watch?v=EEayjRriyeA) |
+| 29  | AI Texture Upscaling               | Corridor Crew       | [Watch](https://www.youtube.com/watch?v=QCSW-7kAhwE) |
+| 30  | Texture Atlasing for Games         | Grant Abbitt        | [Watch](https://www.youtube.com/watch?v=hzNAdDKgjNQ) |
+| 30  | Channel Packing Techniques         | CGDive              | [Watch](https://www.youtube.com/watch?v=BlHgEfrndN4) |
+| 30  | Texture Compression Guide          | SouthernShotty      | [Watch](https://www.youtube.com/watch?v=1ykArH0T3eU) |
+| 30  | Roblox Texture Limits              | ByteBlox            | [Watch](https://www.youtube.com/watch?v=frlV_mQavtg) |
+| 31  | Blender 4.0 Rigging Changes        | Grant Abbitt        | [Watch](https://www.youtube.com/watch?v=PV7WLvUgZRk) |
+| 31  | Bone Creation Basics               | Pierrick Picaut     | [Watch](https://www.youtube.com/watch?v=wTf7Yiq1hPo) |
+| 31  | Armature Properties                | CGDive              | [Watch](https://www.youtube.com/watch?v=bQnRpNnmQGc) |
+| 31  | Bone Naming Conventions            | Joey Carlino        | [Watch](https://www.youtube.com/watch?v=1yCBlGL1gkw) |
+| 32  | Character Rigging Part 1           | Grant Abbitt        | [Watch](https://www.youtube.com/watch?v=_ZL0BAf4TSs) |
+| 32  | Bone Parenting Guide               | Pierrick Picaut     | [Watch](https://www.youtube.com/watch?v=-4rB6rr8v0Q) |
+| 32  | IK vs FK Explained                 | CGDive              | [Watch](https://www.youtube.com/watch?v=X6iYXBoIWZc) |
+| 33  | Weight Painting Fundamentals       | Grant Abbitt        | [Watch](https://www.youtube.com/watch?v=6G8wLdE_Zo4) |
+| 33  | Automatic Weights Guide            | Pierrick Picaut     | [Watch](https://www.youtube.com/watch?v=OCdkQ9n6A1U) |
+| 33  | Weight Paint Tools                 | CGDive              | [Watch](https://www.youtube.com/watch?v=yJ6SmTqNTio) |
+| 33  | Common Weight Issues               | Joey Carlino        | [Watch](https://www.youtube.com/watch?v=FfH5-yDtnNQ) |
+| 34  | Bone Constraints Guide             | Grant Abbitt        | [Watch](https://www.youtube.com/watch?v=OujODDafuyc) |
+| 34  | Copy Location and Rotation         | Pierrick Picaut     | [Watch](https://www.youtube.com/watch?v=BD2YeZf1x-4) |
+| 34  | Limit Constraints                  | CGDive              | [Watch](https://www.youtube.com/watch?v=l7pH7diEnF8) |
+| 35  | Rigging a Simple Character         | Grant Abbitt        | [Watch](https://www.youtube.com/watch?v=9O2Lp8jRFlw) |
+| 35  | Prop Rigging Tutorial              | Pierrick Picaut     | [Watch](https://www.youtube.com/watch?v=zmvYwz0cLQk) |
+| 35  | Testing Your Rig                   | CGDive              | [Watch](https://www.youtube.com/watch?v=efKllI1lEag) |
+| 35  | Export Settings for Rigs           | Joey Carlino        | [Watch](https://www.youtube.com/watch?v=HvXTfAgwPtE) |
+| 36  | Animation Layers in Blender 4.1    | Grant Abbitt        | [Watch](https://www.youtube.com/watch?v=9TtfiC2UFCg) |
+| 36  | Keyframe Animation Basics          | Pierrick Picaut     | [Watch](https://www.youtube.com/watch?v=dkDCTzYDoBc) |
+| 36  | Timeline and Dope Sheet            | CGDive              | [Watch](https://www.youtube.com/watch?v=6rVveQ7frLk) |
+| 36  | Animation Principles               | Joey Carlino        | [Watch](https://www.youtube.com/watch?v=GLnkLwc-wlI) |
+| 37  | Mixamo to Roblox 2024 Pipeline     | TheDevKing          | [Watch](https://www.youtube.com/watch?v=xtciSBqT3sI) |
+| 37  | Auto-Rigging with Mixamo           | FlippedNormals      | [Watch](https://www.youtube.com/watch?v=g-JscMSqMUE) |
+| 37  | Mixamo Best Practices              | ByteBlox            | [Watch](https://www.youtube.com/watch?v=bmlkbkmGSlo) |
+| 38  | RoMixamo Plugin Tutorial           | AlvinBlox           | [Watch](https://www.youtube.com/watch?v=LKjP2-3HKdI) |
+| 38  | 3000+ Animations Guide             | TheDevKing          | [Watch](https://www.youtube.com/watch?v=cpDc2cpPgIo) |
+| 38  | Animation Retargeting              | B Ricey             | [Watch](https://www.youtube.com/watch?v=_Su_F5o-lkI) |
+| 38  | Custom Animation Edits             | ByteBlox            | [Watch](https://www.youtube.com/watch?v=mZs7JJIX4ac) |
+| 39  | Cascadeur 2024 Physics Animation   | Cascadeur Official  | [Watch](https://www.youtube.com/watch?v=HLne3d8Ch7k) |
+| 39  | DeepMotion Animate 3D              | DeepMotion Official | [Watch](https://www.youtube.com/watch?v=WqvS5TkZpMQ) |
+| 39  | Rokoko Vision 2024                 | Rokoko Official     | [Watch](https://www.youtube.com/watch?v=b1yjzRWiTOA) |
+| 39  | AI Motion Capture Tips             | Two Minute Papers   | [Watch](https://www.youtube.com/watch?v=EgL6CZZe5pI) |
+| 40  | Roblox Animation Editor 2024       | TheDevKing          | [Watch](https://www.youtube.com/watch?v=9Kvjjs2Hukw) |
+| 40  | Batch Animation Import             | ByteBlox            | [Watch](https://www.youtube.com/watch?v=pGxu2cAtwUA) |
+| 40  | Animation Events Setup             | AlvinBlox           | [Watch](https://www.youtube.com/watch?v=bFJvAI3y27o) |
+| 40  | Performance Tips                   | Suphi Kaner         | [Watch](https://www.youtube.com/watch?v=F3MrOiISNnI) |

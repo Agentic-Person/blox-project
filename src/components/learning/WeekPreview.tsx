@@ -11,10 +11,13 @@ import {
   CheckCircle,
   Target,
   ChevronRight,
-  Calendar
+  Calendar,
+  Zap
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useLearningStore } from '@/store/learningStore'
+import { Breadcrumb } from './Breadcrumb'
+import * as Progress from '@radix-ui/react-progress'
 
 // Type to match the store's expected format
 interface DayProgress {
@@ -86,10 +89,19 @@ export function WeekPreview({
   // Calculate total videos
   const totalVideos = week.days.reduce((acc, day) => acc + day.videos.length, 0)
   
+  // Calculate week progress
+  const weekProgress = week.days.reduce((acc, day) => {
+    const progress = calculateDayProgress(day.id)
+    return acc + progress.completionPercentage
+  }, 0) / week.days.length
+  
   return (
     <div className="h-full flex flex-col bg-blox-very-dark-blue">
       {/* Week Header */}
-      <div className="p-6 border-b border-blox-medium-blue-gray">
+      <div className="p-6 border-b border-blox-medium-blue-gray bg-gradient-to-r from-blox-very-dark-blue to-blox-dark-blue">
+        <div className="mb-3">
+          <Breadcrumb />
+        </div>
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -120,9 +132,33 @@ export function WeekPreview({
         </motion.div>
       </div>
       
-      {/* Days Grid */}
+      {/* Week Progress Bar */}
+      <div className="px-6 py-3 bg-blox-dark-blue/30">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm text-blox-off-white">Week Progress</span>
+          <span className="text-sm font-semibold text-blox-teal">{Math.round(weekProgress)}% Complete</span>
+        </div>
+        <Progress.Root 
+          className="relative overflow-hidden bg-blox-medium-blue-gray/30 rounded-full w-full h-2"
+          value={weekProgress}
+        >
+          <Progress.Indicator
+            className={`h-full w-full flex-1 transition-transform duration-500 ease-out ${
+              weekProgress === 100 
+                ? 'bg-blox-success' 
+                : weekProgress > 0 
+                  ? 'bg-gradient-to-r from-blox-warning to-blox-teal'
+                  : 'bg-blox-medium-blue-gray'
+            }`}
+            style={{ transform: `translateX(-${100 - weekProgress}%)` }}
+          />
+        </Progress.Root>
+      </div>
+      
+      {/* Days Grid - All Expanded */}
       <div className="flex-1 overflow-auto p-6">
-        <div className="space-y-6">
+        <h2 className="text-lg font-semibold text-blox-white mb-4">Daily Breakdown</h2>
+        <div className="space-y-4">
           {week.days.map((day, dayIndex) => {
             const dayProgress = calculateDayProgress(day.id)
             const dayNumber = dayIndex + 1
@@ -134,7 +170,15 @@ export function WeekPreview({
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: dayIndex * 0.1 }}
               >
-                <Card className="glass-card border-blox-glass-border hover:border-blox-teal/50 transition-all">
+                <Card className={`border transition-all cursor-pointer ${
+                  dayProgress.status === 'completed' 
+                    ? 'bg-blox-success/10 border-blox-success/30' 
+                    : dayProgress.status === 'in_progress'
+                      ? 'bg-blox-warning/10 border-blox-warning/30'
+                      : 'bg-blox-second-dark-blue/30 border-blox-glass-border hover:border-blox-teal/50'
+                }`}
+                onClick={() => onDaySelect(day.id)}
+                >
                   <CardHeader className="pb-4">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -201,12 +245,21 @@ export function WeekPreview({
                             
                             {/* Video Info */}
                             <div className="flex-1 min-w-0">
-                              <h4 className="text-sm font-medium text-blox-white group-hover:text-blox-teal transition-colors line-clamp-1">
-                                {video.title}
+                              <h4 className={`text-sm font-medium transition-colors line-clamp-1 ${
+                                isCompleted 
+                                  ? 'text-blox-success' 
+                                  : 'text-blox-white group-hover:text-blox-teal'
+                              }`}>
+                                {videoIndex + 1}. {video.title}
                               </h4>
                               <div className="flex items-center gap-3 mt-1 text-xs text-blox-off-white">
                                 <span>{video.duration}</span>
                                 <span className="text-blox-teal">+{video.xpReward} XP</span>
+                                {isCompleted && (
+                                  <Badge className="bg-blox-success/20 text-blox-success border-blox-success/30 px-1 py-0">
+                                    ✓
+                                  </Badge>
+                                )}
                               </div>
                             </div>
                             

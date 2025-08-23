@@ -20,9 +20,11 @@ export function ResizableSidebar({
 }: ResizableSidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [sidebarSize, setSidebarSize] = useState(defaultSize)
+  const [isClient, setIsClient] = useState(false)
 
-  // Load saved sidebar size from localStorage
+  // Ensure we only access localStorage on the client
   useEffect(() => {
+    setIsClient(true)
     const savedSize = localStorage.getItem('sidebar-size')
     if (savedSize) {
       const size = parseFloat(savedSize)
@@ -50,7 +52,7 @@ export function ResizableSidebar({
     >
       {/* Sidebar Panel */}
       <Panel
-        defaultSize={sidebarSize}
+        defaultSize={isClient ? sidebarSize : defaultSize}
         minSize={minSize}
         maxSize={maxSize}
         collapsible={true}
@@ -78,7 +80,7 @@ export function ResizableSidebar({
       </PanelResizeHandle>
 
       {/* Main Content Panel */}
-      <Panel defaultSize={100 - sidebarSize} minSize={50}>
+      <Panel defaultSize={100 - (isClient ? sidebarSize : defaultSize)} minSize={50}>
         <div className="h-full overflow-hidden">
           {mainContent}
         </div>

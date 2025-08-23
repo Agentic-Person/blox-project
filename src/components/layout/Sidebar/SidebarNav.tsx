@@ -12,6 +12,12 @@ export function SidebarNav() {
   const pathname = usePathname()
   const isLearningPath = pathname.includes('/learning')
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['main']))
+  
+  // Parse learning path segments
+  const pathSegments = pathname.split('/').filter(Boolean)
+  const currentModuleId = isLearningPath ? pathSegments[1] : undefined
+  const currentWeekId = isLearningPath ? pathSegments[2] : undefined  
+  const currentDayId = isLearningPath ? pathSegments[3] : undefined
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => {
@@ -26,7 +32,7 @@ export function SidebarNav() {
   }
 
   return (
-    <nav className="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4">
+    <nav className="p-4 space-y-4">
       {/* Main Section */}
       <div>
         <button
@@ -72,7 +78,11 @@ export function SidebarNav() {
                   {/* Navigation Tree for Learning Path */}
                   {isLearningPath && (
                     <div className="mt-3 ml-2 pl-4 border-l-2 border-blox-medium-blue-gray">
-                      <LearningPathTree />
+                      <LearningPathTree 
+                        currentModuleId={currentModuleId}
+                        currentWeekId={currentWeekId}
+                        currentDayId={currentDayId}
+                      />
                     </div>
                   )}
                 </div>
@@ -140,30 +150,6 @@ export function SidebarNav() {
         </div>
       </div>
 
-      {/* Quick Stats */}
-      <div className="pt-4 border-t border-blox-glass-border">
-        <h3 className="px-2 mb-3 text-xs font-semibold text-blox-light-blue-gray uppercase tracking-wider">
-          Quick Stats
-        </h3>
-        <div className="grid grid-cols-2 gap-2">
-          <div className="glass-card rounded-lg p-3">
-            <div className="text-xs text-blox-light-blue-gray">Streak</div>
-            <div className="text-lg font-bold text-blox-teal teal-glow-text">7 days</div>
-          </div>
-          <div className="glass-card rounded-lg p-3">
-            <div className="text-xs text-blox-light-blue-gray">Completed</div>
-            <div className="text-lg font-bold text-blox-teal">23</div>
-          </div>
-          <div className="glass-card rounded-lg p-3">
-            <div className="text-xs text-blox-light-blue-gray">BLOX</div>
-            <div className="text-lg font-bold text-blox-teal teal-glow-text">450</div>
-          </div>
-          <div className="glass-card rounded-lg p-3">
-            <div className="text-xs text-blox-light-blue-gray">Rank</div>
-            <div className="text-lg font-bold text-blox-teal">#142</div>
-          </div>
-        </div>
-      </div>
     </nav>
   )
 }
