@@ -155,10 +155,10 @@
     @apply shadow-teal-glow;
   }
 
-  /* Card hover effects */
+  /* Card hover effects - Reduced intensity */
   .card-hover-glow {
-    @apply hover:shadow-teal-glow-lg hover:border-blox-teal/50;
-    @apply transform hover:-translate-y-1 transition-all duration-300;
+    @apply hover:shadow-sm hover:border-blox-teal/30;
+    @apply transform hover:-translate-y-0.5 transition-all duration-200;
   }
 
   /* Input styles */

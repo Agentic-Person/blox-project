@@ -1,12 +1,25 @@
 'use client'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { useState } from 'react'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Users, Plus, Search, Filter, Crown, User, Info } from 'lucide-react'
+import { Plus, Info, Users, Trophy, Target, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import TeamBetaBadge from '@/components/teams/TeamBetaBadge'
+import TeamCard from '@/components/teams/TeamCard'
+import TeamFilters, { TeamFilterState } from '@/components/teams/TeamFilters'
+import { motion } from 'framer-motion'
 
 export default function TeamsPage() {
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filters, setFilters] = useState<TeamFilterState>({
+    recruitmentStatus: [],
+    teamType: [],
+    skills: [],
+    teamSize: 'all',
+    sortBy: 'newest'
+  })
+
   const teams = [
     {
       id: 'team-1',
@@ -18,7 +31,23 @@ export default function TeamsPage() {
       skills: ['Building', 'Scripting', 'UI Design'],
       leader: 'ScriptMaster',
       avatar: '/images/team-logos/gamedev-squad.png',
-      projects: 2
+      projects: 2,
+      founded: '2 weeks ago',
+      rank: 3,
+      points: 2450,
+      badges: ['First Project', 'Team Player'],
+      recruitmentStatus: 'open' as const,
+      teamType: 'competitive' as const,
+      activeProjects: [
+        { id: 'p1', name: 'Tower Defense Game', status: 'in-progress' as const, progress: 65, deadline: 'Dec 15' },
+        { id: 'p2', name: 'UI Overhaul', status: 'testing' as const, progress: 85 }
+      ],
+      members: [
+        { id: 'm1', name: 'ScriptMaster', role: 'leader' as const, joinedAt: '2 weeks ago', contributions: 45, online: true },
+        { id: 'm2', name: 'BuilderPro', role: 'builder' as const, joinedAt: '1 week ago', contributions: 23, online: false },
+        { id: 'm3', name: 'UIWizard', role: 'designer' as const, joinedAt: '3 days ago', contributions: 12, online: true },
+        { id: 'm4', name: 'GameDev123', role: 'developer' as const, joinedAt: '5 days ago', contributions: 18 }
+      ]
     },
     {
       id: 'team-2',
@@ -30,7 +59,12 @@ export default function TeamsPage() {
       skills: ['Building', 'Art', 'Animation'],
       leader: 'BuilderPro',
       avatar: '/images/team-logos/creative-builders.png',
-      projects: 1
+      projects: 1,
+      founded: '1 month ago',
+      rank: 7,
+      points: 1850,
+      recruitmentStatus: 'open' as const,
+      teamType: 'casual' as const
     },
     {
       id: 'team-3',
@@ -42,7 +76,13 @@ export default function TeamsPage() {
       skills: ['Scripting', 'Game Design', 'Leadership'],
       leader: 'LuaMaster',
       avatar: '/images/team-logos/code-warriors.png',
-      projects: 3
+      projects: 3,
+      founded: '3 months ago',
+      rank: 1,
+      points: 4200,
+      badges: ['Elite Team', 'Project Master', 'Community Leader'],
+      recruitmentStatus: 'closed' as const,
+      teamType: 'competitive' as const
     },
     {
       id: 'team-4',
@@ -54,12 +94,97 @@ export default function TeamsPage() {
       skills: ['Building', 'UI Design'],
       leader: 'PixelArt123',
       avatar: '/images/team-logos/pixel-pioneers.png',
-      projects: 0
+      projects: 0,
+      founded: '3 days ago',
+      points: 150,
+      recruitmentStatus: 'open' as const,
+      teamType: 'learning' as const
+    },
+    {
+      id: 'team-5',
+      name: 'Neon Scripters',
+      description: 'Specializing in advanced lighting and particle effects',
+      memberCount: 4,
+      maxMembers: 5,
+      isRecruiting: true,
+      skills: ['Scripting', 'Animation', 'Art'],
+      leader: 'NeonMaster',
+      projects: 2,
+      founded: '2 weeks ago',
+      rank: 5,
+      points: 2100,
+      recruitmentStatus: 'selective' as const,
+      teamType: 'competitive' as const
     },
   ]
 
-  const myTeams = teams.filter(team => team.id === 'team-1')
-  const recruitingTeams = teams.filter(team => team.isRecruiting && team.id !== 'team-1')
+  // Filter teams based on search and filters
+  const filteredTeams = teams.filter(team => {
+    // Search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase()
+      if (!(
+        team.name.toLowerCase().includes(query) ||
+        team.description.toLowerCase().includes(query) ||
+        team.skills.some(skill => skill.toLowerCase().includes(query)) ||
+        team.leader.toLowerCase().includes(query)
+      )) {
+        return false
+      }
+    }
+
+    // Recruitment status filter
+    if (filters.recruitmentStatus.length > 0) {
+      if (!filters.recruitmentStatus.includes(team.recruitmentStatus || 'open')) {
+        return false
+      }
+    }
+
+    // Team type filter
+    if (filters.teamType.length > 0) {
+      if (!filters.teamType.includes(team.teamType || 'casual')) {
+        return false
+      }
+    }
+
+    // Skills filter
+    if (filters.skills.length > 0) {
+      if (!filters.skills.some(skill => team.skills.includes(skill))) {
+        return false
+      }
+    }
+
+    // Team size filter
+    if (filters.teamSize !== 'all') {
+      if (filters.teamSize === 'small' && team.maxMembers > 3) return false
+      if (filters.teamSize === 'medium' && (team.maxMembers < 4 || team.maxMembers > 6)) return false
+      if (filters.teamSize === 'large' && team.maxMembers < 7) return false
+    }
+
+    return true
+  })
+
+  // Sort teams
+  const sortedTeams = [...filteredTeams].sort((a, b) => {
+    switch (filters.sortBy) {
+      case 'oldest':
+        return 0 // Would normally sort by creation date
+      case 'members':
+        return b.memberCount - a.memberCount
+      case 'projects':
+        return b.projects - a.projects
+      case 'points':
+        return (b.points || 0) - (a.points || 0)
+      case 'name':
+        return a.name.localeCompare(b.name)
+      case 'newest':
+      default:
+        return 0 // Would normally sort by creation date
+    }
+  })
+
+  const myTeams = sortedTeams.filter(team => team.id === 'team-1')
+  const recruitingTeams = sortedTeams.filter(team => team.isRecruiting && team.id !== 'team-1')
 
   return (
     <div className="p-6 space-y-6">
@@ -103,150 +228,110 @@ export default function TeamsPage() {
       </Card>
 
       {/* Search and Filter */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-blox-medium-blue-gray" />
-                <input
-                  type="text"
-                  placeholder="Search teams by name, skills, or description..."
-                  className="w-full bg-blox-black-blue border border-blox-medium-blue-gray rounded-lg pl-10 pr-4 py-2 text-blox-white placeholder-blox-medium-blue-gray focus:outline-none focus:border-blox-teal focus:ring-1 focus:ring-blox-teal"
-                />
-              </div>
-            </div>
-            <Button variant="secondary">
-              <Filter className="mr-2 h-4 w-4" />
-              Filter
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <TeamFilters 
+        onSearchChange={setSearchQuery}
+        onFilterChange={setFilters}
+      />
 
       {/* My Teams */}
       {myTeams.length > 0 && (
         <div>
-          <h2 className="text-xl font-semibold text-blox-white mb-4">My Teams</h2>
+          <div className="flex items-center gap-2 mb-4">
+            <h2 className="text-xl font-semibold text-blox-white">My Teams</h2>
+            <Sparkles className="h-5 w-5 text-yellow-500" />
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {myTeams.map((team) => (
-              <Card key={team.id} className="card-hover border-blox-teal">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-gradient-to-r from-blox-teal to-blox-teal-dark rounded-lg flex items-center justify-center">
-                        <span className="text-white font-bold text-lg">
-                          {team.name.charAt(0)}
-                        </span>
-                      </div>
-                      <div>
-                        <CardTitle className="text-lg">{team.name}</CardTitle>
-                        <div className="flex items-center text-sm text-blox-off-white">
-                          <Crown className="h-3 w-3 mr-1 text-yellow-500" />
-                          {team.leader}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-sm text-blox-off-white">
-                        {team.memberCount}/{team.maxMembers}
-                      </div>
-                      <Users className="h-4 w-4 text-blox-medium-blue-gray" />
-                    </div>
-                  </div>
-                  <CardDescription>{team.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex flex-wrap gap-1">
-                      {team.skills.map((skill) => (
-                        <span 
-                          key={skill}
-                          className="px-2 py-1 bg-blox-black-blue text-blox-teal text-xs rounded-md border border-blox-glass-border"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="text-xs text-blox-off-white">
-                      {team.projects} active project{team.projects !== 1 ? 's' : ''}
-                    </div>
-                    <Link href={`/teams/${team.id}`}>
-                      <Button className="w-full" variant="secondary">
-                        Preview Dashboard
-                      </Button>
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
+            {myTeams.map((team, index) => (
+              <motion.div
+                key={team.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <TeamCard 
+                  team={team} 
+                  variant="compact" 
+                  isOwned={true}
+                />
+              </motion.div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Recruiting Teams */}
+      {/* Teams Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <Card className="glass-card">
+          <CardContent className="p-4 text-center">
+            <Users className="h-6 w-6 text-blox-teal mx-auto mb-2" />
+            <div className="text-2xl font-bold text-blox-white">{sortedTeams.length}</div>
+            <div className="text-xs text-blox-medium-blue-gray">Active Teams</div>
+          </CardContent>
+        </Card>
+        <Card className="glass-card">
+          <CardContent className="p-4 text-center">
+            <Trophy className="h-6 w-6 text-yellow-500 mx-auto mb-2" />
+            <div className="text-2xl font-bold text-blox-white">
+              {sortedTeams.filter(t => t.rank && t.rank <= 10).length}
+            </div>
+            <div className="text-xs text-blox-medium-blue-gray">Top Teams</div>
+          </CardContent>
+        </Card>
+        <Card className="glass-card">
+          <CardContent className="p-4 text-center">
+            <Target className="h-6 w-6 text-blox-purple mx-auto mb-2" />
+            <div className="text-2xl font-bold text-blox-white">
+              {sortedTeams.reduce((sum, t) => sum + t.projects, 0)}
+            </div>
+            <div className="text-xs text-blox-medium-blue-gray">Active Projects</div>
+          </CardContent>
+        </Card>
+        <Card className="glass-card">
+          <CardContent className="p-4 text-center">
+            <Sparkles className="h-6 w-6 text-green-500 mx-auto mb-2" />
+            <div className="text-2xl font-bold text-blox-white">
+              {sortedTeams.filter(t => t.isRecruiting).length}
+            </div>
+            <div className="text-xs text-blox-medium-blue-gray">Recruiting Now</div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* All Teams */}
       <div>
         <h2 className="text-xl font-semibold text-blox-white mb-4">
-          Teams Recruiting ({recruitingTeams.length})
+          {searchQuery || filters.recruitmentStatus.length > 0 || filters.teamType.length > 0 || filters.skills.length > 0
+            ? `Search Results (${sortedTeams.length})`
+            : `All Teams (${sortedTeams.length})`}
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {recruitingTeams.map((team) => (
-            <Card key={team.id} className="card-hover">
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 bg-blox-second-dark-blue rounded-lg flex items-center justify-center border border-blox-medium-blue-gray">
-                      <span className="text-blox-teal font-bold text-lg">
-                        {team.name.charAt(0)}
-                      </span>
-                    </div>
-                    <div>
-                      <CardTitle className="text-lg">{team.name}</CardTitle>
-                      <div className="flex items-center text-sm text-blox-off-white">
-                        <Crown className="h-3 w-3 mr-1 text-yellow-500" />
-                        {team.leader}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-sm text-blox-off-white">
-                      {team.memberCount}/{team.maxMembers}
-                    </div>
-                    <Users className="h-4 w-4 text-blox-medium-blue-gray" />
-                  </div>
-                </div>
-                <CardDescription>{team.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex flex-wrap gap-1">
-                    {team.skills.map((skill) => (
-                      <span 
-                        key={skill}
-                        className="px-2 py-1 bg-blox-black-blue text-blox-teal text-xs rounded-md border border-blox-glass-border"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="text-xs text-blox-off-white">
-                    {team.projects} active project{team.projects !== 1 ? 's' : ''}
-                  </div>
-                  <div className="flex gap-2">
-                    <Link href={`/teams/${team.id}`} className="flex-1">
-                      <Button variant="secondary" className="w-full">
-                        Preview
-                      </Button>
-                    </Link>
-                    <Button className="flex-1" disabled>
-                      Join (Coming Soon)
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        {sortedTeams.length === 0 ? (
+          <Card className="glass-card">
+            <CardContent className="p-12 text-center">
+              <Users className="h-12 w-12 text-blox-medium-blue-gray mx-auto mb-4" />
+              <p className="text-blox-white font-medium mb-2">No teams found</p>
+              <p className="text-blox-off-white text-sm">
+                Try adjusting your filters or search terms
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {sortedTeams.map((team, index) => (
+              <motion.div
+                key={team.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: Math.min(index * 0.05, 0.3) }}
+              >
+                <TeamCard 
+                  team={team} 
+                  variant="compact"
+                  isOwned={team.id === 'team-1'}
+                />
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

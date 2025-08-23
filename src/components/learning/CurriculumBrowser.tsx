@@ -274,8 +274,8 @@ export function CurriculumBrowser({ onNavigateToDay, className }: CurriculumBrow
                   key={module.id}
                   module={module}
                   isLocked={isLocked}
-                  onStartModule={() => handleModuleSelect(module)}
-                  onContinueModule={() => handleModuleSelect(module)}
+                  onStartModule={() => router.push(`/learning/${module.id}`)}
+                  onContinueModule={() => router.push(`/learning/${module.id}`)}
                 />
               )
             })}

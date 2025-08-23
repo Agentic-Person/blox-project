@@ -26,9 +26,9 @@ export function SplitView({
           defaultSize={defaultLeftSize}
           minSize={minLeftSize}
           maxSize={maxLeftSize}
-          className="bg-blox-very-dark-blue border-r border-blox-medium-blue-gray"
+          className="border-r border-blox-medium-blue-gray"
         >
-          <div className="h-full overflow-auto">
+          <div className="h-full">
             {leftPanel}
           </div>
         </Panel>

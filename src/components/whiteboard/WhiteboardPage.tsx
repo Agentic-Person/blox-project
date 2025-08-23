@@ -1,19 +1,18 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useWhiteboardStore } from '@/store/whiteboardStore'
-import WhiteboardCanvas from './WhiteboardCanvas'
-import BoardManager from './BoardManager'
+import WhiteboardCanvas, { WhiteboardCanvasRef } from './WhiteboardCanvas'
+import { WhiteboardSidebar } from './WhiteboardSidebar'
+import { WhiteboardToolbar } from './WhiteboardToolbar'
+import { MarkdownImport } from './MarkdownImport'
 import { Button } from '@/components/ui/button'
 import { 
   ChevronLeft, 
-  ChevronRight, 
-  Download, 
-  Upload, 
   Maximize2, 
   Minimize2,
-  Save,
-  Menu
+  PanelLeftClose,
+  PanelLeft
 } from 'lucide-react'
 
 export default function WhiteboardPage() {
@@ -21,6 +20,8 @@ export default function WhiteboardPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [fullscreen, setFullscreen] = useState(false)
   const [showSaveNotification, setShowSaveNotification] = useState(false)
+  const [showMarkdownImport, setShowMarkdownImport] = useState(false)
+  const canvasRef = useRef<WhiteboardCanvasRef>(null)
 
   // Create initial board if none exists
   useEffect(() => {
@@ -35,19 +36,104 @@ export default function WhiteboardPage() {
     }
   }, [activeBoard, createBoard, setActiveBoard])
 
-  const handleExport = () => {
-    // Export functionality - to be implemented
-    alert('Export feature coming soon!')
+  const handleExport = async () => {
+    if (!canvasRef.current) return
+    
+    const blob = await canvasRef.current.exportAsImage()
+    if (blob) {
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `mindmap-${Date.now()}.svg`
+      a.click()
+      URL.revokeObjectURL(url)
+    }
   }
 
-  const handleImport = () => {
-    // Import functionality - to be implemented
-    alert('Import feature coming soon!')
+  const handleExportJSON = () => {
+    if (!canvasRef.current) return
+    
+    const data = canvasRef.current.exportAsJSON()
+    if (data) {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `board-${Date.now()}.json`
+      a.click()
+      URL.revokeObjectURL(url)
+    }
+  }
+
+  const handleImportJSON = () => {
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = '.json'
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0]
+      if (file && canvasRef.current) {
+        const text = await file.text()
+        const data = JSON.parse(text)
+        canvasRef.current.importFromJSON(data)
+      }
+    }
+    input.click()
+  }
+
+  const handleImportImage = () => {
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = 'image/*'
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0]
+      if (file && canvasRef.current) {
+        const reader = new FileReader()
+        reader.onload = (event) => {
+          const dataUrl = event.target?.result as string
+          const editor = canvasRef.current?.getEditor()
+          if (editor) {
+            const viewportCenter = editor.getViewportScreenCenter()
+            editor.createShape({
+              type: 'image',
+              x: viewportCenter.x - 200,
+              y: viewportCenter.y - 150,
+              props: {
+                url: dataUrl,
+                w: 400,
+                h: 300,
+              },
+            })
+          }
+        }
+        reader.readAsDataURL(file)
+      }
+    }
+    input.click()
+  }
+
+  const handleImportMarkdown = (content: string, format: 'markdown' | 'html') => {
+    if (canvasRef.current) {
+      canvasRef.current.addMarkdownText(content)
+    }
+  }
+
+  const handleClearBoard = () => {
+    if (confirm('Are you sure you want to clear the board? This cannot be undone.')) {
+      canvasRef.current?.clearCanvas()
+    }
   }
 
   const handleManualSave = () => {
     setShowSaveNotification(true)
     setTimeout(() => setShowSaveNotification(false), 2000)
+  }
+
+  const handleNewBoard = () => {
+    const name = prompt('Enter board name:')
+    if (name) {
+      const newBoardId = createBoard(name)
+      setActiveBoard(newBoardId)
+    }
   }
 
   const toggleFullscreen = () => {
@@ -61,23 +147,14 @@ export default function WhiteboardPage() {
   }
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-blox-very-dark-blue to-blox-second-dark-blue">
+    <div className="flex h-full bg-gradient-to-br from-blox-very-dark-blue to-blox-second-dark-blue">
       {/* Sidebar */}
-      <div className={`${
-        sidebarOpen ? 'w-80' : 'w-0'
-      } transition-all duration-300 overflow-hidden border-r border-blox-glass-border bg-blox-black-blue/50 backdrop-blur-sm`}>
-        {sidebarOpen && (
-          <BoardManager 
-            onBoardSelect={(boardId) => setActiveBoard(boardId)}
-            className="h-full"
-          />
-        )}
-      </div>
+      {sidebarOpen && <WhiteboardSidebar />}
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
-        {/* Toolbar */}
-        <div className="flex items-center justify-between p-4 border-b border-blox-glass-border bg-blox-glass-teal backdrop-blur-sm">
+        {/* Header Toolbar */}
+        <div className="flex items-center justify-between p-4 border-b border-blox-glass-border bg-blox-glass-teal/50 backdrop-blur-sm">
           <div className="flex items-center gap-2">
             <Button
               size="sm"
@@ -85,7 +162,7 @@ export default function WhiteboardPage() {
               onClick={() => setSidebarOpen(!sidebarOpen)}
               className="text-blox-off-white hover:text-blox-white"
             >
-              {sidebarOpen ? <ChevronLeft className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+              {sidebarOpen ? <PanelLeftClose className="h-4 w-4" /> : <PanelLeft className="h-4 w-4" />}
             </Button>
             
             <h1 className="text-xl font-semibold text-blox-white">
@@ -93,36 +170,16 @@ export default function WhiteboardPage() {
             </h1>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={handleManualSave}
-              className="text-blox-off-white hover:text-blox-white"
-            >
-              <Save className="h-4 w-4 mr-2" />
-              Save
-            </Button>
-
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={handleExport}
-              className="text-blox-off-white hover:text-blox-white"
-            >
-              <Download className="h-4 w-4 mr-2" />
-              Export
-            </Button>
-
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={handleImport}
-              className="text-blox-off-white hover:text-blox-white"
-            >
-              <Upload className="h-4 w-4 mr-2" />
-              Import
-            </Button>
+          <div className="flex items-center gap-4">
+            <WhiteboardToolbar
+              onNewBoard={handleNewBoard}
+              onSave={handleManualSave}
+              onLoad={handleImportJSON}
+              onExport={handleExport}
+              onImportMarkdown={() => setShowMarkdownImport(true)}
+              onImportImage={handleImportImage}
+              onClear={handleClearBoard}
+            />
 
             <Button
               size="sm"
@@ -143,6 +200,7 @@ export default function WhiteboardPage() {
         <div className="flex-1 relative">
           {activeBoard ? (
             <WhiteboardCanvas 
+              ref={canvasRef}
               boardId={activeBoard}
               onSave={() => {
                 setShowSaveNotification(true)
@@ -179,6 +237,13 @@ export default function WhiteboardPage() {
           )}
         </div>
       </div>
+
+      {/* Markdown Import Dialog */}
+      <MarkdownImport
+        isOpen={showMarkdownImport}
+        onClose={() => setShowMarkdownImport(false)}
+        onImport={handleImportMarkdown}
+      />
     </div>
   )
 }

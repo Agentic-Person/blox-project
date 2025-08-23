@@ -2,417 +2,2021 @@
   "modules": [
     {
       "id": "module-1",
-      "title": "Month 1 – Modern Foundations & 3D Introduction",
+      "title": "M1: Modern Foundations & 3D Introduction",
       "description": "Master Roblox Studio 2024, Blender 4.1+, and AI tools for 3D creation",
       "totalHours": 50,
-      "totalXP": 2100,
+      "totalXP": 750,
       "weeks": [
         {
           "id": "week-1",
-          "title": "Week 1: Roblox Studio 2024 Basics",
+          "title": "W1: Roblox Studio 2024 Basics",
           "description": "Navigate the new Creator Hub and master the modern Studio interface",
           "days": [
             {
               "id": "day-1",
-              "title": "Day 1: Roblox Studio 2024 Complete Beginner Guide",
+              "title": "D1: New Creator Hub & Studio Interface Part 1",
               "videos": [
                 {
                   "id": "video-1-1-1",
-                  "title": "Roblox Studio 2024 Complete Beginner Guide",
+                  "title": "Introduction to Creator Hub",
                   "youtubeId": "placeholder1",
                   "duration": "25:00",
-                  "xpReward": 100
+                  "xpReward": 50
                 }
               ],
-              "practiceTask": "Navigate the new Creator Hub",
+              "practiceTask": "Navigate and customize your workspace",
               "estimatedTime": "2.5h"
             },
             {
-              "id": "day-2",
-              "title": "Day 2: Modern Studio Interface & Beginner Scripting Ep. 1",
+              "id": "day-2", 
+              "title": "D2: New Creator Hub & Studio Interface Part 2",
               "videos": [
                 {
-                  "id": "video-1-1-2a",
-                  "title": "Modern Studio Interface 2024",
-                  "youtubeId": "placeholder2a",
+                  "id": "video-1-1-2",
+                  "title": "Advanced Creator Hub Features",
+                  "youtubeId": "placeholder2",
                   "duration": "20:00",
-                  "xpReward": 80
-                },
-                {
-                  "id": "video-1-1-2b",
-                  "title": "2024 Beginner Scripting Ep. 1",
-                  "youtubeId": "placeholder2b",
-                  "duration": "15:00",
-                  "xpReward": 60
+                  "xpReward": 40
                 }
               ],
-              "practiceTask": "Customize workspace",
+              "practiceTask": "Deep dive into Creator Hub features",
               "estimatedTime": "2.5h"
             },
             {
               "id": "day-3",
-              "title": "Day 3: Properties, Attributes & Beginner Scripting Ep. 2",
+              "title": "D3: Building Fundamentals",
               "videos": [
                 {
-                  "id": "video-1-1-3a",
-                  "title": "2024 Beginner Scripting Ep. 2",
-                  "youtubeId": "placeholder3a",
-                  "duration": "18:00",
-                  "xpReward": 70
-                },
-                {
-                  "id": "video-1-1-3b",
-                  "title": "Properties and Attributes 2024",
-                  "youtubeId": "placeholder3b",
-                  "duration": "22:00",
-                  "xpReward": 90
+                  "id": "video-1-1-3", 
+                  "title": "Basic Building Tools",
+                  "youtubeId": "placeholder3",
+                  "duration": "30:00",
+                  "xpReward": 60
                 }
               ],
-              "practiceTask": "Create parts using Material Service",
+              "practiceTask": "Create your first structure",
               "estimatedTime": "2.5h"
             },
             {
               "id": "day-4",
-              "title": "Day 4: Beginner Scripting Ep. 3 & Advanced Practice",
+              "title": "D4: Materials and Textures",
               "videos": [
                 {
                   "id": "video-1-1-4",
-                  "title": "2024 Beginner Scripting Ep. 3",
-                  "youtubeId": "placeholder4",
-                  "duration": "20:00",
-                  "xpReward": 80
+                  "title": "Applying Materials and Textures",
+                  "youtubeId": "placeholder4", 
+                  "duration": "25:00",
+                  "xpReward": 50
                 }
               ],
-              "practiceTask": "Continue part creation",
+              "practiceTask": "Apply and customize materials",
               "estimatedTime": "2.5h"
             },
             {
               "id": "day-5",
-              "title": "Day 5: Modern Building Techniques & Terrain Tools",
+              "title": "D5: Week 1 Project",
               "videos": [
                 {
-                  "id": "video-1-1-5a",
-                  "title": "Modern Building Techniques 2024 (Part 1)",
-                  "youtubeId": "placeholder5a",
-                  "duration": "15:00",
-                  "xpReward": 60
-                },
-                {
-                  "id": "video-1-1-5b",
-                  "title": "Modern Building Techniques 2024 (Part 2)",
-                  "youtubeId": "placeholder5b",
-                  "duration": "12:00",
-                  "xpReward": 50
-                },
-                {
-                  "id": "video-1-1-5c",
-                  "title": "Terrain Tools 2024 Update",
-                  "youtubeId": "placeholder5c",
-                  "duration": "18:00",
+                  "id": "video-1-1-5",
+                  "title": "Week 1 Challenge Project",
+                  "youtubeId": "placeholder5",
+                  "duration": "35:00", 
                   "xpReward": 70
                 }
               ],
-              "practiceTask": "Build an environment using terrain features",
+              "practiceTask": "Complete week 1 project",
               "estimatedTime": "3h"
             }
           ]
         },
         {
           "id": "week-2",
-          "title": "Week 2: Blender 4.1+ Introduction Part I",
-          "description": "Master Blender interface, navigation, and basic modeling",
+          "title": "W2: 3D Modeling with Blender",
+          "description": "Learn professional 3D modeling techniques",
           "days": [
             {
               "id": "day-6",
-              "title": "Day 6: Donut Tutorial & Blender Basics Part 1",
+              "title": "D6: Blender 4.1 Introduction",
               "videos": [
                 {
-                  "id": "video-1-2-1a",
-                  "title": "Donut Tutorial 4.0 – Part 1",
-                  "youtubeId": "placeholder6a",
-                  "duration": "30:00",
-                  "xpReward": 120
-                },
-                {
-                  "id": "video-1-2-1b",
-                  "title": "Blender 4.1 for Beginners – Part 1",
-                  "youtubeId": "placeholder6b",
-                  "duration": "25:00",
-                  "xpReward": 100
+                  "id": "video-1-2-1",
+                  "title": "Blender Interface Overview",
+                  "youtubeId": "placeholder6",
+                  "duration": "28:00",
+                  "xpReward": 55
                 }
               ],
-              "practiceTask": "Interface & navigation",
+              "practiceTask": "Navigate Blender interface",
               "estimatedTime": "2.5h"
             },
             {
               "id": "day-7",
-              "title": "Day 7: Donut Tutorial Part 2 & Viewports",
+              "title": "D7: Basic 3D Modeling",
               "videos": [
                 {
-                  "id": "video-1-2-2a",
-                  "title": "Donut Tutorial 4.0 – Part 2",
-                  "youtubeId": "placeholder7a",
-                  "duration": "28:00",
-                  "xpReward": 110
-                },
-                {
-                  "id": "video-1-2-2b",
-                  "title": "Blender 4.1 for Beginners – Part 2",
-                  "youtubeId": "placeholder7b",
-                  "duration": "22:00",
-                  "xpReward": 90
+                  "id": "video-1-2-2", 
+                  "title": "Creating Basic Shapes",
+                  "youtubeId": "placeholder7",
+                  "duration": "32:00",
+                  "xpReward": 65
                 }
               ],
-              "practiceTask": "Viewports & panels",
-              "estimatedTime": "2.5h"
+              "practiceTask": "Model basic objects",
+              "estimatedTime": "3h"
             },
             {
               "id": "day-8",
-              "title": "Day 8: Donut Tutorial Part 3 & What's New in Blender 4.1",
+              "title": "D8: Texturing in Blender",
               "videos": [
                 {
-                  "id": "video-1-2-3a",
-                  "title": "Donut Tutorial 4.0 – Part 3",
-                  "youtubeId": "placeholder8a",
-                  "duration": "32:00",
-                  "xpReward": 130
-                },
-                {
-                  "id": "video-1-2-3b",
-                  "title": "What's New in Blender 4.1",
-                  "youtubeId": "placeholder8b",
-                  "duration": "20:00",
-                  "xpReward": 80
+                  "id": "video-1-2-3",
+                  "title": "Material Creation and Texturing",
+                  "youtubeId": "placeholder8", 
+                  "duration": "30:00",
+                  "xpReward": 60
                 }
               ],
-              "practiceTask": "Explore new UI & tools",
+              "practiceTask": "Apply textures to models",
               "estimatedTime": "2.5h"
             },
             {
               "id": "day-9",
-              "title": "Day 9: Game Asset Creation & Low Poly Modeling",
+              "title": "D9: Export to Roblox",
               "videos": [
                 {
-                  "id": "video-1-2-4a",
-                  "title": "Game Asset Creation Ep. 1 (Grant Abbitt)",
-                  "youtubeId": "placeholder9a",
-                  "duration": "25:00",
-                  "xpReward": 100
-                },
-                {
-                  "id": "video-1-2-4b",
-                  "title": "Low Poly Modeling 2024 (SouthernShotty)",
-                  "youtubeId": "placeholder9b",
-                  "duration": "20:00",
-                  "xpReward": 80
+                  "id": "video-1-2-4",
+                  "title": "Blender to Roblox Workflow",
+                  "youtubeId": "placeholder9",
+                  "duration": "22:00", 
+                  "xpReward": 45
                 }
               ],
-              "practiceTask": "Edit mode and modeling tools",
-              "estimatedTime": "2.5h"
+              "practiceTask": "Export and import models",
+              "estimatedTime": "2h"
             },
             {
               "id": "day-10",
-              "title": "Day 10: Game Asset Creation Ep. 2 & Practice",
+              "title": "D10: Week 2 Project",
               "videos": [
                 {
                   "id": "video-1-2-5",
-                  "title": "Game Asset Creation Ep. 2",
+                  "title": "3D Model Challenge",
                   "youtubeId": "placeholder10",
-                  "duration": "22:00",
-                  "xpReward": 90
+                  "duration": "40:00",
+                  "xpReward": 80
                 }
               ],
-              "practiceTask": "Model a simple asset",
-              "estimatedTime": "2.5h"
+              "practiceTask": "Complete 3D modeling project",
+              "estimatedTime": "4h"
             }
           ]
         },
         {
-          "id": "week-3",
-          "title": "Week 3: Blender 4.1+ Introduction Part II",
-          "description": "Advanced game asset creation and optimization techniques",
+          "id": "week-3", 
+          "title": "W3: Advanced Building Techniques",
+          "description": "Master complex building systems",
           "days": [
             {
               "id": "day-11",
-              "title": "Day 11: Game Asset Creation Ep. 3 & 10-Minute Modeling",
+              "title": "D11: Union and Negation",
               "videos": [
                 {
-                  "id": "video-1-3-1a",
-                  "title": "Game Asset Creation Ep. 3",
-                  "youtubeId": "placeholder11a",
-                  "duration": "28:00",
-                  "xpReward": 110
-                },
-                {
-                  "id": "video-1-3-1b",
-                  "title": "10-Minute Modeling 2024 (Imphenzia) – Episode 1",
-                  "youtubeId": "placeholder11b",
-                  "duration": "10:00",
-                  "xpReward": 40
-                },
-                {
-                  "id": "video-1-3-1c",
-                  "title": "10-Minute Modeling 2024 (Imphenzia) – Episode 2",
-                  "youtubeId": "placeholder11c",
-                  "duration": "10:00",
-                  "xpReward": 40
+                  "id": "video-1-3-1",
+                  "title": "Advanced Part Manipulation",
+                  "youtubeId": "placeholder11",
+                  "duration": "26:00",
+                  "xpReward": 52
                 }
               ],
-              "practiceTask": "Create quick game-ready assets",
+              "practiceTask": "Practice boolean operations",
               "estimatedTime": "2.5h"
             },
             {
               "id": "day-12",
-              "title": "Day 12: Game Asset Creation Ep. 4 & More 10-Minute Modeling",
+              "title": "D12: Terrain Building",
               "videos": [
                 {
-                  "id": "video-1-3-2a",
-                  "title": "Game Asset Creation Ep. 4",
-                  "youtubeId": "placeholder12a",
-                  "duration": "25:00",
-                  "xpReward": 100
-                },
-                {
-                  "id": "video-1-3-2b",
-                  "title": "10-Minute Modeling 2024 (Imphenzia) – Episode 3",
-                  "youtubeId": "placeholder12b",
-                  "duration": "10:00",
-                  "xpReward": 40
-                },
-                {
-                  "id": "video-1-3-2c",
-                  "title": "10-Minute Modeling 2024 (Imphenzia) – Episode 4",
-                  "youtubeId": "placeholder12c",
-                  "duration": "10:00",
-                  "xpReward": 40
+                  "id": "video-1-3-2",
+                  "title": "Terrain Tools and Techniques",
+                  "youtubeId": "placeholder12", 
+                  "duration": "35:00",
+                  "xpReward": 70
                 }
               ],
-              "practiceTask": "Refine assets",
-              "estimatedTime": "2.5h"
+              "practiceTask": "Create custom terrain",
+              "estimatedTime": "3h"
             },
             {
               "id": "day-13",
-              "title": "Day 13: Optimized Game Assets in Blender 4.1",
+              "title": "D13: Lighting Systems",
               "videos": [
                 {
                   "id": "video-1-3-3",
-                  "title": "Optimized Game Assets in Blender 4.1",
+                  "title": "Advanced Lighting Setup",
                   "youtubeId": "placeholder13",
-                  "duration": "35:00",
-                  "xpReward": 140
+                  "duration": "28:00",
+                  "xpReward": 55
                 }
               ],
-              "practiceTask": "Optimize asset topology and materials",
+              "practiceTask": "Design lighting scenes",
               "estimatedTime": "2.5h"
             },
             {
               "id": "day-14",
-              "title": "Day 14: Asset Creation Practice",
-              "videos": [],
-              "practiceTask": "Create 2–3 new assets using previous lessons",
+              "title": "D14: Particle Effects",
+              "videos": [
+                {
+                  "id": "video-1-3-4", 
+                  "title": "Creating Particle Effects",
+                  "youtubeId": "placeholder14",
+                  "duration": "30:00",
+                  "xpReward": 60
+                }
+              ],
+              "practiceTask": "Add particle effects",
               "estimatedTime": "3h"
             },
             {
               "id": "day-15",
-              "title": "Day 15: Asset Portfolio Building",
-              "videos": [],
-              "practiceTask": "Create 5–10 simple game assets and reflect on the week's progress",
-              "estimatedTime": "3h"
+              "title": "D15: Week 3 Project",
+              "videos": [
+                {
+                  "id": "video-1-3-5",
+                  "title": "Advanced Building Challenge",
+                  "youtubeId": "placeholder15",
+                  "duration": "45:00",
+                  "xpReward": 90
+                }
+              ],
+              "practiceTask": "Complete advanced building project",
+              "estimatedTime": "4h"
             }
           ]
         },
         {
           "id": "week-4",
-          "title": "Week 4: Current AI Tools for 3D",
-          "description": "Leverage cutting-edge AI tools for rapid 3D asset creation",
+          "title": "W4: AI Tools for 3D Creation",
+          "description": "Leverage AI for rapid prototyping",
           "days": [
             {
               "id": "day-16",
-              "title": "Day 16: Meshy v3 Complete Guide",
+              "title": "D16: AI Texture Generation",
               "videos": [
                 {
                   "id": "video-1-4-1",
-                  "title": "Meshy v3 Complete Guide 2024",
+                  "title": "AI Tools for Textures",
                   "youtubeId": "placeholder16",
-                  "duration": "30:00",
-                  "xpReward": 120
+                  "duration": "24:00",
+                  "xpReward": 48
                 }
               ],
-              "practiceTask": "Generate 1–2 AI models",
-              "estimatedTime": "2.5h"
+              "practiceTask": "Generate AI textures",
+              "estimatedTime": "2h"
             },
             {
               "id": "day-17",
-              "title": "Day 17: Kaedim 2.0 & Bezi AI Collaboration",
+              "title": "D17: AI Model Generation",
               "videos": [
                 {
-                  "id": "video-1-4-2a",
-                  "title": "Kaedim 2.0 Game Asset Creation",
-                  "youtubeId": "placeholder17a",
-                  "duration": "25:00",
-                  "xpReward": 100
-                },
-                {
-                  "id": "video-1-4-2b",
-                  "title": "Bezi AI Collaborative Tutorials",
-                  "youtubeId": "placeholder17b",
-                  "duration": "20:00",
-                  "xpReward": 80
+                  "id": "video-1-4-2",
+                  "title": "AI-Assisted 3D Modeling",
+                  "youtubeId": "placeholder17", 
+                  "duration": "32:00",
+                  "xpReward": 65
                 }
               ],
-              "practiceTask": "Generate 2–3 AI models",
-              "estimatedTime": "2.5h"
+              "practiceTask": "Create AI-generated models",
+              "estimatedTime": "3h"
             },
             {
               "id": "day-18",
-              "title": "Day 18: Claude 3 & GPT-4 Vision for 3D",
+              "title": "D18: AI Animation Tools",
               "videos": [
                 {
-                  "id": "video-1-4-3a",
-                  "title": "Claude 3 for 3D Prompting",
-                  "youtubeId": "placeholder18a",
-                  "duration": "22:00",
-                  "xpReward": 90
-                },
-                {
-                  "id": "video-1-4-3b",
-                  "title": "GPT-4 Vision for 3D Reference",
-                  "youtubeId": "placeholder18b",
-                  "duration": "18:00",
-                  "xpReward": 70
+                  "id": "video-1-4-3",
+                  "title": "AI Animation Workflows",
+                  "youtubeId": "placeholder18",
+                  "duration": "28:00",
+                  "xpReward": 55
                 }
               ],
-              "practiceTask": "Create themed model collections",
+              "practiceTask": "Animate with AI assistance",
               "estimatedTime": "2.5h"
             },
             {
               "id": "day-19",
-              "title": "Day 19: AI Model Cleanup & Animation",
+              "title": "D19: AI Integration Pipeline",
               "videos": [
                 {
-                  "id": "video-1-4-4a",
-                  "title": "Cleaning AI Models in Blender 4.1",
-                  "youtubeId": "placeholder19a",
-                  "duration": "28:00",
-                  "xpReward": 110
-                },
+                  "id": "video-1-4-4",
+                  "title": "Complete AI Workflow",
+                  "youtubeId": "placeholder19",
+                  "duration": "30:00",
+                  "xpReward": 60
+                }
+              ],
+              "practiceTask": "Build AI-assisted pipeline",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-20", 
+              "title": "D20: Module 1 Final Project",
+              "videos": [
                 {
-                  "id": "video-1-4-4b",
-                  "title": "Cascadeur for AI Animation Cleanup",
-                  "youtubeId": "placeholder19b",
-                  "duration": "25:00",
+                  "id": "video-1-4-5",
+                  "title": "Module 1 Capstone Project",
+                  "youtubeId": "placeholder20",
+                  "duration": "50:00",
                   "xpReward": 100
                 }
               ],
-              "practiceTask": "Refine AI-generated models",
+              "practiceTask": "Complete module 1 final project",
+              "estimatedTime": "5h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "module-2",
+      "title": "M2: Introduction to Scripting",
+      "description": "Learn Lua programming and game logic fundamentals",
+      "totalHours": 60,
+      "totalXP": 900,
+      "weeks": [
+        {
+          "id": "week-5",
+          "title": "W5: Lua Programming Basics",
+          "description": "Master Lua syntax and fundamental programming concepts",
+          "days": [
+            {
+              "id": "day-21",
+              "title": "D21: Variables and Data Types",
+              "videos": [
+                {
+                  "id": "video-2-1-1",
+                  "title": "Lua Variables Explained", 
+                  "youtubeId": "placeholder21",
+                  "duration": "25:00",
+                  "xpReward": 50
+                }
+              ],
+              "practiceTask": "Practice variable declarations",
+              "estimatedTime": "2h"
+            },
+            {
+              "id": "day-22",
+              "title": "D22: Control Structures",
+              "videos": [
+                {
+                  "id": "video-2-1-2",
+                  "title": "If Statements and Loops",
+                  "youtubeId": "placeholder22",
+                  "duration": "30:00",
+                  "xpReward": 60
+                }
+              ],
+              "practiceTask": "Build logic flows",
               "estimatedTime": "2.5h"
             },
             {
-              "id": "day-20",
-              "title": "Day 20: AI Workflow Optimization & Review",
-              "videos": [],
-              "practiceTask": "Optimize AI-generated workflows and review AI models, cleanup, and optimization",
+              "id": "day-23",
+              "title": "D23: Functions and Scope",
+              "videos": [
+                {
+                  "id": "video-2-1-3",
+                  "title": "Creating Lua Functions",
+                  "youtubeId": "placeholder23",
+                  "duration": "28:00",
+                  "xpReward": 55
+                }
+              ],
+              "practiceTask": "Write custom functions",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-24",
+              "title": "D24: Tables and Arrays",
+              "videos": [
+                {
+                  "id": "video-2-1-4",
+                  "title": "Working with Lua Tables",
+                  "youtubeId": "placeholder24",
+                  "duration": "32:00",
+                  "xpReward": 65
+                }
+              ],
+              "practiceTask": "Create data structures",
               "estimatedTime": "3h"
+            },
+            {
+              "id": "day-25",
+              "title": "D25: Week 5 Project",
+              "videos": [
+                {
+                  "id": "video-2-1-5",
+                  "title": "Lua Basics Challenge",
+                  "youtubeId": "placeholder25",
+                  "duration": "40:00",
+                  "xpReward": 80
+                }
+              ],
+              "practiceTask": "Complete Lua fundamentals project",
+              "estimatedTime": "4h"
+            }
+          ]
+        },
+        {
+          "id": "week-6",
+          "title": "W6: Roblox Scripting Fundamentals", 
+          "description": "Apply Lua to Roblox game development",
+          "days": [
+            {
+              "id": "day-26",
+              "title": "D26: ServerScript vs LocalScript",
+              "videos": [
+                {
+                  "id": "video-2-2-1",
+                  "title": "Understanding Script Types",
+                  "youtubeId": "placeholder26",
+                  "duration": "26:00",
+                  "xpReward": 52
+                }
+              ],
+              "practiceTask": "Create different script types",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-27",
+              "title": "D27: Working with Parts",
+              "videos": [
+                {
+                  "id": "video-2-2-2",
+                  "title": "Part Manipulation with Code",
+                  "youtubeId": "placeholder27",
+                  "duration": "30:00", 
+                  "xpReward": 60
+                }
+              ],
+              "practiceTask": "Script part movements",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-28",
+              "title": "D28: Events and Connections",
+              "videos": [
+                {
+                  "id": "video-2-2-3",
+                  "title": "Roblox Events System",
+                  "youtubeId": "placeholder28",
+                  "duration": "28:00",
+                  "xpReward": 55
+                }
+              ],
+              "practiceTask": "Handle user events",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-29",
+              "title": "D29: Player Interaction",
+              "videos": [
+                {
+                  "id": "video-2-2-4",
+                  "title": "Player Touch and Click Events",
+                  "youtubeId": "placeholder29",
+                  "duration": "32:00",
+                  "xpReward": 65
+                }
+              ],
+              "practiceTask": "Create interactive objects",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-30",
+              "title": "D30: Week 6 Project",
+              "videos": [
+                {
+                  "id": "video-2-2-5",
+                  "title": "Interactive Game Element",
+                  "youtubeId": "placeholder30",
+                  "duration": "42:00",
+                  "xpReward": 85
+                }
+              ],
+              "practiceTask": "Build interactive game feature",
+              "estimatedTime": "4h"
+            }
+          ]
+        },
+        {
+          "id": "week-7",
+          "title": "W7: Game Systems Development",
+          "description": "Build core game mechanics and systems",
+          "days": [
+            {
+              "id": "day-31",
+              "title": "D31: Player Data Storage",
+              "videos": [
+                {
+                  "id": "video-2-3-1",
+                  "title": "DataStore Fundamentals",
+                  "youtubeId": "placeholder31",
+                  "duration": "35:00",
+                  "xpReward": 70
+                }
+              ],
+              "practiceTask": "Implement save system",
+              "estimatedTime": "3.5h"
+            },
+            {
+              "id": "day-32",
+              "title": "D32: GUI Programming",
+              "videos": [
+                {
+                  "id": "video-2-3-2",
+                  "title": "Creating User Interfaces",
+                  "youtubeId": "placeholder32",
+                  "duration": "30:00",
+                  "xpReward": 60
+                }
+              ],
+              "practiceTask": "Build game UI",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-33",
+              "title": "D33: Remote Events",
+              "videos": [
+                {
+                  "id": "video-2-3-3",
+                  "title": "Client-Server Communication",
+                  "youtubeId": "placeholder33",
+                  "duration": "32:00",
+                  "xpReward": 65
+                }
+              ],
+              "practiceTask": "Setup remote communication",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-34",
+              "title": "D34: Game Logic Systems",
+              "videos": [
+                {
+                  "id": "video-2-3-4",
+                  "title": "Building Game Rules",
+                  "youtubeId": "placeholder34", 
+                  "duration": "38:00",
+                  "xpReward": 75
+                }
+              ],
+              "practiceTask": "Create game mechanics",
+              "estimatedTime": "4h"
+            },
+            {
+              "id": "day-35",
+              "title": "D35: Week 7 Project",
+              "videos": [
+                {
+                  "id": "video-2-3-5",
+                  "title": "Complete Game System",
+                  "youtubeId": "placeholder35",
+                  "duration": "45:00",
+                  "xpReward": 90
+                }
+              ],
+              "practiceTask": "Build complete game system",
+              "estimatedTime": "5h"
+            }
+          ]
+        },
+        {
+          "id": "week-8",
+          "title": "W8: Advanced Scripting Concepts",
+          "description": "Master advanced Lua and Roblox programming patterns",
+          "days": [
+            {
+              "id": "day-36", 
+              "title": "D36: Object-Oriented Programming",
+              "videos": [
+                {
+                  "id": "video-2-4-1",
+                  "title": "OOP in Lua and Roblox",
+                  "youtubeId": "placeholder36",
+                  "duration": "35:00",
+                  "xpReward": 70
+                }
+              ],
+              "practiceTask": "Create object classes",
+              "estimatedTime": "3.5h"
+            },
+            {
+              "id": "day-37",
+              "title": "D37: Module Scripts",
+              "videos": [
+                {
+                  "id": "video-2-4-2",
+                  "title": "Organizing Code with Modules",
+                  "youtubeId": "placeholder37",
+                  "duration": "28:00",
+                  "xpReward": 55
+                }
+              ],
+              "practiceTask": "Structure code with modules",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-38",
+              "title": "D38: Error Handling",
+              "videos": [
+                {
+                  "id": "video-2-4-3",
+                  "title": "Debugging and Error Management",
+                  "youtubeId": "placeholder38",
+                  "duration": "30:00",
+                  "xpReward": 60
+                }
+              ],
+              "practiceTask": "Implement error handling",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-39",
+              "title": "D39: Performance Optimization",
+              "videos": [
+                {
+                  "id": "video-2-4-4",
+                  "title": "Optimizing Roblox Scripts",
+                  "youtubeId": "placeholder39",
+                  "duration": "32:00",
+                  "xpReward": 65
+                }
+              ],
+              "practiceTask": "Optimize game performance",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-40",
+              "title": "D40: Module 2 Final Project",
+              "videos": [
+                {
+                  "id": "video-2-4-5",
+                  "title": "Advanced Scripting Capstone",
+                  "youtubeId": "placeholder40", 
+                  "duration": "55:00",
+                  "xpReward": 110
+                }
+              ],
+              "practiceTask": "Complete advanced scripting project",
+              "estimatedTime": "6h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "module-3",
+      "title": "M3: Game Design & Mechanics",
+      "description": "Design engaging gameplay systems and user experiences",
+      "totalHours": 55,
+      "totalXP": 825,
+      "weeks": [
+        {
+          "id": "week-9",
+          "title": "W9: Game Design Fundamentals",
+          "description": "Learn core game design principles and theory",
+          "days": [
+            {
+              "id": "day-41",
+              "title": "D41: Game Design Theory",
+              "videos": [
+                {
+                  "id": "video-3-1-1",
+                  "title": "Principles of Good Game Design",
+                  "youtubeId": "placeholder41",
+                  "duration": "28:00",
+                  "xpReward": 55
+                }
+              ],
+              "practiceTask": "Analyze popular games",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-42",
+              "title": "D42: Player Psychology",
+              "videos": [
+                {
+                  "id": "video-3-1-2",
+                  "title": "Understanding Player Motivation", 
+                  "youtubeId": "placeholder42",
+                  "duration": "30:00",
+                  "xpReward": 60
+                }
+              ],
+              "practiceTask": "Design for player engagement",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-43",
+              "title": "D43: Core Game Loops",
+              "videos": [
+                {
+                  "id": "video-3-1-3",
+                  "title": "Creating Addictive Game Loops",
+                  "youtubeId": "placeholder43",
+                  "duration": "26:00",
+                  "xpReward": 52
+                }
+              ],
+              "practiceTask": "Design core game loop",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-44",
+              "title": "D44: Progression Systems",
+              "videos": [
+                {
+                  "id": "video-3-1-4",
+                  "title": "Player Progression and Rewards",
+                  "youtubeId": "placeholder44",
+                  "duration": "32:00",
+                  "xpReward": 65
+                }
+              ],
+              "practiceTask": "Create progression system",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-45",
+              "title": "D45: Week 9 Project",
+              "videos": [
+                {
+                  "id": "video-3-1-5",
+                  "title": "Game Design Document",
+                  "youtubeId": "placeholder45",
+                  "duration": "40:00",
+                  "xpReward": 80
+                }
+              ],
+              "practiceTask": "Create game design document",
+              "estimatedTime": "4h"
+            }
+          ]
+        },
+        {
+          "id": "week-10",
+          "title": "W10: Combat and Action Systems",
+          "description": "Build engaging combat and action mechanics",
+          "days": [
+            {
+              "id": "day-46",
+              "title": "D46: Basic Combat System",
+              "videos": [
+                {
+                  "id": "video-3-2-1",
+                  "title": "Creating Combat Mechanics",
+                  "youtubeId": "placeholder46",
+                  "duration": "35:00",
+                  "xpReward": 70
+                }
+              ],
+              "practiceTask": "Build basic combat",
+              "estimatedTime": "3.5h"
+            },
+            {
+              "id": "day-47",
+              "title": "D47: Weapon Systems",
+              "videos": [
+                {
+                  "id": "video-3-2-2",
+                  "title": "Designing Weapon Mechanics",
+                  "youtubeId": "placeholder47",
+                  "duration": "30:00",
+                  "xpReward": 60
+                }
+              ],
+              "practiceTask": "Create weapon system", 
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-48",
+              "title": "D48: Health and Damage",
+              "videos": [
+                {
+                  "id": "video-3-2-3",
+                  "title": "Health Systems and Damage",
+                  "youtubeId": "placeholder48",
+                  "duration": "28:00",
+                  "xpReward": 55
+                }
+              ],
+              "practiceTask": "Implement health system",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-49",
+              "title": "D49: Special Effects",
+              "videos": [
+                {
+                  "id": "video-3-2-4",
+                  "title": "Combat Visual Effects",
+                  "youtubeId": "placeholder49",
+                  "duration": "32:00",
+                  "xpReward": 65
+                }
+              ],
+              "practiceTask": "Add combat effects",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-50",
+              "title": "D50: Week 10 Project",
+              "videos": [
+                {
+                  "id": "video-3-2-5",
+                  "title": "Complete Combat System",
+                  "youtubeId": "placeholder50",
+                  "duration": "42:00",
+                  "xpReward": 85
+                }
+              ],
+              "practiceTask": "Build full combat system",
+              "estimatedTime": "4h"
+            }
+          ]
+        },
+        {
+          "id": "week-11",
+          "title": "W11: Economy and Trading Systems",
+          "description": "Create virtual economies and trading mechanics",
+          "days": [
+            {
+              "id": "day-51",
+              "title": "D51: Virtual Currency",
+              "videos": [
+                {
+                  "id": "video-3-3-1",
+                  "title": "Designing Game Economy",
+                  "youtubeId": "placeholder51",
+                  "duration": "30:00",
+                  "xpReward": 60
+                }
+              ],
+              "practiceTask": "Create currency system",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-52",
+              "title": "D52: Shop Systems",
+              "videos": [
+                {
+                  "id": "video-3-3-2",
+                  "title": "Building In-Game Shops",
+                  "youtubeId": "placeholder52",
+                  "duration": "32:00", 
+                  "xpReward": 65
+                }
+              ],
+              "practiceTask": "Build shop interface",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-53",
+              "title": "D53: Trading Mechanics",
+              "videos": [
+                {
+                  "id": "video-3-3-3",
+                  "title": "Player-to-Player Trading",
+                  "youtubeId": "placeholder53",
+                  "duration": "35:00",
+                  "xpReward": 70
+                }
+              ],
+              "practiceTask": "Implement trading system",
+              "estimatedTime": "3.5h"
+            },
+            {
+              "id": "day-54",
+              "title": "D54: Economy Balance",
+              "videos": [
+                {
+                  "id": "video-3-3-4",
+                  "title": "Balancing Game Economy",
+                  "youtubeId": "placeholder54",
+                  "duration": "28:00",
+                  "xpReward": 55
+                }
+              ],
+              "practiceTask": "Balance economy systems",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-55",
+              "title": "D55: Week 11 Project",
+              "videos": [
+                {
+                  "id": "video-3-3-5",
+                  "title": "Complete Economy System",
+                  "youtubeId": "placeholder55",
+                  "duration": "45:00",
+                  "xpReward": 90
+                }
+              ],
+              "practiceTask": "Build complete economy",
+              "estimatedTime": "5h"
+            }
+          ]
+        },
+        {
+          "id": "week-12",
+          "title": "W12: Multiplayer and Social Features",
+          "description": "Create engaging multiplayer experiences",
+          "days": [
+            {
+              "id": "day-56",
+              "title": "D56: Multiplayer Basics",
+              "videos": [
+                {
+                  "id": "video-3-4-1",
+                  "title": "Understanding Multiplayer Systems",
+                  "youtubeId": "placeholder56",
+                  "duration": "30:00",
+                  "xpReward": 60
+                }
+              ],
+              "practiceTask": "Plan multiplayer features",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-57",
+              "title": "D57: Team Systems",
+              "videos": [
+                {
+                  "id": "video-3-4-2",
+                  "title": "Creating Team Mechanics",
+                  "youtubeId": "placeholder57",
+                  "duration": "28:00",
+                  "xpReward": 55
+                }
+              ],
+              "practiceTask": "Build team system",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-58",
+              "title": "D58: Chat and Communication",
+              "videos": [
+                {
+                  "id": "video-3-4-3",
+                  "title": "Player Communication Systems", 
+                  "youtubeId": "placeholder58",
+                  "duration": "26:00",
+                  "xpReward": 52
+                }
+              ],
+              "practiceTask": "Implement chat features",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-59",
+              "title": "D59: Leaderboards and Competitions",
+              "videos": [
+                {
+                  "id": "video-3-4-4",
+                  "title": "Competitive Game Features",
+                  "youtubeId": "placeholder59",
+                  "duration": "32:00",
+                  "xpReward": 65
+                }
+              ],
+              "practiceTask": "Create leaderboard system",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-60",
+              "title": "D60: Module 3 Final Project",
+              "videos": [
+                {
+                  "id": "video-3-4-5",
+                  "title": "Game Design Capstone",
+                  "youtubeId": "placeholder60",
+                  "duration": "50:00",
+                  "xpReward": 100
+                }
+              ],
+              "practiceTask": "Complete game design project",
+              "estimatedTime": "5h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "module-4",
+      "title": "M4: UI/UX Design & User Experience",
+      "description": "Create beautiful and functional user interfaces",
+      "totalHours": 45,
+      "totalXP": 675,
+      "weeks": [
+        {
+          "id": "week-13",
+          "title": "W13: UI Design Fundamentals",
+          "description": "Learn the basics of user interface design",
+          "days": [
+            {
+              "id": "day-61",
+              "title": "D61: Design Principles",
+              "videos": [
+                {
+                  "id": "video-4-1-1",
+                  "title": "UI Design Fundamentals",
+                  "youtubeId": "placeholder61",
+                  "duration": "25:00",
+                  "xpReward": 50
+                }
+              ],
+              "practiceTask": "Apply design principles",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-62",
+              "title": "D62: Color Theory",
+              "videos": [
+                {
+                  "id": "video-4-1-2",
+                  "title": "Using Color in Game UI",
+                  "youtubeId": "placeholder62",
+                  "duration": "28:00",
+                  "xpReward": 55
+                }
+              ],
+              "practiceTask": "Create color schemes",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-63",
+              "title": "D63: Typography",
+              "videos": [
+                {
+                  "id": "video-4-1-3", 
+                  "title": "Typography in Game Design",
+                  "youtubeId": "placeholder63",
+                  "duration": "22:00",
+                  "xpReward": 45
+                }
+              ],
+              "practiceTask": "Design text systems",
+              "estimatedTime": "2h"
+            },
+            {
+              "id": "day-64",
+              "title": "D64: Layout and Composition",
+              "videos": [
+                {
+                  "id": "video-4-1-4",
+                  "title": "UI Layout Techniques",
+                  "youtubeId": "placeholder64",
+                  "duration": "30:00",
+                  "xpReward": 60
+                }
+              ],
+              "practiceTask": "Create interface layouts",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-65",
+              "title": "D65: Week 13 Project",
+              "videos": [
+                {
+                  "id": "video-4-1-5",
+                  "title": "UI Design Challenge",
+                  "youtubeId": "placeholder65",
+                  "duration": "35:00",
+                  "xpReward": 70
+                }
+              ],
+              "practiceTask": "Complete UI design project",
+              "estimatedTime": "3.5h"
+            }
+          ]
+        },
+        {
+          "id": "week-14",
+          "title": "W14: Interactive Elements",
+          "description": "Build engaging interactive UI components",
+          "days": [
+            {
+              "id": "day-66",
+              "title": "D66: Buttons and Controls",
+              "videos": [
+                {
+                  "id": "video-4-2-1",
+                  "title": "Creating Interactive Buttons",
+                  "youtubeId": "placeholder66",
+                  "duration": "26:00",
+                  "xpReward": 52
+                }
+              ],
+              "practiceTask": "Build button systems",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-67",
+              "title": "D67: Menus and Navigation",
+              "videos": [
+                {
+                  "id": "video-4-2-2",
+                  "title": "Menu System Design",
+                  "youtubeId": "placeholder67",
+                  "duration": "30:00",
+                  "xpReward": 60
+                }
+              ],
+              "practiceTask": "Create navigation system",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-68",
+              "title": "D68: Forms and Input",
+              "videos": [
+                {
+                  "id": "video-4-2-3",
+                  "title": "User Input Interfaces",
+                  "youtubeId": "placeholder68",
+                  "duration": "28:00",
+                  "xpReward": 55
+                }
+              ],
+              "practiceTask": "Build input forms",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-69",
+              "title": "D69: Feedback Systems",
+              "videos": [
+                {
+                  "id": "video-4-2-4",
+                  "title": "Visual Feedback and Animations",
+                  "youtubeId": "placeholder69",
+                  "duration": "32:00",
+                  "xpReward": 65
+                }
+              ],
+              "practiceTask": "Add UI animations",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-70",
+              "title": "D70: Week 14 Project",
+              "videos": [
+                {
+                  "id": "video-4-2-5",
+                  "title": "Interactive UI System",
+                  "youtubeId": "placeholder70",
+                  "duration": "38:00",
+                  "xpReward": 75
+                }
+              ],
+              "practiceTask": "Build interactive interface",
+              "estimatedTime": "4h"
+            }
+          ]
+        },
+        {
+          "id": "week-15",
+          "title": "W15: Mobile and Responsive Design",
+          "description": "Design for multiple screen sizes and devices",
+          "days": [
+            {
+              "id": "day-71",
+              "title": "D71: Mobile UI Principles",
+              "videos": [
+                {
+                  "id": "video-4-3-1",
+                  "title": "Mobile-First UI Design",
+                  "youtubeId": "placeholder71",
+                  "duration": "24:00",
+                  "xpReward": 48
+                }
+              ],
+              "practiceTask": "Design mobile interface",
+              "estimatedTime": "2h"
+            },
+            {
+              "id": "day-72",
+              "title": "D72: Responsive Layouts",
+              "videos": [
+                {
+                  "id": "video-4-3-2",
+                  "title": "Adaptive UI Systems",
+                  "youtubeId": "placeholder72",
+                  "duration": "30:00",
+                  "xpReward": 60
+                }
+              ],
+              "practiceTask": "Create responsive design",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-73",
+              "title": "D73: Touch Interactions",
+              "videos": [
+                {
+                  "id": "video-4-3-3",
+                  "title": "Touch and Gesture Controls",
+                  "youtubeId": "placeholder73",
+                  "duration": "26:00",
+                  "xpReward": 52
+                }
+              ],
+              "practiceTask": "Implement touch controls",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-74",
+              "title": "D74: Cross-Platform Testing",
+              "videos": [
+                {
+                  "id": "video-4-3-4",
+                  "title": "Testing on Multiple Devices",
+                  "youtubeId": "placeholder74",
+                  "duration": "28:00",
+                  "xpReward": 55
+                }
+              ],
+              "practiceTask": "Test across platforms",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-75",
+              "title": "D75: Week 15 Project",
+              "videos": [
+                {
+                  "id": "video-4-3-5",
+                  "title": "Mobile UI Challenge",
+                  "youtubeId": "placeholder75",
+                  "duration": "40:00",
+                  "xpReward": 80
+                }
+              ],
+              "practiceTask": "Complete mobile UI project",
+              "estimatedTime": "4h"
+            }
+          ]
+        },
+        {
+          "id": "week-16",
+          "title": "W16: Advanced UI Techniques",
+          "description": "Master advanced interface design and animation",
+          "days": [
+            {
+              "id": "day-76",
+              "title": "D76: UI Animation Systems",
+              "videos": [
+                {
+                  "id": "video-4-4-1",
+                  "title": "Advanced UI Animations",
+                  "youtubeId": "placeholder76",
+                  "duration": "32:00",
+                  "xpReward": 65
+                }
+              ],
+              "practiceTask": "Create animation system",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-77",
+              "title": "D77: Particle UI Effects",
+              "videos": [
+                {
+                  "id": "video-4-4-2",
+                  "title": "Particle Effects in UI",
+                  "youtubeId": "placeholder77",
+                  "duration": "28:00",
+                  "xpReward": 55
+                }
+              ],
+              "practiceTask": "Add particle effects",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-78",
+              "title": "D78: 3D UI Elements",
+              "videos": [
+                {
+                  "id": "video-4-4-3",
+                  "title": "3D Interface Components",
+                  "youtubeId": "placeholder78",
+                  "duration": "35:00",
+                  "xpReward": 70
+                }
+              ],
+              "practiceTask": "Create 3D UI elements",
+              "estimatedTime": "3.5h"
+            },
+            {
+              "id": "day-79",
+              "title": "D79: Accessibility Design",
+              "videos": [
+                {
+                  "id": "video-4-4-4",
+                  "title": "Accessible Game Interfaces",
+                  "youtubeId": "placeholder79",
+                  "duration": "26:00",
+                  "xpReward": 52
+                }
+              ],
+              "practiceTask": "Design accessible UI",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-80",
+              "title": "D80: Module 4 Final Project",
+              "videos": [
+                {
+                  "id": "video-4-4-5",
+                  "title": "UI/UX Design Capstone",
+                  "youtubeId": "placeholder80",
+                  "duration": "48:00",
+                  "xpReward": 95
+                }
+              ],
+              "practiceTask": "Complete UI/UX portfolio project",
+              "estimatedTime": "5h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "module-5",
+      "title": "M5: Advanced Game Development",
+      "description": "Master complex systems and advanced techniques",
+      "totalHours": 65,
+      "totalXP": 975,
+      "weeks": [
+        {
+          "id": "week-17",
+          "title": "W17: Performance Optimization",
+          "description": "Optimize games for maximum performance",
+          "days": [
+            {
+              "id": "day-81",
+              "title": "D81: Performance Profiling",
+              "videos": [
+                {
+                  "id": "video-5-1-1",
+                  "title": "Analyzing Game Performance",
+                  "youtubeId": "placeholder81",
+                  "duration": "30:00",
+                  "xpReward": 60
+                }
+              ],
+              "practiceTask": "Profile game performance",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-82",
+              "title": "D82: Script Optimization",
+              "videos": [
+                {
+                  "id": "video-5-1-2",
+                  "title": "Optimizing Lua Scripts",
+                  "youtubeId": "placeholder82",
+                  "duration": "32:00",
+                  "xpReward": 65
+                }
+              ],
+              "practiceTask": "Optimize script performance",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-83",
+              "title": "D83: Memory Management",
+              "videos": [
+                {
+                  "id": "video-5-1-3",
+                  "title": "Managing Game Memory",
+                  "youtubeId": "placeholder83",
+                  "duration": "28:00",
+                  "xpReward": 55
+                }
+              ],
+              "practiceTask": "Implement memory optimization",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-84",
+              "title": "D84: Asset Optimization",
+              "videos": [
+                {
+                  "id": "video-5-1-4",
+                  "title": "Optimizing Game Assets",
+                  "youtubeId": "placeholder84",
+                  "duration": "35:00",
+                  "xpReward": 70
+                }
+              ],
+              "practiceTask": "Optimize game assets",
+              "estimatedTime": "3.5h"
+            },
+            {
+              "id": "day-85",
+              "title": "D85: Week 17 Project",
+              "videos": [
+                {
+                  "id": "video-5-1-5",
+                  "title": "Performance Optimization Challenge",
+                  "youtubeId": "placeholder85",
+                  "duration": "42:00",
+                  "xpReward": 85
+                }
+              ],
+              "practiceTask": "Complete optimization project",
+              "estimatedTime": "4h"
+            }
+          ]
+        },
+        {
+          "id": "week-18",
+          "title": "W18: Networking and Data Management",
+          "description": "Build robust networked systems",
+          "days": [
+            {
+              "id": "day-86",
+              "title": "D86: Advanced DataStores",
+              "videos": [
+                {
+                  "id": "video-5-2-1",
+                  "title": "Complex Data Management",
+                  "youtubeId": "placeholder86",
+                  "duration": "35:00",
+                  "xpReward": 70
+                }
+              ],
+              "practiceTask": "Build advanced data system",
+              "estimatedTime": "3.5h"
+            },
+            {
+              "id": "day-87",
+              "title": "D87: HTTP Services",
+              "videos": [
+                {
+                  "id": "video-5-2-2",
+                  "title": "External API Integration",
+                  "youtubeId": "placeholder87",
+                  "duration": "30:00",
+                  "xpReward": 60
+                }
+              ],
+              "practiceTask": "Integrate external APIs",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-88",
+              "title": "D88: Messaging Services",
+              "videos": [
+                {
+                  "id": "video-5-2-3",
+                  "title": "Cross-Server Communication",
+                  "youtubeId": "placeholder88",
+                  "duration": "28:00",
+                  "xpReward": 55
+                }
+              ],
+              "practiceTask": "Build messaging system",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-89",
+              "title": "D89: Real-time Systems",
+              "videos": [
+                {
+                  "id": "video-5-2-4",
+                  "title": "Real-time Game Features",
+                  "youtubeId": "placeholder89",
+                  "duration": "32:00",
+                  "xpReward": 65
+                }
+              ],
+              "practiceTask": "Create real-time features",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-90",
+              "title": "D90: Week 18 Project",
+              "videos": [
+                {
+                  "id": "video-5-2-5",
+                  "title": "Networked Game System",
+                  "youtubeId": "placeholder90",
+                  "duration": "45:00",
+                  "xpReward": 90
+                }
+              ],
+              "practiceTask": "Build networked game feature",
+              "estimatedTime": "5h"
+            }
+          ]
+        },
+        {
+          "id": "week-19",
+          "title": "W19: AI and Procedural Generation",
+          "description": "Create intelligent and dynamic content",
+          "days": [
+            {
+              "id": "day-91",
+              "title": "D91: Basic AI Systems",
+              "videos": [
+                {
+                  "id": "video-5-3-1",
+                  "title": "AI Fundamentals in Games",
+                  "youtubeId": "placeholder91",
+                  "duration": "32:00",
+                  "xpReward": 65
+                }
+              ],
+              "practiceTask": "Create AI behaviors",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-92",
+              "title": "D92: Pathfinding",
+              "videos": [
+                {
+                  "id": "video-5-3-2",
+                  "title": "AI Navigation Systems",
+                  "youtubeId": "placeholder92",
+                  "duration": "30:00",
+                  "xpReward": 60
+                }
+              ],
+              "practiceTask": "Implement pathfinding",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-93",
+              "title": "D93: Procedural Generation",
+              "videos": [
+                {
+                  "id": "video-5-3-3",
+                  "title": "Generating Dynamic Content",
+                  "youtubeId": "placeholder93",
+                  "duration": "35:00",
+                  "xpReward": 70
+                }
+              ],
+              "practiceTask": "Build procedural systems",
+              "estimatedTime": "3.5h"
+            },
+            {
+              "id": "day-94",
+              "title": "D94: Behavior Trees",
+              "videos": [
+                {
+                  "id": "video-5-3-4",
+                  "title": "Advanced AI Behavior Systems",
+                  "youtubeId": "placeholder94",
+                  "duration": "38:00",
+                  "xpReward": 75
+                }
+              ],
+              "practiceTask": "Create behavior trees",
+              "estimatedTime": "4h"
+            },
+            {
+              "id": "day-95",
+              "title": "D95: Week 19 Project",
+              "videos": [
+                {
+                  "id": "video-5-3-5",
+                  "title": "AI and Procedural Generation Challenge",
+                  "youtubeId": "placeholder95",
+                  "duration": "48:00",
+                  "xpReward": 95
+                }
+              ],
+              "practiceTask": "Complete AI project",
+              "estimatedTime": "5h"
+            }
+          ]
+        },
+        {
+          "id": "week-20",
+          "title": "W20: Security and Anti-Cheat",
+          "description": "Protect your games from exploits and cheating",
+          "days": [
+            {
+              "id": "day-96",
+              "title": "D96: Security Fundamentals",
+              "videos": [
+                {
+                  "id": "video-5-4-1",
+                  "title": "Game Security Basics",
+                  "youtubeId": "placeholder96",
+                  "duration": "28:00",
+                  "xpReward": 55
+                }
+              ],
+              "practiceTask": "Analyze security vulnerabilities",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-97",
+              "title": "D97: Remote Event Security",
+              "videos": [
+                {
+                  "id": "video-5-4-2",
+                  "title": "Securing Client-Server Communication",
+                  "youtubeId": "placeholder97",
+                  "duration": "30:00",
+                  "xpReward": 60
+                }
+              ],
+              "practiceTask": "Secure remote events",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-98",
+              "title": "D98: Input Validation",
+              "videos": [
+                {
+                  "id": "video-5-4-3",
+                  "title": "Validating User Input",
+                  "youtubeId": "placeholder98",
+                  "duration": "26:00",
+                  "xpReward": 52
+                }
+              ],
+              "practiceTask": "Implement input validation",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-99",
+              "title": "D99: Anti-Cheat Systems",
+              "videos": [
+                {
+                  "id": "video-5-4-4",
+                  "title": "Building Anti-Cheat Protection",
+                  "youtubeId": "placeholder99",
+                  "duration": "32:00",
+                  "xpReward": 65
+                }
+              ],
+              "practiceTask": "Build anti-cheat system",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-100",
+              "title": "D100: Module 5 Final Project",
+              "videos": [
+                {
+                  "id": "video-5-4-5",
+                  "title": "Advanced Development Capstone",
+                  "youtubeId": "placeholder100",
+                  "duration": "55:00",
+                  "xpReward": 110
+                }
+              ],
+              "practiceTask": "Complete advanced development project",
+              "estimatedTime": "6h"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "module-6",
+      "title": "M6: Publishing & Monetization",
+      "description": "Launch and monetize your games successfully",
+      "totalHours": 40,
+      "totalXP": 600,
+      "weeks": [
+        {
+          "id": "week-21",
+          "title": "W21: Game Publishing",
+          "description": "Prepare and publish your games",
+          "days": [
+            {
+              "id": "day-101",
+              "title": "D101: Publishing Preparation",
+              "videos": [
+                {
+                  "id": "video-6-1-1",
+                  "title": "Preparing Your Game for Launch",
+                  "youtubeId": "placeholder101",
+                  "duration": "25:00",
+                  "xpReward": 50
+                }
+              ],
+              "practiceTask": "Prepare game for publishing",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-102",
+              "title": "D102: Game Icons and Thumbnails",
+              "videos": [
+                {
+                  "id": "video-6-1-2",
+                  "title": "Creating Compelling Game Assets",
+                  "youtubeId": "placeholder102",
+                  "duration": "22:00",
+                  "xpReward": 45
+                }
+              ],
+              "practiceTask": "Create game marketing assets",
+              "estimatedTime": "2h"
+            },
+            {
+              "id": "day-103",
+              "title": "D103: Game Descriptions",
+              "videos": [
+                {
+                  "id": "video-6-1-3",
+                  "title": "Writing Effective Game Descriptions",
+                  "youtubeId": "placeholder103",
+                  "duration": "20:00",
+                  "xpReward": 40
+                }
+              ],
+              "practiceTask": "Write game description",
+              "estimatedTime": "2h"
+            },
+            {
+              "id": "day-104",
+              "title": "D104: Publishing Process",
+              "videos": [
+                {
+                  "id": "video-6-1-4",
+                  "title": "How to Publish on Roblox",
+                  "youtubeId": "placeholder104",
+                  "duration": "28:00",
+                  "xpReward": 55
+                }
+              ],
+              "practiceTask": "Publish your first game",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-105",
+              "title": "D105: Week 21 Project",
+              "videos": [
+                {
+                  "id": "video-6-1-5",
+                  "title": "Game Launch Strategy",
+                  "youtubeId": "placeholder105",
+                  "duration": "30:00",
+                  "xpReward": 60
+                }
+              ],
+              "practiceTask": "Execute game launch",
+              "estimatedTime": "3h"
+            }
+          ]
+        },
+        {
+          "id": "week-22",
+          "title": "W22: Monetization Strategies",
+          "description": "Generate revenue from your games",
+          "days": [
+            {
+              "id": "day-106",
+              "title": "D106: Developer Products",
+              "videos": [
+                {
+                  "id": "video-6-2-1",
+                  "title": "Creating Developer Products",
+                  "youtubeId": "placeholder106",
+                  "duration": "26:00",
+                  "xpReward": 52
+                }
+              ],
+              "practiceTask": "Implement developer products",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-107",
+              "title": "D107: Game Passes",
+              "videos": [
+                {
+                  "id": "video-6-2-2",
+                  "title": "Game Pass Monetization",
+                  "youtubeId": "placeholder107",
+                  "duration": "28:00",
+                  "xpReward": 55
+                }
+              ],
+              "practiceTask": "Create game passes",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-108",
+              "title": "D108: Premium Benefits",
+              "videos": [
+                {
+                  "id": "video-6-2-3",
+                  "title": "Roblox Premium Integration",
+                  "youtubeId": "placeholder108",
+                  "duration": "24:00",
+                  "xpReward": 48
+                }
+              ],
+              "practiceTask": "Add premium benefits",
+              "estimatedTime": "2h"
+            },
+            {
+              "id": "day-109",
+              "title": "D109: Monetization Ethics",
+              "videos": [
+                {
+                  "id": "video-6-2-4",
+                  "title": "Ethical Monetization Practices",
+                  "youtubeId": "placeholder109",
+                  "duration": "22:00",
+                  "xpReward": 45
+                }
+              ],
+              "practiceTask": "Review monetization strategy",
+              "estimatedTime": "2h"
+            },
+            {
+              "id": "day-110",
+              "title": "D110: Week 22 Project",
+              "videos": [
+                {
+                  "id": "video-6-2-5",
+                  "title": "Complete Monetization System",
+                  "youtubeId": "placeholder110",
+                  "duration": "35:00",
+                  "xpReward": 70
+                }
+              ],
+              "practiceTask": "Implement full monetization",
+              "estimatedTime": "3.5h"
+            }
+          ]
+        },
+        {
+          "id": "week-23",
+          "title": "W23: Community and Marketing",
+          "description": "Build and grow your player community",
+          "days": [
+            {
+              "id": "day-111",
+              "title": "D111: Community Building",
+              "videos": [
+                {
+                  "id": "video-6-3-1",
+                  "title": "Building a Game Community",
+                  "youtubeId": "placeholder111",
+                  "duration": "26:00",
+                  "xpReward": 52
+                }
+              ],
+              "practiceTask": "Plan community strategy",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-112",
+              "title": "D112: Social Media Marketing",
+              "videos": [
+                {
+                  "id": "video-6-3-2",
+                  "title": "Marketing Your Game on Social Media",
+                  "youtubeId": "placeholder112",
+                  "duration": "24:00",
+                  "xpReward": 48
+                }
+              ],
+              "practiceTask": "Create marketing content",
+              "estimatedTime": "2h"
+            },
+            {
+              "id": "day-113",
+              "title": "D113: Influencer Collaboration",
+              "videos": [
+                {
+                  "id": "video-6-3-3",
+                  "title": "Working with Content Creators",
+                  "youtubeId": "placeholder113",
+                  "duration": "22:00",
+                  "xpReward": 45
+                }
+              ],
+              "practiceTask": "Reach out to influencers",
+              "estimatedTime": "2h"
+            },
+            {
+              "id": "day-114",
+              "title": "D114: Events and Updates",
+              "videos": [
+                {
+                  "id": "video-6-3-4",
+                  "title": "Keeping Players Engaged",
+                  "youtubeId": "placeholder114",
+                  "duration": "28:00",
+                  "xpReward": 55
+                }
+              ],
+              "practiceTask": "Plan game events",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-115",
+              "title": "D115: Week 23 Project",
+              "videos": [
+                {
+                  "id": "video-6-3-5",
+                  "title": "Community Growth Strategy",
+                  "youtubeId": "placeholder115",
+                  "duration": "30:00",
+                  "xpReward": 60
+                }
+              ],
+              "practiceTask": "Execute community plan",
+              "estimatedTime": "3h"
+            }
+          ]
+        },
+        {
+          "id": "week-24",
+          "title": "W24: Analytics and Growth",
+          "description": "Measure success and plan for the future",
+          "days": [
+            {
+              "id": "day-116",
+              "title": "D116: Game Analytics",
+              "videos": [
+                {
+                  "id": "video-6-4-1",
+                  "title": "Understanding Player Data",
+                  "youtubeId": "placeholder116",
+                  "duration": "28:00",
+                  "xpReward": 55
+                }
+              ],
+              "practiceTask": "Set up analytics tracking",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-117",
+              "title": "D117: Performance Metrics",
+              "videos": [
+                {
+                  "id": "video-6-4-2",
+                  "title": "Key Performance Indicators",
+                  "youtubeId": "placeholder117",
+                  "duration": "26:00",
+                  "xpReward": 52
+                }
+              ],
+              "practiceTask": "Analyze game metrics",
+              "estimatedTime": "2.5h"
+            },
+            {
+              "id": "day-118",
+              "title": "D118: Long-term Growth",
+              "videos": [
+                {
+                  "id": "video-6-4-3",
+                  "title": "Scaling Your Game Business",
+                  "youtubeId": "placeholder118",
+                  "duration": "30:00",
+                  "xpReward": 60
+                }
+              ],
+              "practiceTask": "Create growth plan",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-119",
+              "title": "D119: Career Development",
+              "videos": [
+                {
+                  "id": "video-6-4-4",
+                  "title": "Building a Game Development Career",
+                  "youtubeId": "placeholder119",
+                  "duration": "32:00",
+                  "xpReward": 65
+                }
+              ],
+              "practiceTask": "Plan your career path",
+              "estimatedTime": "3h"
+            },
+            {
+              "id": "day-120",
+              "title": "D120: Final Capstone Project",
+              "videos": [
+                {
+                  "id": "video-6-4-5",
+                  "title": "6-Month Journey Complete",
+                  "youtubeId": "placeholder120",
+                  "duration": "60:00",
+                  "xpReward": 120
+                }
+              ],
+              "practiceTask": "Complete final portfolio project",
+              "estimatedTime": "8h"
             }
           ]
         }

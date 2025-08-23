@@ -1,15 +1,20 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import { Sidebar } from '@/components/layout/Sidebar/Sidebar'
 import { Header } from '@/components/layout/Header/Header'
 import { ResizableSidebar } from '@/components/layout/ResizableSidebar'
 import { cn } from '@/lib/utils/cn'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname()
   const [isMobile, setIsMobile] = useState(false)
   const [isTablet, setIsTablet] = useState(false)
   const [viewportHeight, setViewportHeight] = useState('100vh')
+  
+  // Check if we're on a learning page
+  const isLearningPage = pathname?.includes('/learning')
 
   useEffect(() => {
     // Handle viewport resize
@@ -47,7 +52,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <Sidebar />
         <div className="flex flex-col flex-1 w-full">
           <Header />
-          <main className="flex-1 overflow-auto px-4 py-4">
+          <main className={cn(
+            "flex-1 overflow-auto",
+            !isLearningPage && "px-4 py-4"
+          )}>
             <div className="max-w-full mx-auto">
               {children}
             </div>
@@ -69,8 +77,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
         <div className="flex flex-col flex-1 min-w-0 transition-all duration-300 ease-in-out">
           <Header />
-          <main className="flex-1 overflow-auto px-4 xl:px-6 py-4 xl:py-6">
-            <div className="max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto">
+          <main className={cn(
+            "flex-1 overflow-auto",
+            !isLearningPage && "px-4 xl:px-6 py-4 xl:py-6"
+          )}>
+            <div className={cn(
+              !isLearningPage && "max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto"
+            )}>
               {children}
             </div>
           </main>
@@ -92,8 +105,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <Header />
             <main className="flex-1 overflow-hidden">
               <div className={cn(
-                "h-full px-6 xl:px-8 py-4 xl:py-6 overflow-y-auto transition-all duration-300 ease-in-out",
-                "max-w-6xl xl:max-w-7xl 2xl:max-w-[1920px] mx-auto"
+                "h-full overflow-y-auto transition-all duration-300 ease-in-out",
+                !isLearningPage && "px-6 xl:px-8 py-4 xl:py-6",
+                !isLearningPage && "max-w-6xl xl:max-w-7xl 2xl:max-w-[1920px] mx-auto"
               )}>
                 {children}
               </div>

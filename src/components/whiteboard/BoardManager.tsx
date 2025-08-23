@@ -12,7 +12,7 @@ interface BoardManagerProps {
   className?: string
 }
 
-export default function BoardManager({ onBoardSelect, className = '' }: BoardManagerProps) {
+export function BoardManager({ onBoardSelect, className = '' }: BoardManagerProps) {
   const { 
     boards, 
     activeBoard, 

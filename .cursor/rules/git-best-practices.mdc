@@ -1,0 +1,116 @@
+---
+description: Git workflow and commit best practices for Blox Buddy development
+alwaysApply: false
+---
+# Git Best Practices for Blox Buddy
+
+## Branch Strategy
+
+### Main Branches
+- **`main`**: Production-ready code only
+- **`develop`**: Integration branch for features
+- **`rebuild-version-001`**: Current active development branch
+
+### Feature Branches
+- **Naming Convention**: `feature/descriptive-name`
+  - `feature/blox-wizard-ui`
+  - `feature/video-transcript-system`
+  - `feature/premium-subscription`
+- **Hotfix Branches**: `hotfix/issue-description`
+- **Release Branches**: `release/v1.0.0`
+
+## Commit Message Standards
+
+### Format
+```markdown:.cursor/rules/git-best-practices.mdc
+<code_block_to_apply_changes_from>
+```
+<type>(scope): <description>
+
+[optional body]
+
+[optional footer]
+```
+
+### Types
+- **feat**: New feature implementation
+- **fix**: Bug fixes
+- **docs**: Documentation updates
+- **style**: Code formatting, no logic changes
+- **refactor**: Code restructuring without feature changes
+- **test**: Adding or updating tests
+- **chore**: Build process, dependencies, tooling
+- **perf**: Performance improvements
+- **ui**: UI/UX improvements and styling
+- **db**: Database schema or migration changes
+
+### Examples
+```bash
+# Good commit messages
+feat(wizard): add video reference cards with timestamps
+fix(auth): resolve Discord OAuth redirect issue
+ui(dashboard): implement glass morphism effects
+docs(api): update Blox Wizard implementation guide
+chore(deps): update OpenAI SDK to v4.0.0
+
+# Bad commit messages
+fix bug
+update files
+working on chat
+```
+
+## Stage-Based Development Workflow
+
+### Current Project Stages
+Based on [todo.md](mdc:todo.md), follow this progression:
+
+1. **Stage 1-2**: ✅ Completed (Foundation & Styling)
+2. **Stage 3**: Learning Path Enhancement
+3. **Stage 4**: Teams & Community Features  
+4. **Stage 5**: Whiteboard Integration
+5. **Stage 6**: Progress & XP System
+6. **Stage 7**: ✅ Completed (Discord Integration)
+7. **Stage 8**: AI Assistant (Blox Wizard) - **Current Focus**
+
+### Commit Strategy by Stage
+```bash
+# Stage commits should reference the stage
+feat(stage-8): implement transcript extraction service
+ui(stage-8): add premium upgrade modal
+fix(stage-5): resolve TLDraw integration issue
+```
+
+## File Organization Rules
+
+### Never Commit These Files
+- Environment variables (`.env*.local`)
+- API keys or secrets
+- Large media files in `/snips/` (already ignored)
+- Node modules or build artifacts
+- Personal configuration files
+
+### Always Include
+- Documentation updates for new features
+- Type definitions for new components
+- Migration files for database changes
+- Test files for new functionality
+
+## Blox Buddy Specific Practices
+
+### Component Development
+```bash
+# When adding new components
+feat(ui): add VideoReferenceCard component
+feat(wizard): implement PremiumGate with usage tracking
+ui(chat): enhance message display with video references
+```
+
+### Database Changes
+```bash
+# Database migrations and schema updates
+db
+```
+description:
+globs:
+alwaysApply: false
+---
