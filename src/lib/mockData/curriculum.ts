@@ -1,3 +1,7 @@
+// Mock data file no longer used - replaced with real curriculum.json
+// Commented out to avoid type errors
+
+/*
 import { Module, Week, Day, Video } from '@/types'
 
 export const mockVideos: Video[] = [
@@ -7,7 +11,7 @@ export const mockVideos: Video[] = [
     title: 'Welcome to Roblox Studio',
     description: 'Get started with Roblox Studio and learn the basics of the interface',
     youtubeId: 'dQw4w9WgXcQ',
-    duration: 720, // 12 minutes
+    duration: '12:00',
     order: 1,
     thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg',
     channel: 'TheDevKing',
@@ -19,7 +23,7 @@ export const mockVideos: Video[] = [
     title: 'Understanding Parts and Properties',
     description: 'Learn about parts, their properties, and how to manipulate them',
     youtubeId: 'dQw4w9WgXcQ',
-    duration: 960, // 16 minutes
+    duration: '16:00',
     order: 2,
     thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg',
     channel: 'TheDevKing',
@@ -87,7 +91,6 @@ export const mockModules: Module[] = [
     order: 1,
     weeks: mockWeeks,
     thumbnail: '/images/thumbnails/module-1.jpg',
-    estimatedHours: 20,
   },
   {
     id: 'module-2',
@@ -96,7 +99,6 @@ export const mockModules: Module[] = [
     order: 2,
     weeks: [],
     thumbnail: '/images/thumbnails/module-2.jpg',
-    estimatedHours: 30,
   },
   {
     id: 'module-3',
@@ -105,7 +107,6 @@ export const mockModules: Module[] = [
     order: 3,
     weeks: [],
     thumbnail: '/images/thumbnails/module-3.jpg',
-    estimatedHours: 25,
   },
   {
     id: 'module-4',
@@ -114,7 +115,6 @@ export const mockModules: Module[] = [
     order: 4,
     weeks: [],
     thumbnail: '/images/thumbnails/module-4.jpg',
-    estimatedHours: 15,
   },
   {
     id: 'module-5',
@@ -123,7 +123,6 @@ export const mockModules: Module[] = [
     order: 5,
     weeks: [],
     thumbnail: '/images/thumbnails/module-5.jpg',
-    estimatedHours: 35,
   },
   {
     id: 'module-6',
@@ -132,6 +131,6 @@ export const mockModules: Module[] = [
     order: 6,
     weeks: [],
     thumbnail: '/images/thumbnails/module-6.jpg',
-    estimatedHours: 20,
   },
 ]
+*/

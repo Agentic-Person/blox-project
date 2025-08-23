@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button'
 import { BookOpen, CheckCircle, Clock, ArrowRight } from 'lucide-react'
 import * as Progress from '@radix-ui/react-progress'
 import Link from 'next/link'
+import { useLearningStore } from '@/store/learningStore'
+import curriculumData from '@/data/curriculum.json'
 
 interface ModuleProgress {
   id: string
@@ -12,57 +14,68 @@ interface ModuleProgress {
   progress: number
   completed: boolean
   isCurrentModule?: boolean
+  daysCompleted: number
+  totalDays: number
 }
 
 interface LearningProgressProps {
-  modules: ModuleProgress[]
-  overallProgress: number
+  modules?: ModuleProgress[]
+  overallProgress?: number
 }
 
-const mockModules: ModuleProgress[] = [
-  {
-    id: 'module-1',
-    title: 'Roblox Studio Basics',
-    progress: 100,
-    completed: true
-  },
-  {
-    id: 'module-2', 
-    title: 'Introduction to Scripting',
-    progress: 100,
-    completed: true
-  },
-  {
-    id: 'module-3',
-    title: 'Advanced Building Techniques',
-    progress: 67,
-    completed: false,
-    isCurrentModule: true
-  },
-  {
-    id: 'module-4',
-    title: 'Game Mechanics & Systems',
-    progress: 0,
-    completed: false
-  },
-  {
-    id: 'module-5',
-    title: 'Professional Development',
-    progress: 0,
-    completed: false
-  },
-  {
-    id: 'module-6',
-    title: 'Capstone Project',
-    progress: 0,
-    completed: false
-  }
-]
-
 export function LearningProgress({ 
-  modules = mockModules, 
-  overallProgress = 44 
+  modules, 
+  overallProgress 
 }: LearningProgressProps) {
+  const { 
+    getModuleProgress, 
+    getOverallProgress,
+    getCompletedDaysCount,
+    getTotalDaysInCurriculum,
+    completedDays
+  } = useLearningStore()
+
+  // Calculate real module progress from curriculum data
+  const realModules: ModuleProgress[] = curriculumData.modules.map((module, index) => {
+    const progress = getModuleProgress(module.id)
+    const totalDays = module.weeks.reduce((acc, week) => acc + week.days.length, 0)
+    const daysCompleted = completedDays.filter(dayId => {
+      return module.weeks.some(week => 
+        week.days.some(day => day.id === dayId)
+      )
+    }).length
+
+    // Determine current module (first incomplete module with progress)
+    const isCurrentModule = progress > 0 && progress < 100 && 
+      index === curriculumData.modules.findIndex(m => {
+        const moduleProgress = getModuleProgress(m.id)
+        return moduleProgress > 0 && moduleProgress < 100
+      })
+
+    // Clean up module title for better display
+    let displayTitle = module.title
+    if (displayTitle.startsWith('Month ')) {
+      displayTitle = displayTitle.replace(/^Month \d+ – /, '')
+    }
+
+    return {
+      id: module.id,
+      title: displayTitle,
+      progress,
+      completed: progress === 100,
+      isCurrentModule,
+      daysCompleted,
+      totalDays
+    }
+  })
+
+  const actualModules = modules || realModules
+  const actualOverallProgress = overallProgress || getOverallProgress()
+
+  // Calculate stats
+  const completedModules = actualModules.filter(m => m.completed).length
+  const inProgressModules = actualModules.filter(m => m.progress > 0 && !m.completed).length
+  const remainingModules = actualModules.filter(m => m.progress === 0).length
   return (
     <Card className="card-hover">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
@@ -86,23 +99,23 @@ export function LearningProgress({
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-blox-off-white">Overall Progress</span>
-            <span className="text-blox-white font-medium">{overallProgress}% Complete</span>
+            <span className="text-blox-white font-medium">{actualOverallProgress}% Complete</span>
           </div>
           
           <Progress.Root 
             className="relative overflow-hidden bg-blox-second-dark-blue rounded-full w-full h-2"
-            value={overallProgress}
+            value={actualOverallProgress}
           >
             <Progress.Indicator
               className="bg-gradient-to-r from-blox-teal to-blox-teal-light h-full w-full flex-1 transition-transform duration-300 ease-out"
-              style={{ transform: `translateX(-${100 - overallProgress}%)` }}
+              style={{ transform: `translateX(-${100 - actualOverallProgress}%)` }}
             />
           </Progress.Root>
         </div>
 
         {/* Module List */}
         <div className="space-y-3">
-          {modules.map((module, index) => (
+          {actualModules.map((module, index) => (
             <div 
               key={module.id}
               className={`flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
@@ -174,15 +187,15 @@ export function LearningProgress({
         {/* Quick Stats */}
         <div className="grid grid-cols-3 gap-4 pt-2 border-t border-blox-medium-blue-gray/30">
           <div className="text-center">
-            <div className="text-lg font-bold text-blox-success">2</div>
+            <div className="text-lg font-bold text-blox-success">{completedModules}</div>
             <div className="text-xs text-blox-off-white">Complete</div>
           </div>
           <div className="text-center">
-            <div className="text-lg font-bold text-blox-teal">1</div>
+            <div className="text-lg font-bold text-blox-teal">{inProgressModules}</div>
             <div className="text-xs text-blox-off-white">In Progress</div>
           </div>
           <div className="text-center">
-            <div className="text-lg font-bold text-blox-off-white">3</div>
+            <div className="text-lg font-bold text-blox-off-white">{remainingModules}</div>
             <div className="text-xs text-blox-off-white">Remaining</div>
           </div>
         </div>

@@ -15,6 +15,11 @@ const config: Config = {
             DEFAULT: '#36B0D9',
             dark: '#2A8CB0'
           },
+          purple: {
+            light: '#A78BFA',
+            DEFAULT: '#8B5CF6',
+            dark: '#7C3AED'
+          },
           'black-blue': '#001C38',
           'very-dark-blue': '#001D39',
           'second-dark-blue': '#002246',
@@ -26,11 +31,6 @@ const config: Config = {
             light: '#34D399',
             DEFAULT: '#10B981',
             dark: '#059669'
-          },
-          purple: {
-            light: '#A78BFA',
-            DEFAULT: '#8B5CF6',
-            dark: '#7C3AED'
           },
           glass: {
             teal: 'rgba(54, 176, 217, 0.1)',
