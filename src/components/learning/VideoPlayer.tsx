@@ -1,12 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Play, Pause, Volume2, SkipBack, SkipForward, CheckCircle, Clock, Zap, Book, Award } from 'lucide-react'
 import * as Progress from '@radix-ui/react-progress'
 import { useLearningStore } from '@/store/learningStore'
+import { useTimeManagementStore } from '@/store/timeManagementStore'
 import { Breadcrumb } from './Breadcrumb'
+import { loadYouTubeAPI, createYouTubePlayer, PlayerState } from '@/lib/youtube/youtube-api'
 // import { toast } from 'sonner'
 
 interface VideoPlayerProps {
@@ -17,6 +19,7 @@ interface VideoPlayerProps {
     youtubeId: string
     duration: string
     xpReward: number
+    creator?: string
   }
   dayInfo?: {
     id: string
@@ -46,6 +49,11 @@ export function VideoPlayer({
   const [playing, setPlaying] = useState(false)
   const [watchProgress, setWatchProgress] = useState(0)
   const [hasEarnedXP, setHasEarnedXP] = useState(false)
+  const [player, setPlayer] = useState<any>(null)
+  const [videoDuration, setVideoDuration] = useState(0)
+  const [videoError, setVideoError] = useState<string | null>(null)
+  const playerRef = useRef<HTMLDivElement>(null)
+  const trackingIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
   const {
     isVideoCompleted,
@@ -54,6 +62,14 @@ export function VideoPlayer({
     videoProgress,
     totalHoursWatched
   } = useLearningStore()
+
+  const {
+    currentSessionStart,
+    startSession,
+    updateSessionTime,
+    isOverDailyLimit,
+    shouldShowBreakReminder
+  } = useTimeManagementStore()
 
   const isCompleted = isVideoCompleted(video.id)
   const currentVideoProgress = videoProgress[video.id]
@@ -68,12 +84,126 @@ export function VideoPlayer({
 
   const durationInSeconds = convertDurationToSeconds(video.duration)
 
-  const handleVideoProgress = (currentTime: number) => {
-    const progressPercent = Math.round((currentTime / durationInSeconds) * 100)
+  // Initialize YouTube player
+  useEffect(() => {
+    if (!video.youtubeId || !playerRef.current) return
+
+    const initPlayer = async () => {
+      try {
+        await loadYouTubeAPI()
+        
+        // Create a unique ID for the player div
+        const playerId = `youtube-player-${video.id}`
+        if (playerRef.current) {
+          playerRef.current.id = playerId
+        }
+        
+        const ytPlayer = await createYouTubePlayer(playerId, {
+          videoId: video.youtubeId,
+          playerVars: {
+            autoplay: 0,
+            controls: 1,
+            rel: 0,
+            modestbranding: 1,
+            enablejsapi: 1,
+            origin: window.location.protocol === 'http:' ? window.location.origin : undefined
+          },
+          events: {
+            onReady: (event: any) => {
+              setPlayer(event.target)
+              const duration = event.target.getDuration()
+              setVideoDuration(duration)
+            },
+            onStateChange: (event: any) => {
+              if (event.data === PlayerState.PLAYING) {
+                setPlaying(true)
+                startVideoTracking()
+                if (!currentSessionStart) {
+                  startSession()
+                }
+              } else if (event.data === PlayerState.PAUSED || event.data === PlayerState.ENDED) {
+                setPlaying(false)
+                stopVideoTracking()
+              }
+            },
+            onError: (event: any) => {
+              console.error('YouTube Player Error:', event.data)
+              // Error codes:
+              // 2: Invalid video ID
+              // 5: HTML5 player error
+              // 100: Video not found
+              // 101, 150: Video not embeddable
+              if (event.data === 2) {
+                setVideoError('Invalid video ID. This video may have been removed.')
+              } else if (event.data === 100) {
+                setVideoError('Video not found. It may have been deleted or made private.')
+              } else if (event.data === 101 || event.data === 150) {
+                setVideoError('This video cannot be embedded due to creator restrictions.')
+              } else {
+                setVideoError('Unable to load video. Please try again later.')
+              }
+            }
+          }
+        })
+      } catch (error) {
+        console.error('Failed to initialize YouTube player:', error)
+      }
+    }
+
+    initPlayer()
+
+    return () => {
+      stopVideoTracking()
+      if (player) {
+        player.destroy?.()
+      }
+    }
+  }, [video.youtubeId, video.id])
+
+  const startVideoTracking = useCallback(() => {
+    if (trackingIntervalRef.current) return
+    
+    trackingIntervalRef.current = setInterval(() => {
+      if (player) {
+        const currentTime = player.getCurrentTime()
+        const duration = player.getDuration()
+        handleVideoProgress(currentTime, duration)
+      }
+    }, 1000) // Update every second
+  }, [player])
+
+  const stopVideoTracking = useCallback(() => {
+    if (trackingIntervalRef.current) {
+      clearInterval(trackingIntervalRef.current)
+      trackingIntervalRef.current = null
+    }
+  }, [])
+
+  const handleVideoProgress = useCallback((currentTime: number, duration: number) => {
+    if (!duration || duration === 0) return
+    
+    const progressPercent = Math.round((currentTime / duration) * 100)
     setWatchProgress(progressPercent)
     
     // Update video progress in store
-    updateVideoProgress(video.id, currentTime, durationInSeconds)
+    updateVideoProgress(video.id, currentTime, duration)
+    
+    // Update session time (convert seconds to minutes)
+    const minutesWatched = Math.floor(currentTime / 60)
+    updateSessionTime(minutesWatched)
+    
+    // Check for break reminder
+    if (shouldShowBreakReminder()) {
+      console.log('Time for a break! You\'ve been learning for a while.')
+      // toast.info('Time for a break! You\'ve been learning for a while.')
+    }
+    
+    // Check daily limit
+    if (isOverDailyLimit()) {
+      console.log('Daily learning limit reached. Great job today!')
+      // toast.warning('Daily learning limit reached. Great job today!')
+      player?.pauseVideo()
+    }
     
     // Mark as complete and award XP when 90% watched
     if (progressPercent >= 90 && !isCompleted && !hasEarnedXP) {
@@ -86,7 +216,7 @@ export function VideoPlayer({
       // })
       console.log(`Video completed! +${video.xpReward} XP earned`)
     }
-  }
+  }, [video.id, video.xpReward, isCompleted, hasEarnedXP, updateVideoProgress, updateSessionTime, shouldShowBreakReminder, isOverDailyLimit, markVideoComplete, onComplete])
 
   // Helper function to convert duration string to seconds
   function convertDurationToSeconds(duration: string): number {
@@ -95,6 +225,13 @@ export function VideoPlayer({
   }
 
   const togglePlayPause = () => {
+    if (player) {
+      if (playing) {
+        player.pauseVideo()
+      } else {
+        player.playVideo()
+      }
+    }
     setPlaying(!playing)
   }
 
@@ -113,6 +250,11 @@ export function VideoPlayer({
             </h1>
             
             <div className="flex items-center space-x-4 text-sm text-blox-off-white">
+              {video.creator && (
+                <div className="flex items-center space-x-1">
+                  <span className="text-blox-teal">by {video.creator}</span>
+                </div>
+              )}
               <div className="flex items-center space-x-1">
                 <Clock className="h-4 w-4" />
                 <span>{video.duration}</span>
@@ -143,26 +285,43 @@ export function VideoPlayer({
       {/* Video Player */}
       <div className="flex-1 p-6">
         <div className="aspect-video bg-black rounded-lg overflow-hidden mb-6 relative">
-          {video.youtubeId ? (
-            <iframe
-              src={`https://www.youtube.com/embed/${video.youtubeId}?enablejsapi=1&origin=${window.location.origin}`}
-              title={video.title}
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-              className="w-full h-full"
-              onLoad={() => {
-                // You could add YouTube API integration here for progress tracking
-                // For now, we'll simulate progress updates
-                if (!isCompleted) {
-                  const interval = setInterval(() => {
-                    handleVideoProgress(Math.random() * durationInSeconds)
-                  }, 1000)
-                  
-                  return () => clearInterval(interval)
-                }
-              }}
-            />
+          {video.youtubeId && !videoError ? (
+            <div ref={playerRef} className="w-full h-full" />
+          ) : videoError ? (
+            /* Error state with direct YouTube link */
+            <div className="flex items-center justify-center h-full bg-blox-very-dark-blue">
+              <div className="text-center space-y-4 p-8">
+                <div className="w-20 h-20 mx-auto bg-red-500/20 rounded-full flex items-center justify-center">
+                  <svg className="w-10 h-10 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                </div>
+                <div className="text-white">
+                  <h3 className="text-lg font-semibold mb-2">Video Unavailable</h3>
+                  <p className="text-sm text-gray-300 mb-4">{videoError}</p>
+                  <div className="space-y-2">
+                    <a 
+                      href={`https://www.youtube.com/watch?v=${video.youtubeId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                    >
+                      <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                      </svg>
+                      Watch on YouTube
+                    </a>
+                    <Button 
+                      onClick={() => handleVideoProgress(durationInSeconds * 0.95, durationInSeconds)}
+                      className="bg-blox-teal hover:bg-blox-teal-light text-white ml-2"
+                    >
+                      <CheckCircle className="mr-2 h-4 w-4" />
+                      Mark as Watched
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
           ) : (
             /* Placeholder for videos without YouTube ID */
             <div className="flex items-center justify-center h-full">
@@ -174,7 +333,7 @@ export function VideoPlayer({
                   <h3 className="text-lg font-semibold mb-2">{video.title}</h3>
                   <p className="text-sm text-gray-300 mb-4">Duration: {video.duration}</p>
                   <Button 
-                    onClick={() => handleVideoProgress(durationInSeconds * 0.95)} // Simulate completion
+                    onClick={() => handleVideoProgress(durationInSeconds * 0.95, durationInSeconds)} // Simulate completion
                     className="bg-blox-teal hover:bg-blox-teal-light text-white"
                   >
                     <CheckCircle className="mr-2 h-4 w-4" />

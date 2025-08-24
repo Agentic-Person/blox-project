@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -8,9 +9,11 @@ import { Progress } from '@/components/ui/progress'
 import { 
   Users, Crown, Trophy, Star, MessageSquare, 
   Calendar, Target, TrendingUp, Clock, Shield,
-  CheckCircle, AlertCircle, XCircle
+  CheckCircle, AlertCircle, XCircle, UserPlus
 } from 'lucide-react'
 import Link from 'next/link'
+import { useTeamStore } from '@/store/teamStore'
+import TeamApplicationModal from './TeamApplicationModal'
 
 interface TeamMember {
   id: string
@@ -86,12 +89,21 @@ const teamTypeStyles = {
 }
 
 export default function TeamCard({ team, variant = 'compact', showActions = true, isOwned = false }: TeamCardProps) {
+  const { currentUserId, getUserTeams } = useTeamStore()
+  const [showApplicationModal, setShowApplicationModal] = useState(false)
+  
   const memberCapacity = (team.memberCount / team.maxMembers) * 100
   const TypeIcon = team.teamType ? teamTypeStyles[team.teamType].icon : Users
+  
+  // Check if user is already in this team
+  const userTeams = getUserTeams(currentUserId)
+  const isUserInTeam = userTeams.some(t => t.id === team.id)
+  const canApply = !isUserInTeam && team.isRecruiting && team.memberCount < team.maxMembers
 
   if (variant === 'compact') {
     return (
-      <motion.div
+      <>
+        <motion.div
         whileHover={{ y: -4 }}
         transition={{ type: "spring", stiffness: 300 }}
       >
@@ -199,12 +211,16 @@ export default function TeamCard({ team, variant = 'compact', showActions = true
                 <div className="flex gap-2">
                   <Link href={`/teams/${team.id}`} className="flex-1">
                     <Button variant="secondary" className="w-full">
-                      View Details
+                      {isUserInTeam ? 'Manage Team' : 'View Details'}
                     </Button>
                   </Link>
-                  {!isOwned && team.isRecruiting && (
-                    <Button className="flex-1" disabled>
-                      Apply to Join
+                  {canApply && (
+                    <Button 
+                      className="flex-1" 
+                      onClick={() => setShowApplicationModal(true)}
+                    >
+                      <UserPlus className="h-4 w-4 mr-1" />
+                      Apply
                     </Button>
                   )}
                   {isOwned && (
@@ -218,6 +234,16 @@ export default function TeamCard({ team, variant = 'compact', showActions = true
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* Application Modal */}
+      {showApplicationModal && (
+        <TeamApplicationModal
+          isOpen={showApplicationModal}
+          onClose={() => setShowApplicationModal(false)}
+          team={team}
+        />
+      )}
+      </>
     )
   }
 

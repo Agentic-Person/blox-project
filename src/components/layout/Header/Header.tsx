@@ -1,11 +1,10 @@
 'use client'
 
-import { Clock, Zap, User, LogOut } from 'lucide-react'
+import { Clock, Zap, User, LogOut, Gamepad2, Coins } from 'lucide-react'
 import { useAuth } from '@/lib/providers'
 import { useLearningStore } from '@/store/learningStore'
 import { useState, useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
-import { WalletButton } from '@/components/wallet'
 
 export function Header() {
   const { user, signOut } = useAuth()
@@ -13,52 +12,9 @@ export function Header() {
   const [showDropdown, setShowDropdown] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
-
-  // Get contextual content based on current page
-  const getPageContext = () => {
-    if (pathname === '/dashboard' || pathname === '/') {
-      return {
-        title: 'Welcome back, Builder! 👋',
-        subtitle: 'Ready to continue your Roblox development journey? Let\'s build something amazing today.'
-      }
-    }
-    if (pathname.startsWith('/learning')) {
-      return {
-        title: 'Learning Path 📚',
-        subtitle: 'Master Roblox development through structured video lessons and hands-on practice.'
-      }
-    }
-    if (pathname.startsWith('/teams')) {
-      return {
-        title: 'Team Collaboration 🤝',
-        subtitle: 'Connect with other builders and work together on amazing Roblox projects.'
-      }
-    }
-    if (pathname.startsWith('/projects')) {
-      return {
-        title: 'My Projects 🚀',
-        subtitle: 'Showcase your creations and get feedback from the community.'
-      }
-    }
-    if (pathname.startsWith('/community')) {
-      return {
-        title: 'Community Hub 🌟',
-        subtitle: 'Connect with fellow developers and join the Blox Buddy community.'
-      }
-    }
-    if (pathname.startsWith('/notes')) {
-      return {
-        title: 'My Workspace 📝',
-        subtitle: 'Organize your ideas and collaborate on your creative canvas.'
-      }
-    }
-    return {
-      title: 'Blox Buddy 🎯',
-      subtitle: 'Your journey to Roblox mastery continues here.'
-    }
-  }
-
-  const { title, subtitle } = getPageContext()
+  
+  // Mock BLOX token balance for now (will be fetched from blockchain later)
+  const [bloxBalance] = useState(450)
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -75,27 +31,29 @@ export function Header() {
 
   return (
     <header className="flex items-center justify-between px-6 py-4 bg-blox-second-dark-blue border-b border-blox-glass-border">
-      <div className="transition-all duration-300 ease-in-out">
-        <h1 className="text-2xl font-bold text-blox-white">
-          {title}
+      <div className="flex items-center gap-3 transition-all duration-300 ease-in-out">
+        <Gamepad2 className="w-6 h-6 text-blox-teal" />
+        <h1 className="text-xl font-bold text-blox-white">
+          Welcome back, game developer!
         </h1>
       </div>
 
       <div className="flex items-center gap-6">
         {/* Stats */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-5">
+          <div className="flex items-center gap-2 glass-card px-3 py-1.5 rounded-lg">
             <Clock className="w-4 h-4 text-blox-teal" />
-            <span className="text-sm text-blox-off-white">{totalHoursWatched}h watched</span>
+            <span className="text-sm text-blox-off-white font-medium">{totalHoursWatched}h</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 glass-card px-3 py-1.5 rounded-lg">
             <Zap className="w-4 h-4 text-blox-success" />
-            <span className="text-sm text-blox-off-white">{totalXP} XP</span>
+            <span className="text-sm text-blox-off-white font-medium">{totalXP} XP</span>
+          </div>
+          <div className="flex items-center gap-2 glass-card px-3 py-1.5 rounded-lg border border-blox-teal/30">
+            <Coins className="w-4 h-4 text-blox-teal" />
+            <span className="text-sm text-blox-teal font-bold">{bloxBalance} BLOX</span>
           </div>
         </div>
-
-        {/* Wallet Button */}
-        <WalletButton />
 
         {/* User Menu */}
         <div className="relative" ref={dropdownRef}>

@@ -1,28 +1,58 @@
+'use client'
+
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { motion } from 'framer-motion'
+import { Loader2 } from 'lucide-react'
+
 export default function RootPage() {
+  const router = useRouter()
+
+  useEffect(() => {
+    // Auto-redirect to dashboard after a brief moment
+    const timer = setTimeout(() => {
+      router.push('/dashboard')
+    }, 1500)
+
+    return () => clearTimeout(timer)
+  }, [router])
+
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="container mx-auto px-4 py-20">
-        <h1 className="text-6xl font-bold text-center mb-6">
+    <div className="min-h-screen bg-gradient-to-br from-blox-very-dark-blue via-blox-dark-blue to-blox-very-dark-blue flex items-center justify-center">
+      <motion.div 
+        className="text-center space-y-8"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.h1 
+          className="text-7xl font-bold bg-gradient-to-r from-blox-teal to-blox-purple bg-clip-text text-transparent"
+          initial={{ scale: 0.9 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           BLOX BUDDY
-        </h1>
-        <p className="text-xl text-center mb-12">
+        </motion.h1>
+        
+        <motion.p 
+          className="text-xl text-blox-off-white"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
           Free learning and community platform for young Roblox developers
-        </p>
-        <div className="text-center">
-          <a 
-            href="/dashboard" 
-            className="inline-block px-8 py-4 bg-blue-600 text-white rounded-lg font-semibold mr-4"
-          >
-            Launch App
-          </a>
-          <a 
-            href="/about" 
-            className="inline-block px-8 py-4 border border-white text-white rounded-lg font-semibold"
-          >
-            Learn More
-          </a>
-        </div>
-      </div>
+        </motion.p>
+        
+        <motion.div 
+          className="flex items-center justify-center space-x-2 text-blox-teal"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+        >
+          <Loader2 className="h-5 w-5 animate-spin" />
+          <span className="text-sm">Loading your dashboard...</span>
+        </motion.div>
+      </motion.div>
     </div>
   )
 }

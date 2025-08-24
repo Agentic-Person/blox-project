@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { ChevronDown, Play, CheckCircle, Clock, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronDown, ChevronUp, Play, CheckCircle, Clock, ChevronLeft, ChevronRight, BookOpen, Calendar } from 'lucide-react'
 import * as Select from '@radix-ui/react-select'
 import Image from 'next/image'
 import { useLearningStore } from '@/store/learningStore'
+import { motion, AnimatePresence } from 'framer-motion'
 
 interface VideoItem {
   id: string
@@ -22,6 +23,7 @@ interface DayItem {
   videos: VideoItem[]
   completed: boolean
   estimatedTime: string
+  practiceTask?: string
 }
 
 interface WeekItem {
@@ -41,6 +43,7 @@ interface WeekOverviewProps {
   }
   weeks: WeekItem[]
   currentWeek: string
+  currentDay?: string
   onWeekChange: (weekId: string) => void
   onVideoSelect: (videoId: string, dayId: string) => void
 }
@@ -49,12 +52,25 @@ export function WeekOverview({
   module,
   weeks = [],
   currentWeek,
+  currentDay,
   onWeekChange,
   onVideoSelect
 }: WeekOverviewProps) {
   const [selectedWeek, setSelectedWeek] = useState(currentWeek || weeks[0]?.id || '')
+  const [expandedWeek, setExpandedWeek] = useState<string | null>(null)
   const currentWeekData = weeks.find(w => w.id === selectedWeek) || weeks[0]
-  const { getWeekProgress } = useLearningStore()
+  const { getWeekProgress, isVideoCompleted } = useLearningStore()
+  
+  // Auto-expand the week containing the selected day
+  useEffect(() => {
+    if (currentDay) {
+      const weekWithDay = weeks.find(w => w.days.some(d => d.id === currentDay))
+      if (weekWithDay) {
+        setExpandedWeek(weekWithDay.id)
+        setSelectedWeek(weekWithDay.id)
+      }
+    }
+  }, [currentDay, weeks])
 
   const handleWeekChange = (weekId: string) => {
     setSelectedWeek(weekId)
@@ -196,76 +212,177 @@ export function WeekOverview({
           const totalVideos = week.days.reduce((acc, day) => acc + day.videos.length, 0)
           const completedVideos = week.days.reduce((acc, day) => 
             acc + day.videos.filter(v => v.completed).length, 0)
+          const isExpanded = expandedWeek === week.id
           
           return (
-            <div
-              key={week.id}
-              className={`rounded-lg border p-2 cursor-pointer transition-all ${
-                selectedWeek === week.id 
-                  ? 'bg-blox-dark-blue border-blox-teal/50' 
-                  : 'bg-blox-dark-blue/50 border-blox-medium-blue-gray/30 hover:border-blox-teal/30'
-              }`}
-              onClick={() => handleWeekChange(week.id)}
-            >
-              <div className="flex items-center justify-between">
-                {/* Week Title and Number */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xs font-bold text-blox-teal">{weekNum}</span>
-                    <h3 className="text-xs font-semibold text-blox-white truncate">
-                      {week.title}
-                    </h3>
-                  </div>
-                  <div className="flex items-center space-x-2 mt-1">
-                    <span className="text-xs text-blox-off-white/60">
-                      Navigate the new Creator Hub and master...
-                    </span>
-                  </div>
-                </div>
-
-                {/* Day Number Boxes */}
-                <div className="flex items-center space-x-1">
-                  {week.days.slice(0, 4).map((day, index) => {
-                    const dayCompleted = day.videos.every(v => v.completed)
-                    return (
-                      <div
-                        key={day.id}
-                        className={`w-5 h-5 rounded-sm flex items-center justify-center text-xs font-bold ${
-                          dayCompleted 
-                            ? 'bg-blox-light-green text-blox-very-dark-blue' 
-                            : 'bg-blox-medium-blue-gray/50 text-blox-off-white/60 border border-blox-medium-blue-gray/30'
-                        }`}
+            <div key={week.id}>
+              <div
+                className={`rounded-lg border p-2 cursor-pointer transition-all ${
+                  selectedWeek === week.id 
+                    ? 'bg-blox-dark-blue border-blox-teal/50' 
+                    : 'bg-blox-dark-blue/50 border-blox-medium-blue-gray/30 hover:border-blox-teal/30'
+                }`}
+                onClick={() => {
+                  handleWeekChange(week.id)
+                  setExpandedWeek(isExpanded ? null : week.id)
+                }}
+              >
+                <div className="flex items-center justify-between">
+                  {/* Week Title and Number */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xs font-bold text-blox-teal">{weekNum}</span>
+                      <h3 className="text-xs font-semibold text-blox-white truncate">
+                        {week.title}
+                      </h3>
+                      {/* Expand/Collapse Icon */}
+                      <button 
+                        className="p-0.5 hover:bg-blox-medium-blue-gray/30 rounded transition-colors"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setExpandedWeek(isExpanded ? null : week.id)
+                        }}
                       >
-                        {index + 1}
-                      </div>
-                    )
-                  })}
-                  {week.days.length > 4 && (
-                    <div className="w-5 h-5 rounded-sm bg-blox-medium-blue-gray/30 border border-blox-medium-blue-gray/30 flex items-center justify-center">
-                      <span className="text-xs text-blox-off-white/60 font-bold">+{week.days.length - 4}</span>
+                        {isExpanded ? (
+                          <ChevronUp className="h-3 w-3 text-blox-teal" />
+                        ) : (
+                          <ChevronDown className="h-3 w-3 text-blox-off-white/60" />
+                        )}
+                      </button>
                     </div>
-                  )}
+                    <div className="flex items-center space-x-2 mt-1">
+                      <span className="text-xs text-blox-off-white/60">
+                        {week.days.length} days • {week.days.reduce((acc, day) => acc + day.videos.length, 0)} videos
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Day Number Boxes */}
+                  <div className="flex items-center space-x-1">
+                    {week.days.slice(0, 4).map((day, index) => {
+                      const dayCompleted = day.videos.every(v => v.completed)
+                      return (
+                        <div
+                          key={day.id}
+                          className={`w-5 h-5 rounded-sm flex items-center justify-center text-xs font-bold ${
+                            dayCompleted 
+                              ? 'bg-blox-light-green text-blox-very-dark-blue' 
+                              : 'bg-blox-medium-blue-gray/50 text-blox-off-white/60 border border-blox-medium-blue-gray/30'
+                          }`}
+                        >
+                          {index + 1}
+                        </div>
+                      )
+                    })}
+                    {week.days.length > 4 && (
+                      <div className="w-5 h-5 rounded-sm bg-blox-medium-blue-gray/30 border border-blox-medium-blue-gray/30 flex items-center justify-center">
+                        <span className="text-xs text-blox-off-white/60 font-bold">+{week.days.length - 4}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Progress Info */}
+                <div className="flex items-center justify-between mt-1.5">
+                  <div className="flex items-center space-x-3 text-xs">
+                    <span className="text-blox-off-white/60">
+                      <CheckCircle className="h-3 w-3 inline mr-1 text-blox-light-green/60" />
+                      15.0h
+                    </span>
+                    <span className="text-blox-off-white/60">• {totalVideos} videos</span>
+                  </div>
+                  {(() => {
+                    const progress = getWeekProgress(week.id)
+                    return progress > 0 ? (
+                      <div className="text-xs text-blox-light-green">
+                        {progress}%
+                      </div>
+                    ) : null
+                  })()}
                 </div>
               </div>
 
-              {/* Progress Info */}
-              <div className="flex items-center justify-between mt-1.5">
-                <div className="flex items-center space-x-3 text-xs">
-                  <span className="text-blox-off-white/60">
-                    <CheckCircle className="h-3 w-3 inline mr-1 text-blox-light-green/60" />
-                    15.0h
-                  </span>
-                  <span className="text-blox-off-white/60">• {totalVideos} videos</span>
-                </div>
-                {(() => {
-                  const progress = getWeekProgress(week.id)
-                  return progress > 0 ? (
-                    <div className="text-xs text-blox-light-green">
-                      {progress}%
+              {/* Expandable Day List */}
+              <AnimatePresence>
+                {isExpanded && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="ml-3 mt-1 space-y-1 border-l-2 border-blox-medium-blue-gray/30 pl-2">
+                      {week.days.map((day, dayIndex) => {
+                        const dayNum = dayIndex + 1
+                        const completedCount = day.videos.filter(v => isVideoCompleted(v.id)).length
+                        const totalCount = day.videos.length
+                        const dayCompleted = completedCount === totalCount
+                        const dayInProgress = completedCount > 0 && completedCount < totalCount
+                        
+                        const isSelectedDay = currentDay === day.id
+                        
+                        return (
+                          <div
+                            key={day.id}
+                            className={`p-2 rounded-md transition-colors cursor-pointer ${
+                              isSelectedDay 
+                                ? 'bg-blox-teal/20 border border-blox-teal/50 shadow-md' 
+                                : 'bg-blox-very-dark-blue/50 hover:bg-blox-very-dark-blue/70'
+                            }`}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              onVideoSelect(day.videos[0]?.id || '', day.id)
+                            }}
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center space-x-2">
+                                  <div className={`w-4 h-4 rounded-sm flex items-center justify-center text-xs font-bold ${
+                                    dayCompleted 
+                                      ? 'bg-blox-light-green text-blox-very-dark-blue' 
+                                      : dayInProgress
+                                        ? 'bg-blox-warning text-blox-very-dark-blue'
+                                        : 'bg-blox-medium-blue-gray/50 text-blox-off-white/60 border border-blox-medium-blue-gray/30'
+                                  }`}>
+                                    {dayNum}
+                                  </div>
+                                  <h4 className="text-xs font-medium text-blox-white">
+                                    {day.title}
+                                  </h4>
+                                  {dayCompleted && (
+                                    <CheckCircle className="h-3 w-3 text-blox-light-green" />
+                                  )}
+                                </div>
+                                <div className="flex items-center space-x-3 mt-1 text-xs text-blox-off-white/60">
+                                  <span className="flex items-center gap-1">
+                                    <BookOpen className="h-2.5 w-2.5" />
+                                    {totalCount} videos
+                                  </span>
+                                  <span className="flex items-center gap-1">
+                                    <Clock className="h-2.5 w-2.5" />
+                                    {day.estimatedTime || '2.5h'}
+                                  </span>
+                                  {completedCount > 0 && (
+                                    <span className="text-blox-light-green">
+                                      {completedCount}/{totalCount} complete
+                                    </span>
+                                  )}
+                                </div>
+                                {day.practiceTask && (
+                                  <p className="text-xs text-blox-off-white/50 mt-1 italic">
+                                    Task: {day.practiceTask}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      })}
                     </div>
-                  ) : null
-                })()}
-              </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           )
         })}

@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { BookOpen, Users, TrendingUp, Zap, Video } from 'lucide-react'
+import { BookOpen, Users, TrendingUp, Zap, Video, Coins } from 'lucide-react'
 import { fadeInUp, staggerChildren } from '@/styles/animations'
 import { ContinueLearning } from '@/components/dashboard/ContinueLearning'
 import { LearningProgress } from '@/components/dashboard/LearningProgress'
@@ -57,10 +57,10 @@ export default function DashboardPage() {
 
         <motion.div variants={fadeInUp} className="glass-card p-4 rounded-lg card-hover-glow">
           <div className="flex items-center gap-3">
-            <TrendingUp className="w-5 h-5 text-blox-success" />
+            <Coins className="w-5 h-5 text-blox-teal" />
             <div>
-              <p className="text-2xl font-bold text-blox-white">2</p>
-              <p className="text-xs text-blox-light-blue-gray">Modules Complete</p>
+              <p className="text-2xl font-bold text-blox-white">450</p>
+              <p className="text-xs text-blox-light-blue-gray">BLOX Earned</p>
             </div>
           </div>
         </motion.div>

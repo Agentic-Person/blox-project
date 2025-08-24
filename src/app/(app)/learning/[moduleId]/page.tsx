@@ -26,8 +26,9 @@ export default function ModuleLearningPage({ params }: PageProps) {
   // Find the current module from curriculum data
   const currentModule = curriculumData.modules.find(m => m.id === moduleId)
   
-  // State for selected week
+  // State for selected week and day
   const [selectedWeek, setSelectedWeek] = useState<string>('')
+  const [selectedDay, setSelectedDay] = useState<string>('')
   
   // Set default week on module load
   useEffect(() => {
@@ -39,6 +40,7 @@ export default function ModuleLearningPage({ params }: PageProps) {
   // Handle week change - update selected week to show in right panel
   const handleWeekChange = (weekId: string) => {
     setSelectedWeek(weekId)
+    setSelectedDay('') // Clear day selection when changing week
   }
   
   // Handle video selection - navigate to video player
@@ -47,13 +49,16 @@ export default function ModuleLearningPage({ params }: PageProps) {
       w.days.some(d => d.id === dayId)
     )
     if (week) {
+      setSelectedDay(dayId)
+      setSelectedWeek(week.id)
       router.push(`/learning/${moduleId}/${week.id}/${dayId}`)
     }
   }
   
-  // Handle day navigation
+  // Handle day navigation from WeekPreview
   const handleDaySelect = (dayId: string) => {
     if (selectedWeek) {
+      setSelectedDay(dayId)
       router.push(`/learning/${moduleId}/${selectedWeek}/${dayId}`)
     }
   }
@@ -104,6 +109,7 @@ export default function ModuleLearningPage({ params }: PageProps) {
       }}
       weeks={transformedWeeks}
       currentWeek={selectedWeek}
+      currentDay={selectedDay}
       onWeekChange={handleWeekChange}
       onVideoSelect={handleVideoSelect}
     />

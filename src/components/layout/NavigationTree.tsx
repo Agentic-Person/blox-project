@@ -1,11 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ChevronDown, ChevronRight, Play, CheckCircle, Clock, Trophy } from 'lucide-react'
 import { cn } from '@/lib/utils/cn'
 import * as Accordion from '@radix-ui/react-accordion'
+import curriculumData from '@/data/curriculum.json'
+import { useLearningStore } from '@/store/learningStore'
 
 interface VideoItem {
   id: string
@@ -41,115 +43,58 @@ interface ModuleItem {
   estimatedHours: number
 }
 
-// Mock data - this would come from your data store
-const learningModules: ModuleItem[] = [
-  {
-    id: 'module-1',
-    title: 'Modern Foundations & 3D Introduction',
-    description: 'Master Roblox Studio 2024, Blender 4.1+, and AI tools for 3D creation',
-    completed: true,
-    progress: 100,
-    estimatedHours: 20,
-    weeks: [
-      {
-        id: 'week-1',
-        title: 'Roblox Studio 2024 Basics',
-        completed: true,
-        progress: 100,
-        days: [
-          {
-            id: 'day-1',
-            title: 'New Creator Hub & Studio Interface Part 1',
-            completed: true,
-            estimatedTime: '3 hrs',
-            videos: [
-              { id: 'v1', title: 'Roblox Studio 2024 Basics', duration: '12:36', completed: true, xp: 50 },
-              { id: 'v2', title: 'New Creator Hub Tutorial 2024', duration: '25:00', completed: true, xp: 100 }
-            ]
-          },
-          {
-            id: 'day-2',
-            title: 'New Creator Hub & Studio Interface Part 2',
-            completed: true,
-            estimatedTime: '2.5 hrs',
-            videos: [
-              { id: 'v3', title: 'Modern Studio Interface 2024', duration: '18:45', completed: true, xp: 75 }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'module-2',
-    title: 'Introduction to Scripting',
-    description: 'Learn Lua fundamentals and basic Roblox scripting',
-    completed: true,
-    progress: 100,
-    estimatedHours: 20,
-    weeks: []
-  },
-  {
-    id: 'module-3',
-    title: 'Advanced Building Techniques',
-    description: 'Creating Dynamic Lighting Systems',
-    completed: false,
-    progress: 67,
-    estimatedHours: 20,
-    weeks: [
-      {
-        id: 'week-10',
-        title: 'Week 10',
-        completed: false,
-        progress: 67,
-        days: [
-          {
-            id: 'day-1-w10',
-            title: 'Day 1: New Creator Hub & Studio Interface Part 1',
-            completed: false,
-            estimatedTime: '3 hrs',
-            videos: [
-              { id: 'v10', title: 'Blender 4.1 Introduction (Part 1)', duration: '50h', completed: false, xp: 50 },
-              { id: 'v11', title: 'Blender & Game Assets Continued', duration: '13:26', completed: false, xp: 100 }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'module-4',
-    title: 'Game Mechanics & Systems',
-    description: 'Build complex game systems and mechanics',
-    completed: false,
-    progress: 0,
-    estimatedHours: 20,
-    weeks: []
-  },
-  {
-    id: 'module-5',
-    title: 'Professional Development',
-    description: 'Portfolio building and advanced techniques',
-    completed: false,
-    progress: 0,
-    estimatedHours: 20,
-    weeks: []
-  },
-  {
-    id: 'module-6',
-    title: 'Capstone Project',
-    description: 'Create your final project and portfolio',
-    completed: false,
-    progress: 0,
-    estimatedHours: 20,
-    weeks: []
-  }
-]
 
 export function NavigationTree() {
   const pathname = usePathname()
-  const [expandedModules, setExpandedModules] = useState<string[]>(['module-3'])
-  const [expandedWeeks, setExpandedWeeks] = useState<string[]>(['week-10'])
+  const { isVideoCompleted } = useLearningStore()
+  const [expandedModules, setExpandedModules] = useState<string[]>(['module-1'])
+  const [expandedWeeks, setExpandedWeeks] = useState<string[]>([])
+  
+  // Transform curriculum data to match the expected format
+  const learningModules = curriculumData.modules.map(module => ({
+    id: module.id,
+    title: module.title,
+    description: module.description,
+    completed: false, // Would be calculated from store
+    progress: 0, // Would be calculated from store
+    estimatedHours: module.totalHours,
+    weeks: module.weeks.map(week => ({
+      id: week.id,
+      title: week.title,
+      completed: false,
+      progress: 0,
+      days: week.days.map(day => ({
+        id: day.id,
+        title: day.title,
+        completed: false,
+        estimatedTime: day.estimatedTime || '2.5h',
+        videos: day.videos.map(video => ({
+          id: video.id,
+          title: video.title,
+          duration: video.duration,
+          completed: isVideoCompleted(video.id),
+          xp: video.xpReward
+        }))
+      }))
+    }))
+  }))
+  
+  // Auto-expand based on current URL
+  useEffect(() => {
+    const pathParts = pathname.split('/')
+    if (pathParts.includes('learning')) {
+      const moduleId = pathParts[2] // e.g., module-1
+      const weekId = pathParts[3] // e.g., week-1
+      
+      if (moduleId && !expandedModules.includes(moduleId)) {
+        setExpandedModules(prev => [...prev, moduleId])
+      }
+      
+      if (weekId && !expandedWeeks.includes(weekId)) {
+        setExpandedWeeks(prev => [...prev, weekId])
+      }
+    }
+  }, [pathname])
 
   const toggleModule = (moduleId: string) => {
     setExpandedModules(prev => 
@@ -263,7 +208,7 @@ export function NavigationTree() {
                           className={cn(
                             "flex items-center px-3 py-1.5 rounded-md text-xs transition-all duration-200",
                             pathname.includes(day.id)
-                              ? "bg-blox-teal text-white"
+                              ? "bg-gradient-to-r from-yellow-400 to-amber-500 text-white font-bold shadow-lg shadow-yellow-500/30 border border-yellow-400/50"
                               : day.completed
                               ? "text-blox-success hover:bg-blox-success/5"
                               : "text-blox-off-white hover:bg-blox-second-dark-blue/30"

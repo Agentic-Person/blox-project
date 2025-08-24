@@ -1,4 +1,4 @@
-import { BookOpen, Users, TrendingUp, MessageCircle, FileText, User, Settings, HelpCircle, Home, Bot } from 'lucide-react'
+import { Brain, Users, TrendingUp, MessageCircle, FileText, User, Settings, HelpCircle, Home, Bot, UserCog } from 'lucide-react'
 
 export interface NavItem {
   title: string
@@ -16,16 +16,10 @@ export const MAIN_NAV: NavItem[] = [
     description: 'Overview of your progress',
   },
   {
-    title: 'Learning',
+    title: 'Learning Path',
     href: '/learning',
-    icon: BookOpen,
+    icon: Brain,
     description: 'Structured learning path',
-  },
-  {
-    title: 'Teams',
-    href: '/teams',
-    icon: Users,
-    description: 'Find and join teams',
   },
   {
     title: 'Progress',
@@ -34,16 +28,22 @@ export const MAIN_NAV: NavItem[] = [
     description: 'Track your learning journey',
   },
   {
+    title: 'Notes',
+    href: '/notes',
+    icon: FileText,
+    description: 'Your learning notes',
+  },
+  {
     title: 'Discord',
     href: '/discord',
     icon: MessageCircle,
     description: 'Community chat',
   },
   {
-    title: 'Notes',
-    href: '/notes',
-    icon: FileText,
-    description: 'Your learning notes',
+    title: 'Teams',
+    href: '/teams',
+    icon: Users,
+    description: 'Find and join teams',
   },
   {
     title: 'Blox Wizard',
@@ -59,6 +59,11 @@ export const SECONDARY_NAV: NavItem[] = [
     title: 'Profile',
     href: '/profile',
     icon: User,
+  },
+  {
+    title: 'Account',
+    href: '/account',
+    icon: UserCog,
   },
   {
     title: 'Settings',

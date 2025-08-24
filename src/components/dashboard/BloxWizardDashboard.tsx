@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Bot, Send, Sparkles, Crown, MessageSquare, Zap, Brain, Code, HelpCircle, Lock } from 'lucide-react'
+import { Bot, Send, Sparkles, Crown, MessageSquare, Zap, Brain, Code, HelpCircle, Lock, ArrowRight } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -41,8 +41,13 @@ export function BloxWizardDashboard() {
   const [isLoading, setIsLoading] = useState(false)
   const [isPremium] = useState(false) // Mock premium status
   const [remainingQuestions] = useState(3) // Mock remaining questions
+  const [isMounted, setIsMounted] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   // Sample questions like ChatGPT - 6 questions for 2x3 grid
   const sampleQuestions = [
@@ -54,13 +59,14 @@ export function BloxWizardDashboard() {
     "What are the best practices for Roblox scripting?"
   ]
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
+  // Removed automatic scroll for dashboard version to prevent page jumping
+  // const scrollToBottom = () => {
+  //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  // }
 
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages])
+  // useEffect(() => {
+  //   scrollToBottom()
+  // }, [messages])
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return
@@ -155,9 +161,11 @@ export function BloxWizardDashboard() {
                       }`}
                     >
                       <p className="text-sm">{message.content}</p>
-                      <p className="text-xs opacity-50 mt-1">
-                        {message.timestamp.toLocaleTimeString()}
-                      </p>
+                      {isMounted && (
+                        <p className="text-xs opacity-50 mt-1">
+                          {message.timestamp.toLocaleTimeString()}
+                        </p>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -228,26 +236,19 @@ export function BloxWizardDashboard() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-sm">
                   <Sparkles className="h-4 w-4 text-yellow-500" />
-                  Upgrade to Premium
+                  Upgrade to Pro
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <ul className="space-y-1 mb-3 text-xs">
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-500">✓</span> Unlimited questions
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-500">✓</span> Code debugging help
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-500">✓</span> Priority support
-                  </li>
-                </ul>
+              <CardContent className="space-y-3">
+                <p className="text-xs text-blox-off-white/90 leading-relaxed">
+                  Unlock Blox Chat Wizard - your personal AI learning assistant
+                </p>
                 <Button
                   onClick={() => window.location.href = '/ai-assistant'}
-                  className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-xs"
+                  className="group flex items-center justify-center gap-2 w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-xs"
                 >
-                  Upgrade Now - 500 BLOX
+                  <span>Learn more</span>
+                  <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                 </Button>
               </CardContent>
             </Card>

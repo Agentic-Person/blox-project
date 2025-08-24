@@ -1,0 +1,1128 @@
+{
+  "module1": {
+    "week1": {
+      "day1": [
+        {
+          "day": 1,
+          "title": "Roblox Studio 2024 Complete Beginner Guide",
+          "creator": "TheDevKing",
+          "youtubeId": "K0lDWlGMK94"
+        },
+        {
+          "day": 1,
+          "title": "New Creator Hub Tutorial 2024",
+          "creator": "BrawlDev",
+          "youtubeId": "AKz_60c2v_A"
+        },
+        {
+          "day": 1,
+          "title": "How to Navigate Roblox Studio 2024",
+          "creator": "AlvinBlox",
+          "youtubeId": "SpvjB0wS3cc"
+        }
+      ],
+      "day2": [
+        {
+          "day": 2,
+          "title": "Modern Studio Interface 2024",
+          "creator": "AlvinBlox",
+          "youtubeId": "OYwWs5s1KYY"
+        },
+        {
+          "day": 2,
+          "title": "Essential Tools in Roblox Studio",
+          "creator": "ByteBlox",
+          "youtubeId": "bBN8Y95k54k"
+        },
+        {
+          "day": 2,
+          "title": "Workspace Organization Tutorial",
+          "creator": "B Ricey",
+          "youtubeId": "9FQKSU2PFeQ"
+        },
+        {
+          "day": 2,
+          "title": "Camera Controls and Views",
+          "creator": "HowToRoblox",
+          "youtubeId": "F9lFk4CemXw"
+        }
+      ],
+      "day3": [
+        {
+          "day": 3,
+          "title": "2024 Beginner Scripting Series Episode 1",
+          "creator": "ByteBlox",
+          "youtubeId": "UyO1tWYswHc"
+        },
+        {
+          "day": 3,
+          "title": "Properties and Attributes 2024",
+          "creator": "Suphi Kaner",
+          "youtubeId": "QX7Tgo3-7nI"
+        },
+        {
+          "day": 3,
+          "title": "Working with Parts Tutorial",
+          "creator": "TheDevKing",
+          "youtubeId": "JvIzWQ5Lk0w"
+        },
+        {
+          "day": 3,
+          "title": "Material Service Guide 2024",
+          "creator": "BrawlDev",
+          "youtubeId": "2bHcCCxwAtE"
+        }
+      ],
+      "day4": [
+        {
+          "day": 4,
+          "title": "Modern Building Techniques 2024 Part 1",
+          "creator": "B Ricey",
+          "youtubeId": "tbUBhJfrJIM"
+        },
+        {
+          "day": 4,
+          "title": "Basic Building Tools Tutorial",
+          "creator": "AlvinBlox",
+          "youtubeId": "OvSB0bR-3Dc"
+        },
+        {
+          "day": 4,
+          "title": "Anchoring and CanCollide Explained",
+          "creator": "DasKairo",
+          "youtubeId": "fC3mtYcSyJw"
+        },
+        {
+          "day": 4,
+          "title": "Color and Material Properties",
+          "creator": "ByteBlox",
+          "youtubeId": "wHfya1WYN3g"
+        }
+      ],
+      "day5": [
+        {
+          "day": 5,
+          "title": "Terrain Tools 2024 Update",
+          "creator": "HowToRoblox",
+          "youtubeId": "1A1fZwC3XiI"
+        },
+        {
+          "day": 5,
+          "title": "Creating Realistic Terrain",
+          "creator": "TheDevKing",
+          "youtubeId": "p3EnRjt7wFo"
+        },
+        {
+          "day": 5,
+          "title": "Water and Environment Effects",
+          "creator": "B Ricey",
+          "youtubeId": "RUI-7hkY2Es"
+        },
+        {
+          "day": 5,
+          "title": "Terrain Materials Guide",
+          "creator": "BrawlDev",
+          "youtubeId": "ehSCwP7U8iA"
+        }
+      ]
+    },
+    "week2": {
+      "day6": [
+        {
+          "day": 6,
+          "title": "Models vs Groups vs Folders",
+          "creator": "AlvinBlox",
+          "youtubeId": "_umkW6z3Zqg"
+        },
+        {
+          "day": 6,
+          "title": "Organizing Your Workspace",
+          "creator": "ByteBlox",
+          "youtubeId": "rPCm5gQZkgY"
+        },
+        {
+          "day": 6,
+          "title": "Model Hierarchy Best Practices",
+          "creator": "Suphi Kaner",
+          "youtubeId": "GE55QhfiAps"
+        },
+        {
+          "day": 6,
+          "title": "Naming Conventions Guide",
+          "creator": "DasKairo",
+          "youtubeId": "ia9twQtwmm4"
+        }
+      ],
+      "day7": [
+        {
+          "day": 7,
+          "title": "Physics Constraints Complete Guide",
+          "creator": "TheDevKing",
+          "youtubeId": "rtFV_K5d5Ew"
+        },
+        {
+          "day": 7,
+          "title": "Hinges, Springs, and Ropes Tutorial",
+          "creator": "B Ricey",
+          "youtubeId": "6V2_kYcK5E4"
+        },
+        {
+          "day": 7,
+          "title": "Creating Moving Parts",
+          "creator": "AlvinBlox",
+          "youtubeId": "bBA-jt9wOLQ"
+        },
+        {
+          "day": 7,
+          "title": "Collision Groups Explained",
+          "creator": "Suphi Kaner",
+          "youtubeId": "QojA4w79fVU"
+        }
+      ],
+      "day8": [
+        {
+          "day": 8,
+          "title": "Future is Bright Phase 4",
+          "creator": "Roblox Official",
+          "youtubeId": "AxSdH46r0j8"
+        },
+        {
+          "day": 8,
+          "title": "Lighting Types and Uses",
+          "creator": "TheDevKing",
+          "youtubeId": "yOY3rSNCWk0"
+        },
+        {
+          "day": 8,
+          "title": "Atmosphere and Skybox 2024",
+          "creator": "B Ricey",
+          "youtubeId": "kd2nd-yj2NM"
+        },
+        {
+          "day": 8,
+          "title": "Basic Lighting Setup",
+          "creator": "ByteBlox",
+          "youtubeId": "-t_8m1k4KPI"
+        }
+      ],
+      "day9": [
+        {
+          "day": 9,
+          "title": "UI Design Basics 2024",
+          "creator": "AlvinBlox",
+          "youtubeId": "rYG0P3kTnYw"
+        },
+        {
+          "day": 9,
+          "title": "ScreenGui vs BillboardGui",
+          "creator": "ByteBlox",
+          "youtubeId": "xKjDrM05fEU"
+        },
+        {
+          "day": 9,
+          "title": "Creating Your First GUI",
+          "creator": "TheDevKing",
+          "youtubeId": "O1p9jV6KylM"
+        },
+        {
+          "day": 9,
+          "title": "UI Scaling and Positioning",
+          "creator": "DasKairo",
+          "youtubeId": "iyB7e4KfukA"
+        }
+      ],
+      "day10": [
+        {
+          "day": 10,
+          "title": "Building Your First Game Environment",
+          "creator": "GnomeCode",
+          "youtubeId": "pkr8jaTScz0"
+        },
+        {
+          "day": 10,
+          "title": "Showcase Lighting Setup",
+          "creator": "B Ricey",
+          "youtubeId": "_yEBsQ64D98"
+        },
+        {
+          "day": 10,
+          "title": "Publishing Your First Place",
+          "creator": "AlvinBlox",
+          "youtubeId": "n6Q6bnQWj4w"
+        }
+      ]
+    },
+    "week3": {
+      "day11": [
+        {
+          "day": 11,
+          "title": "Donut Tutorial 4.0 Version Part 1",
+          "creator": "Blender Guru",
+          "youtubeId": "TPrnSACiTJ4"
+        },
+        {
+          "day": 11,
+          "title": "Blender 4.1 for Beginners",
+          "creator": "Joey Carlino",
+          "youtubeId": "65ecUxmTT8A"
+        },
+        {
+          "day": 11,
+          "title": "What's New in Blender 4.1",
+          "creator": "CGDive",
+          "youtubeId": "CTpvQvLU_Qk"
+        },
+        {
+          "day": 11,
+          "title": "Interface Customization",
+          "creator": "Grant Abbitt",
+          "youtubeId": "ldOqY7RP6vE"
+        }
+      ],
+      "day12": [
+        {
+          "day": 12,
+          "title": "Donut Tutorial 4.0 Version Part 2",
+          "creator": "Blender Guru",
+          "youtubeId": "mH7e2FzG9D4"
+        },
+        {
+          "day": 12,
+          "title": "Viewport Navigation Mastery",
+          "creator": "CGDive",
+          "youtubeId": "nq6V1gkk-TI"
+        },
+        {
+          "day": 12,
+          "title": "Essential Shortcuts for Beginners",
+          "creator": "Grant Abbitt",
+          "youtubeId": "I6j8TGDw7Zo"
+        },
+        {
+          "day": 12,
+          "title": "3D Cursor Basics",
+          "creator": "Joey Carlino",
+          "youtubeId": "7pQXEM7niD0"
+        }
+      ],
+      "day13": [
+        {
+          "day": 13,
+          "title": "Blender 4.0 Game Asset Creation Episode 1",
+          "creator": "Grant Abbitt",
+          "youtubeId": "rV7wjBpqXS8"
+        },
+        {
+          "day": 13,
+          "title": "Edit Mode Fundamentals",
+          "creator": "Joey Carlino",
+          "youtubeId": "uh1gWvCj61E"
+        },
+        {
+          "day": 13,
+          "title": "Basic Modeling Tools",
+          "creator": "SouthernShotty",
+          "youtubeId": "7f5fr4sDZho"
+        },
+        {
+          "day": 13,
+          "title": "Selecting and Transforming",
+          "creator": "CGDive",
+          "youtubeId": "FQdiqWtcEp8"
+        }
+      ],
+      "day14": [
+        {
+          "day": 14,
+          "title": "Blender 4.0 Game Asset Creation Episode 2",
+          "creator": "Grant Abbitt",
+          "youtubeId": "_48MIh8bMJE"
+        },
+        {
+          "day": 14,
+          "title": "Understanding Object vs Edit Mode",
+          "creator": "CGDive",
+          "youtubeId": "btEDUlDR00o"
+        },
+        {
+          "day": 14,
+          "title": "Basic Transformations",
+          "creator": "SouthernShotty",
+          "youtubeId": "Otu_jja-mAo"
+        },
+        {
+          "day": 14,
+          "title": "Origin Points Explained",
+          "creator": "Joey Carlino",
+          "youtubeId": "uwOsjqx_5wA"
+        }
+      ],
+      "day15": [
+        {
+          "day": 15,
+          "title": "10-minute modeling 2024 Episode 1",
+          "creator": "Imphenzia",
+          "youtubeId": "Q7AOvWpIVHU"
+        },
+        {
+          "day": 15,
+          "title": "10-minute modeling 2024 Episode 2",
+          "creator": "Imphenzia",
+          "youtubeId": "Os8-QLp5L6c"
+        },
+        {
+          "day": 15,
+          "title": "Low Poly Modeling 2024",
+          "creator": "SouthernShotty",
+          "youtubeId": "JxfmYXXlOtA"
+        },
+        {
+          "day": 15,
+          "title": "Creating Game-Ready Props",
+          "creator": "Grant Abbitt",
+          "youtubeId": "q8Eo1QhW3sE"
+        },
+        {
+          "day": 15,
+          "title": "Optimization Basics",
+          "creator": "CGDive",
+          "youtubeId": "LSGbwo7BrPU"
+        }
+      ]
+    },
+    "week4": {
+      "day16": [
+        {
+          "day": 16,
+          "title": "Meshy v3 Complete Guide 2024",
+          "creator": "Meshy Official",
+          "youtubeId": "gAJvj5Hg_Y0"
+        },
+        {
+          "day": 16,
+          "title": "Creating Game Assets with Meshy",
+          "creator": "Indian GameDev",
+          "youtubeId": "k9Ypa1oVIJQ"
+        },
+        {
+          "day": 16,
+          "title": "Text to 3D Workflow",
+          "creator": "Captain Creativity",
+          "youtubeId": "YEvLcp6tkb4"
+        },
+        {
+          "day": 16,
+          "title": "Meshy Settings Explained",
+          "creator": "AI Game Dev",
+          "youtubeId": "dkb7dK5R7vU"
+        }
+      ],
+      "day17": [
+        {
+          "day": 17,
+          "title": "Kaedim 2.0 Game Asset Creation",
+          "creator": "Kaedim Official",
+          "youtubeId": "JGvDJm37keQ"
+        },
+        {
+          "day": 17,
+          "title": "Bezi AI Collaborative 3D Tutorial",
+          "creator": "Bezi Official",
+          "youtubeId": "2Mfr1b8BFTQ"
+        },
+        {
+          "day": 17,
+          "title": "Luma AI Genie Mobile Guide",
+          "creator": "Two Minute Papers",
+          "youtubeId": "3H2mZTP7Mkc"
+        },
+        {
+          "day": 17,
+          "title": "Spline 3D Quick Start",
+          "creator": "School of Motion",
+          "youtubeId": "8LQ-HGOXkWc"
+        }
+      ],
+      "day18": [
+        {
+          "day": 18,
+          "title": "Claude 3 for 3D Prompting",
+          "creator": "AI Game Dev",
+          "youtubeId": "J5e6PioK6zQ"
+        },
+        {
+          "day": 18,
+          "title": "GPT-4 Vision for 3D Reference",
+          "creator": "Matt Wolfe",
+          "youtubeId": "OTzOtcWfydk"
+        },
+        {
+          "day": 18,
+          "title": "Effective 3D Prompts Guide",
+          "creator": "Captain Creativity",
+          "youtubeId": "bQjAU8n-6Is"
+        },
+        {
+          "day": 18,
+          "title": "Prompt Engineering Basics",
+          "creator": "Fireship",
+          "youtubeId": "gQOjK8I7YFo"
+        }
+      ],
+      "day19": [
+        {
+          "day": 19,
+          "title": "Cleaning AI Models in Blender 4.1",
+          "creator": "Grant Abbitt",
+          "youtubeId": "gDbnN2YswIE"
+        },
+        {
+          "day": 19,
+          "title": "Optimizing AI-Generated Meshes",
+          "creator": "CGDive",
+          "youtubeId": "cKSKHfI-UjA"
+        },
+        {
+          "day": 19,
+          "title": "Retopology Basics for AI Models",
+          "creator": "SouthernShotty",
+          "youtubeId": "0jhn3o6Wv3U"
+        }
+      ],
+      "day20": [
+        {
+          "day": 20,
+          "title": "AI to Roblox Pipeline 2024",
+          "creator": "ByteBlox",
+          "youtubeId": "5jZZRAGG3pY"
+        },
+        {
+          "day": 20,
+          "title": "Importing Custom Models",
+          "creator": "TheDevKing",
+          "youtubeId": "vDQQubcWZzE"
+        },
+        {
+          "day": 20,
+          "title": "Scale and Optimization Tips",
+          "creator": "B Ricey",
+          "youtubeId": "ImlT8oAgiEk"
+        }
+      ]
+    }
+  },
+  "module2": {
+    "week5": {
+      "day21": [
+        {
+          "day": 21,
+          "title": "UV Unwrapping Blender 4.0+ Part 1",
+          "creator": "Grant Abbitt",
+          "youtubeId": "pbWE9dqG9NM"
+        },
+        {
+          "day": 21,
+          "title": "Understanding UV Coordinates",
+          "creator": "CGDive",
+          "youtubeId": "V6FqLr3G9J4"
+        },
+        {
+          "day": 21,
+          "title": "Why UVs Matter for Games",
+          "creator": "SouthernShotty",
+          "youtubeId": "54yRwv-6A8o"
+        },
+        {
+          "day": 21,
+          "title": "UV Editor Interface",
+          "creator": "Joey Carlino",
+          "youtubeId": "I-EjH2e_v9c"
+        }
+      ],
+      "day22": [
+        {
+          "day": 22,
+          "title": "UV Unwrapping Blender 4.0+ Part 2",
+          "creator": "Grant Abbitt",
+          "youtubeId": "F0C0w6u3-1E"
+        },
+        {
+          "day": 22,
+          "title": "Smart UV Project Guide",
+          "creator": "CGDive",
+          "youtubeId": "8jWqkSJQYiA"
+        },
+        {
+          "day": 22,
+          "title": "Seams Placement Strategy",
+          "creator": "SouthernShotty",
+          "youtubeId": "d-yN3TX9BOg"
+        }
+      ],
+      "day23": [
+        {
+          "day": 23,
+          "title": "UV Unwrapping Blender 4.0+ Part 3",
+          "creator": "Grant Abbitt",
+          "youtubeId": "6E2eKlOd7Rk"
+        },
+        {
+          "day": 23,
+          "title": "UDIM Workflow for Games 2024",
+          "creator": "CGDive",
+          "youtubeId": "_YxQw6XkqEk"
+        },
+        {
+          "day": 23,
+          "title": "Texture Density Guide",
+          "creator": "Joey Carlino",
+          "youtubeId": "9RxiBlb0u08"
+        },
+        {
+          "day": 23,
+          "title": "UV Packing Tips",
+          "creator": "SouthernShotty",
+          "youtubeId": "wISQpVfGQyE"
+        }
+      ],
+      "day24": [
+        {
+          "day": 24,
+          "title": "UV Unwrapping Common Objects",
+          "creator": "Grant Abbitt",
+          "youtubeId": "gfi6qKGlGZE"
+        },
+        {
+          "day": 24,
+          "title": "Troubleshooting UV Issues",
+          "creator": "CGDive",
+          "youtubeId": "WTsp3JbfGSo"
+        },
+        {
+          "day": 24,
+          "title": "Quick UV Tips",
+          "creator": "Imphenzia",
+          "youtubeId": "-RfEpWJ0oxg"
+        }
+      ],
+      "day25": [
+        {
+          "day": 25,
+          "title": "Preparing UVs for Texturing",
+          "creator": "Grant Abbitt",
+          "youtubeId": "pDt2gDWWdAw"
+        },
+        {
+          "day": 25,
+          "title": "UV Layout Export",
+          "creator": "CGDive",
+          "youtubeId": "dPXSlwD8wCw"
+        },
+        {
+          "day": 25,
+          "title": "Texture Resolution Guide",
+          "creator": "SouthernShotty",
+          "youtubeId": "Fx9FoRuwdwI"
+        },
+        {
+          "day": 25,
+          "title": "Blender to Roblox UV Tips",
+          "creator": "ByteBlox",
+          "youtubeId": "GEwjOpy5Dew"
+        }
+      ]
+    },
+    "week6": {
+      "day26": [
+        {
+          "day": 26,
+          "title": "Blender 4.1 Shader Nodes for Games",
+          "creator": "CGDive",
+          "youtubeId": "cT2Kk7ZtlpE"
+        },
+        {
+          "day": 26,
+          "title": "Principled BSDF v2 Guide",
+          "creator": "Grant Abbitt",
+          "youtubeId": "IVq-S2k8eDo"
+        },
+        {
+          "day": 26,
+          "title": "Node Editor Basics",
+          "creator": "Default Cube",
+          "youtubeId": "9bJ2bD5iQx4"
+        },
+        {
+          "day": 26,
+          "title": "Material Properties",
+          "creator": "Joey Carlino",
+          "youtubeId": "ytYc7nldZ84"
+        }
+      ],
+      "day27": [
+        {
+          "day": 27,
+          "title": "Texture Painting in Blender",
+          "creator": "Grant Abbitt",
+          "youtubeId": "8N5m1cyu3ys"
+        },
+        {
+          "day": 27,
+          "title": "Procedural Texturing 2024",
+          "creator": "Default Cube",
+          "youtubeId": "RnbBIRdF6co"
+        },
+        {
+          "day": 27,
+          "title": "Image Textures Setup",
+          "creator": "CGDive",
+          "youtubeId": "5pPpyL6kgkQ"
+        }
+      ],
+      "day28": [
+        {
+          "day": 28,
+          "title": "PBR Texturing Workflows",
+          "creator": "Grant Abbitt",
+          "youtubeId": "Yc7i-mq8S1U"
+        },
+        {
+          "day": 28,
+          "title": "Understanding PBR Maps",
+          "creator": "CGDive",
+          "youtubeId": "2DgFWGFgPlw"
+        },
+        {
+          "day": 28,
+          "title": "Roughness and Metallic",
+          "creator": "SouthernShotty",
+          "youtubeId": "YhUeUxN8gVM"
+        },
+        {
+          "day": 28,
+          "title": "Normal Maps Explained",
+          "creator": "Default Cube",
+          "youtubeId": "JQaP9znK7lE"
+        }
+      ],
+      "day29": [
+        {
+          "day": 29,
+          "title": "Magnific AI Pro Features 2024",
+          "creator": "Two Minute Papers",
+          "youtubeId": "quA87e3D6r8"
+        },
+        {
+          "day": 29,
+          "title": "Adobe Firefly 3D Textures",
+          "creator": "Adobe Official",
+          "youtubeId": "0z5j8d0fBgU"
+        },
+        {
+          "day": 29,
+          "title": "Stability AI Material Generator",
+          "creator": "Matt Wolfe",
+          "youtubeId": "EEayjRriyeA"
+        },
+        {
+          "day": 29,
+          "title": "AI Texture Upscaling",
+          "creator": "Corridor Crew",
+          "youtubeId": "QCSW-7kAhwE"
+        }
+      ],
+      "day30": [
+        {
+          "day": 30,
+          "title": "Texture Atlasing for Games",
+          "creator": "Grant Abbitt",
+          "youtubeId": "hzNAdDKgjNQ"
+        },
+        {
+          "day": 30,
+          "title": "Channel Packing Techniques",
+          "creator": "CGDive",
+          "youtubeId": "BlHgEfrndN4"
+        },
+        {
+          "day": 30,
+          "title": "Texture Compression Guide",
+          "creator": "SouthernShotty",
+          "youtubeId": "1ykArH0T3eU"
+        },
+        {
+          "day": 30,
+          "title": "Roblox Texture Limits",
+          "creator": "ByteBlox",
+          "youtubeId": "frlV_mQavtg"
+        }
+      ]
+    },
+    "week7": {
+      "day31": [
+        {
+          "day": 31,
+          "title": "Blender 4.0 Rigging Changes",
+          "creator": "Grant Abbitt",
+          "youtubeId": "PV7WLvUgZRk"
+        },
+        {
+          "day": 31,
+          "title": "Bone Creation Basics",
+          "creator": "Pierrick Picaut",
+          "youtubeId": "wTf7Yiq1hPo"
+        },
+        {
+          "day": 31,
+          "title": "Armature Properties",
+          "creator": "CGDive",
+          "youtubeId": "bQnRpNnmQGc"
+        },
+        {
+          "day": 31,
+          "title": "Bone Naming Conventions",
+          "creator": "Joey Carlino",
+          "youtubeId": "1yCBlGL1gkw"
+        }
+      ],
+      "day32": [
+        {
+          "day": 32,
+          "title": "Character Rigging Part 1",
+          "creator": "Grant Abbitt",
+          "youtubeId": "_ZL0BAf4TSs"
+        },
+        {
+          "day": 32,
+          "title": "Bone Parenting Guide",
+          "creator": "Pierrick Picaut",
+          "youtubeId": "-4rB6rr8v0Q"
+        },
+        {
+          "day": 32,
+          "title": "IK vs FK Explained",
+          "creator": "CGDive",
+          "youtubeId": "X6iYXBoIWZc"
+        }
+      ],
+      "day33": [
+        {
+          "day": 33,
+          "title": "Weight Painting Fundamentals",
+          "creator": "Grant Abbitt",
+          "youtubeId": "6G8wLdE_Zo4"
+        },
+        {
+          "day": 33,
+          "title": "Automatic Weights Guide",
+          "creator": "Pierrick Picaut",
+          "youtubeId": "OCdkQ9n6A1U"
+        },
+        {
+          "day": 33,
+          "title": "Weight Paint Tools",
+          "creator": "CGDive",
+          "youtubeId": "yJ6SmTqNTio"
+        },
+        {
+          "day": 33,
+          "title": "Common Weight Issues",
+          "creator": "Joey Carlino",
+          "youtubeId": "FfH5-yDtnNQ"
+        }
+      ],
+      "day34": [
+        {
+          "day": 34,
+          "title": "Bone Constraints Guide",
+          "creator": "Grant Abbitt",
+          "youtubeId": "OujODDafuyc"
+        },
+        {
+          "day": 34,
+          "title": "Copy Location and Rotation",
+          "creator": "Pierrick Picaut",
+          "youtubeId": "BD2YeZf1x-4"
+        },
+        {
+          "day": 34,
+          "title": "Limit Constraints",
+          "creator": "CGDive",
+          "youtubeId": "l7pH7diEnF8"
+        }
+      ],
+      "day35": [
+        {
+          "day": 35,
+          "title": "Rigging a Simple Character",
+          "creator": "Grant Abbitt",
+          "youtubeId": "9O2Lp8jRFlw"
+        },
+        {
+          "day": 35,
+          "title": "Prop Rigging Tutorial",
+          "creator": "Pierrick Picaut",
+          "youtubeId": "zmvYwz0cLQk"
+        },
+        {
+          "day": 35,
+          "title": "Testing Your Rig",
+          "creator": "CGDive",
+          "youtubeId": "efKllI1lEag"
+        },
+        {
+          "day": 35,
+          "title": "Export Settings for Rigs",
+          "creator": "Joey Carlino",
+          "youtubeId": "HvXTfAgwPtE"
+        }
+      ]
+    },
+    "week8": {
+      "day36": [
+        {
+          "day": 36,
+          "title": "Animation Layers in Blender 4.1",
+          "creator": "Grant Abbitt",
+          "youtubeId": "9TtfiC2UFCg"
+        },
+        {
+          "day": 36,
+          "title": "Keyframe Animation Basics",
+          "creator": "Pierrick Picaut",
+          "youtubeId": "dkDCTzYDoBc"
+        },
+        {
+          "day": 36,
+          "title": "Timeline and Dope Sheet",
+          "creator": "CGDive",
+          "youtubeId": "6rVveQ7frLk"
+        },
+        {
+          "day": 36,
+          "title": "Animation Principles",
+          "creator": "Joey Carlino",
+          "youtubeId": "GLnkLwc-wlI"
+        }
+      ],
+      "day37": [
+        {
+          "day": 37,
+          "title": "Mixamo to Roblox 2024 Pipeline",
+          "creator": "TheDevKing",
+          "youtubeId": "xtciSBqT3sI"
+        },
+        {
+          "day": 37,
+          "title": "Auto-Rigging with Mixamo",
+          "creator": "FlippedNormals",
+          "youtubeId": "g-JscMSqMUE"
+        },
+        {
+          "day": 37,
+          "title": "Mixamo Best Practices",
+          "creator": "ByteBlox",
+          "youtubeId": "bmlkbkmGSlo"
+        }
+      ],
+      "day38": [
+        {
+          "day": 38,
+          "title": "RoMixamo Plugin Tutorial",
+          "creator": "AlvinBlox",
+          "youtubeId": "LKjP2-3HKdI"
+        },
+        {
+          "day": 38,
+          "title": "3000+ Animations Guide",
+          "creator": "TheDevKing",
+          "youtubeId": "cpDc2cpPgIo"
+        },
+        {
+          "day": 38,
+          "title": "Animation Retargeting",
+          "creator": "B Ricey",
+          "youtubeId": "_Su_F5o-lkI"
+        },
+        {
+          "day": 38,
+          "title": "Custom Animation Edits",
+          "creator": "ByteBlox",
+          "youtubeId": "mZs7JJIX4ac"
+        }
+      ],
+      "day39": [
+        {
+          "day": 39,
+          "title": "Cascadeur 2024 Physics Animation",
+          "creator": "Cascadeur Official",
+          "youtubeId": "HLne3d8Ch7k"
+        },
+        {
+          "day": 39,
+          "title": "DeepMotion Animate 3D",
+          "creator": "DeepMotion Official",
+          "youtubeId": "WqvS5TkZpMQ"
+        },
+        {
+          "day": 39,
+          "title": "Rokoko Vision 2024",
+          "creator": "Rokoko Official",
+          "youtubeId": "b1yjzRWiTOA"
+        },
+        {
+          "day": 39,
+          "title": "AI Motion Capture Tips",
+          "creator": "Two Minute Papers",
+          "youtubeId": "EgL6CZZe5pI"
+        }
+      ],
+      "day40": [
+        {
+          "day": 40,
+          "title": "Roblox Animation Editor 2024",
+          "creator": "TheDevKing",
+          "youtubeId": "9Kvjjs2Hukw"
+        },
+        {
+          "day": 40,
+          "title": "Batch Animation Import",
+          "creator": "ByteBlox",
+          "youtubeId": "pGxu2cAtwUA"
+        },
+        {
+          "day": 40,
+          "title": "Animation Events Setup",
+          "creator": "AlvinBlox",
+          "youtubeId": "bFJvAI3y27o"
+        },
+        {
+          "day": 40,
+          "title": "Performance Tips",
+          "creator": "Suphi Kaner",
+          "youtubeId": "F3MrOiISNnI"
+        }
+      ]
+    }
+  },
+  "module3": {
+    "week9": {
+      "day41": [],
+      "day42": [],
+      "day43": [],
+      "day44": [],
+      "day45": []
+    },
+    "week10": {
+      "day46": [],
+      "day47": [],
+      "day48": [],
+      "day49": [],
+      "day50": []
+    },
+    "week11": {
+      "day51": [],
+      "day52": [],
+      "day53": [],
+      "day54": [],
+      "day55": []
+    },
+    "week12": {
+      "day56": [],
+      "day57": [],
+      "day58": [],
+      "day59": [],
+      "day60": []
+    }
+  },
+  "module4": {
+    "week13": {
+      "day61": [],
+      "day62": [],
+      "day63": [],
+      "day64": [],
+      "day65": []
+    },
+    "week14": {
+      "day66": [],
+      "day67": [],
+      "day68": [],
+      "day69": [],
+      "day70": []
+    },
+    "week15": {
+      "day71": [],
+      "day72": [],
+      "day73": [],
+      "day74": [],
+      "day75": []
+    },
+    "week16": {
+      "day76": [],
+      "day77": [],
+      "day78": [],
+      "day79": [],
+      "day80": []
+    }
+  },
+  "module5": {
+    "week17": {
+      "day81": [],
+      "day82": [],
+      "day83": [],
+      "day84": [],
+      "day85": []
+    },
+    "week18": {
+      "day86": [],
+      "day87": [],
+      "day88": [],
+      "day89": [],
+      "day90": []
+    },
+    "week19": {
+      "day91": [],
+      "day92": [],
+      "day93": [],
+      "day94": [],
+      "day95": []
+    },
+    "week20": {
+      "day96": [],
+      "day97": [],
+      "day98": [],
+      "day99": [],
+      "day100": []
+    }
+  },
+  "module6": {
+    "week21": {
+      "day101": [],
+      "day102": [],
+      "day103": [],
+      "day104": [],
+      "day105": []
+    },
+    "week22": {
+      "day106": [],
+      "day107": [],
+      "day108": [],
+      "day109": [],
+      "day110": []
+    },
+    "week23": {
+      "day111": [],
+      "day112": [],
+      "day113": [],
+      "day114": [],
+      "day115": []
+    },
+    "week24": {
+      "day116": [],
+      "day117": [],
+      "day118": [],
+      "day119": [],
+      "day120": []
+    }
+  }
+}

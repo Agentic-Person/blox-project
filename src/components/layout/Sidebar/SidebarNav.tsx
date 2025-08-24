@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { MAIN_NAV, SECONDARY_NAV } from '@/lib/config/navigation'
 import { LearningPathTree } from '@/components/learning/LearningPathTree'
 import { cn } from '@/lib/utils/cn'
-import { ChevronDown, ChevronRight } from 'lucide-react'
+import { ChevronDown, ChevronRight, Star } from 'lucide-react'
 
 export function SidebarNav() {
   const pathname = usePathname()
@@ -67,7 +67,7 @@ export function SidebarNav() {
                     )}
                   >
                     <Icon className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform" />
-                    Learning Path
+                    {item.title}
                     {item.badge && (
                       <span className="ml-auto xp-badge">
                         {item.badge}
@@ -94,13 +94,20 @@ export function SidebarNav() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "nav-item w-full text-left flex items-center",
+                  "nav-item w-full text-left flex items-center relative",
                   isActive && "nav-item-active"
                 )}
               >
                 <Icon className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform" />
                 {item.title}
-                {item.badge && (
+                {/* Pro Feature Badge for Blox Wizard */}
+                {item.href === '/ai-assistant' && (
+                  <span className="ml-2 inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-semibold bg-blox-golden-yellow text-blox-black-blue rounded">
+                    <Star className="h-2.5 w-2.5" />
+                    Pro
+                  </span>
+                )}
+                {item.badge && item.href !== '/ai-assistant' && (
                   <span className="ml-auto xp-badge">
                     {item.badge}
                   </span>

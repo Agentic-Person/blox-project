@@ -37,3 +37,7 @@ next-env.d.ts
 
 # snips folder - contains sensitive data and screenshots
 /snips/
+
+# private folder - contains API keys and sensitive data
+/.private/
+.private/

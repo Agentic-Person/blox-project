@@ -105,11 +105,14 @@
   /* Progress bars */
   .progress-bar {
     @apply relative h-2 bg-blox-second-dark-blue rounded-full overflow-hidden;
+    @apply border border-white/30;
   }
 
   .progress-fill {
-    @apply absolute inset-y-0 left-0 bg-teal-gradient rounded-full;
-    @apply shadow-teal-glow transition-all duration-500 ease-out;
+    @apply absolute inset-y-0 left-0 rounded-full;
+    @apply transition-all duration-500 ease-out;
+    background: linear-gradient(90deg, #FF4444 0%, #FF8844 25%, #FFDD44 50%, #4488FF 75%, #44FF88 100%);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
   }
 
   /* Navigation items */
@@ -120,8 +123,8 @@
   }
 
   .nav-item-active {
-    @apply text-blox-teal bg-blox-glass-teal;
-    @apply border-l-2 border-blox-teal;
+    @apply text-blox-golden-yellow bg-blox-golden-yellow/10;
+    @apply border-l-2 border-blox-golden-yellow;
   }
 
   /* Text styles */

@@ -1,0 +1,16 @@
+{
+  "totalMissing": 157,
+  "missingByModule": {
+    "Module 1": 8,
+    "Module 2": 74,
+    "Module 3": 20,
+    "Module 4": 20,
+    "Module 5": 20,
+    "Module 6": 20
+  },
+  "nextSearchPriority": [
+    "Module 1: M1: Modern Foundations & 3D Introduction (8 videos)",
+    "Module 2: M2: Introduction to Scripting (74 videos)",
+    "Module 3: M3: Game Design & Mechanics (20 videos)"
+  ]
+}

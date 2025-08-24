@@ -7,8 +7,6 @@ import { APP_CONFIG } from '@/lib/config/constants'
 import { UserProgress } from './UserProgress'
 import { SidebarNav } from './SidebarNav'
 import { UpgradeCard } from './UpgradeCard'
-import { UserInfo } from './UserInfo'
-import { QuickStats } from './QuickStats'
 
 export function Sidebar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false)
@@ -132,20 +130,9 @@ export function Sidebar() {
           <SidebarNav />
         </div>
 
-        {/* Bottom fixed sections */}
-        {/* Upgrade to Pro */}
-        <div className="p-4">
+        {/* Bottom fixed section - Upgrade Card only */}
+        <div className="p-4 border-t border-blox-glass-border">
           <UpgradeCard />
-        </div>
-
-        {/* User Info */}
-        <div className="p-4 border-t border-blox-glass-border">
-          <UserInfo />
-        </div>
-
-        {/* Quick Stats - At very bottom */}
-        <div className="p-4 border-t border-blox-glass-border">
-          <QuickStats />
         </div>
       </div>
 

@@ -20,7 +20,11 @@ export function Breadcrumb() {
   const day = week?.days.find(d => d.id === dayId)
   
   // Build breadcrumb items
-  const items = [
+  const items: Array<{
+    label: string
+    href: string
+    icon: React.ElementType | null
+  }> = [
     {
       label: 'Learning Path',
       href: '/learning',

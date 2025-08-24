@@ -12,7 +12,9 @@ import {
   Target,
   ChevronRight,
   Calendar,
-  Zap
+  Zap,
+  User,
+  FileText
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useLearningStore } from '@/store/learningStore'
@@ -33,6 +35,7 @@ interface Video {
   youtubeId: string
   duration: string
   xpReward: number
+  creator?: string
 }
 
 interface Day {
@@ -170,35 +173,50 @@ export function WeekPreview({
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: dayIndex * 0.1 }}
               >
-                <Card className={`border transition-all cursor-pointer ${
+                <Card className={`border-2 transition-all ${
                   dayProgress.status === 'completed' 
-                    ? 'bg-blox-success/10 border-blox-success/30' 
+                    ? 'bg-blox-success/5 border-blox-success/30 shadow-lg shadow-blox-success/10' 
                     : dayProgress.status === 'in_progress'
-                      ? 'bg-blox-warning/10 border-blox-warning/30'
-                      : 'bg-blox-second-dark-blue/30 border-blox-glass-border hover:border-blox-teal/50'
-                }`}
-                onClick={() => onDaySelect(day.id)}
-                >
-                  <CardHeader className="pb-4">
+                      ? 'bg-blox-warning/5 border-blox-warning/30 shadow-lg shadow-blox-warning/10'
+                      : 'bg-blox-second-dark-blue/20 border-blox-glass-border hover:border-blox-teal/50 hover:shadow-lg hover:shadow-blox-teal/10'
+                }`}>
+                  <CardHeader className="pb-4 bg-gradient-to-r from-blox-very-dark-blue/50 to-transparent rounded-t-lg">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <Badge className="bg-blox-teal text-white">
+                        <div className="flex items-center gap-3 mb-3">
+                          <Badge className="bg-gradient-to-r from-blox-teal to-blox-teal-dark text-white px-3 py-1 text-sm font-bold shadow-md">
                             Day {dayNumber}
                           </Badge>
-                          <CardTitle className="text-lg text-blox-white">
+                          <CardTitle className="text-xl font-bold text-blox-white">
                             {day.title}
                           </CardTitle>
+                          {dayProgress.status === 'completed' && (
+                            <div className="ml-auto">
+                              <Badge className="bg-blox-success/20 text-blox-success border-blox-success/30 flex items-center gap-1">
+                                <CheckCircle className="h-3 w-3" />
+                                Completed
+                              </Badge>
+                            </div>
+                          )}
                         </div>
-                        <div className="flex items-center gap-4 text-sm text-blox-off-white">
-                          <div className="flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            <span>{day.estimatedTime || '2.5h'} estimated time</span>
+                        <div className="flex items-center gap-6 text-sm">
+                          <div className="flex items-center gap-2 text-blox-off-white">
+                            <Clock className="h-4 w-4 text-blox-teal" />
+                            <span className="font-medium">{day.estimatedTime || '2.5h'}</span>
                           </div>
-                          {dayProgress.completionPercentage > 0 && (
-                            <div className="flex items-center gap-1 text-blox-success">
-                              <CheckCircle className="h-3 w-3" />
-                              <span>{dayProgress.completionPercentage}% complete</span>
+                          <div className="flex items-center gap-2 text-blox-off-white">
+                            <BookOpen className="h-4 w-4 text-blox-purple" />
+                            <span className="font-medium">{day.videos.length} videos</span>
+                          </div>
+                          {dayProgress.completionPercentage > 0 && dayProgress.completionPercentage < 100 && (
+                            <div className="flex items-center gap-2 text-blox-warning">
+                              <div className="w-20 h-2 bg-blox-medium-blue-gray/30 rounded-full overflow-hidden">
+                                <div 
+                                  className="h-full bg-gradient-to-r from-blox-warning to-blox-teal transition-all duration-300"
+                                  style={{ width: `${dayProgress.completionPercentage}%` }}
+                                />
+                              </div>
+                              <span className="text-xs font-semibold">{dayProgress.completionPercentage}%</span>
                             </div>
                           )}
                         </div>
@@ -215,11 +233,11 @@ export function WeekPreview({
                         return (
                           <div
                             key={video.id}
-                            className="flex items-center gap-3 p-3 rounded-lg bg-blox-second-dark-blue/30 hover:bg-blox-second-dark-blue/50 cursor-pointer transition-all group"
+                            className="flex items-start gap-4 p-4 rounded-lg bg-blox-second-dark-blue/30 hover:bg-blox-second-dark-blue/50 cursor-pointer transition-all group border border-blox-glass-border hover:border-blox-teal/30"
                             onClick={() => onVideoSelect?.(video.id, day.id)}
                           >
-                            {/* Video Thumbnail or Number */}
-                            <div className="relative w-20 h-12 bg-blox-very-dark-blue rounded overflow-hidden flex-shrink-0">
+                            {/* Enhanced Video Thumbnail */}
+                            <div className="relative w-32 h-20 bg-blox-very-dark-blue rounded-lg overflow-hidden flex-shrink-0 shadow-lg">
                               {video.youtubeId ? (
                                 <>
                                   <img
@@ -227,79 +245,146 @@ export function WeekPreview({
                                     alt={video.title}
                                     className="w-full h-full object-cover"
                                   />
-                                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <Play className="h-5 w-5 text-white" />
+                                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div className="bg-blox-teal/90 rounded-full p-2">
+                                      <Play className="h-6 w-6 text-white fill-white" />
+                                    </div>
+                                  </div>
+                                  {/* Duration Badge */}
+                                  <div className="absolute bottom-1 right-1 bg-black/80 px-1.5 py-0.5 rounded text-xs text-white">
+                                    {video.duration}
                                   </div>
                                 </>
                               ) : (
-                                <div className="w-full h-full flex items-center justify-center bg-blox-medium-blue-gray">
-                                  <span className="text-blox-white font-bold">{videoIndex + 1}</span>
+                                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blox-medium-blue-gray to-blox-dark-blue">
+                                  <div className="text-center">
+                                    <span className="text-2xl font-bold text-blox-white/80">{videoIndex + 1}</span>
+                                    <p className="text-xs text-blox-off-white/60 mt-1">Video</p>
+                                  </div>
                                 </div>
                               )}
                               {isCompleted && (
-                                <div className="absolute top-1 right-1">
-                                  <CheckCircle className="h-4 w-4 text-blox-success" />
+                                <div className="absolute top-1 right-1 bg-blox-success rounded-full p-1">
+                                  <CheckCircle className="h-4 w-4 text-white" />
                                 </div>
                               )}
                             </div>
                             
-                            {/* Video Info */}
+                            {/* Enhanced Video Info */}
                             <div className="flex-1 min-w-0">
-                              <h4 className={`text-sm font-medium transition-colors line-clamp-1 ${
-                                isCompleted 
-                                  ? 'text-blox-success' 
-                                  : 'text-blox-white group-hover:text-blox-teal'
-                              }`}>
-                                {videoIndex + 1}. {video.title}
-                              </h4>
-                              <div className="flex items-center gap-3 mt-1 text-xs text-blox-off-white">
-                                <span>{video.duration}</span>
-                                <span className="text-blox-teal">+{video.xpReward} XP</span>
-                                {isCompleted && (
-                                  <Badge className="bg-blox-success/20 text-blox-success border-blox-success/30 px-1 py-0">
-                                    ✓
-                                  </Badge>
-                                )}
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <h4 className={`text-base font-semibold transition-colors ${
+                                    isCompleted 
+                                      ? 'text-blox-success' 
+                                      : 'text-blox-white group-hover:text-blox-teal'
+                                  }`}>
+                                    {videoIndex + 1}. {video.title}
+                                  </h4>
+                                  
+                                  {/* Video Description */}
+                                  <p className="text-sm text-blox-off-white/80 mt-1 line-clamp-2">
+                                    Learn the fundamentals and best practices for {video.title.toLowerCase()}. 
+                                    This video covers essential concepts you'll need to master.
+                                  </p>
+                                  
+                                  {/* Video Metadata */}
+                                  <div className="flex items-center gap-4 mt-2">
+                                    {video.creator === 'Coming Soon' ? (
+                                      <Badge className="bg-blox-warning/20 text-blox-warning border-blox-warning/30">
+                                        Coming Soon
+                                      </Badge>
+                                    ) : (
+                                      <>
+                                        <div className="flex items-center gap-1 text-xs text-blox-off-white/60">
+                                          <Clock className="h-3 w-3" />
+                                          <span>{video.duration}</span>
+                                        </div>
+                                        <div className="flex items-center gap-1 text-xs">
+                                          <Zap className="h-3 w-3 text-blox-teal" />
+                                          <span className="text-blox-teal font-semibold">+{video.xpReward} XP</span>
+                                        </div>
+                                        {video.creator && (
+                                          <div className="flex items-center gap-1 text-xs text-blox-light-blue-gray">
+                                            <User className="h-3 w-3" />
+                                            <span>{video.creator}</span>
+                                          </div>
+                                        )}
+                                      </>
+                                    )}
+                                    {isCompleted && (
+                                      <Badge className="bg-blox-success/20 text-blox-success border-blox-success/30">
+                                        ✓ Completed
+                                      </Badge>
+                                    )}
+                                  </div>
+                                </div>
+                                
+                                {/* Watch Button */}
+                                <Button
+                                  size="sm"
+                                  className="ml-4 bg-blox-teal hover:bg-blox-teal/80 text-white"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    onVideoSelect?.(video.id, day.id)
+                                  }}
+                                >
+                                  <Play className="h-3 w-3 mr-1" />
+                                  Watch
+                                </Button>
                               </div>
                             </div>
-                            
-                            {/* Watch Button */}
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              className="opacity-0 group-hover:opacity-100 transition-opacity"
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                onVideoSelect?.(video.id, day.id)
-                              }}
-                            >
-                              Watch
-                              <Play className="h-3 w-3 ml-1" />
-                            </Button>
                           </div>
                         )
                       })}
                     </div>
                     
-                    {/* Practice Task */}
+                    {/* Enhanced Practice Task */}
                     {day.practiceTask && (
-                      <div className="p-4 rounded-lg bg-blox-purple/10 border border-blox-purple/20 mb-4">
-                        <div className="flex items-start gap-2">
-                          <Target className="h-4 w-4 text-blox-purple mt-0.5" />
+                      <div className="mt-4 p-4 rounded-lg bg-gradient-to-r from-blox-purple/20 to-blox-teal/10 border border-blox-purple/30">
+                        <div className="flex items-start gap-3">
+                          <div className="bg-blox-purple/30 rounded-full p-2">
+                            <Target className="h-5 w-5 text-blox-purple" />
+                          </div>
                           <div className="flex-1">
-                            <h4 className="text-sm font-medium text-blox-white mb-1">Practice Task</h4>
-                            <p className="text-xs text-blox-off-white">{day.practiceTask}</p>
+                            <h4 className="text-base font-semibold text-blox-white mb-2 flex items-center gap-2">
+                              Practice Task for Day {dayNumber}
+                              <Badge className="bg-blox-purple/20 text-blox-purple border-blox-purple/30 text-xs">
+                                Hands-on
+                              </Badge>
+                            </h4>
+                            <p className="text-sm text-blox-off-white leading-relaxed">{day.practiceTask}</p>
+                            <div className="mt-3 flex items-center gap-4 text-xs text-blox-off-white/60">
+                              <div className="flex items-center gap-1">
+                                <FileText className="h-3 w-3" />
+                                <span>Complete after watching videos</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <Zap className="h-3 w-3 text-blox-teal" />
+                                <span className="text-blox-teal">+100 XP on completion</span>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
                     )}
                     
-                    {/* Start Day Button */}
+                    {/* Start/Continue Day Button */}
                     <Button 
-                      className="w-full bg-blox-teal hover:bg-blox-teal/80 text-white"
+                      className={`w-full text-white font-semibold ${
+                        dayProgress.status === 'completed'
+                          ? 'bg-blox-success hover:bg-blox-success/80'
+                          : dayProgress.status === 'in_progress'
+                            ? 'bg-blox-warning hover:bg-blox-warning/80'
+                            : 'bg-blox-teal hover:bg-blox-teal/80'
+                      }`}
                       onClick={() => onDaySelect(day.id)}
                     >
-                      Start Day {dayNumber}
+                      {dayProgress.status === 'completed' 
+                        ? 'Review Day' 
+                        : dayProgress.status === 'in_progress'
+                          ? 'Continue Day'
+                          : 'Start Day'} {dayNumber}
                       <ChevronRight className="h-4 w-4 ml-2" />
                     </Button>
                   </CardContent>

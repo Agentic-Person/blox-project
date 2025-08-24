@@ -1,6 +1,7 @@
 'use client'
 
 import { Bot, User } from 'lucide-react'
+import { useState, useEffect } from 'react'
 
 interface Message {
   id: number
@@ -15,6 +16,11 @@ interface ChatMessageProps {
 
 export function ChatMessage({ message }: ChatMessageProps) {
   const isUser = message.role === 'user'
+  const [isMounted, setIsMounted] = useState(false)
+  
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   return (
     <div className={`flex gap-3 ${isUser ? 'flex-row-reverse' : ''}`}>
@@ -34,12 +40,14 @@ export function ChatMessage({ message }: ChatMessageProps) {
             : 'bg-blox-second-dark-blue/50 text-blox-white'
         }`}>
           <p className="text-sm">{message.content}</p>
-          <p className="text-xs opacity-50 mt-1">
-            {message.timestamp.toLocaleTimeString([], { 
-              hour: '2-digit', 
-              minute: '2-digit' 
-            })}
-          </p>
+          {isMounted && (
+            <p className="text-xs opacity-50 mt-1">
+              {message.timestamp.toLocaleTimeString([], { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+              })}
+            </p>
+          )}
         </div>
       </div>
     </div>

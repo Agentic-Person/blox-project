@@ -9,8 +9,10 @@ import TeamBetaBadge from '@/components/teams/TeamBetaBadge'
 import TeamCard from '@/components/teams/TeamCard'
 import TeamFilters, { TeamFilterState } from '@/components/teams/TeamFilters'
 import { motion } from 'framer-motion'
+import { useTeamStore } from '@/store/teamStore'
 
 export default function TeamsPage() {
+  const { teams: allTeams, getUserTeams, currentUserId } = useTeamStore()
   const [searchQuery, setSearchQuery] = useState('')
   const [filters, setFilters] = useState<TeamFilterState>({
     recruitmentStatus: [],
@@ -20,103 +22,47 @@ export default function TeamsPage() {
     sortBy: 'newest'
   })
 
+  // Transform teams to match the expected format
+  const teams = allTeams.map(team => ({
+    id: team.id,
+    name: team.name,
+    description: team.description,
+    memberCount: team.members.length,
+    maxMembers: team.maxMembers,
+    isRecruiting: team.recruitmentStatus !== 'closed',
+    skills: team.skills,
+    leader: team.members.find(m => m.role === 'leader')?.username || 'Unknown',
+    avatar: team.avatar,
+    projects: team.projects.length,
+    founded: new Date(team.createdAt).toLocaleDateString(),
+    rank: team.rank,
+    points: team.points,
+    badges: team.achievements,
+    recruitmentStatus: team.recruitmentStatus,
+    teamType: team.type,
+    activeProjects: team.projects.map(p => ({
+      id: p.id,
+      name: p.name,
+      status: p.status,
+      progress: p.progress,
+      deadline: p.deadline
+    })),
+    members: team.members.map(m => ({
+      id: m.userId,
+      name: m.username,
+      role: m.role === 'leader' ? 'leader' : m.role === 'moderator' ? 'developer' : m.role as any,
+      joinedAt: m.joinedAt,
+      contributions: m.contributions,
+      online: m.online
+    }))
+  }))
+
+  /* Old mock data - commented out
   const teams = [
     {
       id: 'team-1',
       name: 'GameDev Squad',
-      description: 'Building the next generation of Roblox experiences together',
-      memberCount: 4,
-      maxMembers: 6,
-      isRecruiting: true,
-      skills: ['Building', 'Scripting', 'UI Design'],
-      leader: 'ScriptMaster',
-      avatar: '/images/team-logos/gamedev-squad.png',
-      projects: 2,
-      founded: '2 weeks ago',
-      rank: 3,
-      points: 2450,
-      badges: ['First Project', 'Team Player'],
-      recruitmentStatus: 'open' as const,
-      teamType: 'competitive' as const,
-      activeProjects: [
-        { id: 'p1', name: 'Tower Defense Game', status: 'in-progress' as const, progress: 65, deadline: 'Dec 15' },
-        { id: 'p2', name: 'UI Overhaul', status: 'testing' as const, progress: 85 }
-      ],
-      members: [
-        { id: 'm1', name: 'ScriptMaster', role: 'leader' as const, joinedAt: '2 weeks ago', contributions: 45, online: true },
-        { id: 'm2', name: 'BuilderPro', role: 'builder' as const, joinedAt: '1 week ago', contributions: 23, online: false },
-        { id: 'm3', name: 'UIWizard', role: 'designer' as const, joinedAt: '3 days ago', contributions: 12, online: true },
-        { id: 'm4', name: 'GameDev123', role: 'developer' as const, joinedAt: '5 days ago', contributions: 18 }
-      ]
-    },
-    {
-      id: 'team-2',
-      name: 'Creative Builders',
-      description: 'Focus on stunning visuals and creative gameplay mechanics',
-      memberCount: 3,
-      maxMembers: 5,
-      isRecruiting: true,
-      skills: ['Building', 'Art', 'Animation'],
-      leader: 'BuilderPro',
-      avatar: '/images/team-logos/creative-builders.png',
-      projects: 1,
-      founded: '1 month ago',
-      rank: 7,
-      points: 1850,
-      recruitmentStatus: 'open' as const,
-      teamType: 'casual' as const
-    },
-    {
-      id: 'team-3',
-      name: 'Code Warriors',
-      description: 'Advanced scripting team working on complex systems',
-      memberCount: 5,
-      maxMembers: 5,
-      isRecruiting: false,
-      skills: ['Scripting', 'Game Design', 'Leadership'],
-      leader: 'LuaMaster',
-      avatar: '/images/team-logos/code-warriors.png',
-      projects: 3,
-      founded: '3 months ago',
-      rank: 1,
-      points: 4200,
-      badges: ['Elite Team', 'Project Master', 'Community Leader'],
-      recruitmentStatus: 'closed' as const,
-      teamType: 'competitive' as const
-    },
-    {
-      id: 'team-4',
-      name: 'Pixel Pioneers',
-      description: 'New team looking for motivated beginners to grow together',
-      memberCount: 2,
-      maxMembers: 6,
-      isRecruiting: true,
-      skills: ['Building', 'UI Design'],
-      leader: 'PixelArt123',
-      avatar: '/images/team-logos/pixel-pioneers.png',
-      projects: 0,
-      founded: '3 days ago',
-      points: 150,
-      recruitmentStatus: 'open' as const,
-      teamType: 'learning' as const
-    },
-    {
-      id: 'team-5',
-      name: 'Neon Scripters',
-      description: 'Specializing in advanced lighting and particle effects',
-      memberCount: 4,
-      maxMembers: 5,
-      isRecruiting: true,
-      skills: ['Scripting', 'Animation', 'Art'],
-      leader: 'NeonMaster',
-      projects: 2,
-      founded: '2 weeks ago',
-      rank: 5,
-      points: 2100,
-      recruitmentStatus: 'selective' as const,
-      teamType: 'competitive' as const
-    },
-  ]
+  */
 
   // Filter teams based on search and filters
   const filteredTeams = teams.filter(team => {
@@ -183,8 +129,11 @@ export default function TeamsPage() {
     }
   })
 
-  const myTeams = sortedTeams.filter(team => team.id === 'team-1')
-  const recruitingTeams = sortedTeams.filter(team => team.isRecruiting && team.id !== 'team-1')
+  // Get user's teams
+  const userTeams = getUserTeams(currentUserId)
+  const myTeamIds = userTeams.map(t => t.id)
+  const myTeams = sortedTeams.filter(team => myTeamIds.includes(team.id))
+  const recruitingTeams = sortedTeams.filter(team => team.isRecruiting && !myTeamIds.includes(team.id))
 
   return (
     <div className="p-6 space-y-6">

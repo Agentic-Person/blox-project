@@ -36,6 +36,11 @@ const config: Config = {
             teal: 'rgba(54, 176, 217, 0.1)',
             light: 'rgba(54, 176, 217, 0.05)',
             border: 'rgba(54, 176, 217, 0.2)'
+          },
+          'golden-yellow': {
+            light: '#FFED4E',
+            DEFAULT: '#FFD700',
+            dark: '#FFB800'
           }
         }
       },
