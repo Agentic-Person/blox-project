@@ -1,41 +1,66 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { User, Edit, Trophy, Users, BookOpen, MapPin, Calendar, Target } from 'lucide-react'
+import { User, Edit, Trophy, Users, BookOpen, MapPin, Calendar, Target, QrCode, Upload } from 'lucide-react'
 import { ProfileEditModal } from '@/components/profile/ProfileEditModal'
 import { PortfolioSection } from '@/components/profile/PortfolioSection'
+import { AvatarUpload } from '@/components/profile/AvatarUpload'
+import { RecentWorkGrid } from '@/components/profile/RecentWorkGrid'
+import { QRCodeUpload } from '@/components/profile/QRCodeUpload'
+import { ImageLightbox } from '@/components/profile/ImageLightbox'
+import { useProfileStore } from '@/store/profileStore'
+import type { ProfileImage } from '@/store/profileStore'
 
-// Mock profile data for Alex Thompson
-const mockProfileData = {
-  username: 'blocks-builder-1-2-3',
-  fullName: 'Alex Thompson',
-  email: 'alex.thompson@example.com',
-  joinDate: 'January 15, 2024',
-  background: 'I started my journey in game development about 2 years ago when I discovered Roblox Studio. I\'ve always been fascinated by how games work and wanted to create my own experiences. I started with simple building projects and gradually learned Lua scripting.',
-  currentStatus: 'Currently working on a multiplayer adventure game called "Mystic Realms" where players explore ancient ruins and solve puzzles together. I\'m also learning advanced UI design and working on improving my building skills.',
-  goals: 'My goal is to become a professional game developer and eventually work on larger projects. I want to master advanced scripting techniques, create engaging gameplay mechanics, and build a portfolio of successful games that players love.',
-  personalWebsite: 'https://alexthompson.dev',
-  gameUrl: 'https://www.roblox.com/games/1234567890/Mystic-Realms',
-  portfolioImages: [
-    'https://via.placeholder.com/300x200/36B0D9/FFFFFF?text=Mystic+Realms+Gameplay',
-    'https://via.placeholder.com/300x200/1E3A8A/FFFFFF?text=Ancient+Ruins+Build',
-    'https://via.placeholder.com/300x200/059669/FFFFFF?text=UI+Design+Mockup',
-    'https://via.placeholder.com/300x200/DC2626/FFFFFF?text=Puzzle+Mechanics',
-    'https://via.placeholder.com/300x200/7C3AED/FFFFFF?text=Character+Design',
-    'https://via.placeholder.com/300x200/F59E0B/FFFFFF?text=Environment+Art'
-  ]
-}
 
 export default function ProfilePage() {
-  const [profileData, setProfileData] = useState(mockProfileData)
+  const { profile, loadProfile, updateProfile, uploadImage, setActiveImage } = useProfileStore()
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isQRModalOpen, setIsQRModalOpen] = useState(false)
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false)
+  const [lightboxImages, setLightboxImages] = useState<ProfileImage[]>([])
+  const [lightboxInitialIndex, setLightboxInitialIndex] = useState(0)
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
 
-  const handleSaveProfile = (newData: typeof mockProfileData) => {
-    setProfileData(newData)
-    // In a real app, you'd save this to your database
-    console.log('Profile updated:', newData)
+  useEffect(() => {
+    // Load profile on mount
+    loadProfile('user-1')
+  }, [])
+
+  const handleSaveProfile = async (newData: any) => {
+    await updateProfile(newData)
+  }
+
+  const handleImageClick = (image: ProfileImage) => {
+    const allImages = [...(profile?.recentWork || []), ...(profile?.portfolioImages || [])]
+    const index = allImages.findIndex(img => img.id === image.id)
+    setLightboxImages(allImages)
+    setLightboxInitialIndex(index >= 0 ? index : 0)
+    setIsLightboxOpen(true)
+  }
+
+  const handleAddImages = () => {
+    setIsQRModalOpen(true)
+  }
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || [])
+    for (const file of files) {
+      await uploadImage(file, true)
+    }
+  }
+
+  if (!profile) {
+    return (
+      <div className="p-6 flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blox-teal mx-auto"></div>
+          <p className="mt-4 text-blox-off-white">Loading profile...</p>
+        </div>
+      </div>
+    )
   }
   return (
     <div className="p-6 space-y-6">
@@ -50,6 +75,16 @@ export default function ProfilePage() {
         </Button>
       </div>
 
+      {/* Hidden file input for uploads */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        accept="image/*"
+        multiple
+        onChange={handleFileUpload}
+        className="hidden"
+      />
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           {/* Profile Information */}
@@ -62,21 +97,24 @@ export default function ProfilePage() {
             </CardHeader>
             <CardContent>
               <div className="flex items-center space-x-4 mb-6">
-                <div className="w-20 h-20 bg-gradient-to-r from-blox-teal to-blox-teal-dark rounded-full flex items-center justify-center">
-                  <span className="text-white font-bold text-2xl">AT</span>
-                </div>
+                <AvatarUpload
+                  currentAvatarUrl={profile.avatarUrl}
+                  onUpload={(url) => updateProfile({ avatarUrl: url })}
+                />
                 <div className="flex-1">
-                  <h2 className="text-2xl font-semibold text-blox-white">{profileData.fullName}</h2>
-                  <p className="text-blox-teal font-medium">@{profileData.username}</p>
+                  <h2 className="text-2xl font-semibold text-blox-white">{profile.fullName}</h2>
+                  <p className="text-blox-teal font-medium">@{profile.username}</p>
                   <div className="flex items-center gap-4 mt-2 text-sm text-blox-medium-blue-gray">
                     <div className="flex items-center gap-1">
                       <Calendar className="h-4 w-4" />
-                      Joined {profileData.joinDate}
+                      Joined {profile.joinDate}
                     </div>
-                    <div className="flex items-center gap-1">
-                      <MapPin className="h-4 w-4" />
-                      United States
-                    </div>
+                    {profile.location && (
+                      <div className="flex items-center gap-1">
+                        <MapPin className="h-4 w-4" />
+                        {profile.location}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -88,7 +126,7 @@ export default function ProfilePage() {
                     Background
                   </label>
                   <p className="text-blox-off-white leading-relaxed">
-                    {profileData.background}
+                    {profile.background}
                   </p>
                 </div>
                 
@@ -98,7 +136,7 @@ export default function ProfilePage() {
                     Current Status
                   </label>
                   <p className="text-blox-off-white leading-relaxed">
-                    {profileData.currentStatus}
+                    {profile.currentStatus}
                   </p>
                 </div>
                 
@@ -108,25 +146,21 @@ export default function ProfilePage() {
                     Goals & Aspirations
                   </label>
                   <p className="text-blox-off-white leading-relaxed">
-                    {profileData.goals}
+                    {profile.goals}
                   </p>
                 </div>
                 
                 <div>
                   <label className="text-sm font-medium text-blox-white mb-2">Skills</label>
                   <div className="flex flex-wrap gap-2 mt-2">
-                    <span className="px-3 py-1 bg-blox-black-blue text-blox-teal text-sm rounded-md border border-blox-glass-border">
-                      Building - Intermediate
-                    </span>
-                    <span className="px-3 py-1 bg-blox-black-blue text-blox-teal text-sm rounded-md border border-blox-glass-border">
-                      Scripting - Beginner
-                    </span>
-                    <span className="px-3 py-1 bg-blox-black-blue text-blox-teal text-sm rounded-md border border-blox-glass-border">
-                      UI Design - Beginner
-                    </span>
-                    <span className="px-3 py-1 bg-blox-black-blue text-blox-teal text-sm rounded-md border border-blox-glass-border">
-                      Game Design - Beginner
-                    </span>
+                    {profile.skills.map((skill) => (
+                      <span
+                        key={skill.name}
+                        className="px-3 py-1 bg-blox-black-blue text-blox-teal text-sm rounded-md border border-blox-glass-border"
+                      >
+                        {skill.name} - {skill.level.charAt(0).toUpperCase() + skill.level.slice(1)}
+                      </span>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -135,13 +169,19 @@ export default function ProfilePage() {
 
           {/* Portfolio Section */}
           <PortfolioSection
-            portfolioImages={profileData.portfolioImages}
-            personalWebsite={profileData.personalWebsite}
-            gameUrl={profileData.gameUrl}
+            portfolioImages={profile.portfolioImages.map(img => img.url)}
+            personalWebsite={profile.personalWebsite}
+            gameUrl={profile.gameUrl}
           />
         </div>
 
         <div className="space-y-6">
+          {/* Recent Work Grid */}
+          <RecentWorkGrid
+            onImageClick={handleImageClick}
+            onAddClick={handleAddImages}
+          />
+
           <Card>
             <CardHeader>
               <CardTitle className="text-lg">Statistics</CardTitle>
@@ -152,7 +192,7 @@ export default function ProfilePage() {
                   <BookOpen className="h-4 w-4 text-blox-teal mr-2" />
                   <span className="text-blox-off-white">Videos Watched</span>
                 </div>
-                <span className="text-blox-white font-semibold">47</span>
+                <span className="text-blox-white font-semibold">{profile.videosWatched}</span>
               </div>
               
               <div className="flex items-center justify-between">
@@ -160,7 +200,7 @@ export default function ProfilePage() {
                   <Trophy className="h-4 w-4 text-yellow-500 mr-2" />
                   <span className="text-blox-off-white">Achievements</span>
                 </div>
-                <span className="text-blox-white font-semibold">8</span>
+                <span className="text-blox-white font-semibold">{profile.achievements.length}</span>
               </div>
               
               <div className="flex items-center justify-between">
@@ -168,7 +208,7 @@ export default function ProfilePage() {
                   <Users className="h-4 w-4 text-blox-teal mr-2" />
                   <span className="text-blox-off-white">Teams Joined</span>
                 </div>
-                <span className="text-blox-white font-semibold">2</span>
+                <span className="text-blox-white font-semibold">{profile.teamsJoined}</span>
               </div>
             </CardContent>
           </Card>
@@ -212,8 +252,33 @@ export default function ProfilePage() {
       <ProfileEditModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        profileData={profileData}
+        profileData={{
+          username: profile.username,
+          fullName: profile.fullName,
+          email: profile.email,
+          joinDate: profile.joinDate,
+          background: profile.background,
+          currentStatus: profile.currentStatus,
+          goals: profile.goals,
+          personalWebsite: profile.personalWebsite || '',
+          gameUrl: profile.gameUrl || '',
+          portfolioImages: profile.portfolioImages.map(img => img.url)
+        }}
         onSave={handleSaveProfile}
+      />
+
+      {/* QR Code Upload Modal */}
+      <QRCodeUpload
+        isOpen={isQRModalOpen}
+        onClose={() => setIsQRModalOpen(false)}
+      />
+
+      {/* Image Lightbox */}
+      <ImageLightbox
+        images={lightboxImages}
+        initialIndex={lightboxInitialIndex}
+        isOpen={isLightboxOpen}
+        onClose={() => setIsLightboxOpen(false)}
       />
     </div>
   )

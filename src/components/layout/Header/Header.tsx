@@ -1,12 +1,18 @@
 'use client'
 
-import { Clock, Zap, User, LogOut, Gamepad2, Coins, Settings, UserCheck, Video, Flame, Sparkles } from 'lucide-react'
+import { Clock, Zap, User, LogOut, Gamepad2, Coins, Settings, UserCheck, Video, Flame, Sparkles, ArrowLeft, Home } from 'lucide-react'
 import { useAuth } from '@/lib/providers'
 import { useLearningStore } from '@/store/learningStore'
 import { useState, useEffect, useRef } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
+import { motion, AnimatePresence } from 'framer-motion'
 
-export function Header() {
+interface HeaderProps {
+  isLearningPage?: boolean
+  onBackToDashboard?: () => void
+}
+
+export function Header({ isLearningPage = false, onBackToDashboard }: HeaderProps) {
   const { user, signOut } = useAuth()
   const { totalHoursWatched, totalXP } = useLearningStore()
   const [showDropdown, setShowDropdown] = useState(false)
@@ -50,9 +56,34 @@ export function Header() {
     // router.push('/profile?edit=true')
   }
 
+  const handleBackToDashboard = () => {
+    router.push('/dashboard')
+    onBackToDashboard?.()
+  }
+
   return (
     <header className="flex items-center justify-between px-6 py-4 bg-blox-second-dark-blue border-b border-blox-glass-border">
       <div className="flex items-center gap-3 transition-all duration-300 ease-in-out relative">
+        {/* Back to Dashboard Button - Shows only on learning pages */}
+        <AnimatePresence>
+          {isLearningPage && (
+            <motion.button
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -20, opacity: 0 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              onClick={handleBackToDashboard}
+              className="group flex items-center gap-2 px-3 py-1.5 bg-blox-glass-bg/50 hover:bg-blox-teal/20 border border-blox-teal/30 hover:border-blox-teal/50 rounded-lg transition-all duration-200"
+            >
+              <ArrowLeft className="w-4 h-4 text-blox-teal group-hover:text-blox-white transition-colors" />
+              <span className="text-sm font-medium text-blox-off-white group-hover:text-blox-white transition-colors">
+                Back to Dashboard
+              </span>
+              <Home className="w-4 h-4 text-blox-teal/50 group-hover:text-blox-white/80 transition-colors" />
+            </motion.button>
+          )}
+        </AnimatePresence>
+        
         <Gamepad2 className={`w-6 h-6 text-blox-teal ${isMounted ? 'animate-float-left' : ''}`} />
         <h1 className="text-xl font-bold text-blox-white flex items-center gap-2">
           <span>Welcome back, Game Developer!</span>

@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import { Sidebar } from '@/components/layout/Sidebar/Sidebar'
 import { Header } from '@/components/layout/Header/Header'
-import { ResizableSidebar } from '@/components/layout/ResizableSidebar'
+import { ResizableSidebar, ResizableSidebarHandle } from '@/components/layout/ResizableSidebar'
 import { cn } from '@/lib/utils/cn'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -12,6 +12,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [isMobile, setIsMobile] = useState(false)
   const [isTablet, setIsTablet] = useState(false)
   const [viewportHeight, setViewportHeight] = useState('100vh')
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const sidebarRef = useRef<ResizableSidebarHandle>(null)
   
   // Check if we're on a learning page
   const isLearningPage = pathname?.includes('/learning')
@@ -42,6 +44,31 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
+  // Auto-collapse sidebar on learning pages
+  useEffect(() => {
+    if (isLearningPage && !isMobile && !isTablet) {
+      setSidebarCollapsed(true)
+    } else if (!isLearningPage && !isMobile && !isTablet) {
+      setSidebarCollapsed(false)
+    }
+  }, [isLearningPage, isMobile, isTablet])
+
+  // Keyboard shortcut for toggling sidebar
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      // Cmd/Ctrl + B to toggle sidebar
+      if ((e.metaKey || e.ctrlKey) && e.key === 'b') {
+        e.preventDefault()
+        if (sidebarRef.current) {
+          sidebarRef.current.toggle()
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+    return () => window.removeEventListener('keydown', handleKeyPress)
+  }, [])
+
   // Mobile layout (no resizable sidebar)
   if (isMobile) {
     return (
@@ -51,7 +78,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       >
         <Sidebar />
         <div className="flex flex-col flex-1 w-full">
-          <Header />
+          <Header isLearningPage={isLearningPage} onBackToDashboard={() => {}} />
           <main className={cn(
             "flex-1 overflow-auto",
             !isLearningPage && "px-4 py-4"
@@ -76,7 +103,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <Sidebar />
         </div>
         <div className="flex flex-col flex-1 min-w-0 transition-all duration-300 ease-in-out">
-          <Header />
+          <Header isLearningPage={isLearningPage} onBackToDashboard={() => {}} />
           <main className={cn(
             "flex-1 overflow-auto",
             !isLearningPage && "px-4 xl:px-6 py-4 xl:py-6"
@@ -99,10 +126,22 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       style={{ height: viewportHeight }}
     >
       <ResizableSidebar
+        ref={sidebarRef}
         children={<Sidebar />}
+        collapsed={sidebarCollapsed}
+        onCollapse={setSidebarCollapsed}
+        showDragHandle={isLearningPage}
         mainContent={
           <div className="flex flex-col h-full">
-            <Header />
+            <Header 
+              isLearningPage={isLearningPage} 
+              onBackToDashboard={() => {
+                setSidebarCollapsed(false)
+                if (sidebarRef.current) {
+                  sidebarRef.current.expand()
+                }
+              }} 
+            />
             <main className="flex-1 overflow-hidden">
               <div className={cn(
                 "h-full overflow-y-auto transition-all duration-300 ease-in-out",
