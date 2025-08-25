@@ -3,6 +3,7 @@
 import { SplitView } from '@/components/learning/SplitView'
 import { WeekOverview } from '@/components/learning/WeekOverview'
 import { DayView } from '@/components/learning/DayView'
+import { Breadcrumb } from '@/components/learning/Breadcrumb'
 import { useState, useEffect } from 'react'
 import { useLearningStore } from '@/store/learningStore'
 import curriculumData from '@/data/curriculum.json'
@@ -79,10 +80,8 @@ export default function LearningDayPage({ params }: PageProps) {
       currentWeek={params.weekId}
       currentDay={params.dayId}
       onWeekChange={(weekId) => {
-        const newWeek = currentModule.weeks.find(w => w.id === weekId)
-        if (newWeek) {
-          router.push(`/learning/${params.moduleId}/${weekId}/${newWeek.days[0].id}`)
-        }
+        // Navigate to week overview, not directly to a day
+        router.push(`/learning/${params.moduleId}/${weekId}`)
       }}
       onVideoSelect={handleVideoSelect}
     />
@@ -126,14 +125,19 @@ export default function LearningDayPage({ params }: PageProps) {
   )
 
   return (
-    <div className="h-full">
-      <SplitView
-        leftPanel={leftPanel}
-        rightPanel={rightPanel}
-        defaultLeftSize={30}
-        minLeftSize={25}
-        maxLeftSize={45}
-      />
+    <div className="h-full flex flex-col">
+      <div className="px-4 py-2">
+        <Breadcrumb />
+      </div>
+      <div className="flex-1">
+        <SplitView
+          leftPanel={leftPanel}
+          rightPanel={rightPanel}
+          defaultLeftSize={30}
+          minLeftSize={25}
+          maxLeftSize={45}
+        />
+      </div>
     </div>
   )
 }

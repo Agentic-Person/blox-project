@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { ChevronRight, ChevronDown, CheckCircle, PlayCircle, Lock } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useLearningStore } from '@/store/learningStore'
@@ -21,6 +21,8 @@ export function LearningPathTree({
 }: LearningPathTreeProps = {}) {
   const router = useRouter()
   const pathname = usePathname()
+  const treeRef = useRef<HTMLDivElement>(null)
+  const activeItemRef = useRef<HTMLButtonElement>(null)
   const { 
     completedDays, 
     completedVideos, 
@@ -34,12 +36,62 @@ export function LearningPathTree({
   const initialModuleId = pathSegments[1]
   const initialWeekId = pathSegments[2]
   
-  const [expandedModules, setExpandedModules] = useState<string[]>(() => {
-    return initialModuleId ? [initialModuleId] : []
-  })
-  const [expandedWeeks, setExpandedWeeks] = useState<string[]>(() => {
-    return initialWeekId ? [initialWeekId] : []
-  })
+  // Initialize with defaults, load from localStorage after mount
+  const [expandedModules, setExpandedModules] = useState<string[]>(
+    initialModuleId ? [initialModuleId] : []
+  )
+  
+  const [expandedWeeks, setExpandedWeeks] = useState<string[]>(
+    initialWeekId ? [initialWeekId] : []
+  )
+  
+  // Load persisted state from localStorage after mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        // Load expanded modules
+        const savedModules = localStorage.getItem('learning-expanded-modules')
+        if (savedModules) {
+          const parsedModules = JSON.parse(savedModules)
+          setExpandedModules(current => {
+            // Ensure current module is included
+            if (initialModuleId && !parsedModules.includes(initialModuleId)) {
+              parsedModules.push(initialModuleId)
+            }
+            return parsedModules
+          })
+        }
+        
+        // Load expanded weeks
+        const savedWeeks = localStorage.getItem('learning-expanded-weeks')
+        if (savedWeeks) {
+          const parsedWeeks = JSON.parse(savedWeeks)
+          setExpandedWeeks(current => {
+            // Ensure current week is included
+            if (initialWeekId && !parsedWeeks.includes(initialWeekId)) {
+              parsedWeeks.push(initialWeekId)
+            }
+            return parsedWeeks
+          })
+        }
+      } catch (e) {
+        console.error('Failed to load expanded state:', e)
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Only run once on mount
+
+  // Save expanded state to localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('learning-expanded-modules', JSON.stringify(expandedModules))
+        localStorage.setItem('learning-expanded-weeks', JSON.stringify(expandedWeeks))
+      } catch (e) {
+        console.error('Failed to save expanded state:', e)
+      }
+    }
+  }, [expandedModules, expandedWeeks])
 
   // Auto-expand based on current path
   useEffect(() => {
@@ -88,12 +140,8 @@ export function LearningPathTree({
   }
 
   const navigateToWeek = (moduleId: string, weekId: string) => {
-    // Navigate to week with first day selected
-    const module = curriculumData.modules.find(m => m.id === moduleId)
-    const week = module?.weeks.find(w => w.id === weekId)
-    if (week && week.days.length > 0) {
-      router.push(`/learning/${moduleId}/${weekId}/${week.days[0].id}`)
-    }
+    // Navigate to week overview page
+    router.push(`/learning/${moduleId}/${weekId}`)
   }
 
   const navigateToLesson = (moduleId: string, weekId: string, dayId: string) => {
@@ -106,6 +154,19 @@ export function LearningPathTree({
     return 'text-blox-off-white'
   }
 
+  // Auto-scroll to active item when navigation changes
+  useEffect(() => {
+    if (activeItemRef.current && treeRef.current) {
+      // Small delay to ensure DOM is updated
+      setTimeout(() => {
+        activeItemRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        })
+      }, 100)
+    }
+  }, [pathname])
+
   // Determine current location from pathname
   const currentPathSegments = pathname.split('/').filter(Boolean)
   const activeModuleId = currentModuleId || currentPathSegments[1]
@@ -113,7 +174,7 @@ export function LearningPathTree({
   const activeDayId = currentDayId || currentPathSegments[3]
 
   return (
-    <div className="space-y-1">
+    <div className="space-y-1" ref={treeRef}>
       {curriculumData.modules.map((module) => {
         const moduleProgress = getModuleProgress(module.id)
         const moduleProgressColor = getProgressColor(moduleProgress)
@@ -135,9 +196,9 @@ export function LearningPathTree({
               </button>
               <button
                 onClick={() => navigateToModule(module.id)}
-                className={`flex-1 flex items-center justify-between gap-2 px-2 py-2 rounded-lg transition-colors text-left ${
+                className={`flex-1 flex items-center justify-between gap-2 px-2 py-2 rounded-lg transition-all text-left ${
                   isActiveModule 
-                    ? 'bg-blox-teal/20 border-l-2 border-blox-teal' 
+                    ? 'bg-blox-teal/20 border-l-2 border-blox-teal shadow-md shadow-blox-teal/10' 
                     : 'hover:bg-blox-second-dark-blue'
                 }`}
               >
@@ -186,9 +247,9 @@ export function LearningPathTree({
                           </button>
                           <button
                             onClick={() => navigateToWeek(module.id, week.id)}
-                            className={`flex-1 flex items-center justify-between gap-2 px-2 py-1.5 rounded-lg transition-colors text-left ${
+                            className={`flex-1 flex items-center justify-between gap-2 px-2 py-1.5 rounded-lg transition-all text-left ${
                               isActiveWeek 
-                                ? 'bg-blox-purple/20 border-l-2 border-blox-purple' 
+                                ? 'bg-blox-purple/20 border-l-2 border-blox-purple shadow-md shadow-blox-purple/10' 
                                 : 'hover:bg-blox-second-dark-blue/50'
                             }`}
                           >
@@ -230,10 +291,11 @@ export function LearningPathTree({
                                 return (
                                   <button
                                     key={day.id}
+                                    ref={isActiveDay ? activeItemRef : null}
                                     onClick={() => navigateToLesson(module.id, week.id, day.id)}
-                                    className={`w-full flex items-center justify-between gap-2 px-3 py-1 rounded-lg text-xs transition-colors text-left group ${
+                                    className={`w-full flex items-center justify-between gap-2 px-3 py-1 rounded-lg text-xs transition-all text-left group ${
                                       isActiveDay 
-                                        ? 'bg-blox-warning/20 border-l-2 border-blox-warning' 
+                                        ? 'bg-blox-warning/20 border-l-2 border-blox-warning shadow-lg shadow-blox-warning/10' 
                                         : 'hover:bg-blox-second-dark-blue/30'
                                     }`}
                                   >
