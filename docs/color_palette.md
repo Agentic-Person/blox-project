@@ -31,10 +31,27 @@
 - **Default**: `#36B0D9` - Links, highlights, and accent elements
 - **Dark**: `#2A8CB0` - Active and pressed states
 
-#### Success Green
-- **Default**: `#10B981` - Trust indicators and success states
-- **Light**: `#34D399` - Success hover states
-- **Dark**: `#059669` - Success active states
+#### Success Green (BLOX Tokens)
+- **Default**: `#10B981` - BLOX token displays and success states
+- **Light**: `#34D399` - BLOX hover states
+- **Dark**: `#059669` - BLOX active states
+
+### Metrics Colors
+
+#### XP Golden Yellow
+- **Default**: `#F59E0B` - XP displays and progress
+- **Light**: `#FCD34D` - XP hover states
+- **Dark**: `#D97706` - XP active states
+
+#### Streak Fire Orange
+- **Default**: `#F97316` - Day streak displays
+- **Light**: `#FB923C` - Streak hover states
+- **Dark**: `#EA580C` - Streak active states
+
+#### Videos Teal (uses Primary Teal)
+- **Default**: `#36B0D9` - Videos watched displays
+- **Light**: `#4AC4E8` - Videos hover states
+- **Dark**: `#2A8CB0` - Videos active states
 
 ## Gradients
 
@@ -102,11 +119,21 @@ module.exports = {
           'off-white': '#DDDDDD',
           'light-blue-gray': '#9AB6E0',
           'medium-blue-gray': '#596D8C',
-          // Success Colors
+          // Metrics Colors
           success: {
             light: '#34D399',
-            DEFAULT: '#10B981',
+            DEFAULT: '#10B981',  // BLOX Green
             dark: '#059669'
+          },
+          xp: {
+            light: '#FCD34D',
+            DEFAULT: '#F59E0B',  // Golden Yellow
+            dark: '#D97706'
+          },
+          streak: {
+            light: '#FB923C',
+            DEFAULT: '#F97316',  // Fire Orange
+            dark: '#EA580C'
           },
           // Glass Effects (with teal tint)
           glass: {

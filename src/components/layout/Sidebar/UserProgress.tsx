@@ -13,7 +13,7 @@ export function UserProgress() {
     <div className="space-y-2">
       <div className="flex justify-between items-center">
         <span className="text-sm text-blox-light-blue-gray">Overall Progress Level</span>
-        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-blox-success/20 text-blox-success text-xs font-semibold border border-blox-success/30">
+        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-blox-xp/20 text-blox-xp text-xs font-semibold border border-blox-xp/30">
           <Zap className="w-3 h-3" />
           {totalXP} XP
         </span>
@@ -23,10 +23,10 @@ export function UserProgress() {
       </div>
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-1">
-          <Coins className="w-3 h-3 text-blox-golden-yellow" />
-          <p className="text-xs text-blox-golden-yellow font-semibold">{bloxTokens.toLocaleString()} BLOX</p>
+          <Coins className="w-3 h-3 text-blox-success" />
+          <p className="text-xs text-blox-success font-semibold">{bloxTokens.toLocaleString()} BLOX</p>
         </div>
-        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-blox-golden-yellow/20 text-blox-golden-yellow text-xs font-semibold border border-blox-golden-yellow/30">
+        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-blox-success/20 text-blox-success text-xs font-semibold border border-blox-success/30">
           +50 BLOX
         </span>
       </div>

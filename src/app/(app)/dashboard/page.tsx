@@ -1,9 +1,7 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { BookOpen, Users, TrendingUp, Zap, Video, Coins } from 'lucide-react'
-import { fadeInUp, staggerChildren } from '@/styles/animations'
+import { Users, TrendingUp, Zap } from 'lucide-react'
 import { ContinueLearning } from '@/components/dashboard/ContinueLearning'
 import { LearningProgress } from '@/components/dashboard/LearningProgress'
 import { QuickActions } from '@/components/dashboard/QuickActions'
@@ -26,57 +24,7 @@ export default function DashboardPage() {
 
   return (
     <div className="pt-3 px-6 pb-6 space-y-4 max-w-7xl mx-auto">
-
-
-      {/* Enhanced Stats Cards */}
-      <motion.div 
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
-        variants={staggerChildren}
-        initial="initial"
-        animate="animate"
-      >
-        <motion.div variants={fadeInUp} className="glass-card p-4 rounded-lg card-hover-glow">
-          <div className="flex items-center gap-3">
-            <Video className="w-5 h-5 text-blox-teal" />
-            <div>
-              <p className="text-2xl font-bold text-blox-white">39</p>
-              <p className="text-xs text-blox-light-blue-gray">Videos Watched</p>
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div variants={fadeInUp} className="glass-card p-4 rounded-lg card-hover-glow">
-          <div className="flex items-center gap-3">
-            <Zap className="w-5 h-5 text-blox-teal" />
-            <div>
-              <p className="text-2xl font-bold text-blox-white">1,140</p>
-              <p className="text-xs text-blox-light-blue-gray">XP Earned</p>
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div variants={fadeInUp} className="glass-card p-4 rounded-lg card-hover-glow">
-          <div className="flex items-center gap-3">
-            <Coins className="w-5 h-5 text-blox-teal" />
-            <div>
-              <p className="text-2xl font-bold text-blox-white">450</p>
-              <p className="text-xs text-blox-light-blue-gray">BLOX Earned</p>
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div variants={fadeInUp} className="glass-card p-4 rounded-lg card-hover-glow">
-          <div className="flex items-center gap-3">
-            <Users className="w-5 h-5 text-blox-success" />
-            <div>
-              <p className="text-2xl font-bold text-blox-white">7</p>
-              <p className="text-xs text-blox-light-blue-gray">Day Streak 🔥</p>
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
-
-      {/* Main Dashboard Grid */}
+      {/* Main Dashboard Grid - Moved up */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
         {/* Left Column - Continue Learning */}
         <div className="xl:col-span-2">

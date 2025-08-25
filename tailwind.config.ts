@@ -17,7 +17,7 @@ const config: Config = {
           },
           purple: {
             light: '#A78BFA',
-            DEFAULT: '#8B5CF6',
+            DEFAULT: '#9333EA',
             dark: '#7C3AED'
           },
           'black-blue': '#001C38',
@@ -29,18 +29,23 @@ const config: Config = {
           'medium-blue-gray': '#596D8C',
           success: {
             light: '#34D399',
-            DEFAULT: '#10B981',
+            DEFAULT: '#10B981',  // BLOX Green
             dark: '#059669'
+          },
+          xp: {
+            light: '#FCD34D',
+            DEFAULT: '#FBBF24',  // Golden Yellow
+            dark: '#D97706'
+          },
+          streak: {
+            light: '#FB923C',
+            DEFAULT: '#EF4444',  // Fire Red
+            dark: '#DC2626'
           },
           glass: {
             teal: 'rgba(54, 176, 217, 0.1)',
             light: 'rgba(54, 176, 217, 0.05)',
             border: 'rgba(54, 176, 217, 0.2)'
-          },
-          'golden-yellow': {
-            light: '#FFED4E',
-            DEFAULT: '#FFD700',
-            dark: '#FFB800'
           }
         }
       },
@@ -55,6 +60,38 @@ const config: Config = {
         'glow-pulse': 'glowPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'teal-glow': 'tealGlow 2s ease-in-out infinite alternate',
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'float-left': 'floatLeft 3s ease-in-out infinite',
+        'float-right': 'floatRight 3s ease-in-out infinite',
+        'sparkle-1': 'sparkle1 2s ease-in-out infinite',
+        'sparkle-2': 'sparkle2 2.5s ease-in-out infinite',
+        'sparkle-3': 'sparkle3 3s ease-in-out infinite',
+        'gradient-rotate': 'gradientRotate 3s linear infinite',
+      },
+      keyframes: {
+        floatLeft: {
+          '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+          '50%': { transform: 'translateY(-6px) rotate(-5deg)' },
+        },
+        floatRight: {
+          '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+          '50%': { transform: 'translateY(-6px) rotate(5deg)' },
+        },
+        sparkle1: {
+          '0%, 100%': { opacity: '0', transform: 'scale(0) rotate(0deg)' },
+          '50%': { opacity: '1', transform: 'scale(1) rotate(180deg)' },
+        },
+        sparkle2: {
+          '0%, 100%': { opacity: '0', transform: 'scale(0) rotate(0deg)' },
+          '50%': { opacity: '0.8', transform: 'scale(1) rotate(-180deg)' },
+        },
+        sparkle3: {
+          '0%, 100%': { opacity: '0', transform: 'scale(0) rotate(0deg)' },
+          '50%': { opacity: '0.6', transform: 'scale(1) rotate(360deg)' },
+        },
+        gradientRotate: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
       },
       boxShadow: {
         'teal-glow': '0 0 20px rgba(54, 176, 217, 0.5)',

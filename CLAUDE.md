@@ -8,8 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 1. **NEVER install dependencies unless explicitly told to**
 2. **NEVER create duplicate directories**
-   - Do NOT create duplicate folders
-3. **ALWAYS check if files/folders exist before creating**
+3. **ALWAYS check if files/folders exist before creating, Do NOT create duplicate folders**
 4. **ASK before making assumptions about project structure**
 5. **ONLY work with exactly what is specified in each prompt**
 6. **If you think something needs to be installed, ASK first**
@@ -73,4 +72,85 @@ POST   /api/teams/create          # Create new team
 POST   /api/webhooks/discord      # Discord bot webhooks
 POST   /api/webhooks/n8n          # n8n automation webhooks
 ```
+
+## Git Best Practices and Commit Standards
+
+### Branch Strategy
+- **Main Branches:**
+  - `main`: Production-ready code only
+  - `develop`: Integration branch for features
+  - `rebuild-version-001`: Current active development branch
+
+- **Feature Branches:** Use `feature/descriptive-name` format
+  - Examples: `feature/blox-wizard-ui`, `feature/video-transcript-system`, `feature/premium-subscription`
+- **Hotfix Branches:** Use `hotfix/issue-description`
+- **Release Branches:** Use `release/v1.0.0`
+
+### Commit Message Format
+```
+<type>(<scope>): <description>
+
+[optional body]
+
+[optional footer]
+```
+
+### Commit Types
+- **feat**: New feature implementation
+- **fix**: Bug fixes
+- **docs**: Documentation updates
+- **style**: Code formatting, no logic changes
+- **refactor**: Code restructuring without feature changes
+- **test**: Adding or updating tests
+- **chore**: Build process, dependencies, tooling
+- **perf**: Performance improvements
+- **ui**: UI/UX improvements and styling
+- **db**: Database schema or migration changes
+
+### Good Commit Examples
+```bash
+feat(wizard): add video reference cards with timestamps
+fix(auth): resolve Discord OAuth redirect issue
+ui(dashboard): implement glass morphism effects
+docs(api): update Blox Wizard implementation guide
+chore(deps): update OpenAI SDK to v4.0.0
+```
+
+### Bad Commit Examples (AVOID)
+```bash
+fix bug
+update files
+working on chat
+WIP
+```
+
+### Stage-Based Commits
+Reference the current stage when applicable:
+```bash
+feat(stage-8): implement transcript extraction service
+ui(stage-8): add premium upgrade modal
+fix(stage-5): resolve TLDraw integration issue
+```
+
+### Files to NEVER Commit
+- Environment variables (`.env*.local`)
+- API keys or secrets
+- `.private/` folder contents
+- Large media files in `/snips/`
+- Personal configuration files
+- `node_modules/` directory
+- `.next/` build directory
+
+### Always Include in Commits
+- Documentation updates for new features
+- Type definitions for new components
+- Migration files for database changes
+- Test files for new functionality
+
+### Blox Buddy Specific Practices
+When working on this project:
+- Reference the stage number from todo.md in commits when applicable
+- Use descriptive scope names that match the feature area (wizard, teams, learning, etc.)
+- Keep commits focused on single features or fixes taht were updated
+- Write clear commit messages that explain the "why" not just the "what"
 
