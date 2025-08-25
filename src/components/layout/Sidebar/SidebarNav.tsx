@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { MAIN_NAV, SECONDARY_NAV } from '@/lib/config/navigation'
-import { LearningPathTree } from '@/components/learning/LearningPathTree'
+import { EnhancedLearningNav } from './EnhancedLearningNav'
 import { cn } from '@/lib/utils/cn'
 import { ChevronDown, ChevronRight, Star } from 'lucide-react'
 
@@ -12,6 +12,7 @@ export function SidebarNav() {
   const pathname = usePathname()
   const isLearningPath = pathname.includes('/learning')
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['main']))
+  const [showLearningNav, setShowLearningNav] = useState(isLearningPath)
   
   // Parse learning path segments
   const pathSegments = pathname.split('/').filter(Boolean)
@@ -29,6 +30,10 @@ export function SidebarNav() {
       }
       return newSet
     })
+  }
+
+  const toggleLearningNav = () => {
+    setShowLearningNav(prev => !prev)
   }
 
   return (
@@ -59,8 +64,8 @@ export function SidebarNav() {
             if (item.href === '/learning') {
               return (
                 <div key={item.href}>
-                  <Link
-                    href={item.href}
+                  <button
+                    onClick={toggleLearningNav}
                     className={cn(
                       "nav-item w-full text-left flex items-center",
                       isActive && "nav-item-active"
@@ -73,15 +78,20 @@ export function SidebarNav() {
                         {item.badge}
                       </span>
                     )}
-                  </Link>
+                    <ChevronDown className={cn(
+                      "ml-2 h-3 w-3 transition-transform",
+                      showLearningNav ? "rotate-180" : ""
+                    )} />
+                  </button>
                   
-                  {/* Navigation Tree for Learning Path */}
-                  {isLearningPath && (
-                    <div className="mt-3 ml-2 pl-4 border-l-2 border-blox-medium-blue-gray">
-                      <LearningPathTree 
+                  {/* Enhanced Navigation for Learning Path - Shows when clicked */}
+                  {showLearningNav && (
+                    <div className="mt-3">
+                      <EnhancedLearningNav 
                         currentModuleId={currentModuleId}
                         currentWeekId={currentWeekId}
                         currentDayId={currentDayId}
+                        showAllModules={true}
                       />
                     </div>
                   )}

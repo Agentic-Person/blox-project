@@ -1,8 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { SplitView } from '@/components/learning/SplitView'
-import { WeekOverview } from '@/components/learning/WeekOverview'
 import { ModuleOverview } from '@/components/learning/ModuleOverview'
 import { WeekPreview } from '@/components/learning/WeekPreview'
 import { useLearningStore } from '@/store/learningStore'
@@ -63,28 +61,6 @@ export default function ModuleLearningPage({ params }: PageProps) {
     }
   }
   
-  // Transform module data for WeekOverview component
-  const transformedWeeks = currentModule?.weeks.map(week => ({
-    id: week.id,
-    title: week.title,
-    completed: false, // This would be calculated from store
-    progress: 0, // This would be calculated from store
-    days: week.days.map(day => ({
-      id: day.id,
-      title: day.title,
-      videos: day.videos.map(video => ({
-        id: video.id,
-        title: video.title,
-        thumbnail: `https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`,
-        duration: video.duration,
-        completed: isVideoCompleted(video.id),
-        xp: video.xpReward
-      })),
-      completed: false, // This would be calculated from store
-      estimatedTime: day.estimatedTime || '2.5h'
-    }))
-  })) || []
-  
   if (!currentModule) {
     return (
       <div className="h-full flex items-center justify-center bg-blox-very-dark-blue">
@@ -96,30 +72,11 @@ export default function ModuleLearningPage({ params }: PageProps) {
     )
   }
   
-  // Left panel - Week Overview (30%)
-  const leftPanel = (
-    <WeekOverview
-      module={{
-        id: currentModule.id,
-        title: currentModule.title,
-        description: currentModule.description,
-        totalVideos: currentModule.weeks.reduce((acc, week) => 
-          acc + week.days.reduce((dayAcc, day) => dayAcc + day.videos.length, 0), 0
-        )
-      }}
-      weeks={transformedWeeks}
-      currentWeek={selectedWeek}
-      currentDay={selectedDay}
-      onWeekChange={handleWeekChange}
-      onVideoSelect={handleVideoSelect}
-    />
-  )
-  
   // Find selected week data
   const selectedWeekData = selectedWeek ? currentModule.weeks.find(w => w.id === selectedWeek) : null
   
-  // Right panel - Show WeekPreview if week selected, otherwise ModuleOverview (70%)
-  const rightPanel = selectedWeekData ? (
+  // Show WeekPreview if week selected, otherwise ModuleOverview
+  const content = selectedWeekData ? (
     <WeekPreview
       week={selectedWeekData}
       onDaySelect={handleDaySelect}
@@ -131,18 +88,12 @@ export default function ModuleLearningPage({ params }: PageProps) {
   
   return (
     <motion.div 
-      className="h-full"
+      className="h-full w-full"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <SplitView
-        leftPanel={leftPanel}
-        rightPanel={rightPanel}
-        defaultLeftSize={30}
-        minLeftSize={25}
-        maxLeftSize={40}
-      />
+      {content}
     </motion.div>
   )
 }

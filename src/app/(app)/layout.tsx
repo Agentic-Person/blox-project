@@ -12,7 +12,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [isMobile, setIsMobile] = useState(false)
   const [isTablet, setIsTablet] = useState(false)
   const [viewportHeight, setViewportHeight] = useState('100vh')
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false) // Always start expanded
   const sidebarRef = useRef<ResizableSidebarHandle>(null)
   
   // Check if we're on a learning page
@@ -44,14 +44,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
-  // Auto-collapse sidebar on learning pages
-  useEffect(() => {
-    if (isLearningPage && !isMobile && !isTablet) {
-      setSidebarCollapsed(true)
-    } else if (!isLearningPage && !isMobile && !isTablet) {
-      setSidebarCollapsed(false)
-    }
-  }, [isLearningPage, isMobile, isTablet])
+  // Removed auto-collapse on learning pages - sidebar stays open for navigation
+  // User can manually collapse with Cmd/Ctrl+B if needed
 
   // Keyboard shortcut for toggling sidebar
   useEffect(() => {

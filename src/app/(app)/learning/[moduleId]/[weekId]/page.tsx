@@ -1,8 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { SplitView } from '@/components/learning/SplitView'
-import { WeekOverview } from '@/components/learning/WeekOverview'
 import { WeekPreview } from '@/components/learning/WeekPreview'
 import { useLearningStore } from '@/store/learningStore'
 import curriculumData from '@/data/curriculum.json'
@@ -39,28 +37,6 @@ export default function WeekLearningPage({ params }: PageProps) {
     router.push(`/learning/${params.moduleId}/${weekId}`)
   }
   
-  // Transform module data for WeekOverview component
-  const transformedWeeks = currentModule?.weeks.map(week => ({
-    id: week.id,
-    title: week.title,
-    completed: false, // This would be calculated from store
-    progress: 0, // This would be calculated from store
-    days: week.days.map(day => ({
-      id: day.id,
-      title: day.title,
-      videos: day.videos.map(video => ({
-        id: video.id,
-        title: video.title,
-        thumbnail: `https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`,
-        duration: video.duration,
-        completed: isVideoCompleted(video.id),
-        xp: video.xpReward
-      })),
-      completed: false, // This would be calculated from store
-      estimatedTime: day.estimatedTime || '2.5h'
-    }))
-  })) || []
-  
   if (!currentModule || !currentWeek) {
     return (
       <div className="h-full flex items-center justify-center bg-blox-very-dark-blue">
@@ -72,46 +48,17 @@ export default function WeekLearningPage({ params }: PageProps) {
     )
   }
   
-  // Left panel - Week Overview (30%)
-  const leftPanel = (
-    <WeekOverview
-      module={{
-        id: currentModule.id,
-        title: currentModule.title,
-        description: currentModule.description,
-        totalVideos: currentModule.weeks.reduce((acc, week) => 
-          acc + week.days.reduce((dayAcc, day) => dayAcc + day.videos.length, 0), 0
-        )
-      }}
-      weeks={transformedWeeks}
-      currentWeek={params.weekId}
-      onWeekChange={handleWeekChange}
-      onVideoSelect={handleVideoSelect}
-    />
-  )
-  
-  // Right panel - Week Preview (70%)
-  const rightPanel = (
-    <WeekPreview
-      week={currentWeek}
-      onDaySelect={handleDaySelect}
-      onVideoSelect={handleVideoSelect}
-    />
-  )
-  
   return (
     <motion.div 
-      className="h-full"
+      className="h-full w-full"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <SplitView
-        leftPanel={leftPanel}
-        rightPanel={rightPanel}
-        defaultLeftSize={30}
-        minLeftSize={25}
-        maxLeftSize={40}
+      <WeekPreview
+        week={currentWeek}
+        onDaySelect={handleDaySelect}
+        onVideoSelect={handleVideoSelect}
       />
     </motion.div>
   )
