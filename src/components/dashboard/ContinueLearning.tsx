@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { PlayCircle, Clock, Zap } from 'lucide-react'
-import { fadeInUp } from '@/styles/animations'
+import { memo } from 'react'
 
 interface ContinueLearningProps {
   currentModule: {
@@ -16,13 +16,13 @@ interface ContinueLearningProps {
   }
 }
 
-export function ContinueLearning({ currentModule }: ContinueLearningProps) {
+const ContinueLearning = memo(function ContinueLearning({ currentModule }: ContinueLearningProps) {
   return (
     <motion.div 
       className="glass-card p-4 pb-6 rounded-xl"
-      variants={fadeInUp}
-      initial="initial"
-      animate="animate"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2 }}
     >
       <div className="flex items-center justify-between mb-3">
         <h2 className="heading-secondary">Continue Learning</h2>
@@ -48,4 +48,6 @@ export function ContinueLearning({ currentModule }: ContinueLearningProps) {
       </div>
     </motion.div>
   )
-}
+})
+
+export { ContinueLearning }

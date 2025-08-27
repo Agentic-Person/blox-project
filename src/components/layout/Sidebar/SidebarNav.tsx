@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { MAIN_NAV, SECONDARY_NAV } from '@/lib/config/navigation'
 import { EnhancedLearningNav } from './EnhancedLearningNav'
+import { UpgradeCard } from './UpgradeCard'
 import { cn } from '@/lib/utils/cn'
 import { ChevronDown, ChevronRight, Star } from 'lucide-react'
 
@@ -60,11 +61,12 @@ export function SidebarNav() {
             const Icon = item.icon
             const isActive = pathname === item.href
             
-            // Special handling for Learning Path
+            // Special handling for Learning Path - both toggle and navigation
             if (item.href === '/learning') {
               return (
                 <div key={item.href}>
-                  <button
+                  <Link
+                    href={item.href}
                     onClick={toggleLearningNav}
                     className={cn(
                       "nav-item w-full text-left flex items-center",
@@ -82,7 +84,7 @@ export function SidebarNav() {
                       "ml-2 h-3 w-3 transition-transform",
                       showLearningNav ? "rotate-180" : ""
                     )} />
-                  </button>
+                  </Link>
                   
                   {/* Enhanced Navigation for Learning Path - Shows when clicked */}
                   {showLearningNav && (
@@ -165,6 +167,11 @@ export function SidebarNav() {
             )
           })}
         </div>
+      </div>
+
+      {/* Upgrade Card - Integrated into navigation flow */}
+      <div className="pt-4">
+        <UpgradeCard />
       </div>
 
     </nav>

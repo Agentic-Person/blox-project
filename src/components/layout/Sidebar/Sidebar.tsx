@@ -6,7 +6,6 @@ import { cn } from '@/lib/utils/cn'
 import { APP_CONFIG } from '@/lib/config/constants'
 import { UserProgress } from './UserProgress'
 import { SidebarNav } from './SidebarNav'
-import { UpgradeCard } from './UpgradeCard'
 
 export function Sidebar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false)
@@ -20,24 +19,26 @@ export function Sidebar() {
   // Auto-collapse on mobile when clicking outside or navigating
   useEffect(() => {
     if (!mounted) return
-    const handleResize = () => {
-      if (window.innerWidth >= 1024 && isMobileOpen) {
+    
+    const handleEvent = (e: Event) => {
+      if (e.type === 'resize' && window.innerWidth >= 1024 && isMobileOpen) {
         setIsMobileOpen(false)
+      } else if (e.type === 'keydown') {
+        const keyEvent = e as KeyboardEvent
+        if (keyEvent.key === 'Escape' && isMobileOpen) {
+          setIsMobileOpen(false)
+        }
       }
     }
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isMobileOpen) {
-        setIsMobileOpen(false)
+    if (isMobileOpen) {
+      window.addEventListener('resize', handleEvent)
+      document.addEventListener('keydown', handleEvent)
+      
+      return () => {
+        window.removeEventListener('resize', handleEvent)
+        document.removeEventListener('keydown', handleEvent)
       }
-    }
-
-    window.addEventListener('resize', handleResize)
-    document.addEventListener('keydown', handleKeyDown)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-      document.removeEventListener('keydown', handleKeyDown)
     }
   }, [isMobileOpen, mounted])
 
@@ -94,9 +95,9 @@ export function Sidebar() {
         {isMobileOpen ? <X className="h-6 w-6 text-blox-teal" /> : <Menu className="h-6 w-6 text-blox-teal" />}
       </button>
 
-      {/* Sidebar Container */}
+      {/* Sidebar Container - Removed glass-blur for better viewport clarity */}
       <div className={cn(
-        "flex flex-col h-full bg-blox-very-dark-blue/95 glass-blur border-r border-blox-glass-border transition-all duration-500 ease-in-out overflow-hidden",
+        "flex flex-col h-full bg-blox-very-dark-blue border-r border-blox-glass-border transition-all duration-500 ease-in-out overflow-hidden",
         "lg:static lg:translate-x-0",
         "fixed lg:relative inset-y-0 left-0 z-40 w-64 lg:w-full",
         isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
@@ -128,11 +129,6 @@ export function Sidebar() {
         <div className="flex-1 overflow-y-auto">
           {/* Navigation */}
           <SidebarNav />
-        </div>
-
-        {/* Bottom fixed section - Upgrade Card only */}
-        <div className="p-4 border-t border-blox-glass-border">
-          <UpgradeCard />
         </div>
       </div>
 

@@ -7,6 +7,7 @@ import * as Progress from '@radix-ui/react-progress'
 import Link from 'next/link'
 import { useLearningStore } from '@/store/learningStore'
 import curriculumData from '@/data/curriculum.json'
+import { useMemo } from 'react'
 
 interface ModuleProgress {
   id: string
@@ -35,19 +36,20 @@ export function LearningProgress({
     completedDays
   } = useLearningStore()
 
-  // Calculate real module progress from curriculum data
-  const realModules: ModuleProgress[] = curriculumData.modules.map((module, index) => {
-    const progress = getModuleProgress(module.id)
-    const totalDays = module.weeks.reduce((acc, week) => acc + week.days.length, 0)
-    const daysCompleted = completedDays.filter(dayId => {
-      return module.weeks.some(week => 
-        week.days.some(day => day.id === dayId)
-      )
-    }).length
+  // Calculate real module progress from curriculum data - memoized for performance
+  const realModules: ModuleProgress[] = useMemo(() => {
+    return curriculumData.modules.map((module, index) => {
+      const progress = getModuleProgress(module.id)
+      const totalDays = module.weeks.reduce((acc, week) => acc + week.days.length, 0)
+      const daysCompleted = completedDays.filter(dayId => {
+        return module.weeks.some(week => 
+          week.days.some(day => day.id === dayId)
+        )
+      }).length
 
-    // Determine current module (first incomplete module with progress)
-    const isCurrentModule = progress > 0 && progress < 100 && 
-      index === curriculumData.modules.findIndex(m => {
+      // Determine current module (first incomplete module with progress)
+      const isCurrentModule = progress > 0 && progress < 100 && 
+        index === curriculumData.modules.findIndex(m => {
         const moduleProgress = getModuleProgress(m.id)
         return moduleProgress > 0 && moduleProgress < 100
       })
@@ -58,24 +60,35 @@ export function LearningProgress({
       displayTitle = displayTitle.replace(/^Month \d+ – /, '')
     }
 
-    return {
-      id: module.id,
-      title: displayTitle,
-      progress,
-      completed: progress === 100,
-      isCurrentModule,
-      daysCompleted,
-      totalDays
-    }
-  })
+      return {
+        id: module.id,
+        title: displayTitle,
+        progress,
+        completed: progress === 100,
+        isCurrentModule,
+        daysCompleted,
+        totalDays
+      }
+    })
+  }, [getModuleProgress, completedDays])
 
   const actualModules = modules || realModules
   const actualOverallProgress = overallProgress || getOverallProgress()
 
-  // Calculate stats
-  const completedModules = actualModules.filter(m => m.completed).length
-  const inProgressModules = actualModules.filter(m => m.progress > 0 && !m.completed).length
-  const remainingModules = actualModules.filter(m => m.progress === 0).length
+  // Calculate stats - memoized for performance
+  const moduleStats = useMemo(() => {
+    const completedModules = actualModules.filter(m => m.completed).length
+    const inProgressModules = actualModules.filter(m => m.progress > 0 && !m.completed).length
+    const remainingModules = actualModules.filter(m => m.progress === 0).length
+    
+    return {
+      completedModules,
+      inProgressModules,
+      remainingModules
+    }
+  }, [actualModules])
+  
+  const { completedModules, inProgressModules, remainingModules } = moduleStats
   return (
     <Card className="card-hover">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">

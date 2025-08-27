@@ -10,6 +10,7 @@
     --blox-teal-dark: 42 140 176;
     --blox-black-blue: 0 28 56;
     --blox-very-dark-blue: 0 29 57;
+    --blox-dark-blue: 0 30 58;
     --blox-second-dark-blue: 0 34 70;
     --blox-white: 255 255 255;
     --blox-off-white: 221 221 221;
@@ -86,6 +87,11 @@
     @apply hover:border-blox-teal/40 transition-all duration-300;
   }
 
+  /* Background utilities */
+  .bg-teal-gradient {
+    background: linear-gradient(135deg, #36B0D9 0%, #1782AC 100%);
+  }
+
   /* Buttons */
   .btn-primary {
     @apply bg-teal-gradient text-blox-white font-semibold px-6 py-3 rounded-lg;
@@ -159,6 +165,25 @@
     @apply inline-flex items-center gap-1 px-3 py-1 rounded-full;
     @apply bg-teal-gradient text-blox-white text-sm font-bold;
     @apply shadow-teal-glow;
+  }
+
+  /* Custom scrollbar for navigation */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(54, 176, 217, 0.1);
+    border-radius: 2px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(54, 176, 217, 0.3);
+    border-radius: 2px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(54, 176, 217, 0.5);
   }
 
   /* Card hover effects - Reduced intensity */
