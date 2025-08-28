@@ -9,6 +9,8 @@ import { RecentActivity } from '@/components/dashboard/RecentActivity'
 import { TodaySchedule } from '@/components/dashboard/TodaySchedule'
 import { BloxTokenCard } from '@/components/dashboard/BloxTokenCard'
 import { BloxWizardDashboard } from '@/components/dashboard/BloxWizardDashboard'
+import { AIJourneyWidget } from '@/components/dashboard/AIJourneyWidget'
+import { AIWelcomeOverlay } from '@/components/dashboard/AIWelcomeOverlay'
 
 export default function DashboardPage() {
   // Mock data for continue learning
@@ -24,6 +26,12 @@ export default function DashboardPage() {
 
   return (
     <div className="pt-3 px-6 pb-6 space-y-4 max-w-7xl mx-auto">
+      {/* AI Journey Widget - At the very top */}
+      <AIJourneyWidget />
+
+      {/* Welcome Overlay for first-time users */}
+      <AIWelcomeOverlay onComplete={() => console.log('AI Journey started!')} />
+
       {/* Main Dashboard Grid - Moved up */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
         {/* Left Column - Continue Learning */}
@@ -37,7 +45,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Blox Wizard AI Assistant - Above Learning Path */}
+      {/* Blox Wizard AI Assistant - Below AI Journey */}
       <BloxWizardDashboard />
 
       {/* Learning Progress Section */}
