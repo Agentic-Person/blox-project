@@ -1,5 +1,7 @@
 'use client'
 
+import { useRef, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Users, TrendingUp, Zap } from 'lucide-react'
 import { ContinueLearning } from '@/components/dashboard/ContinueLearning'
@@ -9,10 +11,25 @@ import { RecentActivity } from '@/components/dashboard/RecentActivity'
 import { TodaySchedule } from '@/components/dashboard/TodaySchedule'
 import { BloxTokenCard } from '@/components/dashboard/BloxTokenCard'
 import { BloxWizardDashboard } from '@/components/dashboard/BloxWizardDashboard'
-import { AIJourneyWidget } from '@/components/dashboard/AIJourneyWidget'
+import { BloxWizardHeroCard } from '@/components/dashboard/BloxWizardHeroCard'
 import { AIWelcomeOverlay } from '@/components/dashboard/AIWelcomeOverlay'
+import { useAIJourney } from '@/hooks/useAIJourney'
 
 export default function DashboardPage() {
+  const bloxWizardRef = useRef<HTMLDivElement>(null)
+  const searchParams = useSearchParams()
+  const { forceShowWelcomeOverlay } = useAIJourney()
+  
+  // Check if this is a first visit from landing page
+  const isFirstVisit = searchParams?.get('firstVisit') === 'true'
+  
+  useEffect(() => {
+    if (isFirstVisit) {
+      // Force show overlay for first-time users
+      forceShowWelcomeOverlay()
+    }
+  }, [isFirstVisit, forceShowWelcomeOverlay])
+  
   // Mock data for continue learning
   const currentModule = {
     id: 'module-3',
@@ -24,15 +41,42 @@ export default function DashboardPage() {
     week: 10
   }
 
+  const handleStartChat = () => {
+    bloxWizardRef.current?.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    })
+  }
+
   return (
     <div className="pt-3 px-6 pb-6 space-y-4 max-w-7xl mx-auto">
-      {/* AI Journey Widget - At the very top */}
-      <AIJourneyWidget />
-
       {/* Welcome Overlay for first-time users */}
       <AIWelcomeOverlay onComplete={() => console.log('AI Journey started!')} />
+      
+      {/* Temporary test button - remove in production */}
+      <div className="fixed bottom-4 right-4 z-50">
+        <button 
+          onClick={() => {
+            localStorage.removeItem('blox-buddy-visited')
+            localStorage.removeItem('ai-journey-storage')
+            window.location.href = '/'
+          }}
+          className="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-white text-xs"
+        >
+          Reset First Visit
+        </button>
+      </div>
+      
 
-      {/* Main Dashboard Grid - Moved up */}
+      {/* Blox Wizard Hero Card - Prominent introduction */}
+      <BloxWizardHeroCard onStartChat={handleStartChat} />
+
+      {/* Blox Wizard AI Assistant - Primary feature at top */}
+      <div ref={bloxWizardRef}>
+        <BloxWizardDashboard />
+      </div>
+
+      {/* Main Dashboard Grid */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
         {/* Left Column - Continue Learning */}
         <div className="xl:col-span-2">
@@ -44,9 +88,6 @@ export default function DashboardPage() {
           <RecentActivity />
         </div>
       </div>
-
-      {/* Blox Wizard AI Assistant - Below AI Journey */}
-      <BloxWizardDashboard />
 
       {/* Learning Progress Section */}
       <LearningProgress modules={[]} overallProgress={44} />

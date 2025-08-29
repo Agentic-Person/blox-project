@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { useAIJourneyStore, type GameType, type AIJourney } from '@/store/aiJourneyStore'
+import { useAIJourneyRealtime } from './useAIJourneyRealtime'
 
 export interface JourneyProgress {
   completedSkills: number
@@ -35,15 +36,29 @@ export const useAIJourney = () => {
     isExpanded,
     showWelcomeOverlay,
     isGenerating,
+    isLoading,
+    userId,
+    syncEnabled,
+    lastSyncAt,
     setJourney,
+    setUserId,
+    initializeFromDatabase,
+    createJourneyInDatabase,
     updateProgress,
     completeTask,
     setExpanded,
     hideWelcomeOverlay,
+    showWelcomeOverlay: forceShowWelcomeOverlay,
     generateJourneyFromGameType,
     updateAIInsights,
+    syncToDatabase,
+    enableSync,
+    disableSync,
     resetJourney
   } = useAIJourneyStore()
+  
+  // Setup realtime subscriptions
+  const { isSubscribed, hasActiveSubscription } = useAIJourneyRealtime()
 
   // Calculate overall progress
   const progress: JourneyProgress = useMemo(() => {
@@ -136,9 +151,40 @@ export const useAIJourney = () => {
     }
   }, [journey])
 
-  // Initialize journey for first-time users
+  // Initialize journey - uses database if user is logged in
   const initializeJourney = (gameType: GameType, customGoal?: string) => {
-    generateJourneyFromGameType(gameType, customGoal)
+    if (userId && syncEnabled) {
+      createJourneyInDatabase(gameType, customGoal)
+    } else {
+      generateJourneyFromGameType(gameType, customGoal)
+    }
+  }
+  
+  // Initialize user session with database sync
+  const initializeUser = (newUserId: string) => {
+    setUserId(newUserId)
+  }
+  
+  // Get sync status information including realtime status
+  const getSyncStatus = () => {
+    if (!userId) return { status: 'offline', message: 'Not logged in', realtime: false }
+    if (!syncEnabled) return { status: 'disabled', message: 'Sync disabled', realtime: false }
+    if (isLoading) return { status: 'syncing', message: 'Syncing with database...', realtime: hasActiveSubscription }
+    if (lastSyncAt) {
+      const syncDate = lastSyncAt instanceof Date ? lastSyncAt : new Date(lastSyncAt)
+      const timeSince = Date.now() - syncDate.getTime()
+      const minutes = Math.floor(timeSince / (1000 * 60))
+      return { 
+        status: 'synced', 
+        message: minutes < 1 ? 'Just synced' : `Synced ${minutes}m ago`,
+        realtime: hasActiveSubscription
+      }
+    }
+    return { 
+      status: 'pending', 
+      message: 'Ready to sync',
+      realtime: hasActiveSubscription
+    }
   }
 
   // Mark task as complete
@@ -190,7 +236,8 @@ export const useAIJourney = () => {
     if (!journey) return 0
     
     // Mock streak calculation based on journey age
-    const daysSinceCreated = Math.floor((new Date().getTime() - journey.createdAt.getTime()) / (1000 * 60 * 60 * 24))
+    const createdAt = journey.createdAt instanceof Date ? journey.createdAt : new Date(journey.createdAt)
+    const daysSinceCreated = Math.floor((new Date().getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24))
     return Math.min(daysSinceCreated + 1, 7) // Cap at 7 days for demo
   }
 
@@ -208,6 +255,16 @@ export const useAIJourney = () => {
     isExpanded,
     showWelcomeOverlay,
     isGenerating,
+    isLoading,
+    
+    // Database sync state
+    userId,
+    syncEnabled,
+    lastSyncAt,
+    
+    // Realtime state
+    isSubscribed,
+    hasActiveSubscription,
     
     // Calculated data
     progress,
@@ -216,21 +273,32 @@ export const useAIJourney = () => {
     
     // Actions
     initializeJourney,
+    initializeUser,
     markTaskComplete,
     markSkillComplete,
     setExpanded,
     hideWelcomeOverlay,
+    forceShowWelcomeOverlay,
     resetJourney,
     updateAIInsights,
+    
+    // Database sync actions
+    syncToDatabase,
+    enableSync,
+    disableSync,
+    initializeFromDatabase,
     
     // Helper functions
     getNextAction,
     getStreak,
+    getSyncStatus,
     
     // Raw store actions for advanced use
     setJourney,
+    setUserId,
     updateProgress,
     completeTask,
-    generateJourneyFromGameType
+    generateJourneyFromGameType,
+    createJourneyInDatabase
   }
 }

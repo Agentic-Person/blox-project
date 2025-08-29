@@ -1,7 +1,14 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { aiJourneyAPI } from '@/lib/api/aiJourney'
+import type { 
+  GameType, 
+  AIJourneyWithSkills, 
+  CreateJourneyRequest,
+  UpdateJourneyProgressRequest 
+} from '@/types/supabase-ai-journey'
 
-export type GameType = 'horror' | 'rpg' | 'racing' | 'battle-royale' | 'custom'
+export type { GameType }
 
 export interface Skill {
   id: string
@@ -58,16 +65,32 @@ export interface AIJourneyState {
   // UI states
   isExpanded: boolean
   showWelcomeOverlay: boolean
+  hasCompletedOnboarding: boolean
   isGenerating: boolean
+  isLoading: boolean
+  
+  // Database sync states
+  userId: string | null
+  syncEnabled: boolean
+  lastSyncAt: Date | null
   
   // Actions
   setJourney: (journey: AIJourney) => void
+  setUserId: (userId: string) => void
+  initializeFromDatabase: () => Promise<void>
+  createJourneyInDatabase: (gameType: GameType, customGoal?: string) => Promise<void>
   updateProgress: (skillId: string, completed: boolean) => void
   completeTask: (date: string, taskIndex: number) => void
   setExpanded: (expanded: boolean) => void
   hideWelcomeOverlay: () => void
+  showWelcomeOverlay: () => void
   generateJourneyFromGameType: (gameType: GameType, customGoal?: string) => void
   updateAIInsights: (insights: Partial<AIInsight>) => void
+  
+  // Database sync functions
+  syncToDatabase: () => Promise<void>
+  enableSync: () => void
+  disableSync: () => void
   
   // Reset functions
   resetJourney: () => void
@@ -111,6 +134,60 @@ const defaultSkills: Record<GameType, Skill[]> = {
   ]
 }
 
+// Helper functions for converting between local and database types
+const convertToSupabaseJourney = (journey: AIJourney, userId: string): CreateJourneyRequest => {
+  return {
+    userId,
+    gameType: journey.gameType,
+    gameTitle: journey.gameTitle,
+    customGoal: journey.customGoal,
+    skills: journey.skills.map((skill, index) => ({
+      skillId: skill.id,
+      skillName: skill.name,
+      skillDescription: skill.description,
+      skillIcon: skill.icon,
+      skillOrder: index + 1,
+      videoCount: skill.videos,
+      estimatedHours: skill.estimatedHours
+    }))
+  }
+}
+
+const convertFromSupabaseJourney = (dbJourney: AIJourneyWithSkills): AIJourney => {
+  return {
+    id: dbJourney.id,
+    userId: dbJourney.user_id,
+    gameType: dbJourney.game_type,
+    gameTitle: dbJourney.game_title,
+    customGoal: dbJourney.custom_goal || undefined,
+    currentSkill: dbJourney.current_skill_id || 'Getting Started',
+    currentModule: dbJourney.current_module || 'Module 1',
+    currentWeek: dbJourney.current_week,
+    currentDay: dbJourney.current_day,
+    totalProgress: dbJourney.total_progress,
+    skills: dbJourney.skills
+      .sort((a, b) => a.skill_order - b.skill_order)
+      .map(skill => ({
+        id: skill.skill_id,
+        name: skill.skill_name,
+        status: skill.status,
+        videos: skill.video_count,
+        estimatedHours: skill.estimated_hours,
+        description: skill.skill_description || '',
+        icon: skill.skill_icon || '⭐'
+      })),
+    schedule: [], // TODO: Convert from ai_journey_schedule
+    aiInsights: {
+      pace: 'on-track',
+      nextMilestone: 'Continue your learning journey',
+      suggestion: 'Focus on your current skill',
+      motivationalTip: 'You\'re making great progress!'
+    }, // TODO: Convert from ai_journey_insights
+    createdAt: new Date(dbJourney.created_at),
+    lastUpdated: new Date(dbJourney.updated_at)
+  }
+}
+
 const generateMockTasks = (gameType: GameType): DailyTask[] => {
   const baseTasks: Record<GameType, DailyTask[]> = {
     'horror': [
@@ -149,15 +226,129 @@ export const useAIJourneyStore = create<AIJourneyState>()(
       // Initial state
       journey: null,
       isExpanded: true, // Default expanded for new users
-      showWelcomeOverlay: true, // Show for new users
+      showWelcomeOverlay: false, // Will be set to true for first-time users
+      hasCompletedOnboarding: false,
       isGenerating: false,
+      isLoading: false,
+      
+      // Database sync states
+      userId: null,
+      syncEnabled: false,
+      lastSyncAt: null,
       
       // Actions
       setJourney: (journey) => set({ journey }),
       
-      updateProgress: (skillId, completed) => set((state) => {
-        if (!state.journey) return state
+      setUserId: (userId) => {
+        set({ userId, syncEnabled: true })
+        // Auto-initialize from database when user is set
+        get().initializeFromDatabase()
+      },
+      
+      initializeFromDatabase: async () => {
+        const { userId } = get()
+        if (!userId) return
         
+        set({ isLoading: true })
+        
+        try {
+          const response = await aiJourneyAPI.getUserJourney(userId)
+          if (response.success && response.data) {
+            const journey = convertFromSupabaseJourney(response.data)
+            set({ 
+              journey,
+              isLoading: false,
+              lastSyncAt: new Date(),
+              hasCompletedOnboarding: true,
+              showWelcomeOverlay: false
+            })
+          } else {
+            // No journey found in database - user needs to create one
+            set({ 
+              isLoading: false,
+              showWelcomeOverlay: true
+            })
+          }
+        } catch (error) {
+          console.error('Failed to initialize from database:', error)
+          set({ isLoading: false })
+        }
+      },
+      
+      createJourneyInDatabase: async (gameType, customGoal) => {
+        const { userId } = get()
+        if (!userId) {
+          // Fallback to local generation if no user
+          get().generateJourneyFromGameType(gameType, customGoal)
+          return
+        }
+        
+        set({ isGenerating: true })
+        
+        try {
+          // Create journey locally first for immediate UI response
+          const gameTitle = customGoal || `${gameType.charAt(0).toUpperCase() + gameType.slice(1).replace('-', ' ')} Game`
+          const skills = defaultSkills[gameType] || defaultSkills.custom
+          const todayTasks = generateMockTasks(gameType)
+          
+          const localJourney: AIJourney = {
+            id: `temp-${Date.now()}`, // Temporary ID
+            userId,
+            gameType,
+            gameTitle,
+            customGoal,
+            currentSkill: skills[0].name,
+            currentModule: 'Module 1',
+            currentWeek: 1,
+            currentDay: 1,
+            totalProgress: 0,
+            skills,
+            schedule: [{
+              date: new Date().toISOString().split('T')[0],
+              tasks: todayTasks
+            }],
+            aiInsights: {
+              pace: 'on-track',
+              nextMilestone: `Complete ${skills[0].name} in 2 weeks`,
+              suggestion: `Focus on understanding the basics before moving to advanced topics`,
+              motivationalTip: `You're starting your ${gameTitle} journey! Take it step by step.`
+            },
+            createdAt: new Date(),
+            lastUpdated: new Date()
+          }
+          
+          // Optimistic update
+          set({ 
+            journey: localJourney,
+            isGenerating: false,
+            hasCompletedOnboarding: true,
+            showWelcomeOverlay: false,
+            isExpanded: true
+          })
+          
+          // Create in database
+          const createRequest = convertToSupabaseJourney(localJourney, userId)
+          const response = await aiJourneyAPI.createJourney(createRequest)
+          
+          if (response.success && response.data) {
+            // Update with real database journey
+            const dbJourney = convertFromSupabaseJourney(response.data)
+            set({ 
+              journey: dbJourney,
+              lastSyncAt: new Date()
+            })
+          }
+        } catch (error) {
+          console.error('Failed to create journey in database:', error)
+          // Keep the local journey even if database fails
+        }
+      },
+      
+      updateProgress: (skillId, completed) => {
+        const state = get()
+        if (!state.journey) return
+        
+        // Optimistic update
         const updatedSkills = state.journey.skills.map(skill => {
           if (skill.id === skillId) {
             return { ...skill, status: (completed ? 'completed' : 'current') as 'locked' | 'current' | 'completed' }
@@ -168,15 +359,34 @@ export const useAIJourneyStore = create<AIJourneyState>()(
         const completedCount = updatedSkills.filter(s => s.status === 'completed').length
         const totalProgress = Math.round((completedCount / updatedSkills.length) * 100)
         
-        return {
-          journey: {
-            ...state.journey,
-            skills: updatedSkills,
-            totalProgress,
-            lastUpdated: new Date()
-          }
+        const updatedJourney = {
+          ...state.journey,
+          skills: updatedSkills,
+          totalProgress,
+          lastUpdated: new Date()
         }
-      }),
+        
+        set({ journey: updatedJourney })
+        
+        // Sync to database if enabled
+        if (state.syncEnabled && state.userId) {
+          aiJourneyAPI.updateJourneyProgress({
+            journeyId: state.journey.id,
+            updates: { totalProgress },
+            skillUpdates: [{
+              skillId,
+              status: completed ? 'completed' : 'current',
+              completedAt: completed ? new Date().toISOString() : undefined
+            }]
+          }).then(response => {
+            if (response.success) {
+              set({ lastSyncAt: new Date() })
+            }
+          }).catch(error => {
+            console.error('Failed to sync progress to database:', error)
+          })
+        }
+      },
       
       completeTask: (date, taskIndex) => set((state) => {
         if (!state.journey) return state
@@ -204,6 +414,7 @@ export const useAIJourneyStore = create<AIJourneyState>()(
       setExpanded: (expanded) => set({ isExpanded: expanded }),
       
       hideWelcomeOverlay: () => set({ showWelcomeOverlay: false }),
+      showWelcomeOverlay: () => set({ showWelcomeOverlay: true }),
       
       generateJourneyFromGameType: (gameType, customGoal) => {
         set({ isGenerating: true })
@@ -244,6 +455,7 @@ export const useAIJourneyStore = create<AIJourneyState>()(
           set({ 
             journey,
             isGenerating: false,
+            hasCompletedOnboarding: true,
             showWelcomeOverlay: false,
             isExpanded: true
           })
@@ -262,10 +474,27 @@ export const useAIJourneyStore = create<AIJourneyState>()(
         }
       }),
       
+      // Database sync functions
+      syncToDatabase: async () => {
+        const { journey, userId, syncEnabled } = get()
+        if (!journey || !userId || !syncEnabled) return
+        
+        try {
+          // This is a full sync - would implement based on what needs syncing
+          set({ lastSyncAt: new Date() })
+        } catch (error) {
+          console.error('Failed to sync to database:', error)
+        }
+      },
+      
+      enableSync: () => set({ syncEnabled: true }),
+      disableSync: () => set({ syncEnabled: false }),
+      
       resetJourney: () => set({ 
         journey: null, 
         showWelcomeOverlay: true,
-        isExpanded: true
+        isExpanded: true,
+        lastSyncAt: null
       })
     }),
     {
@@ -273,8 +502,47 @@ export const useAIJourneyStore = create<AIJourneyState>()(
       partialize: (state) => ({
         journey: state.journey,
         isExpanded: state.isExpanded,
-        showWelcomeOverlay: state.showWelcomeOverlay
-      })
+        hasCompletedOnboarding: state.hasCompletedOnboarding,
+        userId: state.userId,
+        syncEnabled: state.syncEnabled,
+        lastSyncAt: state.lastSyncAt
+      }),
+      storage: {
+        getItem: (name) => {
+          if (typeof window === 'undefined') return null
+          const str = localStorage.getItem(name)
+          if (!str) return null
+          try {
+            const data = JSON.parse(str)
+            // Convert date strings back to Date objects
+            if (data.state?.journey?.createdAt) {
+              data.state.journey.createdAt = new Date(data.state.journey.createdAt)
+            }
+            if (data.state?.journey?.lastUpdated) {
+              data.state.journey.lastUpdated = new Date(data.state.journey.lastUpdated)
+            }
+            if (data.state?.lastSyncAt) {
+              data.state.lastSyncAt = new Date(data.state.lastSyncAt)
+            }
+            return data
+          } catch (error) {
+            console.error('Error parsing persisted state:', error)
+            return null
+          }
+        },
+        setItem: (name, value) => {
+          if (typeof window === 'undefined') return
+          try {
+            localStorage.setItem(name, JSON.stringify(value))
+          } catch (error) {
+            console.error('Error persisting state:', error)
+          }
+        },
+        removeItem: (name) => {
+          if (typeof window === 'undefined') return
+          localStorage.removeItem(name)
+        }
+      }
     }
   )
 )

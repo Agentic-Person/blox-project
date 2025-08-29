@@ -9,9 +9,17 @@ export default function RootPage() {
   const router = useRouter()
 
   useEffect(() => {
+    // Check if this is a first-time visit
+    const hasVisited = localStorage.getItem('blox-buddy-visited')
+    const isFirstTime = !hasVisited
+    
+    if (isFirstTime) {
+      localStorage.setItem('blox-buddy-visited', 'true')
+    }
+    
     // Auto-redirect to dashboard after a brief moment
     const timer = setTimeout(() => {
-      router.push('/dashboard')
+      router.push(`/dashboard${isFirstTime ? '?firstVisit=true' : ''}`)
     }, 1500)
 
     return () => clearTimeout(timer)
