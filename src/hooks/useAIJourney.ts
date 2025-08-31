@@ -48,7 +48,7 @@ export const useAIJourney = () => {
     completeTask,
     setExpanded,
     hideWelcomeOverlay,
-    showWelcomeOverlay: forceShowWelcomeOverlay,
+    forceShowWelcomeOverlay,
     generateJourneyFromGameType,
     updateAIInsights,
     syncToDatabase,
@@ -56,6 +56,8 @@ export const useAIJourney = () => {
     disableSync,
     resetJourney
   } = useAIJourneyStore()
+  
+  // No need for separate selector now that function is renamed
   
   // Setup realtime subscriptions
   const { isSubscribed, hasActiveSubscription } = useAIJourneyRealtime()
