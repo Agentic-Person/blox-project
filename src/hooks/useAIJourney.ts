@@ -34,7 +34,7 @@ export const useAIJourney = () => {
   const {
     journey,
     isExpanded,
-    showWelcomeOverlay,
+    showWelcomeOverlay: showOverlay,
     isGenerating,
     isLoading,
     userId,
@@ -253,7 +253,7 @@ export const useAIJourney = () => {
     // State
     journey,
     isExpanded,
-    showWelcomeOverlay,
+    showWelcomeOverlay: showOverlay,
     isGenerating,
     isLoading,
     

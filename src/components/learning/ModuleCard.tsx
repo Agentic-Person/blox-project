@@ -87,9 +87,8 @@ export function ModuleCard({
       })
     })
     
-    // Shuffle and take 3 videos
-    const shuffled = [...allVideos].sort(() => Math.random() - 0.5)
-    return shuffled.slice(0, 3)
+    // Take first 3 videos deterministically to avoid hydration issues
+    return allVideos.slice(0, 3)
   }, [module])
 
   const getDifficultyColor = (difficulty: string) => {
