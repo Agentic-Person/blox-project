@@ -18,6 +18,9 @@ import {
 import { motion } from 'framer-motion'
 import { useLearningStore } from '@/store/learningStore'
 import * as Progress from '@radix-ui/react-progress'
+import { moduleColorScheme } from '@/lib/constants/moduleColors'
+import { cn } from '@/lib/utils/cn'
+import { getYouTubeThumbnail, getThumbnailAltText } from '@/lib/youtube'
 
 interface Video {
   id: string
@@ -68,6 +71,19 @@ export function DayView({
   
   // Extract day number from ID (e.g., "day-1" -> "1")
   const dayNumber = day.id.split('-').pop() || '1'
+  
+  // Extract module index for color coding (e.g., "module-1" -> 0, "module-2" -> 1)
+  const moduleNumber = moduleInfo.id.split('-')[1]
+  const moduleIndex = parseInt(moduleNumber, 10) - 1
+  
+  // Get module-specific colors
+  const {
+    dayBackgrounds,
+    dayHoverBackgrounds,
+    dayActiveBorders,
+    textColors,
+    progressBarColors
+  } = moduleColorScheme
   
   return (
     <div className="h-full flex flex-col bg-blox-very-dark-blue">
@@ -129,20 +145,19 @@ export function DayView({
       <div className="px-6 py-3 bg-blox-dark-blue/30">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm text-blox-off-white">Day Progress</span>
-          <span className="text-sm font-semibold text-blox-teal">{completionPercentage}% Complete</span>
+          <span className={cn("text-sm font-semibold", textColors[moduleIndex])}>{completionPercentage}% Complete</span>
         </div>
         <Progress.Root 
           className="relative overflow-hidden bg-blox-medium-blue-gray/30 rounded-full w-full h-2"
           value={completionPercentage}
         >
           <Progress.Indicator
-            className={`h-full w-full flex-1 transition-transform duration-500 ease-out ${
+            className={cn(
+              "h-full w-full flex-1 transition-transform duration-500 ease-out",
               dayCompleted 
                 ? 'bg-blox-success' 
-                : dayInProgress 
-                  ? 'bg-gradient-to-r from-blox-warning to-blox-teal'
-                  : 'bg-blox-medium-blue-gray'
-            }`}
+                : progressBarColors[moduleIndex]
+            )}
             style={{ transform: `translateX(-${100 - completionPercentage}%)` }}
           />
         </Progress.Root>
@@ -150,8 +165,23 @@ export function DayView({
       
       {/* Videos List */}
       <div className="flex-1 overflow-auto p-6">
-        <h2 className="text-lg font-semibold text-blox-white mb-4">Videos for Today</h2>
-        <div className="space-y-4">
+        {/* Color-coded Container Card for Videos */}
+        <Card className={cn(
+          "mb-6 transition-all duration-200",
+          dayBackgrounds[moduleIndex],
+          dayActiveBorders[moduleIndex]
+        )}>
+          <CardHeader className="pb-4">
+            <CardTitle className={cn("text-lg font-semibold flex items-center gap-2", textColors[moduleIndex])}>
+              <BookOpen className="h-5 w-5" />
+              Videos for Today
+              <Badge variant="outline" className={cn("ml-auto", textColors[moduleIndex])}>
+                {completedVideos}/{totalVideos} completed
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
           {day.videos.map((video, videoIndex) => {
             const isCompleted = isVideoCompleted(video.id)
             
@@ -171,8 +201,8 @@ export function DayView({
                     {video.youtubeId ? (
                       <>
                         <img
-                          src={`https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`}
-                          alt={video.title}
+                          src={getYouTubeThumbnail(video.youtubeId, 'medium')}
+                          alt={getThumbnailAltText(video.title, video.youtubeId)}
                           className="w-full h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -267,7 +297,9 @@ export function DayView({
               </motion.div>
             )
           })}
-        </div>
+            </div>
+          </CardContent>
+        </Card>
         
         {/* Practice Task */}
         {day.practiceTask && (

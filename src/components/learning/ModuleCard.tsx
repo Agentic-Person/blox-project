@@ -19,8 +19,11 @@ import {
 } from 'lucide-react'
 import { useLearningStore } from '@/store/learningStore'
 import { formatBLOXAmount } from '@/lib/learning/xp-to-blox'
+import { getYouTubeThumbnail, getThumbnailAltText } from '@/lib/youtube'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import { moduleColorScheme } from '@/lib/constants/moduleColors'
+import { cn } from '@/lib/utils/cn'
 
 interface Video {
   id: string
@@ -75,6 +78,17 @@ export function ModuleCard({
 }: ModuleCardProps) {
   const { calculateModuleProgress } = useLearningStore()
   const moduleProgress = calculateModuleProgress(module.id)
+  
+  // Extract module index for color coding (e.g., "module-1" -> 0, "module-2" -> 1)
+  const moduleNumber = module.id.split('-')[1]
+  const moduleIndex = parseInt(moduleNumber, 10) - 1
+  
+  // Get module-specific colors
+  const {
+    moduleBackgrounds,
+    textColors,
+    progressBarColors
+  } = moduleColorScheme
 
   // Get two random videos from the module for thumbnails
   const sampleVideos = useMemo(() => {
@@ -124,11 +138,31 @@ export function ModuleCard({
       transition={{ type: "spring", stiffness: 300 }}
     >
       <Card 
-        className={`relative overflow-hidden transition-all duration-200 hover:shadow-xl glass-card border-blox-glass-border cursor-pointer ${className}`}
+        className={cn(
+          "relative overflow-hidden transition-all duration-300 cursor-pointer group border-2",
+          moduleBackgrounds[moduleIndex],
+          // Use predefined border classes instead of dynamic ones
+          moduleIndex === 0 && 'border-blox-module-green/50 hover:border-blox-module-green/80',
+          moduleIndex === 1 && 'border-blox-module-blue/50 hover:border-blox-module-blue/80',
+          moduleIndex === 2 && 'border-blox-module-violet/50 hover:border-blox-module-violet/80',
+          moduleIndex === 3 && 'border-blox-module-red/50 hover:border-blox-module-red/80',
+          moduleIndex === 4 && 'border-blox-module-orange/50 hover:border-blox-module-orange/80',
+          moduleIndex === 5 && 'border-blox-module-yellow/50 hover:border-blox-module-yellow/80',
+          "hover:shadow-xl hover:scale-[1.02]",
+          className
+        )}
         onClick={() => handleAction()}
       >
-        {/* Glow effect on hover */}
-        <div className="absolute inset-0 bg-gradient-to-r from-blox-teal/0 via-blox-teal/5 to-blox-teal/0 opacity-0 hover:opacity-100 transition-opacity duration-500" />
+        {/* Module-specific glow effect on hover */}
+        <div className={cn(
+          "absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500",
+          moduleIndex === 0 && 'from-blox-module-green/0 via-blox-module-green/10 to-blox-module-green/0',
+          moduleIndex === 1 && 'from-blox-module-blue/0 via-blox-module-blue/10 to-blox-module-blue/0',
+          moduleIndex === 2 && 'from-blox-module-violet/0 via-blox-module-violet/10 to-blox-module-violet/0',
+          moduleIndex === 3 && 'from-blox-module-red/0 via-blox-module-red/10 to-blox-module-red/0',
+          moduleIndex === 4 && 'from-blox-module-orange/0 via-blox-module-orange/10 to-blox-module-orange/0',
+          moduleIndex === 5 && 'from-blox-module-yellow/0 via-blox-module-yellow/10 to-blox-module-yellow/0'
+        )} />
         
         {/* Header with Title and Badge */}
         <CardHeader className="pb-3 relative z-10">
@@ -142,7 +176,16 @@ export function ModuleCard({
                 <span className={isLocked ? 'text-blox-medium-blue-gray' : ''}>{module.title}</span>
               </CardTitle>
             </div>
-            <Badge variant="outline" className={getDifficultyColor(module.difficulty)}>
+            <Badge variant="outline" className={cn(
+              "border-2",
+              textColors[moduleIndex],
+              moduleIndex === 0 && 'border-blox-module-green/30 bg-blox-module-green/10',
+              moduleIndex === 1 && 'border-blox-module-blue/30 bg-blox-module-blue/10',
+              moduleIndex === 2 && 'border-blox-module-violet/30 bg-blox-module-violet/10',
+              moduleIndex === 3 && 'border-blox-module-red/30 bg-blox-module-red/10',
+              moduleIndex === 4 && 'border-blox-module-orange/30 bg-blox-module-orange/10',
+              moduleIndex === 5 && 'border-blox-module-yellow/30 bg-blox-module-yellow/10'
+            )}>
               {module.difficulty}
             </Badge>
           </div>
@@ -178,8 +221,8 @@ export function ModuleCard({
                   <div key={video.id || index} className="relative group flex-1">
                     <div className="relative aspect-video rounded-lg overflow-hidden bg-blox-medium-blue-gray border border-blox-glass-border">
                       <Image
-                        src={`https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`}
-                        alt={video.title}
+                        src={getYouTubeThumbnail(video.youtubeId, 'medium')}
+                        alt={getThumbnailAltText(video.title, video.youtubeId)}
                         fill
                         className="object-cover"
                         sizes="(max-width: 768px) 33vw, 25vw"
@@ -200,12 +243,17 @@ export function ModuleCard({
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-blox-off-white">Progress</span>
-                <span className="font-medium text-blox-teal">{moduleProgress.completionPercentage}%</span>
+                <span className={cn("font-medium", textColors[moduleIndex])}>{moduleProgress.completionPercentage}%</span>
               </div>
-              <Progress 
-                value={moduleProgress.completionPercentage} 
-                className="h-2 bg-blox-medium-blue-gray"
-              />
+              <div className="w-full bg-blox-medium-blue-gray rounded-full h-2">
+                <div 
+                  className={cn(
+                    "h-2 rounded-full transition-all duration-500",
+                    progressBarColors[moduleIndex]
+                  )}
+                  style={{ width: `${moduleProgress.completionPercentage}%` }}
+                />
+              </div>
             </div>
           )}
 
@@ -237,19 +285,44 @@ export function ModuleCard({
                 Locked
               </Button>
             ) : moduleProgress.status === 'completed' ? (
-              <Button variant="outline" className="w-full border-blox-glass-border hover:bg-blox-glass-bg text-blox-white" onClick={(e) => handleAction(e)}>
+              <Button variant="outline" className={cn(
+                "w-full text-white border-2",
+                textColors[moduleIndex],
+                moduleIndex === 0 && 'border-blox-module-green/50 hover:bg-blox-module-green/20',
+                moduleIndex === 1 && 'border-blox-module-blue/50 hover:bg-blox-module-blue/20',
+                moduleIndex === 2 && 'border-blox-module-violet/50 hover:bg-blox-module-violet/20',
+                moduleIndex === 3 && 'border-blox-module-red/50 hover:bg-blox-module-red/20',
+                moduleIndex === 4 && 'border-blox-module-orange/50 hover:bg-blox-module-orange/20',
+                moduleIndex === 5 && 'border-blox-module-yellow/50 hover:bg-blox-module-yellow/20'
+              )} onClick={(e) => handleAction(e)}>
                 <Trophy className="h-4 w-4 mr-2" />
                 Review Module
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
             ) : moduleProgress.status === 'in_progress' ? (
-              <Button className="w-full bg-blox-teal hover:bg-blox-teal/80 text-white" onClick={(e) => handleAction(e)}>
+              <Button className={cn(
+                "w-full text-white",
+                moduleIndex === 0 && 'bg-blox-module-green hover:bg-blox-module-green/80',
+                moduleIndex === 1 && 'bg-blox-module-blue hover:bg-blox-module-blue/80',
+                moduleIndex === 2 && 'bg-blox-module-violet hover:bg-blox-module-violet/80',
+                moduleIndex === 3 && 'bg-blox-module-red hover:bg-blox-module-red/80',
+                moduleIndex === 4 && 'bg-blox-module-orange hover:bg-blox-module-orange/80',
+                moduleIndex === 5 && 'bg-blox-module-yellow hover:bg-blox-module-yellow/80'
+              )} onClick={(e) => handleAction(e)}>
                 <BookOpen className="h-4 w-4 mr-2" />
                 Continue Learning
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
             ) : (
-              <Button className="w-full bg-blox-teal hover:bg-blox-teal/80 text-white" onClick={(e) => handleAction(e)}>
+              <Button className={cn(
+                "w-full text-white",
+                moduleIndex === 0 && 'bg-blox-module-green hover:bg-blox-module-green/80',
+                moduleIndex === 1 && 'bg-blox-module-blue hover:bg-blox-module-blue/80',
+                moduleIndex === 2 && 'bg-blox-module-violet hover:bg-blox-module-violet/80',
+                moduleIndex === 3 && 'bg-blox-module-red hover:bg-blox-module-red/80',
+                moduleIndex === 4 && 'bg-blox-module-orange hover:bg-blox-module-orange/80',
+                moduleIndex === 5 && 'bg-blox-module-yellow hover:bg-blox-module-yellow/80'
+              )} onClick={(e) => handleAction(e)}>
                 <BookOpen className="h-4 w-4 mr-2" />
                 Start Module
                 <ArrowRight className="h-4 w-4 ml-2" />

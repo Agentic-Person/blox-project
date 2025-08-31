@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import curriculumData from '@/data/curriculum.json'
 import { useLearningStore } from '@/store/learningStore'
 import { cn } from '@/lib/utils/cn'
+import { moduleColorScheme } from '@/lib/constants/moduleColors'
 
 export function Breadcrumb() {
   const pathname = usePathname()
@@ -21,6 +22,13 @@ export function Breadcrumb() {
   const module = curriculumData.modules.find(m => m.id === moduleId)
   const week = module?.weeks.find(w => w.id === weekId)
   const day = week?.days.find(d => d.id === dayId)
+  
+  // Extract module index for color coding
+  const moduleNumber = module?.id.split('-')[1]
+  const moduleIndex = moduleNumber ? parseInt(moduleNumber, 10) - 1 : 0
+  
+  // Get module-specific colors
+  const { moduleBackgrounds, textColors, dayBackgrounds } = moduleColorScheme
   
   // Get progress for each level
   const moduleProgress = module ? getModuleProgress(module.id) : 0
@@ -85,7 +93,20 @@ export function Breadcrumb() {
   }
 
   return (
-    <div className="flex items-center space-x-2 text-sm bg-blox-very-dark-blue/80 backdrop-blur-sm px-3 py-2 rounded-lg border border-blox-glass-border">
+    <div className={cn(
+      "flex items-center space-x-2 text-sm backdrop-blur-sm px-3 py-2 rounded-lg border-2 transition-all duration-300",
+      module ? (
+        cn(
+          dayBackgrounds[moduleIndex],
+          moduleIndex === 0 && 'border-blox-module-green/50',
+          moduleIndex === 1 && 'border-blox-module-blue/50',
+          moduleIndex === 2 && 'border-blox-module-violet/50', 
+          moduleIndex === 3 && 'border-blox-module-red/50',
+          moduleIndex === 4 && 'border-blox-module-orange/50',
+          moduleIndex === 5 && 'border-blox-module-yellow/50'
+        )
+      ) : 'bg-blox-very-dark-blue/80 border-blox-glass-border'
+    )}>
       {items.map((item, index) => {
         const Icon = item.icon
         const isLast = index === items.length - 1
@@ -98,7 +119,11 @@ export function Breadcrumb() {
             
             {isLast ? (
               <div className="flex items-center gap-2" title={item.fullTitle}>
-                <span className="text-blox-white font-medium flex items-center gap-1">
+                <span className={cn(
+                  "font-medium flex items-center gap-1",
+                  // Special styling for module items
+                  item.label.startsWith('Module') && module ? textColors[moduleIndex] : "text-blox-white"
+                )}>
                   {Icon && <Icon className="h-3 w-3" />}
                   {item.label}
                 </span>
@@ -117,7 +142,13 @@ export function Breadcrumb() {
                 className="group flex items-center gap-2"
                 title={item.fullTitle}
               >
-                <span className="text-blox-off-white hover:text-blox-teal transition-colors flex items-center gap-1">
+                <span className={cn(
+                  "transition-colors flex items-center gap-1",
+                  // Special styling for module items
+                  item.label.startsWith('Module') && module 
+                    ? cn(textColors[moduleIndex], `hover:${textColors[moduleIndex]}/80`)
+                    : "text-blox-off-white hover:text-blox-teal"
+                )}>
                   {Icon && <Icon className="h-3 w-3" />}
                   {item.label}
                 </span>
