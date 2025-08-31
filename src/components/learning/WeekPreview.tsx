@@ -18,8 +18,9 @@ import {
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useLearningStore } from '@/store/learningStore'
-import { Breadcrumb } from './Breadcrumb'
 import * as Progress from '@radix-ui/react-progress'
+import { moduleColorScheme } from '@/lib/constants/moduleColors'
+import { cn } from '@/lib/utils/cn'
 
 // Type to match the store's expected format
 interface DayProgress {
@@ -55,16 +56,59 @@ interface Week {
 
 interface WeekPreviewProps {
   week: Week
+  moduleId?: string
   onDaySelect: (dayId: string) => void
   onVideoSelect?: (videoId: string, dayId: string) => void
 }
 
 export function WeekPreview({ 
   week, 
+  moduleId,
   onDaySelect,
   onVideoSelect 
 }: WeekPreviewProps) {
   const { isVideoCompleted } = useLearningStore()
+  
+  // Get module index and colors
+  const moduleIndex = moduleId ? parseInt(moduleId.split('-')[1], 10) - 1 : 0
+  const { textColors, progressBarColors } = moduleColorScheme
+  
+  // Define static color arrays for proper Tailwind compilation
+  const badgeGradients = [
+    'from-blox-module-green to-blox-module-green-dark',
+    'from-blox-module-blue to-blox-module-blue-dark',
+    'from-blox-module-violet to-blox-module-violet-dark',
+    'from-blox-module-red to-blox-module-red-dark',
+    'from-blox-module-orange to-blox-module-orange-dark',
+    'from-blox-module-yellow to-blox-module-yellow-dark'
+  ]
+  
+  const playButtonColors = [
+    'bg-blox-module-green/90',
+    'bg-blox-module-blue/90',
+    'bg-blox-module-violet/90',
+    'bg-blox-module-red/90',
+    'bg-blox-module-orange/90',
+    'bg-blox-module-yellow/90'
+  ]
+  
+  const buttonColors = [
+    'bg-blox-module-green hover:bg-blox-module-green/80',
+    'bg-blox-module-blue hover:bg-blox-module-blue/80',
+    'bg-blox-module-violet hover:bg-blox-module-violet/80',
+    'bg-blox-module-red hover:bg-blox-module-red/80',
+    'bg-blox-module-orange hover:bg-blox-module-orange/80',
+    'bg-blox-module-yellow hover:bg-blox-module-yellow/80'
+  ]
+  
+  const startButtonColors = [
+    'bg-blox-module-green hover:bg-blox-module-green/80',
+    'bg-blox-module-blue hover:bg-blox-module-blue/80', 
+    'bg-blox-module-violet hover:bg-blox-module-violet/80',
+    'bg-blox-module-red hover:bg-blox-module-red/80',
+    'bg-blox-module-orange hover:bg-blox-module-orange/80',
+    'bg-blox-module-yellow hover:bg-blox-module-yellow/80'
+  ]
   
   // Calculate day progress locally since calculateDayProgress might not exist
   const calculateDayProgress = (dayId: string): DayProgress => {
@@ -102,9 +146,6 @@ export function WeekPreview({
     <div className="h-full flex flex-col bg-blox-very-dark-blue">
       {/* Week Header */}
       <div className="p-6 border-b border-blox-medium-blue-gray bg-gradient-to-r from-blox-very-dark-blue to-blox-dark-blue">
-        <div className="mb-3">
-          <Breadcrumb />
-        </div>
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -120,7 +161,7 @@ export function WeekPreview({
           {/* Week Stats */}
           <div className="flex items-center gap-6 text-sm">
             <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-blox-teal" />
+              <Clock className={cn("h-4 w-4", textColors[moduleIndex])} />
               <span className="text-blox-off-white">{totalWeekHours.toFixed(1)} hours total</span>
             </div>
             <div className="flex items-center gap-2">
@@ -139,7 +180,7 @@ export function WeekPreview({
       <div className="px-6 py-3 bg-blox-dark-blue/30">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm text-blox-off-white">Week Progress</span>
-          <span className="text-sm font-semibold text-blox-teal">{Math.round(weekProgress)}% Complete</span>
+          <span className={cn("text-sm font-semibold", textColors[moduleIndex])}>{Math.round(weekProgress)}% Complete</span>
         </div>
         <Progress.Root 
           className="relative overflow-hidden bg-blox-medium-blue-gray/30 rounded-full w-full h-2"
@@ -184,7 +225,7 @@ export function WeekPreview({
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-3">
-                          <Badge className="bg-gradient-to-r from-blox-teal to-blox-teal-dark text-white px-3 py-1 text-sm font-bold shadow-md">
+                          <Badge className={cn("bg-gradient-to-r text-white px-3 py-1 text-sm font-bold shadow-md", badgeGradients[moduleIndex])}>
                             Day {dayNumber}
                           </Badge>
                           <CardTitle className="text-xl font-bold text-blox-white">
@@ -201,7 +242,7 @@ export function WeekPreview({
                         </div>
                         <div className="flex items-center gap-6 text-sm">
                           <div className="flex items-center gap-2 text-blox-off-white">
-                            <Clock className="h-4 w-4 text-blox-teal" />
+                            <Clock className={cn("h-4 w-4", textColors[moduleIndex])} />
                             <span className="font-medium">{day.estimatedTime || '2.5h'}</span>
                           </div>
                           <div className="flex items-center gap-2 text-blox-off-white">
@@ -209,7 +250,7 @@ export function WeekPreview({
                             <span className="font-medium">{day.videos.length} videos</span>
                           </div>
                           {dayProgress.completionPercentage > 0 && dayProgress.completionPercentage < 100 && (
-                            <div className="flex items-center gap-2 text-blox-warning">
+                            <div className={cn("flex items-center gap-2", textColors[moduleIndex])}>
                               <div className="w-20 h-2 bg-blox-medium-blue-gray/30 rounded-full overflow-hidden">
                                 <div 
                                   className="h-full bg-gradient-to-r from-blox-warning to-blox-teal transition-all duration-300"
@@ -246,7 +287,7 @@ export function WeekPreview({
                                     className="w-full h-full object-cover"
                                   />
                                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <div className="bg-blox-teal/90 rounded-full p-2">
+                                    <div className={cn("rounded-full p-2", playButtonColors[moduleIndex])}>
                                       <Play className="h-6 w-6 text-white fill-white" />
                                     </div>
                                   </div>
@@ -277,7 +318,7 @@ export function WeekPreview({
                                   <h4 className={`text-base font-semibold transition-colors ${
                                     isCompleted 
                                       ? 'text-blox-success' 
-                                      : 'text-blox-white group-hover:text-blox-teal'
+                                      : `text-blox-white group-hover:${textColors[moduleIndex]}`
                                   }`}>
                                     {videoIndex + 1}. {video.title}
                                   </h4>
@@ -301,8 +342,8 @@ export function WeekPreview({
                                           <span>{video.duration}</span>
                                         </div>
                                         <div className="flex items-center gap-1 text-xs">
-                                          <Zap className="h-3 w-3 text-blox-teal" />
-                                          <span className="text-blox-teal font-semibold">+{video.xpReward} XP</span>
+                                          <Zap className={cn("h-3 w-3", textColors[moduleIndex])} />
+                                          <span className={cn("font-semibold", textColors[moduleIndex])}>+{video.xpReward} XP</span>
                                         </div>
                                         {video.creator && (
                                           <div className="flex items-center gap-1 text-xs text-blox-light-blue-gray">
@@ -323,7 +364,7 @@ export function WeekPreview({
                                 {/* Watch Button */}
                                 <Button
                                   size="sm"
-                                  className="ml-4 bg-blox-teal hover:bg-blox-teal/80 text-white"
+                                  className={cn("ml-4 text-white", buttonColors[moduleIndex])}
                                   onClick={(e) => {
                                     e.stopPropagation()
                                     onVideoSelect?.(video.id, day.id)
@@ -360,8 +401,8 @@ export function WeekPreview({
                                 <span>Complete after watching videos</span>
                               </div>
                               <div className="flex items-center gap-1">
-                                <Zap className="h-3 w-3 text-blox-teal" />
-                                <span className="text-blox-teal">+100 XP on completion</span>
+                                <Zap className={cn("h-3 w-3", textColors[moduleIndex])} />
+                                <span className={textColors[moduleIndex]}>+100 XP on completion</span>
                               </div>
                             </div>
                           </div>
@@ -376,7 +417,7 @@ export function WeekPreview({
                           ? 'bg-blox-success hover:bg-blox-success/80'
                           : dayProgress.status === 'in_progress'
                             ? 'bg-blox-warning hover:bg-blox-warning/80'
-                            : 'bg-blox-teal hover:bg-blox-teal/80'
+                            : startButtonColors[moduleIndex]
                       }`}
                       onClick={() => onDaySelect(day.id)}
                     >

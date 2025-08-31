@@ -20,6 +20,9 @@ export function SidebarNav() {
   const currentModuleId = isLearningPath ? pathSegments[1] : undefined
   const currentWeekId = isLearningPath ? pathSegments[2] : undefined  
   const currentDayId = isLearningPath ? pathSegments[3] : undefined
+  
+  
+  // Always show all modules in the navigation tree
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => {
@@ -93,7 +96,7 @@ export function SidebarNav() {
                         currentModuleId={currentModuleId}
                         currentWeekId={currentWeekId}
                         currentDayId={currentDayId}
-                        showAllModules={true}
+                        showAllModules
                       />
                     </div>
                   )}

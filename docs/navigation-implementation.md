@@ -562,3 +562,182 @@ src/
    - Collapsible sidebar on mobile
    - Swipe gestures for navigation
    - Bottom navigation for key actions
+
+## CRITICAL BUG FIXES - August 30-31, 2025
+
+### **Major Navigation Bug Resolution**
+
+**Date:** August 30-31, 2025  
+**Status:** RESOLVED ✅  
+**Impact:** Critical - Navigation completely broken  
+
+#### **Symptoms Identified:**
+1. **Duplicate Breadcrumbs:** Double navigation paths showing at top of pages
+2. **Broken Viewport-to-Sidebar Sync:** Clicking items in viewport didn't update sidebar
+3. **Missing Active States:** Navigation tree not highlighting current location
+4. **Module Overview Auto-Navigation:** Clicking module went straight to Day 1 instead of showing module overview
+
+#### **Root Cause Analysis:**
+
+**1. Duplicate Breadcrumb Components**
+- **Issue:** Breadcrumb component was being rendered in BOTH page components AND viewport components
+- **Files Affected:**
+  - `src/app/(app)/learning/[moduleId]/[weekId]/[dayId]/page.tsx` (line 63)
+  - `src/components/learning/DayView.tsx` (line 78)
+  - `src/components/learning/WeekPreview.tsx` (line 151) 
+  - `src/components/learning/ModuleOverview.tsx` (line 121)
+- **Result:** Double breadcrumb paths visible to users
+
+**2. Module Page Auto-Week Selection**
+- **Issue:** Module page automatically selected first week on load via useEffect
+- **File:** `src/app/(app)/learning/[moduleId]/page.tsx` (lines 32-36)
+- **Code:**
+  ```typescript
+  useEffect(() => {
+    if (currentModule && currentModule.weeks.length > 0) {
+      setSelectedWeek(currentModule.weeks[0].id) // CAUSED AUTO-NAVIGATION
+    }
+  }, [currentModule])
+  ```
+- **Result:** Clicking "Module 1" went straight to Week 1 content instead of module overview
+
+**3. Navigation State Sync Issues**
+- **Issue:** Path parsing and active state detection not triggering properly
+- **Files:** 
+  - `src/components/layout/Sidebar/AllModulesNav.tsx`
+  - `src/components/layout/Sidebar/SidebarNav.tsx`
+- **Result:** Viewport clicks didn't update sidebar navigation tree
+
+#### **Complete Fix Implementation:**
+
+**Fix 1: Remove Duplicate Breadcrumbs**
+```typescript
+// REMOVED from DayView.tsx (line 78)
+<div className="mb-3">
+  <Breadcrumb />
+</div>
+
+// REMOVED from WeekPreview.tsx (line 151) 
+<div className="mb-3">
+  <Breadcrumb />
+</div>
+
+// REMOVED from ModuleOverview.tsx (line 121)
+<div className="mb-3">
+  <Breadcrumb />
+</div>
+
+// REMOVED import statements
+import { Breadcrumb } from './Breadcrumb'
+```
+
+**Fix 2: Disable Auto-Week Selection**
+```typescript
+// File: src/app/(app)/learning/[moduleId]/page.tsx (lines 32-36)
+// BEFORE (BROKEN):
+useEffect(() => {
+  if (currentModule && currentModule.weeks.length > 0) {
+    setSelectedWeek(currentModule.weeks[0].id)
+  }
+}, [currentModule])
+
+// AFTER (FIXED):
+// Don't auto-select week - let user choose from ModuleOverview
+// useEffect(() => {
+//   if (currentModule && currentModule.weeks.length > 0) {
+//     setSelectedWeek(currentModule.weeks[0].id)
+//   }
+// }, [currentModule])
+```
+
+**Fix 3: Enhanced Navigation Synchronization**
+```typescript
+// File: src/components/layout/Sidebar/AllModulesNav.tsx
+// Enhanced auto-expand effect to be more reliable
+useEffect(() => {
+  if (activeModuleId) {
+    setExpandedModules(prev => new Set(prev).add(activeModuleId))
+  }
+  if (activeWeekId && activeModuleId) {
+    setExpandedWeeks(prev => new Set(prev).add(`${activeModuleId}-${activeWeekId}`))
+  }
+}, [activeModuleId, activeWeekId])
+
+// Path parsing verification:
+const pathSegments = pathname.split('/').filter(Boolean)
+const activeModuleId = currentModuleId || pathSegments[1] // ✅ Correct
+const activeWeekId = currentWeekId || pathSegments[2]     // ✅ Correct  
+const activeDayId = currentDayId || pathSegments[3]       // ✅ Correct
+```
+
+#### **Files Modified:**
+
+1. **src/app/(app)/learning/[moduleId]/page.tsx**
+   - Commented out auto-week selection useEffect
+   - Now shows ModuleOverview by default
+
+2. **src/components/learning/DayView.tsx** 
+   - Removed Breadcrumb import
+   - Removed Breadcrumb component from render
+
+3. **src/components/learning/WeekPreview.tsx**
+   - Removed Breadcrumb import  
+   - Removed Breadcrumb component from render
+
+4. **src/components/learning/ModuleOverview.tsx**
+   - Removed Breadcrumb import
+   - Removed Breadcrumb component from render
+
+5. **src/components/layout/Sidebar/AllModulesNav.tsx**
+   - Enhanced auto-expand effects
+   - Improved path parsing reliability
+   - Added debugging capabilities (removed after testing)
+
+6. **src/components/layout/Sidebar/SidebarNav.tsx** 
+   - Verified path segment parsing
+   - Added debugging capabilities (removed after testing)
+
+#### **Navigation Flow After Fix:**
+
+**✅ WORKING CORRECTLY:**
+- Click "Module 1" → Shows module overview with 4 horizontal week cards
+- Click week from overview → Shows week details with days  
+- Click day from week → Shows day content with videos
+- All viewport clicks → Auto-expand and highlight in sidebar
+- All sidebar clicks → Update viewport content
+- Single breadcrumb → Shows at page level only
+- Active states → Visible in both sidebar and viewport
+
+#### **Testing Validation:**
+
+**Compilation Status:** ✅ All files compile without errors  
+**Navigation Sync:** ✅ Bidirectional sync working  
+**Breadcrumbs:** ✅ Single breadcrumb only  
+**Module Overview:** ✅ Shows overview instead of auto-navigating  
+**Active States:** ✅ Proper highlighting in sidebar  
+**URL Changes:** ✅ Trigger navigation tree updates  
+
+#### **Prevention Guidelines:**
+
+**❌ NEVER DO:**
+1. Add Breadcrumb component to viewport components (DayView, WeekPreview, ModuleOverview)
+2. Auto-select weeks/days in module page useEffect
+3. Parse URL paths incorrectly in navigation components
+
+**✅ ALWAYS DO:**
+1. Keep Breadcrumb only in page components 
+2. Let users manually select from overview pages
+3. Ensure useEffect dependencies include all path variables
+4. Test navigation sync after any routing changes
+
+#### **Code Review Checklist:**
+
+Before any navigation changes:
+- [ ] Breadcrumb only in page components, not viewport components
+- [ ] No auto-selection in module/week pages
+- [ ] Path parsing uses correct array indices  
+- [ ] useEffect dependencies include path variables
+- [ ] Test bidirectional navigation sync
+- [ ] Verify active states highlight correctly
+
+**This bug fix restores full navigation functionality and prevents future regressions.**

@@ -17,7 +17,6 @@ import {
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useLearningStore } from '@/store/learningStore'
-import { Breadcrumb } from './Breadcrumb'
 import * as Progress from '@radix-ui/react-progress'
 
 interface Video {
@@ -74,9 +73,6 @@ export function DayView({
     <div className="h-full flex flex-col bg-blox-very-dark-blue">
       {/* Day Header */}
       <div className="p-6 border-b border-blox-medium-blue-gray bg-gradient-to-r from-blox-very-dark-blue to-blox-dark-blue">
-        <div className="mb-3">
-          <Breadcrumb />
-        </div>
         
         {/* Back Button */}
         {onBack && (

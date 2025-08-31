@@ -28,12 +28,12 @@ export default function ModuleLearningPage({ params }: PageProps) {
   const [selectedWeek, setSelectedWeek] = useState<string>('')
   const [selectedDay, setSelectedDay] = useState<string>('')
   
-  // Set default week on module load
-  useEffect(() => {
-    if (currentModule && currentModule.weeks.length > 0) {
-      setSelectedWeek(currentModule.weeks[0].id)
-    }
-  }, [currentModule])
+  // Don't auto-select week - let user choose from ModuleOverview
+  // useEffect(() => {
+  //   if (currentModule && currentModule.weeks.length > 0) {
+  //     setSelectedWeek(currentModule.weeks[0].id)
+  //   }
+  // }, [currentModule])
   
   // Handle week change - update selected week to show in right panel
   const handleWeekChange = (weekId: string) => {
@@ -79,6 +79,7 @@ export default function ModuleLearningPage({ params }: PageProps) {
   const content = selectedWeekData ? (
     <WeekPreview
       week={selectedWeekData}
+      moduleId={moduleId}
       onDaySelect={handleDaySelect}
       onVideoSelect={handleVideoSelect}
     />

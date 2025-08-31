@@ -7,6 +7,7 @@ import { ChevronDown, ChevronUp, CheckCircle, Clock, BookOpen, Trophy, Zap, Cale
 import { useLearningStore } from '@/store/learningStore'
 import curriculumData from '@/data/curriculum.json'
 import { cn } from '@/lib/utils/cn'
+import { moduleColorScheme } from '@/lib/constants/moduleColors'
 
 interface AllModulesNavProps {
   currentModuleId?: string
@@ -23,11 +24,12 @@ export function AllModulesNav({
   const router = useRouter()
   const { getModuleProgress, getWeekProgress, getDayProgress, isVideoCompleted } = useLearningStore()
   
-  // Parse current path
+  // Parse current path - ensure we detect from URL changes
   const pathSegments = pathname.split('/').filter(Boolean)
   const activeModuleId = currentModuleId || pathSegments[1]
   const activeWeekId = currentWeekId || pathSegments[2]
   const activeDayId = currentDayId || pathSegments[3]
+  
   
   // State for expanded sections - all modules, weeks, and days
   const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set())
@@ -101,24 +103,23 @@ export function AllModulesNav({
     router.push(`/learning/${moduleId}/${weekId}/${dayId}`)
   }
   
-  // Module gradient colors
-  const moduleColors = [
-    'from-blox-teal/20 to-blox-teal/5',           // Module 1 - Teal
-    'from-blox-purple/20 to-blox-purple/5',       // Module 2 - Purple
-    'from-blox-warning/20 to-blox-warning/5',     // Module 3 - Yellow/Orange
-    'from-blox-light-green/20 to-blox-light-green/5', // Module 4 - Green
-    'from-blox-xp/20 to-blox-xp/5',              // Module 5 - Pink/Red
-    'from-blox-golden-yellow/20 to-blox-golden-yellow/5' // Module 6 - Gold
-  ]
-  
-  const moduleBorderColors = [
-    'border-blox-teal/30 hover:border-blox-teal/50',
-    'border-blox-purple/30 hover:border-blox-purple/50',
-    'border-blox-warning/30 hover:border-blox-warning/50',
-    'border-blox-light-green/30 hover:border-blox-light-green/50',
-    'border-blox-xp/30 hover:border-blox-xp/50',
-    'border-blox-golden-yellow/30 hover:border-blox-golden-yellow/50'
-  ]
+  // Use consistent color scheme from moduleColors.ts
+  const {
+    moduleGradients,
+    moduleBorders,
+    textColors,
+    progressBarColors,
+    selectionRings,
+    badgeBackgrounds,
+    dayBackgrounds,
+    dayActiveBackgrounds,
+    dayHoverBackgrounds,
+    dayActiveBorders,
+    weekBackgrounds,
+    weekActiveBackgrounds,
+    weekBorders,
+    weekActiveBorders
+  } = moduleColorScheme
   
   return (
     <div className="space-y-2">
@@ -145,11 +146,10 @@ export function AllModulesNav({
             {/* Module Card */}
             <motion.div
               className={cn(
-                "rounded-lg border p-3 transition-all cursor-pointer bg-gradient-to-br",
-                moduleColors[moduleIndex],
-                moduleBorderColors[moduleIndex],
-                isActiveModule && "ring-2 ring-offset-2 ring-offset-blox-very-dark-blue",
-                isActiveModule ? `ring-${moduleColors[moduleIndex].split('/')[0].split('-')[2]}` : ''
+                "rounded-lg p-3 transition-all cursor-pointer bg-gradient-to-br",
+                moduleGradients[moduleIndex],
+                moduleBorders[moduleIndex],
+                isActiveModule && selectionRings[moduleIndex]
               )}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -166,8 +166,8 @@ export function AllModulesNav({
                   <div className="flex items-center space-x-2">
                     <span className={cn(
                       "text-xs font-bold px-1.5 py-0.5 rounded",
-                      `bg-${moduleColors[moduleIndex].split('/')[0].split('-')[2]}/20`,
-                      `text-${moduleColors[moduleIndex].split('/')[0].split('-')[2]}`
+                      badgeBackgrounds[moduleIndex],
+                      textColors[moduleIndex]
                     )}>
                       Module {moduleIndex + 1}
                     </span>
@@ -217,7 +217,7 @@ export function AllModulesNav({
                     <motion.div 
                       className={cn(
                         "h-full rounded-full",
-                        `bg-${moduleColors[moduleIndex].split('/')[0].split('-')[2]}`
+                        progressBarColors[moduleIndex]
                       )}
                       initial={{ width: 0 }}
                       animate={{ width: `${moduleProgress}%` }}
@@ -267,8 +267,8 @@ export function AllModulesNav({
                             className={cn(
                               "rounded-md border p-2 transition-all cursor-pointer",
                               isActiveWeek 
-                                ? "bg-blox-teal/10 border-blox-teal/50" 
-                                : "bg-blox-very-dark-blue/30 border-blox-medium-blue-gray/20 hover:border-blox-teal/30"
+                                ? `${weekActiveBackgrounds[moduleIndex]} ${weekActiveBorders[moduleIndex]}` 
+                                : `${weekBackgrounds[moduleIndex]} ${weekBorders[moduleIndex]}`
                             )}
                             whileHover={{ x: 2 }}
                           >
@@ -278,7 +278,7 @@ export function AllModulesNav({
                                 onClick={() => handleWeekClick(module.id, week.id)}
                               >
                                 <div className="flex items-center space-x-2">
-                                  <span className="text-[10px] font-bold text-blox-teal">W{weekIndex + 1}</span>
+                                  <span className={cn("text-[10px] font-bold", textColors[moduleIndex])}>W{weekIndex + 1}</span>
                                   <h4 className="text-xs font-semibold text-blox-white">
                                     {week.title}
                                   </h4>
@@ -323,7 +323,21 @@ export function AllModulesNav({
                                   {week.days.map((day, dayIndex) => {
                                     const dayProgress = getDayProgress(day.id)
                                     const isActiveDay = day.id === activeDayId && week.id === activeWeekId && module.id === activeModuleId
-                                    const dayNum = (moduleIndex * 30) + (weekIndex * 7) + dayIndex + 1
+                                    
+                                    // Calculate cumulative day number properly
+                                    let dayNum = 1
+                                    // Count all days in previous modules
+                                    for (let m = 0; m < moduleIndex; m++) {
+                                      for (let week of curriculumData.modules[m].weeks) {
+                                        dayNum += week.days.length
+                                      }
+                                    }
+                                    // Add days from previous weeks in current module
+                                    for (let w = 0; w < weekIndex; w++) {
+                                      dayNum += module.weeks[w].days.length
+                                    }
+                                    // Add current day index
+                                    dayNum += dayIndex
                                     
                                     return (
                                       <motion.div
@@ -331,8 +345,8 @@ export function AllModulesNav({
                                         className={cn(
                                           "p-1.5 rounded text-xs cursor-pointer transition-all",
                                           isActiveDay 
-                                            ? "bg-blox-warning/20 border border-blox-warning/50" 
-                                            : "hover:bg-blox-very-dark-blue/50"
+                                            ? `${dayActiveBackgrounds[moduleIndex]} ${dayActiveBorders[moduleIndex]}` 
+                                            : `${dayBackgrounds[moduleIndex]} ${dayHoverBackgrounds[moduleIndex]}`
                                         )}
                                         onClick={() => handleDayClick(module.id, week.id, day.id)}
                                         whileHover={{ x: 2 }}
@@ -345,7 +359,7 @@ export function AllModulesNav({
                                                 ? "bg-blox-light-green/20 text-blox-light-green"
                                                 : dayProgress.completionPercentage > 0
                                                   ? "bg-blox-warning/20 text-blox-warning"
-                                                  : "text-blox-off-white/50"
+                                                  : `${badgeBackgrounds[moduleIndex]} ${textColors[moduleIndex]}`
                                             )}>
                                               D{dayNum}
                                             </span>
