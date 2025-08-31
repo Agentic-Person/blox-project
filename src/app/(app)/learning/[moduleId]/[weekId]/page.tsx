@@ -57,6 +57,7 @@ export default function WeekLearningPage({ params }: PageProps) {
     >
       <WeekPreview
         week={currentWeek}
+        moduleId={params.moduleId}
         onDaySelect={handleDaySelect}
         onVideoSelect={handleVideoSelect}
       />

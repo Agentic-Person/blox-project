@@ -27,7 +27,7 @@ export function EnhancedLearningNav({
   const router = useRouter()
   const { getModuleProgress, getWeekProgress, getDayProgress, isVideoCompleted } = useLearningStore()
   
-  // If showAllModules is true, render the AllModulesNav component instead
+  // Always render the AllModulesNav component to show all modules
   if (showAllModules) {
     return (
       <AllModulesNav 
@@ -46,6 +46,10 @@ export function EnhancedLearningNav({
   
   // Get current module data
   const currentModule = curriculumData.modules.find(m => m.id === activeModuleId) || curriculumData.modules[0]
+  
+  // Calculate module index for color scheme
+  const moduleNumber = parseInt(activeModuleId.split('-')[1], 10) || 1
+  const moduleIndex = moduleNumber - 1 // Convert to 0-based index
   
   // State for expanded sections
   const [expandedWeeks, setExpandedWeeks] = useState<Set<string>>(new Set())
@@ -140,6 +144,7 @@ export function EnhancedLearningNav({
               key={week.id}
               week={week}
               weekIndex={weekIndex}
+              moduleIndex={moduleIndex}
               isExpanded={isExpanded}
               isActive={isActiveWeek}
               progress={weekProgress}

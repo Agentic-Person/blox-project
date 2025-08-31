@@ -3,6 +3,7 @@
 import { ChevronDown, ChevronUp, CheckCircle, Clock, BookOpen, Play } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils/cn'
+import { moduleColorScheme } from '@/lib/constants/moduleColors'
 
 interface WeekCardProps {
   week: {
@@ -22,6 +23,7 @@ interface WeekCardProps {
     }>
   }
   weekIndex: number
+  moduleIndex: number
   isExpanded: boolean
   isActive: boolean
   progress: number
@@ -30,13 +32,14 @@ interface WeekCardProps {
   onToggle: () => void
   onWeekClick: () => void
   onDayClick: (dayId: string) => void
-  getDayProgress: (dayId: string) => { completionPercentage: number; completedVideos: number; totalVideos: number }
+  getDayProgress: (dayId: string) => { status: string; completionPercentage: number; xpEarned: number; bloxEarned: number; videosCompleted: string[]; practiceCompleted: boolean }
   isVideoCompleted: (videoId: string) => boolean
 }
 
 export function WeekCard({
   week,
   weekIndex,
+  moduleIndex,
   isExpanded,
   isActive,
   progress,
@@ -59,14 +62,28 @@ export function WeekCard({
   // Calculate cumulative day numbers for continuous counting
   let cumulativeDayNumber = weekIndex * 7 + 1
   
+  // Get module-specific color scheme
+  const {
+    weekBackgrounds,
+    weekActiveBackgrounds,
+    weekBorders,
+    weekActiveBorders,
+    dayBackgrounds,
+    dayActiveBackgrounds,
+    dayHoverBackgrounds,
+    dayBorders,
+    dayActiveBorders,
+    textColors
+  } = moduleColorScheme
+  
   return (
     <div>
       <motion.div
         className={cn(
-          "rounded-lg border p-2.5 transition-all",
+          "rounded-lg p-2.5 transition-all",
           isActive 
-            ? "bg-blox-dark-blue border-blox-teal/50 shadow-lg shadow-blox-teal/10" 
-            : "bg-blox-dark-blue/50 border-blox-medium-blue-gray/30 hover:border-blox-teal/30"
+            ? `${weekActiveBackgrounds[moduleIndex]} ${weekActiveBorders[moduleIndex]}`
+            : `${weekBackgrounds[moduleIndex]} ${weekBorders[moduleIndex]}`
         )}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
@@ -75,7 +92,7 @@ export function WeekCard({
           {/* Week Title and Info */}
           <div className="flex-1 min-w-0 cursor-pointer" onClick={onWeekClick}>
             <div className="flex items-center space-x-2">
-              <span className="text-xs font-bold text-blox-teal">W{weekNum}</span>
+              <span className={cn("text-xs font-bold", textColors[moduleIndex])}>W{weekNum}</span>
               <h3 className="text-xs font-semibold text-blox-white truncate flex-1">
                 {week.title}
               </h3>
@@ -103,7 +120,7 @@ export function WeekCard({
             }}
           >
             {isExpanded ? (
-              <ChevronUp className="h-3 w-3 text-blox-teal" />
+              <ChevronUp className={cn("h-3 w-3", textColors[moduleIndex])} />
             ) : (
               <ChevronDown className="h-3 w-3 text-blox-off-white/60" />
             )}
@@ -183,8 +200,8 @@ export function WeekCard({
                     className={cn(
                       "p-2 rounded-md transition-all cursor-pointer",
                       isSelectedDay 
-                        ? "bg-blox-teal/20 border border-blox-teal/50 shadow-md" 
-                        : "bg-blox-very-dark-blue/50 hover:bg-blox-very-dark-blue/70"
+                        ? `${dayActiveBackgrounds[moduleIndex]} ${dayActiveBorders[moduleIndex]}` 
+                        : `${dayBackgrounds[moduleIndex]} ${dayHoverBackgrounds[moduleIndex]} ${dayBorders[moduleIndex]}`
                     )}
                     onClick={(e) => {
                       e.stopPropagation()
@@ -201,7 +218,7 @@ export function WeekCard({
                               ? "bg-blox-light-green text-blox-very-dark-blue" 
                               : isInProgress
                                 ? "bg-blox-warning text-blox-very-dark-blue"
-                                : "bg-blox-medium-blue-gray/50 text-blox-off-white/60 border border-blox-medium-blue-gray/30"
+                                : `bg-${textColors[moduleIndex].replace('text-', '')}/20 text-${textColors[moduleIndex].replace('text-', '')} border border-${textColors[moduleIndex].replace('text-', '')}/30`
                           )}>
                             D{dayNum}
                           </div>
@@ -222,9 +239,9 @@ export function WeekCard({
                             <Clock className="h-2 w-2" />
                             {day.estimatedTime || '2.5h'}
                           </span>
-                          {dayProgress.completedVideos > 0 && (
+                          {dayProgress.videosCompleted.length > 0 && (
                             <span className="text-blox-light-green">
-                              {dayProgress.completedVideos}/{dayProgress.totalVideos} done
+                              {dayProgress.videosCompleted.length}/{day.videos.length} done
                             </span>
                           )}
                         </div>

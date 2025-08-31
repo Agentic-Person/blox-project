@@ -2,6 +2,8 @@
 
 import { Trophy, Clock, Zap, Calendar } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { moduleColorScheme } from '@/lib/constants/moduleColors'
+import { cn } from '@/lib/utils/cn'
 
 interface ModuleHeaderProps {
   module: {
@@ -17,10 +19,23 @@ interface ModuleHeaderProps {
 
 export function ModuleHeader({ module, totalHours, totalXP, progress }: ModuleHeaderProps) {
   const moduleNumber = module.id.split('-')[1]
+  const moduleIndex = parseInt(moduleNumber, 10) - 1 // Convert to 0-based index
+  
+  // Get colors for this specific module
+  const {
+    moduleGradients,
+    moduleBorders,
+    textColors,
+    progressBarColors
+  } = moduleColorScheme
   
   return (
     <motion.div 
-      className="bg-blox-dark-blue/50 rounded-lg border border-blox-glass-border p-3 space-y-2"
+      className={cn(
+        "rounded-lg p-3 space-y-2 bg-gradient-to-br",
+        moduleGradients[moduleIndex],
+        moduleBorders[moduleIndex]
+      )}
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -28,7 +43,7 @@ export function ModuleHeader({ module, totalHours, totalXP, progress }: ModuleHe
       {/* Module indicator */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2 text-xs text-blox-off-white/80">
-          <span className="text-blox-teal font-semibold">Module {moduleNumber}</span>
+          <span className={cn("font-semibold", textColors[moduleIndex])}>Module {moduleNumber}</span>
           <span>•</span>
           <span>Month {moduleNumber}</span>
         </div>
@@ -49,9 +64,9 @@ export function ModuleHeader({ module, totalHours, totalXP, progress }: ModuleHe
       
       {/* Stats Grid */}
       <div className="grid grid-cols-4 gap-1.5">
-        <div className="bg-blox-second-dark-blue/50 rounded px-1.5 py-1 text-center border border-blox-teal/10">
+        <div className={cn("bg-blox-second-dark-blue/50 rounded px-1.5 py-1 text-center border", `border-${textColors[moduleIndex]}/10`)}>
           <div className="flex items-center justify-center gap-0.5">
-            <Clock className="h-2.5 w-2.5 text-blox-teal/60" />
+            <Clock className={cn("h-2.5 w-2.5", `${textColors[moduleIndex]}/60`)} />
             <div className="text-xs font-bold text-blox-white">{totalHours}h</div>
           </div>
           <div className="text-[10px] text-blox-off-white/50">hours</div>
@@ -82,7 +97,7 @@ export function ModuleHeader({ module, totalHours, totalXP, progress }: ModuleHe
       {/* Progress Bar */}
       <div className="h-1 bg-blox-medium-blue-gray/30 rounded-full overflow-hidden">
         <motion.div 
-          className="h-full bg-gradient-to-r from-blox-teal to-blox-purple rounded-full"
+          className={cn("h-full rounded-full", progressBarColors[moduleIndex])}
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.5, ease: "easeOut" }}
