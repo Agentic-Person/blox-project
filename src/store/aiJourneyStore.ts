@@ -83,7 +83,7 @@ export interface AIJourneyState {
   completeTask: (date: string, taskIndex: number) => void
   setExpanded: (expanded: boolean) => void
   hideWelcomeOverlay: () => void
-  showWelcomeOverlay: () => void
+  forceShowWelcomeOverlay: () => void
   generateJourneyFromGameType: (gameType: GameType, customGoal?: string) => void
   updateAIInsights: (insights: Partial<AIInsight>) => void
   
@@ -252,7 +252,7 @@ export const useAIJourneyStore = create<AIJourneyState>()(
         set({ isLoading: true })
         
         try {
-          const response = await aiJourneyAPI.getUserJourney(userId)
+          const response = await aiJourneyAPI.getJourney(userId)
           if (response.success && response.data) {
             const journey = convertFromSupabaseJourney(response.data)
             set({ 
@@ -370,7 +370,7 @@ export const useAIJourneyStore = create<AIJourneyState>()(
         
         // Sync to database if enabled
         if (state.syncEnabled && state.userId) {
-          aiJourneyAPI.updateJourneyProgress({
+          aiJourneyAPI.updateProgress({
             journeyId: state.journey.id,
             updates: { totalProgress },
             skillUpdates: [{
@@ -414,7 +414,7 @@ export const useAIJourneyStore = create<AIJourneyState>()(
       setExpanded: (expanded) => set({ isExpanded: expanded }),
       
       hideWelcomeOverlay: () => set({ showWelcomeOverlay: false }),
-      showWelcomeOverlay: () => set({ showWelcomeOverlay: true }),
+      forceShowWelcomeOverlay: () => set({ showWelcomeOverlay: true }),
       
       generateJourneyFromGameType: (gameType, customGoal) => {
         set({ isGenerating: true })

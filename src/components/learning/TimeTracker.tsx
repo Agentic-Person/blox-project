@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Clock, Play, Pause, AlertCircle, Coffee, Timer, TrendingUp } from 'lucide-react'
 import { useTimeManagementStore } from '@/store/timeManagementStore'
-import { formatDuration } from '@/lib/youtube/youtube-api'
+import { formatSecondsAsDuration } from '@/lib/youtube'
 
 export function TimeTracker() {
   const [currentTime, setCurrentTime] = useState(0)
@@ -87,8 +87,8 @@ export function TimeTracker() {
           {/* Progress Bar */}
           <div className="space-y-2">
             <div className="flex justify-between text-sm text-blox-off-white">
-              <span>{formatDuration(todayWatchTime * 60)} watched</span>
-              <span>{formatDuration(dailyLimitMinutes * 60)} daily limit</span>
+              <span>{formatSecondsAsDuration(todayWatchTime * 60)} watched</span>
+              <span>{formatSecondsAsDuration(dailyLimitMinutes * 60)} daily limit</span>
             </div>
             <Progress 
               value={progressPercentage} 
@@ -114,7 +114,7 @@ export function TimeTracker() {
           {remainingTime > 0 && !overLimit && (
             <div className="text-sm text-blox-off-white">
               <span className="text-blox-teal font-semibold">
-                {formatDuration(remainingTime * 60)}
+                {formatSecondsAsDuration(remainingTime * 60)}
               </span>
               {' '}remaining today
             </div>
@@ -126,7 +126,7 @@ export function TimeTracker() {
               <>
                 <div className="flex items-center space-x-2 text-sm text-blox-off-white">
                   <Timer className="h-4 w-4 text-blox-teal" />
-                  <span>Session: {formatDuration(currentSessionMinutes * 60)}</span>
+                  <span>Session: {formatSecondsAsDuration(currentSessionMinutes * 60)}</span>
                   {isOnBreak && <span className="text-blox-warning">(On Break)</span>}
                 </div>
                 <Button

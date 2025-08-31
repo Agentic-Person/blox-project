@@ -1,6 +1,9 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, Suspense } from 'react'
+
+// Force dynamic rendering to avoid SSG issues with useSearchParams
+export const dynamic = 'force-dynamic'
 import { useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Users, TrendingUp, Zap } from 'lucide-react'
@@ -15,7 +18,7 @@ import { BloxWizardHeroCard } from '@/components/dashboard/BloxWizardHeroCard'
 import { AIWelcomeOverlay } from '@/components/dashboard/AIWelcomeOverlay'
 import { useAIJourney } from '@/hooks/useAIJourney'
 
-export default function DashboardPage() {
+function DashboardContent() {
   const bloxWizardRef = useRef<HTMLDivElement>(null)
   const searchParams = useSearchParams()
   const { forceShowWelcomeOverlay } = useAIJourney()
@@ -160,5 +163,23 @@ export default function DashboardPage() {
         </Card>
       </div>
     </div>
+  )
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={
+      <div className="pt-3 px-6 pb-6 space-y-4 max-w-7xl mx-auto">
+        <div className="animate-pulse">
+          <div className="h-8 bg-blox-second-dark-blue rounded w-1/3 mb-4"></div>
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+            <div className="xl:col-span-2 h-48 bg-blox-second-dark-blue rounded"></div>
+            <div className="h-48 bg-blox-second-dark-blue rounded"></div>
+          </div>
+        </div>
+      </div>
+    }>
+      <DashboardContent />
+    </Suspense>
   )
 }
