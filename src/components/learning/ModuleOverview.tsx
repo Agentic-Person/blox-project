@@ -10,34 +10,7 @@ import { useRouter } from 'next/navigation'
 import * as Progress from '@radix-ui/react-progress'
 import { moduleColorScheme } from '@/lib/constants/moduleColors'
 import { cn } from '@/lib/utils/cn'
-
-interface Week {
-  id: string
-  title: string
-  description: string
-  days: Array<{
-    id: string
-    title: string
-    videos: Array<{
-      id: string
-      title: string
-      youtubeId: string
-      duration: string
-      xpReward: number
-    }>
-    practiceTask?: string
-    estimatedTime?: string
-  }>
-}
-
-interface Module {
-  id: string
-  title: string
-  description: string
-  totalHours: number
-  totalXP: number
-  weeks: Week[]
-}
+import { Module } from '@/types/learning'
 
 interface ModuleOverviewProps {
   module: Module

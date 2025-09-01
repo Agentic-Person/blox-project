@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -21,23 +22,7 @@ import * as Progress from '@radix-ui/react-progress'
 import { moduleColorScheme } from '@/lib/constants/moduleColors'
 import { cn } from '@/lib/utils/cn'
 import { getYouTubeThumbnail, getThumbnailAltText } from '@/lib/youtube'
-
-interface Video {
-  id: string
-  title: string
-  youtubeId: string
-  duration: string
-  xpReward: number
-  creator?: string
-}
-
-interface Day {
-  id: string
-  title: string
-  videos: Video[]
-  practiceTask?: string
-  estimatedTime?: string
-}
+import { Video, Day } from '@/types/learning'
 
 interface DayViewProps {
   day: Day
@@ -192,10 +177,64 @@ export function DayView({
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: videoIndex * 0.1 }}
               >
-                <div
-                  className="flex items-start gap-4 p-4 rounded-lg bg-blox-second-dark-blue/30 hover:bg-blox-second-dark-blue/50 cursor-pointer transition-all group border border-blox-glass-border hover:border-blox-teal/30"
-                  onClick={() => onVideoSelect(video.id)}
-                >
+                {/* Check if this is an assignment */}
+                {(video as any).type === 'assignment' ? (
+                  <div className="flex items-start gap-4 p-4 rounded-lg bg-gradient-to-br from-blox-module-green/20 to-blox-second-dark-blue/30 hover:bg-blox-module-green/30 cursor-pointer transition-all group border border-blox-module-green/30">
+                    {/* Assignment Thumbnails - Show both images side by side */}
+                    <div className="flex gap-2 flex-shrink-0">
+                      {(video as any).thumbnails?.map((thumbnail: string, index: number) => (
+                        <div key={index} className="relative w-32 h-24 bg-blox-very-dark-blue rounded-lg overflow-hidden shadow-lg">
+                          <img
+                            src={thumbnail}
+                            alt={`${video.title} - Image ${index + 1}`}
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute top-1 right-1 bg-blox-module-green/90 text-blox-very-dark-blue text-[8px] px-1 py-0.5 rounded font-bold">
+                            ASSIGNMENT
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-semibold text-blox-white mb-1 line-clamp-2">{video.title}</h3>
+                          {(video as any).subtitle && (
+                            <p className="text-sm text-blox-module-green font-medium">{(video as any).subtitle}</p>
+                          )}
+                        </div>
+                        {isCompleted && (
+                          <div className="ml-2">
+                            <CheckCircle className="h-6 w-6 text-blox-success flex-shrink-0" />
+                          </div>
+                        )}
+                      </div>
+                      
+                      <p className="text-sm text-blox-off-white/80 mb-3 line-clamp-2">{(video as any).description}</p>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4 text-sm">
+                          <div className="flex items-center gap-1">
+                            <Clock className="h-4 w-4 text-blox-module-green" />
+                            <span className="text-blox-module-green font-medium">{video.duration}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Zap className="h-4 w-4 text-blox-warning" />
+                            <span className="text-blox-warning font-medium">{video.xpReward} XP</span>
+                          </div>
+                        </div>
+                        <Button size="sm" className="bg-blox-module-green hover:bg-blox-module-green/80 text-blox-very-dark-blue font-semibold">
+                          Start Assignment
+                          <ChevronRight className="h-4 w-4 ml-1" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    className="flex items-start gap-4 p-4 rounded-lg bg-blox-second-dark-blue/30 hover:bg-blox-second-dark-blue/50 cursor-pointer transition-all group border border-blox-glass-border hover:border-blox-teal/30"
+                    onClick={() => onVideoSelect(video.id)}
+                  >
                   {/* Enhanced Video Thumbnail */}
                   <div className="relative w-40 h-24 bg-blox-very-dark-blue rounded-lg overflow-hidden flex-shrink-0 shadow-lg">
                     {video.youtubeId ? (
@@ -244,7 +283,7 @@ export function DayView({
                         
                         {/* Video Description */}
                         <p className="text-sm text-blox-off-white/80 mt-2 line-clamp-2">
-                          Learn the fundamentals and best practices. This video covers essential concepts you'll need to master for game development.
+                          {(video as any).description || "Learn the fundamentals and best practices. This video covers essential concepts you'll need to master for game development."}
                         </p>
                         
                         {/* Video Metadata */}
@@ -293,7 +332,8 @@ export function DayView({
                       </Button>
                     </div>
                   </div>
-                </div>
+                  </div>
+                )}
               </motion.div>
             )
           })}
@@ -315,7 +355,12 @@ export function DayView({
                     Hands-on
                   </Badge>
                 </h3>
-                <p className="text-sm text-blox-off-white leading-relaxed mb-3">{day.practiceTask}</p>
+                <p className="text-sm text-blox-off-white leading-relaxed mb-3">
+                  {typeof day.practiceTask === 'string' 
+                    ? day.practiceTask 
+                    : day.practiceTask?.description || 'Practice task available'
+                  }
+                </p>
                 <div className="flex items-center gap-4 text-xs text-blox-off-white/60">
                   <div className="flex items-center gap-1">
                     <FileText className="h-3 w-3" />

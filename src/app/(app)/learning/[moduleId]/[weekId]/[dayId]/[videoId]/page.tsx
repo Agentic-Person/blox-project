@@ -125,7 +125,7 @@ export default function LearningVideoPage({ params }: PageProps) {
         video={{
           id: currentVideo.id,
           title: currentVideo.title,
-          youtubeId: currentVideo.youtubeId,
+          youtubeId: currentVideo.youtubeId || '',
           duration: currentVideo.duration,
           xpReward: currentVideo.xpReward,
           creator: (currentVideo as any).creator

@@ -21,6 +21,7 @@ import { useLearningStore } from '@/store/learningStore'
 import * as Progress from '@radix-ui/react-progress'
 import { moduleColorScheme } from '@/lib/constants/moduleColors'
 import { cn } from '@/lib/utils/cn'
+import { Video, Day, Week } from '@/types/learning'
 
 // Type to match the store's expected format
 interface DayProgress {
@@ -28,30 +29,6 @@ interface DayProgress {
   xpEarned: number
   bloxEarned: number
   status: 'not_started' | 'in_progress' | 'completed'
-}
-
-interface Video {
-  id: string
-  title: string
-  youtubeId: string
-  duration: string
-  xpReward: number
-  creator?: string
-}
-
-interface Day {
-  id: string
-  title: string
-  videos: Video[]
-  practiceTask?: string
-  estimatedTime?: string
-}
-
-interface Week {
-  id: string
-  title: string
-  description: string
-  days: Day[]
 }
 
 interface WeekPreviewProps {
@@ -394,7 +371,12 @@ export function WeekPreview({
                                 Hands-on
                               </Badge>
                             </h4>
-                            <p className="text-sm text-blox-off-white leading-relaxed">{day.practiceTask}</p>
+                            <p className="text-sm text-blox-off-white leading-relaxed">
+                              {typeof day.practiceTask === 'string' 
+                                ? day.practiceTask 
+                                : day.practiceTask?.description || 'Practice task available'
+                              }
+                            </p>
                             <div className="mt-3 flex items-center gap-4 text-xs text-blox-off-white/60">
                               <div className="flex items-center gap-1">
                                 <FileText className="h-3 w-3" />

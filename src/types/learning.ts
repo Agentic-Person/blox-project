@@ -34,11 +34,12 @@ export interface Video {
   dayId?: string
   title: string
   description?: string
-  youtubeId: string
+  youtubeId?: string
   duration: string // duration as string (e.g., "25:00")
   order?: number
   thumbnail?: string
   channel?: string
+  creator?: string
   tags?: string[]
   xpReward: number
 }
