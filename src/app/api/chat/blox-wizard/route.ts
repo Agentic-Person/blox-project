@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createN8nService, createSessionId, determineResponseStyle, type VideoContext } from '@/lib/services/n8n-integration'
 
 interface BloxWizardRequest {
   message: string
   sessionId: string
   userId?: string
+  videoContext?: VideoContext
 }
 
 interface VideoReference {
@@ -21,6 +23,13 @@ interface BloxWizardResponse {
   suggestedQuestions: string[]
   usageRemaining: number
   responseTime: string
+  citations?: Array<{
+    id: number
+    videoTitle: string
+    timestamp: string
+    url: string
+    relevanceScore: number
+  }>
 }
 
 // Mock video database for testing
@@ -46,7 +55,7 @@ const mockVideoReferences: VideoReference[] = [
 export async function POST(request: NextRequest) {
   try {
     const startTime = Date.now()
-    const { message, sessionId, userId }: BloxWizardRequest = await request.json()
+    const { message, sessionId, userId = 'anonymous', videoContext }: BloxWizardRequest = await request.json()
 
     if (!message || !sessionId) {
       return NextResponse.json(
@@ -55,85 +64,90 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Simulate processing delay for realistic feel
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    // Initialize N8n service
+    const n8nService = createN8nService()
 
-    // Mock intelligent response based on question keywords
-    let answer = "I understand you're asking about Roblox development. Let me help you with that!"
-    let videoReferences: VideoReference[] = []
-    let suggestedQuestions: string[] = []
+    try {
+      // First, check if N8n is available
+      const isHealthy = await n8nService.healthCheck()
+      if (!isHealthy) {
+        console.warn('N8n system is not healthy, falling back to mock responses')
+        return generateMockResponse(message, startTime)
+      }
 
-    const lowerMessage = message.toLowerCase()
-    
-    if (lowerMessage.includes('script') || lowerMessage.includes('lua') || lowerMessage.includes('code')) {
-      answer = "Great question about scripting! 🔧 Lua is the programming language used in Roblox, and it's perfect for creating game logic, handling player interactions, and building complex systems. Here are some video tutorials that will help you master Roblox scripting from beginner to advanced levels."
-      videoReferences = mockVideoReferences
-      suggestedQuestions = [
-        "How do I create my first script?",
-        "What's the difference between ServerScript and LocalScript?",
-        "How do I handle player events in Lua?",
-        "Show me how to create a simple GUI script"
-      ]
-    } else if (lowerMessage.includes('studio') || lowerMessage.includes('interface') || lowerMessage.includes('2024')) {
-      answer = "Roblox Studio 2024 has amazing new features! 🚀 The interface has been completely redesigned with better organization, new tools, and improved workflow. The Creator Hub integration makes publishing and managing your games much easier. I've found some excellent tutorials that cover all the modern Studio features."
-      videoReferences = [mockVideoReferences[1]]
-      suggestedQuestions = [
-        "What are the best new 2024 Studio features?",
-        "How do I customize my Studio workspace?",
-        "Where can I find the new terrain tools?",
-        "How do I use the new animation editor?"
-      ]
-    } else if (lowerMessage.includes('teleport')) {
-      answer = "Teleporting players is a super useful game mechanic! ✨ You can either teleport players within the same game using CFrame positioning, or between different games using TeleportService. Both methods have their specific use cases and I can show you exactly how to implement them."
-      videoReferences = mockVideoReferences
-      suggestedQuestions = [
-        "How do I teleport between different games?",
-        "What's the difference between CFrame and TeleportService?",
-        "How do I create a teleport GUI?",
-        "Can I teleport players to specific coordinates?"
-      ]
-    } else if (lowerMessage.includes('gui') || lowerMessage.includes('interface') || lowerMessage.includes('ui')) {
-      answer = "Creating GUIs in Roblox is essential for player interaction! 🎨 You can build everything from simple buttons to complex inventory systems using ScreenGuis, Frames, and various UI elements. The new UI system in 2024 has some great improvements for responsive design."
-      videoReferences = mockVideoReferences
-      suggestedQuestions = [
-        "How do I make a GUI that follows the player?",
-        "What's the best way to create responsive UIs?",
-        "How do I add animations to my GUI?",
-        "Can you show me how to make a shop interface?"
-      ]
-    } else if (lowerMessage.includes('tweenservice') || lowerMessage.includes('tween') || lowerMessage.includes('animation')) {
-      answer = "TweenService is perfect for smooth animations! 🎭 It's one of the most powerful tools in Roblox for creating professional-looking movements, transitions, and effects. You can animate almost any property of any object with smooth easing functions."
-      videoReferences = mockVideoReferences
-      suggestedQuestions = [
-        "How do I use TweenService for smooth animations?",
-        "What are the different easing styles?",
-        "Can I animate GUI elements with TweenService?",
-        "How do I create complex animation sequences?"
-      ]
-    } else {
-      answer = `I see you're asking about "${message}". 🤔 While I don't have specific video tutorials for this exact topic in my current database, I can definitely help you with general Roblox development concepts! Try asking about specific areas like scripting, Studio features, GUI creation, or game mechanics.`
-      suggestedQuestions = [
-        "How do I get started with Roblox scripting?",
-        "What are the basics of Roblox Studio 2024?",
-        "How do I create my first game?",
-        "Show me how to make a simple obby"
-      ]
+      // Determine response style based on user context
+      const responseStyle = determineResponseStyle(undefined, videoContext)
+
+      // Create chat query request for N8n
+      const chatRequest = {
+        eventType: 'chat_query' as const,
+        userId,
+        sessionId,
+        data: {
+          query: message,
+          responseStyle,
+          conversationHistory: [], // TODO: Implement conversation history
+          videoContext
+        },
+        timestamp: new Date().toISOString()
+      }
+
+      // Send to N8n Knowledge Engine via orchestrator
+      const n8nResponse = await n8nService.sendChatQuery(chatRequest)
+
+      if (!n8nResponse.success) {
+        throw new Error('N8n processing failed')
+      }
+
+      // Track user interaction asynchronously (don't await)
+      n8nService.trackInteraction({
+        eventType: 'user_interaction',
+        userId,
+        sessionId,
+        data: {
+          interactionType: 'CHAT_QUERY',
+          query: message,
+          satisfaction: undefined // Will be tracked later
+        },
+        timestamp: new Date().toISOString()
+      }).catch(err => console.warn('Failed to track interaction:', err))
+
+      // Transform N8n response to our API format
+      const videoReferences: VideoReference[] = n8nResponse.data.citations.map(citation => ({
+        title: citation.videoTitle,
+        youtubeId: extractYouTubeId(citation.url) || 'unknown',
+        timestamp: citation.timestamp,
+        relevantSegment: `From "${citation.videoTitle}" at ${citation.timestamp}`,
+        thumbnailUrl: `https://img.youtube.com/vi/${extractYouTubeId(citation.url)}/maxresdefault.jpg`,
+        confidence: citation.relevanceScore
+      }))
+
+      // Generate intelligent follow-up questions based on the response
+      const suggestedQuestions = generateSuggestedQuestions(message, n8nResponse.data.answer)
+
+      // Mock usage tracking (TODO: Implement real usage tracking)
+      const usageRemaining = 5
+
+      const responseTime = `${Date.now() - startTime}ms`
+
+      const response: BloxWizardResponse = {
+        answer: n8nResponse.data.answer,
+        videoReferences,
+        suggestedQuestions,
+        usageRemaining,
+        responseTime,
+        citations: n8nResponse.data.citations
+      }
+
+      return NextResponse.json(response)
+
+    } catch (n8nError) {
+      console.error('N8n integration error:', n8nError)
+      console.log('Falling back to mock response due to N8n error')
+      
+      // Fall back to mock response if N8n fails
+      return generateMockResponse(message, startTime)
     }
-
-    // Mock usage tracking
-    const usageRemaining = 2 // Mock remaining questions
-
-    const responseTime = `${Date.now() - startTime}ms`
-
-    const response: BloxWizardResponse = {
-      answer,
-      videoReferences,
-      suggestedQuestions,
-      usageRemaining,
-      responseTime
-    }
-
-    return NextResponse.json(response)
 
   } catch (error) {
     console.error('Blox Wizard API error:', error)
@@ -142,6 +156,108 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     )
   }
+}
+
+/**
+ * Generate mock response as fallback when N8n is unavailable
+ */
+function generateMockResponse(message: string, startTime: number): NextResponse {
+  let answer = "I understand you're asking about Roblox development. Let me help you with that!"
+  let videoReferences: VideoReference[] = []
+  let suggestedQuestions: string[] = []
+
+  const lowerMessage = message.toLowerCase()
+  
+  if (lowerMessage.includes('script') || lowerMessage.includes('lua') || lowerMessage.includes('code')) {
+    answer = "Great question about scripting! 🔧 Lua is the programming language used in Roblox, and it's perfect for creating game logic, handling player interactions, and building complex systems. Here are some video tutorials that will help you master Roblox scripting from beginner to advanced levels."
+    videoReferences = mockVideoReferences
+    suggestedQuestions = [
+      "How do I create my first script?",
+      "What's the difference between ServerScript and LocalScript?",
+      "How do I handle player events in Lua?",
+      "Show me how to create a simple GUI script"
+    ]
+  } else if (lowerMessage.includes('studio') || lowerMessage.includes('interface') || lowerMessage.includes('2024')) {
+    answer = "Roblox Studio 2024 has amazing new features! 🚀 The interface has been completely redesigned with better organization, new tools, and improved workflow. The Creator Hub integration makes publishing and managing your games much easier. I've found some excellent tutorials that cover all the modern Studio features."
+    videoReferences = [mockVideoReferences[1]]
+    suggestedQuestions = [
+      "What are the best new 2024 Studio features?",
+      "How do I customize my Studio workspace?",
+      "Where can I find the new terrain tools?",
+      "How do I use the new animation editor?"
+    ]
+  } else {
+    answer = `I see you're asking about "${message}". 🤔 While I'm currently running in fallback mode (N8n system unavailable), I can still help with general Roblox development concepts! Try asking about specific areas like scripting, Studio features, or game mechanics.`
+    suggestedQuestions = [
+      "How do I get started with Roblox scripting?",
+      "What are the basics of Roblox Studio 2024?",
+      "How do I create my first game?",
+      "Show me how to make a simple obby"
+    ]
+  }
+
+  const responseTime = `${Date.now() - startTime}ms`
+
+  const response: BloxWizardResponse = {
+    answer,
+    videoReferences,
+    suggestedQuestions,
+    usageRemaining: 2,
+    responseTime
+  }
+
+  return NextResponse.json(response)
+}
+
+/**
+ * Extract YouTube video ID from URL
+ */
+function extractYouTubeId(url: string): string | null {
+  const regex = /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/
+  const match = url.match(regex)
+  return match ? match[1] : null
+}
+
+/**
+ * Generate contextual follow-up questions based on the query and response
+ */
+function generateSuggestedQuestions(query: string, response: string): string[] {
+  const lowerQuery = query.toLowerCase()
+  
+  if (lowerQuery.includes('script') || lowerQuery.includes('code')) {
+    return [
+      "How do I debug my script?",
+      "What are common scripting mistakes?",
+      "Show me advanced scripting techniques",
+      "How do I optimize my code performance?"
+    ]
+  }
+  
+  if (lowerQuery.includes('gui') || lowerQuery.includes('ui')) {
+    return [
+      "How do I make responsive GUIs?",
+      "What are best practices for UI design?",
+      "How do I add animations to my interface?",
+      "Can you show me mobile-friendly UI tips?"
+    ]
+  }
+  
+  if (lowerQuery.includes('game') || lowerQuery.includes('create')) {
+    return [
+      "How do I publish my game?",
+      "What makes a game successful?",
+      "How do I monetize my creation?",
+      "Can you help me plan my next feature?"
+    ]
+  }
+  
+  // Default suggestions
+  return [
+    "Can you explain this in more detail?",
+    "What's the next step I should take?",
+    "Are there any common mistakes to avoid?",
+    "Do you have related video tutorials?"
+  ]
 }
 
 export async function GET() {

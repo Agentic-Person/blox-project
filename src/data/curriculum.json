@@ -9,544 +9,598 @@
       "weeks": [
         {
           "id": "week-1",
-          "title": "W1: Roblox Studio 2024 Basics",
-          "description": "Navigate the new Creator Hub and master the modern Studio interface",
+          "title": "Introduction to Roblox Studio",
+          "description": "Complete introduction to Roblox Studio 2025 - from interface basics to creating your first game",
           "days": [
             {
               "id": "day-1",
-              "title": "D1: New Creator Hub & Studio Interface Part 1",
+              "title": "D1: Getting Started with Roblox Studio",
               "videos": [
                 {
+                  "id": "assignment-1-1-1-0",
+                  "title": "Roblox Studio Learning Course",
+                  "subtitle": "Take a quick tour",
+                  "description": "Learn the basics of Studio by creating your first playable experience in a quick guided tour.",
+                  "duration": "15:00",
+                  "xpReward": 30,
+                  "thumbnails": [
+                    "/images/thumbnails/RobloxStudio_001.jpg",
+                    "/images/thumbnails/RobloxStudio_002.jpg"
+                  ],
+                  "assignmentUrl": "/assignments/roblox-studio-tour",
+                  "type": "assignment"
+                },
+                {
                   "id": "video-1-1-1-1",
-                  "title": "Roblox Studio Basics - Roblox Beginners Scripting Tutorial #1 (2025)",
-                  "youtubeId": "9MUgLaF22Yo",
-                  "creator": "BrawlDev",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "New Creator Hub Tutorial 2024",
-                    "creator": "BrawlDev"
-                  }
-                },
-                {
-                  "id": "video-1-1-1-2",
-                  "title": "Roblox Studio Basics - Roblox Beginners Scripting Tutorial #1 (2025)",
-                  "youtubeId": "9MUgLaF22Yo",
-                  "creator": "BrawlDev",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Roblox Studio 2024 Complete Beginner Guide",
-                    "creator": "TheDevKing"
-                  }
-                },
-                {
-                  "id": "video-1-1-1-3",
-                  "title": "🔥 How to Make a Tycoon On Roblox Studio | Scripting Tutorial",
-                  "youtubeId": "XY6Ig48tAnk",
-                  "creator": "AlvinBlox",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "How to Navigate Roblox Studio 2024",
-                    "creator": "AlvinBlox"
-                  }
+                  "title": "The ULTIMATE Beginner Guide to Roblox Studio.. (Start BUILDING Now!)",
+                  "creator": "SmartyRBX",
+                  "description": "Complete guide to Roblox Studio for beginners. Learn the fundamentals and best practices for the ultimate beginner guide to Roblox Studio. This video covers essential concepts you'll need to master including interface navigation, basic building techniques, and essential workflow tips.",
+                  "duration": "39:33",
+                  "totalMinutes": 40,
+                  "thumbnail": "https://i.ytimg.com/vi/p005iduooyw/maxresdefault.jpg",
+                  "youtubeId": "p005iduooyw",
+                  "xpReward": 25
                 }
               ],
-              "practiceTask": "Navigate and customize your workspace",
-              "estimatedTime": "2.5h"
+              "practiceTask": "Set up Roblox Studio, explore the interface, and create your first project",
+              "estimatedTime": "0.7h"
             },
             {
               "id": "day-2",
-              "title": "D2: New Creator Hub & Studio Interface Part 2",
+              "title": "D2: Beginner Guide to Roblox Scripting",
               "videos": [
                 {
                   "id": "video-1-1-2-1",
-                  "title": "MAKE A ROBLOX FPS GAME IN 30 SECONDS #robloxstudio #robloxtutorial #roblox",
-                  "youtubeId": "_cbpAlTrhS0",
-                  "creator": "Grand",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Modern Studio Interface 2024",
-                    "creator": "AlvinBlox"
-                  }
-                },
-                {
-                  "id": "video-1-1-2-2",
-                  "title": "Helping you understand ViewportFrames :) #shorts #robloxscripting",
-                  "youtubeId": "WipAmv9TzpY",
-                  "creator": "ByteBlox",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Essential Tools in Roblox Studio",
-                    "creator": "ByteBlox"
-                  }
-                },
-                {
-                  "id": "video-1-1-2-3",
-                  "title": "How to use Promises (and why you should) in Roblox Development",
-                  "youtubeId": "TeMGAqzZrDc",
-                  "creator": "B Ricey",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Workspace Organization Tutorial",
-                    "creator": "B Ricey"
-                  }
-                },
-                {
-                  "id": "video-1-1-2-4",
-                  "title": "How to Play Roblox on PC & Laptop - Roblox PC Controls",
-                  "youtubeId": "Tet_M2fPVd8",
-                  "creator": "SlurpTech",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Camera Controls and Views",
-                    "creator": "HowToRoblox"
-                  }
+                  "title": "The EASIEST Beginner Guide to Scripting (Roblox)",
+                  "creator": "SmartyRBX",
+                  "description": "The easiest beginner guide to scripting in Roblox! Learn the fundamentals and best practices for scripting in Roblox. This comprehensive tutorial covers essential scripting concepts you'll need to master including Lua basics, Studio integration, and practical scripting techniques.",
+                  "duration": "48:39",
+                  "totalMinutes": 49,
+                  "thumbnail": "https://i.ytimg.com/vi/P2ECl-mLmvY/maxresdefault.jpg",
+                  "youtubeId": "P2ECl-mLmvY",
+                  "xpReward": 25
                 }
               ],
-              "practiceTask": "Deep dive into Creator Hub features",
-              "estimatedTime": "2.5h"
+              "practiceTask": "Write your first scripts and understand the basics of Lua programming",
+              "estimatedTime": "0.8h"
             },
             {
               "id": "day-3",
-              "title": "D3: Building Fundamentals",
+              "title": "D3: Roblox Building, Low Polys, and Lighting",
               "videos": [
                 {
                   "id": "video-1-1-3-1",
-                  "title": "Roblox Studio Basics - Roblox Beginners Scripting Tutorial #1 (2025)",
-                  "youtubeId": "9MUgLaF22Yo",
-                  "creator": "BrawlDev",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Working with Parts Tutorial",
-                    "creator": "TheDevKing"
-                  }
+                  "title": "FULL Guide to Blender… For COMPLETE Noobs!",
+                  "creator": "SmartyRBX",
+                  "description": "✅❤️‍🔥Visit The SmartyRBX Store for Assets and MORE: https://www.smartyrbx.com/smartyrbx-store\n\nIn this video, I give you a full guide on the beginner basics of blender 3.0 for noobs! I made this to t...",
+                  "duration": "19:29",
+                  "totalMinutes": 19,
+                  "thumbnail": "https://i.ytimg.com/vi/OAW81QZpvRY/maxresdefault.jpg",
+                  "youtubeId": "OAW81QZpvRY",
+                  "xpReward": 25
                 },
                 {
                   "id": "video-1-1-3-2",
-                  "title": "2024 Guide to Roblox Animations",
-                  "youtubeId": "qSkP-hS_MwE",
-                  "creator": "ByteBlox",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "2024 Beginner Scripting Series Episode 1",
-                    "creator": "ByteBlox"
-                  }
-                },
-                {
-                  "id": "video-1-1-3-3",
-                  "title": "Tự Học Angular 18 #6 - Dynamic Text, Properties, Attributes",
-                  "youtubeId": "uzpsV-HMQSs",
-                  "creator": "Ninedev",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Properties and Attributes 2024",
-                    "creator": "Suphi Kaner"
-                  }
-                },
-                {
-                  "id": "video-1-1-3-4",
-                  "title": "Maruti Suzuki Alto 800 Full Service Guide 2024 |",
-                  "youtubeId": "QnjP5yTHZbU",
-                  "creator": "JAY BAHUCHAR AUTOMOBILE 🚗🚗",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Material Service Guide 2024",
-                    "creator": "BrawlDev"
-                  }
+                  "title": "The Secrets to MOTIVATION As A Roblox DEV...",
+                  "creator": "SmartyRBX",
+                  "description": "✅❤️‍🔥Visit The SmartyRBX Store for Assets and MORE: https://www.smartyrbx.com/smartyrbx-store\n\nThe secrets to staying motivated as Roblox game developer, with specific advice whether you're making yo...",
+                  "duration": "14:48",
+                  "totalMinutes": 15,
+                  "thumbnail": "https://i.ytimg.com/vi/D2LrlxWk8kc/maxresdefault.jpg",
+                  "youtubeId": "D2LrlxWk8kc",
+                  "xpReward": 25
                 }
               ],
-              "practiceTask": "Create your first structure",
-              "estimatedTime": "2.5h"
+              "practiceTask": "Build structures with parts, apply materials, and add lighting effects",
+              "estimatedTime": "0.6h"
             },
             {
               "id": "day-4",
-              "title": "D4: Materials and Textures",
+              "title": "D4: Roblox Terrain",
               "videos": [
                 {
                   "id": "video-1-1-4-1",
-                  "title": "Programming Rarity is Harder Than You Think",
-                  "youtubeId": "UUgj-hmX2LM",
-                  "creator": "ByteBlox",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Color and Material Properties",
-                    "creator": "ByteBlox"
-                  }
+                  "title": "The BEST Way to Learn Building! (Roblox Studio)",
+                  "creator": "SmartyRBX",
+                  "description": "✅🌟Looking to Improve your BUILDS FAST? Get MY New ULTIMATE 99+ TEXTURE PACK: https://www.smartyrbx.com/smartyrbx-store/smartys-ultimate-99-texture-pack 🌟✅\n\n✅❤️‍🔥Visit The SmartyRBX Store for Assets...",
+                  "duration": "3:58",
+                  "totalMinutes": 4,
+                  "thumbnail": "https://i.ytimg.com/vi/-xQBxTYq2m8/maxresdefault.jpg",
+                  "youtubeId": "-xQBxTYq2m8",
+                  "xpReward": 25
                 },
                 {
                   "id": "video-1-1-4-2",
-                  "title": "🔥 How to Make an Obby on Roblox Studio | Beginners Scripting Tutorial 🎮",
-                  "youtubeId": "9v3GvfX_qr8",
-                  "creator": "AlvinBlox",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Basic Building Tools Tutorial",
-                    "creator": "AlvinBlox"
-                  }
+                  "title": "The EASIEST Guide to Making a Low Poly Asset Pack.. (Roblox + Blender)",
+                  "creator": "SmartyRBX",
+                  "description": "Get Blender: https://www.blender.org\n\n✅❤️‍🔥Visit The SmartyRBX Store for Assets and MORE: https://www.smartyrbx.com/smartyrbx-store\n\n✅🌟Get another pack I've made, Smarty's Essentials Pack FREE: http...",
+                  "duration": "9:21",
+                  "totalMinutes": 9,
+                  "thumbnail": "https://i.ytimg.com/vi/b_31P1MEOlc/maxresdefault.jpg",
+                  "youtubeId": "b_31P1MEOlc",
+                  "xpReward": 25
                 },
                 {
                   "id": "video-1-1-4-3",
-                  "title": "Presidential Saleh Mosque: A Marvel of Yemeni Architecture and Modern Techniques part 1",
-                  "youtubeId": "RcaRXngddtw",
-                  "creator": "Amazing Facts & Info",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Modern Building Techniques 2024 Part 1",
-                    "creator": "B Ricey"
-                  }
+                  "title": "The EASIEST Guide to Making Amazing Terrain (Roblox Studio)",
+                  "creator": "SmartyRBX",
+                  "description": "✅❤️‍🔥Visit The SmartyRBX Store for Assets and MORE: https://www.smartyrbx.com/smartyrbx-store\n\nJoin me as I dive into the exciting world of terrain in Roblox Studio, a crucial element for creating im...",
+                  "duration": "7:17",
+                  "totalMinutes": 7,
+                  "thumbnail": "https://i.ytimg.com/vi/CippiATeZ54/maxresdefault.jpg",
+                  "youtubeId": "CippiATeZ54",
+                  "xpReward": 25
                 },
                 {
                   "id": "video-1-1-4-4",
-                  "title": "Color and Material Properties",
-                  "youtubeId": "placeholder_1_1_4_4",
-                  "creator": "ByteBlox",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "placeholder": true
+                  "title": "How to OPTIMIZE Your Roblox Game... Easiest Guide!",
+                  "creator": "SmartyRBX",
+                  "description": "✅❤️‍🔥Visit The SmartyRBX Store for Assets and MORE: https://www.smartyrbx.com/smartyrbx-store\n\nIn this video, I give you a full guide on optimizing your Roblox game in Roblox Studio, so you can make ...",
+                  "duration": "4:47",
+                  "totalMinutes": 5,
+                  "thumbnail": "https://i.ytimg.com/vi/mk6iVm95D0U/maxresdefault.jpg",
+                  "youtubeId": "mk6iVm95D0U",
+                  "xpReward": 25
+                },
+                {
+                  "id": "video-1-1-4-5",
+                  "title": "The Complete Guide to Roblox Development Success (Free Course)",
+                  "creator": "SmartyRBX",
+                  "description": "🔥👉 Get the Dev Content Creator Success Blueprint (Free Video Guide + Bonus PDF): https://www.smartyrbx.com/dev-content-free-resource\n\n0:00 - The Golden Path to Roblox Development Success\n1:52 - Step...",
+                  "duration": "28:40",
+                  "totalMinutes": 29,
+                  "thumbnail": "https://i.ytimg.com/vi/fz-0n9ed9xU/maxresdefault.jpg",
+                  "youtubeId": "fz-0n9ed9xU",
+                  "xpReward": 25
                 }
               ],
-              "practiceTask": "Apply and customize materials",
-              "estimatedTime": "2.5h"
+              "practiceTask": "Create realistic terrain and landscapes for your game world",
+              "estimatedTime": "0.9h"
             },
             {
               "id": "day-5",
-              "title": "D5: Week 1 Project",
+              "title": "D5: Blender Modeling Guide and Roblox Development",
               "videos": [
                 {
                   "id": "video-1-1-5-1",
-                  "title": "Creating Realistic Terrain in Roblox  Step by #tycoon #roblox #tutorial",
-                  "youtubeId": "iNaRgV_n7xI",
-                  "creator": "BloxxedDev",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Creating Realistic Terrain",
-                    "creator": "TheDevKing"
-                  }
+                  "title": "The Complete Guide to Lighting in Roblox Studio",
+                  "creator": "SmartyRBX",
+                  "description": "✅❤️‍🔥Visit The SmartyRBX Store for Assets and MORE: https://www.smartyrbx.com/smartyrbx-store\n\nIn this video, I give you a full guide on how to do lighting in Roblox Studio, so you can make your buil...",
+                  "duration": "21:24",
+                  "totalMinutes": 21,
+                  "thumbnail": "https://i.ytimg.com/vi/99C5K1cdql8/maxresdefault.jpg",
+                  "youtubeId": "99C5K1cdql8",
+                  "xpReward": 25
                 },
                 {
                   "id": "video-1-1-5-2",
-                  "title": "new Roblox studio update is fire 🔥🔥 #roblox",
-                  "youtubeId": "2RfY6axoyg8",
-                  "creator": "MrSmartyPants",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Terrain Tools 2024 Update",
-                    "creator": "HowToRoblox"
-                  }
-                },
-                {
-                  "id": "video-1-1-5-3",
-                  "title": "Clearer water, cleaner air: the environmental effects of coronavirus",
-                  "youtubeId": "HVwjs_D_kRI",
-                  "creator": "FRANCE 24 English",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Water and Environment Effects",
-                    "creator": "B Ricey"
-                  }
-                },
-                {
-                  "id": "video-1-1-5-4",
-                  "title": "The EASIEST Guide to Making Amazing Terrain (Roblox Studio)",
-                  "youtubeId": "CippiATeZ54",
+                  "title": "The ULTIMATE Blender Modeling Guide for Noobs! (Make Assets For Games!)",
                   "creator": "SmartyRBX",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Terrain Materials Guide",
-                    "creator": "BrawlDev"
-                  }
+                  "description": "Once you master Blender... you can create anything with more efficiency and potential than ever before. \n\nYou can make game assets, create stunning UGC, and earn from a highly coveted skill in the Rob...",
+                  "duration": "34:20",
+                  "totalMinutes": 34,
+                  "thumbnail": "https://i.ytimg.com/vi/W337AL7n3dc/maxresdefault.jpg",
+                  "youtubeId": "W337AL7n3dc",
+                  "xpReward": 25
                 }
               ],
-              "practiceTask": "Complete week 1 project",
-              "estimatedTime": "3h"
+              "practiceTask": "Model 3D assets in Blender and import them into Roblox Studio",
+              "estimatedTime": "0.9h"
             }
           ]
         },
         {
           "id": "week-2",
-          "title": "W2: 3D Modeling with Blender",
-          "description": "Learn professional 3D modeling techniques",
+          "title": "W2: Blender 4.X Beginner Basic Complete Crash Course",
+          "description": "Master Blender 4.x from basics to advanced techniques including modeling, animation, and scene creation",
           "days": [
             {
               "id": "day-6",
-              "title": "D6: Blender 4.1 Introduction",
+              "title": "D6: Complete Blender Beginner Course",
               "videos": [
                 {
                   "id": "video-1-2-1-1",
-                  "title": "How to Group Objects into Folders or Models in Roblox Studio #6",
-                  "youtubeId": "8fGzjShAz78",
-                  "creator": "Devboxxx",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Models vs Groups vs Folders",
-                    "creator": "AlvinBlox"
-                  }
+                  "title": "Introduction to Blender and CG Cookie - BLENDER 4.5 BASICS (part 0)",
+                  "youtubeId": "qZIOA7mFaRg",
+                  "creator": "CG Cookie",
+                  "duration": "11:37",
+                  "xpReward": 23,
+                  "description": "Welcome to the complete Blender 4.5 basics course! This introductory video covers what you'll learn throughout this comprehensive Blender tutorial series. Perfect for absolute beginners looking to master 3D creation with Blender's latest features and interface improvements."
                 },
                 {
                   "id": "video-1-2-1-2",
-                  "title": "The ULTIMATE POKÉMON STORAGE MANAGEMENT GUIDE in Pokémon GO! (2024)",
-                  "youtubeId": "VnPoFgtCKWI",
-                  "creator": "LuckyBunz",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Naming Conventions Guide",
-                    "creator": "DasKairo"
-                  }
+                  "title": "Intro to 3D Navigation in Blender - BLENDER 4.5 BASICS (part 1)",
+                  "youtubeId": "i8wO5PEDO1c",
+                  "creator": "CG Cookie",
+                  "duration": "9:01",
+                  "xpReward": 18,
+                  "description": "Master 3D navigation in Blender with this essential tutorial! Learn how to efficiently move around your 3D scenes using keyboard shortcuts, mouse controls, and navigation tools. This foundation skill is crucial for all Blender workflows and will make your 3D creation process much more intuitive."
                 },
                 {
                   "id": "video-1-2-1-3",
-                  "title": "Data modeling best practices - Part 1 - in Power BI and Analysis Services",
-                  "youtubeId": "kiVXI7zjSzY",
-                  "creator": "Guy in a Cube",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Model Hierarchy Best Practices",
-                    "creator": "Suphi Kaner"
-                  }
+                  "title": "Selecting Objects in Blender - BLENDER 4.5 BASICS (part 2)",
+                  "youtubeId": "zkupB5S3sUQ",
+                  "creator": "CG Cookie",
+                  "duration": "8:02",
+                  "xpReward": 16,
+                  "description": "➤ Get your Q's answered on CG Cookie: https://b3d.cgcookie.com/g5gmha\n\n➤ Grab your FREE copy of Press Start - Your first Blender Project:  https://b3d.cgcookie.com/49qx15\n\n3D is all about working with..."
                 },
                 {
                   "id": "video-1-2-1-4",
-                  "title": "This Desk Mat Will Keep Your Desk Clean & Tidy!",
-                  "youtubeId": "kh2YU4F14Cc",
-                  "creator": "Midas / Tomi",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Organizing Your Workspace",
-                    "creator": "ByteBlox"
-                  }
-                }
-              ],
-              "practiceTask": "Navigate Blender interface",
-              "estimatedTime": "2.5h"
-            },
-            {
-              "id": "day-7",
-              "title": "D7: Basic 3D Modeling",
-              "videos": [
+                  "title": "Transforming Objects in Blender - BLENDER 4.5 BASICS (part 3)",
+                  "youtubeId": "lYr25_YeuL8",
+                  "creator": "CG Cookie",
+                  "duration": "15:16",
+                  "xpReward": 31,
+                  "description": "➤ Get your Q's answered on CG Cookie: https://b3d.cgcookie.com/bkl9v2\n➤ Grab your FREE copy of Press Start - Your first Blender Project:  https://b3d.cgcookie.com/49qx15\n\nTransforming, when it comes t..."
+                },
+                {
+                  "id": "video-1-2-1-5",
+                  "title": "Adding, Deleting, and the 3D Cursor in Blender - BLENDER 4.5 BASICS (part 4)",
+                  "youtubeId": "ACdtFVSbDZo",
+                  "creator": "CG Cookie",
+                  "duration": "10:14",
+                  "xpReward": 20,
+                  "description": "➤ Get your Q's answered on CG Cookie: https://b3d.cgcookie.com/q3r2kc\n➤ Grab your FREE copy of Press Start - Your first Blender Project: https://b3d.cgcookie.com/49qx15\n\nAdding, Deleting, and the 3D C..."
+                },
+                {
+                  "id": "video-1-2-1-6",
+                  "title": "Orientations and Parenting in Blender - BLENDER 4.5 BASICS (part 5)",
+                  "youtubeId": "vlR6qAbIlR0",
+                  "creator": "CG Cookie",
+                  "duration": "12:33",
+                  "xpReward": 25,
+                  "description": "➤ Get your Q's answered on CG Cookie: https://b3d.cgcookie.com/bid6l0\n➤ Grab your FREE copy of Press Start - Your first Blender Project:  https://b3d.cgcookie.com/49qx15 \n\nIt's easy to move objects al..."
+                },
+                {
+                  "id": "video-1-2-1-7",
+                  "title": "Mesh Components and Object Origins in Blender -BLENDER 4.5 BASICS (part 6)",
+                  "youtubeId": "eJH0hxlhd5M",
+                  "creator": "CG Cookie",
+                  "duration": "11:05",
+                  "xpReward": 22,
+                  "description": "➤ Get your Q's answered on CG Cookie: https://b3d.cgcookie.com/9l8evj\n➤ Grab your FREE copy of Press Start - Your first Blender Project:  https://b3d.cgcookie.com/49qx15 \n➤ Continue learning Modeling:..."
+                },
+                {
+                  "id": "video-1-2-1-8",
+                  "title": "Object Data and Duplication in Blender - BLENDER 4.5 BASICS (part 7)",
+                  "youtubeId": "HFstA5lM4BM",
+                  "creator": "CG Cookie",
+                  "duration": "7:57",
+                  "xpReward": 16,
+                  "description": "➤ Get your Q's answered on CG Cookie: https://b3d.cgcookie.com/mlyzrq\n➤ Grab your FREE copy of Press Start - Your first Blender Project:  https://b3d.cgcookie.com/49qx15\n➤ Continue learning Modeling: ..."
+                },
+                {
+                  "id": "video-1-2-1-9",
+                  "title": "Pivots, Snapping, and Proportional Editing in Blender - BLENDER 4.5 BASICS (part 8)",
+                  "youtubeId": "PfBO0Gfla_Y",
+                  "creator": "CG Cookie",
+                  "duration": "12:44",
+                  "xpReward": 25,
+                  "description": "➤ Get your Q's answered on CG Cookie: https://b3d.cgcookie.com/psi0m1\n➤ Grab your FREE copy of Press Start - Your first Blender Project:  https://b3d.cgcookie.com/49qx15\n➤ Continue learning Modeling: ..."
+                },
+                {
+                  "id": "video-1-2-1-10",
+                  "title": "Visibility and Collections in Blender - BLENDER 4.5 BASICS (part 9)",
+                  "youtubeId": "fPXT6-6Z7pU",
+                  "creator": "CG Cookie",
+                  "duration": "13:29",
+                  "xpReward": 27,
+                  "description": "➤ Get your Q's answered on CG Cookie: https://b3d.cgcookie.com/e2yolf\n➤ Grab your FREE copy of Press Start - Your first Blender Project:   https://b3d.cgcookie.com/49qx15\n➤ Continue learning Modeling:..."
+                },
                 {
                   "id": "video-1-2-2-1",
-                  "title": "Realistic Vehicle Physics in UE5: A Complete Guide to Using Chaos",
-                  "youtubeId": "Ibxp_NMmfsk",
-                  "creator": "Da-code135s",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Physics Constraints Complete Guide",
-                    "creator": "TheDevKing"
-                  }
+                  "title": "Mesh Normals and Smoothing in Blender - BLENDER 4.5 BASICS (part 10)",
+                  "youtubeId": "2cQROA13T04",
+                  "creator": "CG Cookie",
+                  "duration": "6:51",
+                  "xpReward": 14,
+                  "description": "➤ Get your Q's answered on CG Cookie: https://b3d.cgcookie.com/bvk90w\n➤ Grab your FREE copy of Press Start - Your first Blender Project:  https://b3d.cgcookie.com/49qx15\n➤ Continue learning Modeling: ..."
                 },
                 {
                   "id": "video-1-2-2-2",
-                  "title": "How to use SPRING, WIRES & ROPES?! Roblox Build a Boat",
-                  "youtubeId": "nWEXje5vy3A",
-                  "creator": "jessetc",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Hinges, Springs, and Ropes Tutorial",
-                    "creator": "B Ricey"
-                  }
+                  "title": "Extrude, Inset, and Knife in Blender - BLENDER 4.5 BASICS (part 11)",
+                  "youtubeId": "g5WCcHsgWf4",
+                  "creator": "CG Cookie",
+                  "duration": "11:49",
+                  "xpReward": 24,
+                  "description": "➤ Get your Q's answered on CG Cookie: https://b3d.cgcookie.com/ipp4mt\n➤ Grab your FREE copy of Press Start - Your first Blender Project:  https://b3d.cgcookie.com/49qx15\n➤ Continue learning Modeling: ..."
                 },
                 {
                   "id": "video-1-2-2-3",
-                  "title": "🔥 How to Make an Obby on Roblox Studio | Beginners Scripting Tutorial 🎮",
-                  "youtubeId": "9v3GvfX_qr8",
-                  "creator": "AlvinBlox",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Creating Moving Parts",
-                    "creator": "AlvinBlox"
-                  }
+                  "title": "Bevel and Loop Cut in Blender - BLENDER 4.5 BASICS (part 12)",
+                  "youtubeId": "Iyk1rBNFMDg",
+                  "creator": "CG Cookie",
+                  "duration": "10:16",
+                  "xpReward": 21,
+                  "description": "➤ Get your Q's answered on CG Cookie: https://b3d.cgcookie.com/phdx0m\n➤ Grab your FREE copy of Press Start - Your first Blender Project:  https://b3d.cgcookie.com/49qx15\n➤ Continue learning Modeling: ..."
                 },
                 {
                   "id": "video-1-2-2-4",
-                  "title": "GB Studio Collision Groups Explained?",
-                  "youtubeId": "jBcLKf1JcWs",
-                  "creator": "codePetersen",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Collision Groups Explained",
-                    "creator": "Suphi Kaner"
-                  }
-                }
-              ],
-              "practiceTask": "Model basic objects",
-              "estimatedTime": "3h"
-            },
-            {
-              "id": "day-8",
-              "title": "D8: Texturing in Blender",
-              "videos": [
+                  "title": "Subdivide, Fill, and Merge in Blender - BLENDER 4.5 BASICS (part 13)",
+                  "youtubeId": "IjsugFxhB1w",
+                  "creator": "CG Cookie",
+                  "duration": "13:13",
+                  "xpReward": 26,
+                  "description": "➤ Get your Q's answered on CG Cookie: https://b3d.cgcookie.com/9rnqoj\n➤ Grab your FREE copy of Press Start - Your first Blender Project:  https://b3d.cgcookie.com/49qx15\n➤ Continue learning Modeling: ..."
+                },
+                {
+                  "id": "video-1-2-2-5",
+                  "title": "Modifiers in Blender - BLENDER 4.5 BASICS (part 14)",
+                  "youtubeId": "JiQuGealRrs",
+                  "creator": "CG Cookie",
+                  "duration": "11:07",
+                  "xpReward": 22,
+                  "description": "➤ Get your Q's answered on CG Cookie: https://b3d.cgcookie.com/ipp4mt\n➤ Grab your FREE copy of Press Start - Your first Blender Project:  https://b3d.cgcookie.com/49qx15\n➤ Continue learning about MODI..."
+                },
+                {
+                  "id": "video-1-2-2-6",
+                  "title": "Editors and Windows in Blender - BLENDER 4.5 BASICS (part 15)",
+                  "youtubeId": "eVRiJYhE0Wk",
+                  "creator": "CG Cookie",
+                  "duration": "19:48",
+                  "xpReward": 40,
+                  "description": "➤ Get your Q's answered on CG Cookie: https://b3d.cgcookie.com/el9xz3\n➤ Grab your FREE copy of Press Start - Your first Blender Project:  https://b3d.cgcookie.com/49qx15\n➤ Check out CORE - Nine Course..."
+                },
+                {
+                  "id": "video-1-2-2-7",
+                  "title": "Working with Blender Files - BLENDER 4.5 BASICS (part 16)",
+                  "youtubeId": "5dRvcq0rLzU",
+                  "creator": "CG Cookie",
+                  "duration": "8:12",
+                  "xpReward": 16,
+                  "description": "➤ Get your Q's answered on CG Cookie: https://b3d.cgcookie.com/3eyilb\n➤ Grab your FREE copy of Press Start - Your first Blender Project:  https://b3d.cgcookie.com/49qx15\n➤ Check out CORE - Nine Course..."
+                },
+                {
+                  "id": "video-1-2-2-8",
+                  "title": "Cameras and Rendering in Blender - BLENDER 4.5 BASICS (part 17)",
+                  "youtubeId": "iiXElj1DLBo",
+                  "creator": "CG Cookie",
+                  "duration": "11:01",
+                  "xpReward": 22,
+                  "description": "➤ Get your Q's answered on CG Cookie: https://b3d.cgcookie.com/scy88e\n➤ Grab your FREE copy of Press Start - Your first Blender Project:  https://b3d.cgcookie.com/49qx15\n➤ Learn more about 3D Cameras:..."
+                },
+                {
+                  "id": "video-1-2-2-9",
+                  "title": "Materials and Textures in Blender - BLENDER 4.5 BASICS (part 18)",
+                  "youtubeId": "4LySeRWSNiA",
+                  "creator": "CG Cookie",
+                  "duration": "15:15",
+                  "xpReward": 31,
+                  "description": "➤ Get your Q's answered on CG Cookie: https://b3d.cgcookie.com/2zqhy5\n➤ Grab your FREE copy of Press Start - Your first Blender Project:  https://b3d.cgcookie.com/49qx15\n➤ Continue learning about Mate..."
+                },
+                {
+                  "id": "video-1-2-2-10",
+                  "title": "Lighting in Blender - BLENDER 4.5 BASICS (part 19)",
+                  "youtubeId": "E3d7R7BNr_4",
+                  "creator": "CG Cookie",
+                  "duration": "7:48",
+                  "xpReward": 16,
+                  "description": "➤ Get your Q's answered on CG Cookie: https://b3d.cgcookie.com/fwodfr\n➤ Grab your FREE copy of Press Start - Your first Blender Project:  https://b3d.cgcookie.com/49qx15\n➤ Continue learning about Ligh..."
+                },
                 {
                   "id": "video-1-2-3-1",
-                  "title": "Roblox Future Giggle #roblox #robloxdoors #recommended #potemer",
-                  "youtubeId": "ZuyOpOPbVLg",
-                  "creator": "Potemer",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Future is Bright Phase 4",
-                    "creator": "Roblox Official"
-                  }
+                  "title": "3D Animation with Keyframes in Blender - BLENDER 4.5 BASICS (part 20)",
+                  "youtubeId": "xKv0mARhsMg",
+                  "creator": "CG Cookie",
+                  "duration": "15:31",
+                  "xpReward": 31,
+                  "description": "➤ Get your Q's answered on CG Cookie: https://b3d.cgcookie.com/jmuh60\n➤ Grab your FREE copy of Press Start - Your first Blender Project:  https://b3d.cgcookie.com/49qx15\n➤ Continue learning about Anim..."
                 },
                 {
                   "id": "video-1-2-3-2",
-                  "title": "Ultimate Guide to Cinematic Lighting — Types of Light & Gear Explained [Shot List Ep. 12]",
-                  "youtubeId": "r2nD_knsNrc",
-                  "creator": "StudioBinder",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Lighting Types and Uses",
-                    "creator": "TheDevKing"
-                  }
-                },
-                {
-                  "id": "video-1-2-3-3",
-                  "title": "WEIRDEST Roblox Studio Feature #roblox #robloxstudio",
-                  "youtubeId": "cRfzIuy23_U",
-                  "creator": "ByteBlox",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Basic Lighting Setup",
-                    "creator": "ByteBlox"
-                  }
-                },
-                {
-                  "id": "video-1-2-3-4",
-                  "title": "Basic Lighting Setup",
-                  "youtubeId": "placeholder_1_2_3_4",
-                  "creator": "ByteBlox",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "placeholder": true
+                  "title": "Stop Doing Head Math in Blender: Turn Any Input Field Into a Calculator (+ Auto Unit Conversion)",
+                  "youtubeId": "66OK9hebBmE",
+                  "creator": "CG Cookie",
+                  "duration": "2:10",
+                  "xpReward": 10,
+                  "description": "Blender tip: any numeric field can do math for you. Type 5+2, press Enter, get 7. It also handles -, *, /.\nExample: camera at 5 m, move object +2 m? Type 5+2 and confirm.\n\nIt converts units too: enter..."
                 }
               ],
-              "practiceTask": "Apply textures to models",
-              "estimatedTime": "2.5h"
+              "practiceTask": "Complete the donut tutorial following along with the videos, save your .blend file",
+              "estimatedTime": "8h"
+            },
+            {
+              "id": "day-7",
+              "title": "D7: Advanced Modeling Techniques",
+              "videos": [
+                {
+                  "id": "video-1-2-2-1",
+                  "title": "Blender 4 for Absolute Beginners : A Comprehensive Guide from Scratch",
+                  "youtubeId": "lLqep5Q4MiI",
+                  "creator": "Grant Abbitt (Gabbitt)",
+                  "duration": "46:40",
+                  "xpReward": 93,
+                  "description": "A comprehensive guide to Blender 4 designed for absolute beginners! This in-depth tutorial covers everything you need to know to start your 3D modeling journey, from basic interface navigation to advanced modeling techniques. Perfect for those who want a complete foundation in modern 3D creation."
+                },
+                {
+                  "id": "video-1-2-2-2",
+                  "title": "Blender 4 for Absolute Beginners - A Comprehensive Guide from Scratch  - Part 2 of 2",
+                  "youtubeId": "QdMrWxOnqnE",
+                  "creator": "Grant Abbitt (Gabbitt)",
+                  "duration": "44:50",
+                  "xpReward": 90,
+                  "description": "#blender #blender3d #blendertutorial \n\nThis is part 2 of a 2 part series in learning blender from scratch. It's an in-depth, detailed guide to learning blender from scratch. It's very methodical takin..."
+                }
+              ],
+              "practiceTask": "Apply the modeling techniques to create your own simple object",
+              "estimatedTime": "4h"
+            },
+            {
+              "id": "day-8",
+              "title": "D8: Character & Animation Part 1",
+              "videos": [
+                {
+                  "id": "video-1-2-1-1",
+                  "title": "The ULTIMATE Beginner Guide to Roblox Studio.. (Start BUILDING Now!)",
+                  "youtubeId": "p005iduooyw",
+                  "creator": "SmartyRBX",
+                  "duration": "39:33",
+                  "xpReward": 79,
+                  "description": "Get Studio: https://www.roblox.com/create\n\n✅❤️‍🔥Visit The SmartyRBX Store for Assets and MORE: https://www.smartyrbx.com/smartyrbx-store\n\n✅✨Scripting Secrets: Learn Everything You'll Need About Scrip..."
+                },
+                {
+                  "id": "video-1-2-1-2",
+                  "title": "The EASIEST Beginner Guide to Scripting (Roblox)",
+                  "youtubeId": "P2ECl-mLmvY",
+                  "creator": "SmartyRBX",
+                  "duration": "48:39",
+                  "xpReward": 97,
+                  "description": "🌟GET A SCRIPTING CHEAT SHEET (The Basics in ONE Place!) \n👉https://www.smartyrbx.com/scripting-cheat-sheet\n\n✅❤️‍🔥Visit The SmartyRBX Store for More Help, Assets and MORE: https://www.smartyrbx.com/s..."
+                },
+                {
+                  "id": "video-1-2-1-3",
+                  "title": "FULL Guide to Blender… For COMPLETE Noobs!",
+                  "youtubeId": "OAW81QZpvRY",
+                  "creator": "SmartyRBX",
+                  "duration": "19:29",
+                  "xpReward": 39,
+                  "description": "✅❤️‍🔥Visit The SmartyRBX Store for Assets and MORE: https://www.smartyrbx.com/smartyrbx-store\n\nIn this video, I give you a full guide on the beginner basics of blender 3.0 for noobs! I made this to t..."
+                },
+                {
+                  "id": "video-1-2-1-4",
+                  "title": "The BEST Way to Learn Building! (Roblox Studio)",
+                  "youtubeId": "-xQBxTYq2m8",
+                  "creator": "SmartyRBX",
+                  "duration": "3:58",
+                  "xpReward": 10,
+                  "description": "✅🌟Looking to Improve your BUILDS FAST? Get MY New ULTIMATE 99+ TEXTURE PACK: https://www.smartyrbx.com/smartyrbx-store/smartys-ultimate-99-texture-pack 🌟��\n\n✅❤️‍🔥Visit The SmartyRBX Store for Asset..."
+                },
+                {
+                  "id": "video-1-2-1-5",
+                  "title": "The Complete Guide to Lighting in Roblox Studio",
+                  "youtubeId": "99C5K1cdql8",
+                  "creator": "SmartyRBX",
+                  "duration": "21:24",
+                  "xpReward": 43,
+                  "description": "✅❤️‍🔥Visit The SmartyRBX Store for Assets and MORE: https://www.smartyrbx.com/smartyrbx-store\n\nIn this video, I give you a full guide on how to do lighting in Roblox Studio, so you can make your buil..."
+                },
+                {
+                  "id": "video-1-2-1-6",
+                  "title": "The EASIEST Guide to Making a Low Poly Asset Pack.. (Roblox + Blender)",
+                  "youtubeId": "b_31P1MEOlc",
+                  "creator": "SmartyRBX",
+                  "duration": "9:21",
+                  "xpReward": 19,
+                  "description": "Get Blender: https://www.blender.org\n\n✅❤️‍🔥Visit The SmartyRBX Store for Assets and MORE: https://www.smartyrbx.com/smartyrbx-store\n\n✅🌟Get another pack I've made, Smarty's Essentials Pack FREE: http..."
+                }
+              ],
+              "practiceTask": "Create a basic character model following the tutorials",
+              "estimatedTime": "5h"
             },
             {
               "id": "day-9",
-              "title": "D9: Export to Roblox",
+              "title": "D9: Character & Animation Part 2",
               "videos": [
                 {
-                  "id": "video-1-2-4-1",
-                  "title": "Helping you understand ViewportFrames :) #shorts #robloxscripting",
-                  "youtubeId": "WipAmv9TzpY",
-                  "creator": "ByteBlox",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "ScreenGui vs BillboardGui",
-                    "creator": "ByteBlox"
-                  }
+                  "id": "video-1-2-1-7",
+                  "title": "The EASIEST Guide to Making Amazing Terrain (Roblox Studio)",
+                  "youtubeId": "CippiATeZ54",
+                  "creator": "SmartyRBX",
+                  "duration": "7:17",
+                  "xpReward": 15,
+                  "description": "✅❤️‍🔥Visit The SmartyRBX Store for Assets and MORE: https://www.smartyrbx.com/smartyrbx-store\n\nJoin me as I dive into the exciting world of terrain in Roblox Studio, a crucial element for creating im..."
                 },
                 {
-                  "id": "video-1-2-4-2",
-                  "title": "Godot Control Node (UI) Masterclass",
-                  "youtubeId": "5Hog6a0EYa0",
-                  "creator": "Karto",
-                  "duration": "20:00",
+                  "id": "video-1-2-1-8",
+                  "title": "The Secrets to MOTIVATION As A Roblox DEV...",
+                  "youtubeId": "D2LrlxWk8kc",
+                  "creator": "SmartyRBX",
+                  "duration": "14:48",
                   "xpReward": 30,
-                  "originalSearch": {
-                    "title": "UI Scaling and Positioning",
-                    "creator": "DasKairo"
-                  }
+                  "description": "✅❤️‍🔥Visit The SmartyRBX Store for Assets and MORE: https://www.smartyrbx.com/smartyrbx-store\n\nThe secrets to staying motivated as Roblox game developer, with specific advice whether you're making yo..."
                 },
                 {
-                  "id": "video-1-2-4-3",
-                  "title": "How to become a UI UX Designer?",
-                  "youtubeId": "TdDhFGQXxkY",
-                  "creator": "Apna College",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "UI Design Basics 2024",
-                    "creator": "AlvinBlox"
-                  }
+                  "id": "video-1-2-1-9",
+                  "title": "How to OPTIMIZE Your Roblox Game... Easiest Guide!",
+                  "youtubeId": "mk6iVm95D0U",
+                  "creator": "SmartyRBX",
+                  "duration": "4:47",
+                  "xpReward": 10,
+                  "description": "✅❤️‍🔥Visit The SmartyRBX Store for Assets and MORE: https://www.smartyrbx.com/smartyrbx-store\n\nIn this video, I give you a full guide on optimizing your Roblox game in Roblox Studio, so you can make ..."
                 },
                 {
-                  "id": "video-1-2-4-4",
-                  "title": "When you publish your first Roblox game...",
-                  "youtubeId": "GULWuu63gwY",
-                  "creator": "Gamer M8",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Creating Your First GUI",
-                    "creator": "TheDevKing"
-                  }
+                  "id": "video-1-2-1-10",
+                  "title": "The ULTIMATE Blender Modeling Guide for Noobs! (Make Assets For Games!)",
+                  "youtubeId": "W337AL7n3dc",
+                  "creator": "SmartyRBX",
+                  "duration": "34:20",
+                  "xpReward": 69,
+                  "description": "Once you master Blender... you can create anything with more efficiency and potential than ever before. \n\nYou can make game assets, create stunning UGC, and earn from a highly coveted skill in the Rob..."
+                },
+                {
+                  "id": "video-1-2-2-1",
+                  "title": "The Complete Guide to Roblox Development Success (Free Course)",
+                  "youtubeId": "fz-0n9ed9xU",
+                  "creator": "SmartyRBX",
+                  "duration": "28:40",
+                  "xpReward": 57,
+                  "description": "🔥👉 Get the Dev Content Creator Success Blueprint (Free Video Guide + Bonus PDF): https://www.smartyrbx.com/dev-content-free-resource\n\n0:00 - The Golden Path to Roblox Development Success\n1:52 - Step..."
                 }
               ],
-              "practiceTask": "Export and import models",
-              "estimatedTime": "2h"
+              "practiceTask": "Add rigging and basic animation to your character",
+              "estimatedTime": "4h"
             },
             {
               "id": "day-10",
-              "title": "D10: Week 2 Project",
+              "title": "D10: Advanced Blender Techniques",
               "videos": [
                 {
-                  "id": "video-1-2-5-1",
-                  "title": "Did you know this secret of Lua functions? #short",
-                  "youtubeId": "qJNv0hVLLnY",
-                  "creator": "GnomeCode",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Building Your First Game Environment",
-                    "creator": "GnomeCode"
-                  }
+                  "id": "video-1-2-1-1",
+                  "title": "Beginner Blender 4.2 Tutorial: Modelling a Low-Poly Well - Part1",
+                  "youtubeId": "QPh8h0hWkg0",
+                  "creator": "Grant Abbitt (Gabbitt)",
+                  "duration": "15:30",
+                  "xpReward": 31,
+                  "description": "#blendertutorial #blender3d #gamedev \nLearn Blender 4.2 by making a low poly well. Simple and effective modelling techniques that are suitable for beginners. \n\nLearn Blender in a methodical way:\nMy Co..."
                 },
                 {
-                  "id": "video-1-2-5-2",
-                  "title": "When you publish your first Roblox game...",
-                  "youtubeId": "GULWuu63gwY",
-                  "creator": "Gamer M8",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Publishing Your First Place",
-                    "creator": "AlvinBlox"
-                  }
+                  "id": "video-1-2-1-2",
+                  "title": "Beginner Blender 4.2 Tutorial: Modelling a Low-Poly Well - Part2",
+                  "youtubeId": "gyr59jaWT0U",
+                  "creator": "Grant Abbitt (Gabbitt)",
+                  "duration": "17:05",
+                  "xpReward": 34,
+                  "description": "#blendertutorial #blender3d #gamedev \nLearn Blender 4.2 by making a low poly well. Simple and effective modelling techniques that are suitable for beginners. \n\nLearn Blender with my 4 course Blender B..."
                 },
                 {
-                  "id": "video-1-2-5-3",
-                  "title": "We did floating TV setup in low budget | Foam bricks 🧱 | TV lighting",
-                  "youtubeId": "BtjMXLUfdP0",
-                  "creator": "WD TRAILS",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Showcase Lighting Setup",
-                    "creator": "B Ricey"
-                  }
+                  "id": "video-1-2-1-3",
+                  "title": "Beginner Blender 4.2 Tutorial: Modelling a Low-Poly Well - Part3",
+                  "youtubeId": "yBwV3CLG2uM",
+                  "creator": "Grant Abbitt (Gabbitt)",
+                  "duration": "13:25",
+                  "xpReward": 27,
+                  "description": "#blendertutorial #blender3d #gamedev \nLearn Blender 4.2 by making a low poly well. Simple and effective modelling techniques that are suitable for beginners. \n\nLearn Blender with my 4 course Blender B..."
+                },
+                {
+                  "id": "video-1-2-1-4",
+                  "title": "Beginner Blender 4.2 Tutorial: Modelling a Low-Poly Well - Part4",
+                  "youtubeId": "P_OKJ-CreLU",
+                  "creator": "Grant Abbitt (Gabbitt)",
+                  "duration": "13:05",
+                  "xpReward": 26,
+                  "description": "#blendertutorial #blender3d #gamedev \nLearn Blender 4.2 by making a low poly well. Simple and effective modelling techniques that are suitable for beginners. \n\nLearn Blender with my 4 course Blender B..."
+                },
+                {
+                  "id": "video-1-2-1-5",
+                  "title": "Beginner Blender 4.2 Tutorial: Modelling a Low-Poly Well - Part5",
+                  "youtubeId": "CTNPJoB6MC8",
+                  "creator": "Grant Abbitt (Gabbitt)",
+                  "duration": "15:37",
+                  "xpReward": 31,
+                  "description": "#blendertutorial #blender3d #gamedev \nLearn Blender 4.2 by making a low poly well. Simple and effective modelling techniques that are suitable for beginners. \n\nLearn Blender with my 4 course Blender B..."
+                },
+                {
+                  "id": "video-1-2-1-6",
+                  "title": "Detailed Low Poly Characters: My Workflow & Essential Tips: Blender",
+                  "youtubeId": "7QiewPqkG80",
+                  "creator": "Grant Abbitt (Gabbitt)",
+                  "duration": "8:40",
+                  "xpReward": 17,
+                  "description": "#blender3d #gamedev #3dartist \nLearn my complete workflow for creating detailed low-poly characters from a base mesh to final render. This 3D modeling tutorial covers selective detailing, clothing, sc..."
                 }
               ],
-              "practiceTask": "Complete 3D modeling project",
+              "practiceTask": "Create a complete scene using all techniques learned this week",
               "estimatedTime": "4h"
             }
           ]
@@ -655,11 +709,12 @@
                 {
                   "id": "video-1-3-2-4",
                   "title": "3D Cursor Basics",
-                  "youtubeId": "placeholder_1_3_2_4",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Joey Carlino",
                   "duration": "25:00",
                   "xpReward": 50,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create custom terrain",
@@ -1039,20 +1094,22 @@
                 {
                   "id": "video-1-4-4-2",
                   "title": "Optimizing AI-Generated Meshes",
-                  "youtubeId": "placeholder_1_4_4_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "CGDive",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-1-4-4-3",
                   "title": "Retopology Basics for AI Models",
-                  "youtubeId": "placeholder_1_4_4_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "SouthernShotty",
                   "duration": "25:00",
                   "xpReward": 50,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Build AI-assisted pipeline",
@@ -1065,29 +1122,32 @@
                 {
                   "id": "video-1-4-5-1",
                   "title": "AI to Roblox Pipeline 2024",
-                  "youtubeId": "placeholder_1_4_5_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-1-4-5-2",
                   "title": "Importing Custom Models",
-                  "youtubeId": "placeholder_1_4_5_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-1-4-5-3",
                   "title": "Scale and Optimization Tips",
-                  "youtubeId": "placeholder_1_4_5_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "15:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Complete module 1 final project",
@@ -1116,38 +1176,42 @@
                 {
                   "id": "video-2-1-1-1",
                   "title": "UV Unwrapping Blender 4.0+ Part 1",
-                  "youtubeId": "placeholder_2_1_1_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-1-1-2",
                   "title": "Understanding UV Coordinates",
-                  "youtubeId": "placeholder_2_1_1_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-1-1-3",
                   "title": "Why UVs Matter for Games",
-                  "youtubeId": "placeholder_2_1_1_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-1-1-4",
                   "title": "UV Editor Interface",
-                  "youtubeId": "placeholder_2_1_1_4",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Practice variable declarations",
@@ -1160,29 +1224,32 @@
                 {
                   "id": "video-2-1-2-1",
                   "title": "UV Unwrapping Blender 4.0+ Part 2",
-                  "youtubeId": "placeholder_2_1_2_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-1-2-2",
                   "title": "Smart UV Project Guide",
-                  "youtubeId": "placeholder_2_1_2_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "35:00",
                   "xpReward": 70,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-1-2-3",
                   "title": "Seams Placement Strategy",
-                  "youtubeId": "placeholder_2_1_2_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Build logic flows",
@@ -1195,38 +1262,42 @@
                 {
                   "id": "video-2-1-3-1",
                   "title": "UV Unwrapping Blender 4.0+ Part 3",
-                  "youtubeId": "placeholder_2_1_3_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-1-3-2",
                   "title": "UDIM Workflow for Games 2024",
-                  "youtubeId": "placeholder_2_1_3_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-1-3-3",
                   "title": "Texture Density Guide",
-                  "youtubeId": "placeholder_2_1_3_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "35:00",
                   "xpReward": 70,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-1-3-4",
                   "title": "UV Packing Tips",
-                  "youtubeId": "placeholder_2_1_3_4",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "15:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Write custom functions",
@@ -1239,29 +1310,32 @@
                 {
                   "id": "video-2-1-4-1",
                   "title": "UV Unwrapping Common Objects",
-                  "youtubeId": "placeholder_2_1_4_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-1-4-2",
                   "title": "Troubleshooting UV Issues",
-                  "youtubeId": "placeholder_2_1_4_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-1-4-3",
                   "title": "Quick UV Tips",
-                  "youtubeId": "placeholder_2_1_4_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "15:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create data structures",
@@ -1274,38 +1348,42 @@
                 {
                   "id": "video-2-1-5-1",
                   "title": "Preparing UVs for Texturing",
-                  "youtubeId": "placeholder_2_1_5_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-1-5-2",
                   "title": "UV Layout Export",
-                  "youtubeId": "placeholder_2_1_5_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-1-5-3",
                   "title": "Texture Resolution Guide",
-                  "youtubeId": "placeholder_2_1_5_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "35:00",
                   "xpReward": 70,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-1-5-4",
                   "title": "Blender to Roblox UV Tips",
-                  "youtubeId": "placeholder_2_1_5_4",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "15:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Complete Lua fundamentals project",
@@ -1325,38 +1403,42 @@
                 {
                   "id": "video-2-2-1-1",
                   "title": "Blender 4.1 Shader Nodes for Games",
-                  "youtubeId": "placeholder_2_2_1_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-2-1-2",
                   "title": "Principled BSDF v2 Guide",
-                  "youtubeId": "placeholder_2_2_1_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "35:00",
                   "xpReward": 70,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-2-1-3",
                   "title": "Node Editor Basics",
-                  "youtubeId": "placeholder_2_2_1_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "25:00",
                   "xpReward": 50,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-2-1-4",
                   "title": "Material Properties",
-                  "youtubeId": "placeholder_2_2_1_4",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create different script types",
@@ -1369,29 +1451,32 @@
                 {
                   "id": "video-2-2-2-1",
                   "title": "Texture Painting in Blender",
-                  "youtubeId": "placeholder_2_2_2_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-2-2-2",
                   "title": "Procedural Texturing 2024",
-                  "youtubeId": "placeholder_2_2_2_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-2-2-3",
                   "title": "Image Textures Setup",
-                  "youtubeId": "placeholder_2_2_2_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Script part movements",
@@ -1404,38 +1489,42 @@
                 {
                   "id": "video-2-2-3-1",
                   "title": "PBR Texturing Workflows",
-                  "youtubeId": "placeholder_2_2_3_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-2-3-2",
                   "title": "Understanding PBR Maps",
-                  "youtubeId": "placeholder_2_2_3_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-2-3-3",
                   "title": "Roughness and Metallic",
-                  "youtubeId": "placeholder_2_2_3_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-2-3-4",
                   "title": "Normal Maps Explained",
-                  "youtubeId": "placeholder_2_2_3_4",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Handle user events",
@@ -1448,38 +1537,42 @@
                 {
                   "id": "video-2-2-4-1",
                   "title": "Magnific AI Pro Features 2024",
-                  "youtubeId": "placeholder_2_2_4_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-2-4-2",
                   "title": "Adobe Firefly 3D Textures",
-                  "youtubeId": "placeholder_2_2_4_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-2-4-3",
                   "title": "Stability AI Material Generator",
-                  "youtubeId": "placeholder_2_2_4_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-2-4-4",
                   "title": "AI Texture Upscaling",
-                  "youtubeId": "placeholder_2_2_4_4",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create interactive objects",
@@ -1492,38 +1585,42 @@
                 {
                   "id": "video-2-2-5-1",
                   "title": "Texture Atlasing for Games",
-                  "youtubeId": "placeholder_2_2_5_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-2-5-2",
                   "title": "Channel Packing Techniques",
-                  "youtubeId": "placeholder_2_2_5_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-2-5-3",
                   "title": "Texture Compression Guide",
-                  "youtubeId": "placeholder_2_2_5_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "35:00",
                   "xpReward": 70,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-2-5-4",
                   "title": "Roblox Texture Limits",
-                  "youtubeId": "placeholder_2_2_5_4",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Build interactive game feature",
@@ -1543,38 +1640,42 @@
                 {
                   "id": "video-2-3-1-1",
                   "title": "Blender 4.0 Rigging Changes",
-                  "youtubeId": "placeholder_2_3_1_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-3-1-2",
                   "title": "Bone Creation Basics",
-                  "youtubeId": "placeholder_2_3_1_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "25:00",
                   "xpReward": 50,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-3-1-3",
                   "title": "Armature Properties",
-                  "youtubeId": "placeholder_2_3_1_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-3-1-4",
                   "title": "Bone Naming Conventions",
-                  "youtubeId": "placeholder_2_3_1_4",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Implement save system",
@@ -1587,29 +1688,32 @@
                 {
                   "id": "video-2-3-2-1",
                   "title": "Character Rigging Part 1",
-                  "youtubeId": "placeholder_2_3_2_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-3-2-2",
                   "title": "Bone Parenting Guide",
-                  "youtubeId": "placeholder_2_3_2_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "35:00",
                   "xpReward": 70,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-3-2-3",
                   "title": "IK vs FK Explained",
-                  "youtubeId": "placeholder_2_3_2_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Build game UI",
@@ -1622,38 +1726,42 @@
                 {
                   "id": "video-2-3-3-1",
                   "title": "Weight Painting Fundamentals",
-                  "youtubeId": "placeholder_2_3_3_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-3-3-2",
                   "title": "Automatic Weights Guide",
-                  "youtubeId": "placeholder_2_3_3_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "35:00",
                   "xpReward": 70,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-3-3-3",
                   "title": "Weight Paint Tools",
-                  "youtubeId": "placeholder_2_3_3_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-3-3-4",
                   "title": "Common Weight Issues",
-                  "youtubeId": "placeholder_2_3_3_4",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Setup remote communication",
@@ -1666,29 +1774,32 @@
                 {
                   "id": "video-2-3-4-1",
                   "title": "Bone Constraints Guide",
-                  "youtubeId": "placeholder_2_3_4_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "35:00",
                   "xpReward": 70,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-3-4-2",
                   "title": "Copy Location and Rotation",
-                  "youtubeId": "placeholder_2_3_4_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-3-4-3",
                   "title": "Limit Constraints",
-                  "youtubeId": "placeholder_2_3_4_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create game mechanics",
@@ -1701,38 +1812,42 @@
                 {
                   "id": "video-2-3-5-1",
                   "title": "Rigging a Simple Character",
-                  "youtubeId": "placeholder_2_3_5_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-3-5-2",
                   "title": "Prop Rigging Tutorial",
-                  "youtubeId": "placeholder_2_3_5_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "25:00",
                   "xpReward": 50,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-3-5-3",
                   "title": "Testing Your Rig",
-                  "youtubeId": "placeholder_2_3_5_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-3-5-4",
                   "title": "Export Settings for Rigs",
-                  "youtubeId": "placeholder_2_3_5_4",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Build complete game system",
@@ -1752,38 +1867,42 @@
                 {
                   "id": "video-2-4-1-1",
                   "title": "Animation Layers in Blender 4.1",
-                  "youtubeId": "placeholder_2_4_1_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-4-1-2",
                   "title": "Keyframe Animation Basics",
-                  "youtubeId": "placeholder_2_4_1_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "25:00",
                   "xpReward": 50,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-4-1-3",
                   "title": "Timeline and Dope Sheet",
-                  "youtubeId": "placeholder_2_4_1_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-4-1-4",
                   "title": "Animation Principles",
-                  "youtubeId": "placeholder_2_4_1_4",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create object classes",
@@ -1796,29 +1915,32 @@
                 {
                   "id": "video-2-4-2-1",
                   "title": "Mixamo to Roblox 2024 Pipeline",
-                  "youtubeId": "placeholder_2_4_2_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-4-2-2",
                   "title": "Auto-Rigging with Mixamo",
-                  "youtubeId": "placeholder_2_4_2_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-4-2-3",
                   "title": "Mixamo Best Practices",
-                  "youtubeId": "placeholder_2_4_2_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Structure code with modules",
@@ -1831,38 +1953,42 @@
                 {
                   "id": "video-2-4-3-1",
                   "title": "RoMixamo Plugin Tutorial",
-                  "youtubeId": "placeholder_2_4_3_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "25:00",
                   "xpReward": 50,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-4-3-2",
                   "title": "3000+ Animations Guide",
-                  "youtubeId": "placeholder_2_4_3_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "35:00",
                   "xpReward": 70,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-4-3-3",
                   "title": "Animation Retargeting",
-                  "youtubeId": "placeholder_2_4_3_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-4-3-4",
                   "title": "Custom Animation Edits",
-                  "youtubeId": "placeholder_2_4_3_4",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Implement error handling",
@@ -1875,38 +2001,42 @@
                 {
                   "id": "video-2-4-4-1",
                   "title": "Cascadeur 2024 Physics Animation",
-                  "youtubeId": "placeholder_2_4_4_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-4-4-2",
                   "title": "DeepMotion Animate 3D",
-                  "youtubeId": "placeholder_2_4_4_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-4-4-3",
                   "title": "Rokoko Vision 2024",
-                  "youtubeId": "placeholder_2_4_4_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-4-4-4",
                   "title": "AI Motion Capture Tips",
-                  "youtubeId": "placeholder_2_4_4_4",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "15:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Optimize game performance",
@@ -1919,38 +2049,42 @@
                 {
                   "id": "video-2-4-5-1",
                   "title": "Roblox Animation Editor 2024",
-                  "youtubeId": "placeholder_2_4_5_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-4-5-2",
                   "title": "Batch Animation Import",
-                  "youtubeId": "placeholder_2_4_5_2",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-4-5-3",
                   "title": "Animation Events Setup",
-                  "youtubeId": "placeholder_2_4_5_3",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "20:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 },
                 {
                   "id": "video-2-4-5-4",
                   "title": "Performance Tips",
-                  "youtubeId": "placeholder_2_4_5_4",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "creator": "Coming Soon",
                   "duration": "15:00",
                   "xpReward": 30,
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Complete advanced scripting project",
@@ -1977,13 +2111,14 @@
               "title": "D41: Game Design Theory",
               "videos": [
                 {
-                  "id": "video-3-1-1",
+                  "id": "video-3-1-1-1",
                   "title": "Principles of Good Game Design",
-                  "youtubeId": "placeholder_3_1_1_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "28:00",
                   "xpReward": 55,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Analyze popular games",
@@ -1994,13 +2129,14 @@
               "title": "D42: Player Psychology",
               "videos": [
                 {
-                  "id": "video-3-1-2",
+                  "id": "video-3-1-2-1",
                   "title": "Understanding Player Motivation",
-                  "youtubeId": "placeholder_3_1_2_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "30:00",
                   "xpReward": 60,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Design for player engagement",
@@ -2011,13 +2147,14 @@
               "title": "D43: Core Game Loops",
               "videos": [
                 {
-                  "id": "video-3-1-3",
+                  "id": "video-3-1-3-1",
                   "title": "Creating Addictive Game Loops",
-                  "youtubeId": "placeholder_3_1_3_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "26:00",
                   "xpReward": 52,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Design core game loop",
@@ -2028,13 +2165,14 @@
               "title": "D44: Progression Systems",
               "videos": [
                 {
-                  "id": "video-3-1-4",
+                  "id": "video-3-1-4-1",
                   "title": "Player Progression and Rewards",
-                  "youtubeId": "placeholder_3_1_4_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "32:00",
                   "xpReward": 65,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create progression system",
@@ -2045,13 +2183,14 @@
               "title": "D45: Week 9 Project",
               "videos": [
                 {
-                  "id": "video-3-1-5",
+                  "id": "video-3-1-5-1",
                   "title": "Game Design Document",
-                  "youtubeId": "placeholder_3_1_5_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "40:00",
                   "xpReward": 80,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create game design document",
@@ -2069,13 +2208,14 @@
               "title": "D46: Basic Combat System",
               "videos": [
                 {
-                  "id": "video-3-2-1",
+                  "id": "video-3-2-1-1",
                   "title": "Creating Combat Mechanics",
-                  "youtubeId": "placeholder_3_2_1_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "35:00",
                   "xpReward": 70,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Build basic combat",
@@ -2086,13 +2226,14 @@
               "title": "D47: Weapon Systems",
               "videos": [
                 {
-                  "id": "video-3-2-2",
+                  "id": "video-3-2-2-1",
                   "title": "Designing Weapon Mechanics",
-                  "youtubeId": "placeholder_3_2_2_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "30:00",
                   "xpReward": 60,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create weapon system",
@@ -2103,13 +2244,14 @@
               "title": "D48: Health and Damage",
               "videos": [
                 {
-                  "id": "video-3-2-3",
+                  "id": "video-3-2-3-1",
                   "title": "Health Systems and Damage",
-                  "youtubeId": "placeholder_3_2_3_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "28:00",
                   "xpReward": 55,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Implement health system",
@@ -2120,13 +2262,14 @@
               "title": "D49: Special Effects",
               "videos": [
                 {
-                  "id": "video-3-2-4",
+                  "id": "video-3-2-4-1",
                   "title": "Combat Visual Effects",
-                  "youtubeId": "placeholder_3_2_4_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "32:00",
                   "xpReward": 65,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Add combat effects",
@@ -2137,13 +2280,14 @@
               "title": "D50: Week 10 Project",
               "videos": [
                 {
-                  "id": "video-3-2-5",
+                  "id": "video-3-2-5-1",
                   "title": "Complete Combat System",
-                  "youtubeId": "placeholder_3_2_5_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "42:00",
                   "xpReward": 85,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Build full combat system",
@@ -2161,13 +2305,14 @@
               "title": "D51: Virtual Currency",
               "videos": [
                 {
-                  "id": "video-3-3-1",
+                  "id": "video-3-3-1-1",
                   "title": "Designing Game Economy",
-                  "youtubeId": "placeholder_3_3_1_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "30:00",
                   "xpReward": 60,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create currency system",
@@ -2178,13 +2323,14 @@
               "title": "D52: Shop Systems",
               "videos": [
                 {
-                  "id": "video-3-3-2",
+                  "id": "video-3-3-2-1",
                   "title": "Building In-Game Shops",
-                  "youtubeId": "placeholder_3_3_2_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "32:00",
                   "xpReward": 65,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Build shop interface",
@@ -2195,13 +2341,14 @@
               "title": "D53: Trading Mechanics",
               "videos": [
                 {
-                  "id": "video-3-3-3",
+                  "id": "video-3-3-3-1",
                   "title": "Player-to-Player Trading",
-                  "youtubeId": "placeholder_3_3_3_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "35:00",
                   "xpReward": 70,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Implement trading system",
@@ -2212,13 +2359,14 @@
               "title": "D54: Economy Balance",
               "videos": [
                 {
-                  "id": "video-3-3-4",
+                  "id": "video-3-3-4-1",
                   "title": "Balancing Game Economy",
-                  "youtubeId": "placeholder_3_3_4_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "28:00",
                   "xpReward": 55,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Balance economy systems",
@@ -2229,13 +2377,14 @@
               "title": "D55: Week 11 Project",
               "videos": [
                 {
-                  "id": "video-3-3-5",
+                  "id": "video-3-3-5-1",
                   "title": "Complete Economy System",
-                  "youtubeId": "placeholder_3_3_5_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "45:00",
                   "xpReward": 90,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Build complete economy",
@@ -2253,13 +2402,14 @@
               "title": "D56: Multiplayer Basics",
               "videos": [
                 {
-                  "id": "video-3-4-1",
+                  "id": "video-3-4-1-1",
                   "title": "Understanding Multiplayer Systems",
-                  "youtubeId": "placeholder_3_4_1_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "30:00",
                   "xpReward": 60,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Plan multiplayer features",
@@ -2270,13 +2420,14 @@
               "title": "D57: Team Systems",
               "videos": [
                 {
-                  "id": "video-3-4-2",
+                  "id": "video-3-4-2-1",
                   "title": "Creating Team Mechanics",
-                  "youtubeId": "placeholder_3_4_2_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "28:00",
                   "xpReward": 55,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Build team system",
@@ -2287,13 +2438,14 @@
               "title": "D58: Chat and Communication",
               "videos": [
                 {
-                  "id": "video-3-4-3",
+                  "id": "video-3-4-3-1",
                   "title": "Player Communication Systems",
-                  "youtubeId": "placeholder_3_4_3_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "26:00",
                   "xpReward": 52,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Implement chat features",
@@ -2304,13 +2456,14 @@
               "title": "D59: Leaderboards and Competitions",
               "videos": [
                 {
-                  "id": "video-3-4-4",
+                  "id": "video-3-4-4-1",
                   "title": "Competitive Game Features",
-                  "youtubeId": "placeholder_3_4_4_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "32:00",
                   "xpReward": 65,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create leaderboard system",
@@ -2321,13 +2474,14 @@
               "title": "D60: Module 3 Final Project",
               "videos": [
                 {
-                  "id": "video-3-4-5",
+                  "id": "video-3-4-5-1",
                   "title": "Game Design Capstone",
-                  "youtubeId": "placeholder_3_4_5_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "50:00",
                   "xpReward": 100,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Complete game design project",
@@ -2354,13 +2508,14 @@
               "title": "D61: Design Principles",
               "videos": [
                 {
-                  "id": "video-4-1-1",
+                  "id": "video-4-1-1-1",
                   "title": "UI Design Fundamentals",
-                  "youtubeId": "placeholder_4_1_1_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "25:00",
                   "xpReward": 50,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Apply design principles",
@@ -2371,13 +2526,14 @@
               "title": "D62: Color Theory",
               "videos": [
                 {
-                  "id": "video-4-1-2",
+                  "id": "video-4-1-2-1",
                   "title": "Using Color in Game UI",
-                  "youtubeId": "placeholder_4_1_2_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "28:00",
                   "xpReward": 55,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create color schemes",
@@ -2388,13 +2544,14 @@
               "title": "D63: Typography",
               "videos": [
                 {
-                  "id": "video-4-1-3",
+                  "id": "video-4-1-3-1",
                   "title": "Typography in Game Design",
-                  "youtubeId": "placeholder_4_1_3_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "22:00",
                   "xpReward": 45,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Design text systems",
@@ -2405,13 +2562,14 @@
               "title": "D64: Layout and Composition",
               "videos": [
                 {
-                  "id": "video-4-1-4",
+                  "id": "video-4-1-4-1",
                   "title": "UI Layout Techniques",
-                  "youtubeId": "placeholder_4_1_4_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "30:00",
                   "xpReward": 60,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create interface layouts",
@@ -2422,13 +2580,14 @@
               "title": "D65: Week 13 Project",
               "videos": [
                 {
-                  "id": "video-4-1-5",
+                  "id": "video-4-1-5-1",
                   "title": "UI Design Challenge",
-                  "youtubeId": "placeholder_4_1_5_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "35:00",
                   "xpReward": 70,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Complete UI design project",
@@ -2446,13 +2605,14 @@
               "title": "D66: Buttons and Controls",
               "videos": [
                 {
-                  "id": "video-4-2-1",
+                  "id": "video-4-2-1-1",
                   "title": "Creating Interactive Buttons",
-                  "youtubeId": "placeholder_4_2_1_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "26:00",
                   "xpReward": 52,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Build button systems",
@@ -2463,13 +2623,14 @@
               "title": "D67: Menus and Navigation",
               "videos": [
                 {
-                  "id": "video-4-2-2",
+                  "id": "video-4-2-2-1",
                   "title": "Menu System Design",
-                  "youtubeId": "placeholder_4_2_2_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "30:00",
                   "xpReward": 60,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create navigation system",
@@ -2480,13 +2641,14 @@
               "title": "D68: Forms and Input",
               "videos": [
                 {
-                  "id": "video-4-2-3",
+                  "id": "video-4-2-3-1",
                   "title": "User Input Interfaces",
-                  "youtubeId": "placeholder_4_2_3_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "28:00",
                   "xpReward": 55,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Build input forms",
@@ -2497,13 +2659,14 @@
               "title": "D69: Feedback Systems",
               "videos": [
                 {
-                  "id": "video-4-2-4",
+                  "id": "video-4-2-4-1",
                   "title": "Visual Feedback and Animations",
-                  "youtubeId": "placeholder_4_2_4_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "32:00",
                   "xpReward": 65,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Add UI animations",
@@ -2514,13 +2677,14 @@
               "title": "D70: Week 14 Project",
               "videos": [
                 {
-                  "id": "video-4-2-5",
+                  "id": "video-4-2-5-1",
                   "title": "Interactive UI System",
-                  "youtubeId": "placeholder_4_2_5_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "38:00",
                   "xpReward": 75,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Build interactive interface",
@@ -2538,13 +2702,14 @@
               "title": "D71: Mobile UI Principles",
               "videos": [
                 {
-                  "id": "video-4-3-1",
+                  "id": "video-4-3-1-1",
                   "title": "Mobile-First UI Design",
-                  "youtubeId": "placeholder_4_3_1_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "24:00",
                   "xpReward": 48,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Design mobile interface",
@@ -2555,13 +2720,14 @@
               "title": "D72: Responsive Layouts",
               "videos": [
                 {
-                  "id": "video-4-3-2",
+                  "id": "video-4-3-2-1",
                   "title": "Adaptive UI Systems",
-                  "youtubeId": "placeholder_4_3_2_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "30:00",
                   "xpReward": 60,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create responsive design",
@@ -2572,13 +2738,14 @@
               "title": "D73: Touch Interactions",
               "videos": [
                 {
-                  "id": "video-4-3-3",
+                  "id": "video-4-3-3-1",
                   "title": "Touch and Gesture Controls",
-                  "youtubeId": "placeholder_4_3_3_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "26:00",
                   "xpReward": 52,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Implement touch controls",
@@ -2589,13 +2756,14 @@
               "title": "D74: Cross-Platform Testing",
               "videos": [
                 {
-                  "id": "video-4-3-4",
+                  "id": "video-4-3-4-1",
                   "title": "Testing on Multiple Devices",
-                  "youtubeId": "placeholder_4_3_4_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "28:00",
                   "xpReward": 55,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Test across platforms",
@@ -2606,13 +2774,14 @@
               "title": "D75: Week 15 Project",
               "videos": [
                 {
-                  "id": "video-4-3-5",
+                  "id": "video-4-3-5-1",
                   "title": "Mobile UI Challenge",
-                  "youtubeId": "placeholder_4_3_5_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "40:00",
                   "xpReward": 80,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Complete mobile UI project",
@@ -2630,13 +2799,14 @@
               "title": "D76: UI Animation Systems",
               "videos": [
                 {
-                  "id": "video-4-4-1",
+                  "id": "video-4-4-1-1",
                   "title": "Advanced UI Animations",
-                  "youtubeId": "placeholder_4_4_1_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "32:00",
                   "xpReward": 65,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create animation system",
@@ -2647,13 +2817,14 @@
               "title": "D77: Particle UI Effects",
               "videos": [
                 {
-                  "id": "video-4-4-2",
+                  "id": "video-4-4-2-1",
                   "title": "Particle Effects in UI",
-                  "youtubeId": "placeholder_4_4_2_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "28:00",
                   "xpReward": 55,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Add particle effects",
@@ -2664,13 +2835,14 @@
               "title": "D78: 3D UI Elements",
               "videos": [
                 {
-                  "id": "video-4-4-3",
+                  "id": "video-4-4-3-1",
                   "title": "3D Interface Components",
-                  "youtubeId": "placeholder_4_4_3_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "35:00",
                   "xpReward": 70,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create 3D UI elements",
@@ -2681,13 +2853,14 @@
               "title": "D79: Accessibility Design",
               "videos": [
                 {
-                  "id": "video-4-4-4",
+                  "id": "video-4-4-4-1",
                   "title": "Accessible Game Interfaces",
-                  "youtubeId": "placeholder_4_4_4_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "26:00",
                   "xpReward": 52,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Design accessible UI",
@@ -2698,13 +2871,14 @@
               "title": "D80: Module 4 Final Project",
               "videos": [
                 {
-                  "id": "video-4-4-5",
+                  "id": "video-4-4-5-1",
                   "title": "UI/UX Design Capstone",
-                  "youtubeId": "placeholder_4_4_5_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "48:00",
                   "xpReward": 95,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Complete UI/UX portfolio project",
@@ -2731,13 +2905,14 @@
               "title": "D81: Performance Profiling",
               "videos": [
                 {
-                  "id": "video-5-1-1",
+                  "id": "video-5-1-1-1",
                   "title": "Analyzing Game Performance",
-                  "youtubeId": "placeholder_5_1_1_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "30:00",
                   "xpReward": 60,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Profile game performance",
@@ -2748,13 +2923,14 @@
               "title": "D82: Script Optimization",
               "videos": [
                 {
-                  "id": "video-5-1-2",
+                  "id": "video-5-1-2-1",
                   "title": "Optimizing Lua Scripts",
-                  "youtubeId": "placeholder_5_1_2_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "32:00",
                   "xpReward": 65,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Optimize script performance",
@@ -2765,13 +2941,14 @@
               "title": "D83: Memory Management",
               "videos": [
                 {
-                  "id": "video-5-1-3",
+                  "id": "video-5-1-3-1",
                   "title": "Managing Game Memory",
-                  "youtubeId": "placeholder_5_1_3_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "28:00",
                   "xpReward": 55,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Implement memory optimization",
@@ -2782,13 +2959,14 @@
               "title": "D84: Asset Optimization",
               "videos": [
                 {
-                  "id": "video-5-1-4",
+                  "id": "video-5-1-4-1",
                   "title": "Optimizing Game Assets",
-                  "youtubeId": "placeholder_5_1_4_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "35:00",
                   "xpReward": 70,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Optimize game assets",
@@ -2799,13 +2977,14 @@
               "title": "D85: Week 17 Project",
               "videos": [
                 {
-                  "id": "video-5-1-5",
+                  "id": "video-5-1-5-1",
                   "title": "Performance Optimization Challenge",
-                  "youtubeId": "placeholder_5_1_5_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "42:00",
                   "xpReward": 85,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Complete optimization project",
@@ -2823,13 +3002,14 @@
               "title": "D86: Advanced DataStores",
               "videos": [
                 {
-                  "id": "video-5-2-1",
+                  "id": "video-5-2-1-1",
                   "title": "Complex Data Management",
-                  "youtubeId": "placeholder_5_2_1_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "35:00",
                   "xpReward": 70,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Build advanced data system",
@@ -2840,13 +3020,14 @@
               "title": "D87: HTTP Services",
               "videos": [
                 {
-                  "id": "video-5-2-2",
+                  "id": "video-5-2-2-1",
                   "title": "External API Integration",
-                  "youtubeId": "placeholder_5_2_2_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "30:00",
                   "xpReward": 60,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Integrate external APIs",
@@ -2857,13 +3038,14 @@
               "title": "D88: Messaging Services",
               "videos": [
                 {
-                  "id": "video-5-2-3",
+                  "id": "video-5-2-3-1",
                   "title": "Cross-Server Communication",
-                  "youtubeId": "placeholder_5_2_3_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "28:00",
                   "xpReward": 55,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Build messaging system",
@@ -2874,13 +3056,14 @@
               "title": "D89: Real-time Systems",
               "videos": [
                 {
-                  "id": "video-5-2-4",
+                  "id": "video-5-2-4-1",
                   "title": "Real-time Game Features",
-                  "youtubeId": "placeholder_5_2_4_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "32:00",
                   "xpReward": 65,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create real-time features",
@@ -2891,13 +3074,14 @@
               "title": "D90: Week 18 Project",
               "videos": [
                 {
-                  "id": "video-5-2-5",
+                  "id": "video-5-2-5-1",
                   "title": "Networked Game System",
-                  "youtubeId": "placeholder_5_2_5_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "45:00",
                   "xpReward": 90,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Build networked game feature",
@@ -2915,13 +3099,14 @@
               "title": "D91: Basic AI Systems",
               "videos": [
                 {
-                  "id": "video-5-3-1",
+                  "id": "video-5-3-1-1",
                   "title": "AI Fundamentals in Games",
-                  "youtubeId": "placeholder_5_3_1_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "32:00",
                   "xpReward": 65,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create AI behaviors",
@@ -2932,13 +3117,14 @@
               "title": "D92: Pathfinding",
               "videos": [
                 {
-                  "id": "video-5-3-2",
+                  "id": "video-5-3-2-1",
                   "title": "AI Navigation Systems",
-                  "youtubeId": "placeholder_5_3_2_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "30:00",
                   "xpReward": 60,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Implement pathfinding",
@@ -2949,13 +3135,14 @@
               "title": "D93: Procedural Generation",
               "videos": [
                 {
-                  "id": "video-5-3-3",
+                  "id": "video-5-3-3-1",
                   "title": "Generating Dynamic Content",
-                  "youtubeId": "placeholder_5_3_3_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "35:00",
                   "xpReward": 70,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Build procedural systems",
@@ -2966,13 +3153,14 @@
               "title": "D94: Behavior Trees",
               "videos": [
                 {
-                  "id": "video-5-3-4",
+                  "id": "video-5-3-4-1",
                   "title": "Advanced AI Behavior Systems",
-                  "youtubeId": "placeholder_5_3_4_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "38:00",
                   "xpReward": 75,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create behavior trees",
@@ -2983,13 +3171,14 @@
               "title": "D95: Week 19 Project",
               "videos": [
                 {
-                  "id": "video-5-3-5",
+                  "id": "video-5-3-5-1",
                   "title": "AI and Procedural Generation Challenge",
-                  "youtubeId": "placeholder_5_3_5_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "48:00",
                   "xpReward": 95,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Complete AI project",
@@ -3007,13 +3196,14 @@
               "title": "D96: Security Fundamentals",
               "videos": [
                 {
-                  "id": "video-5-4-1",
+                  "id": "video-5-4-1-1",
                   "title": "Game Security Basics",
-                  "youtubeId": "placeholder_5_4_1_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "28:00",
                   "xpReward": 55,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Analyze security vulnerabilities",
@@ -3024,13 +3214,14 @@
               "title": "D97: Remote Event Security",
               "videos": [
                 {
-                  "id": "video-5-4-2",
+                  "id": "video-5-4-2-1",
                   "title": "Securing Client-Server Communication",
-                  "youtubeId": "placeholder_5_4_2_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "30:00",
                   "xpReward": 60,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Secure remote events",
@@ -3041,13 +3232,14 @@
               "title": "D98: Input Validation",
               "videos": [
                 {
-                  "id": "video-5-4-3",
+                  "id": "video-5-4-3-1",
                   "title": "Validating User Input",
-                  "youtubeId": "placeholder_5_4_3_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "26:00",
                   "xpReward": 52,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Implement input validation",
@@ -3058,13 +3250,14 @@
               "title": "D99: Anti-Cheat Systems",
               "videos": [
                 {
-                  "id": "video-5-4-4",
+                  "id": "video-5-4-4-1",
                   "title": "Building Anti-Cheat Protection",
-                  "youtubeId": "placeholder_5_4_4_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "32:00",
                   "xpReward": 65,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Build anti-cheat system",
@@ -3075,13 +3268,14 @@
               "title": "D100: Module 5 Final Project",
               "videos": [
                 {
-                  "id": "video-5-4-5",
+                  "id": "video-5-4-5-1",
                   "title": "Advanced Development Capstone",
-                  "youtubeId": "placeholder_5_4_5_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "55:00",
                   "xpReward": 110,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Complete advanced development project",
@@ -3108,13 +3302,14 @@
               "title": "D101: Publishing Preparation",
               "videos": [
                 {
-                  "id": "video-6-1-1",
+                  "id": "video-6-1-1-1",
                   "title": "Preparing Your Game for Launch",
-                  "youtubeId": "placeholder_6_1_1_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "25:00",
                   "xpReward": 50,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Prepare game for publishing",
@@ -3125,13 +3320,14 @@
               "title": "D102: Game Icons and Thumbnails",
               "videos": [
                 {
-                  "id": "video-6-1-2",
+                  "id": "video-6-1-2-1",
                   "title": "Creating Compelling Game Assets",
-                  "youtubeId": "placeholder_6_1_2_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "22:00",
                   "xpReward": 45,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create game marketing assets",
@@ -3142,13 +3338,14 @@
               "title": "D103: Game Descriptions",
               "videos": [
                 {
-                  "id": "video-6-1-3",
+                  "id": "video-6-1-3-1",
                   "title": "Writing Effective Game Descriptions",
-                  "youtubeId": "placeholder_6_1_3_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "20:00",
                   "xpReward": 40,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Write game description",
@@ -3159,13 +3356,14 @@
               "title": "D104: Publishing Process",
               "videos": [
                 {
-                  "id": "video-6-1-4",
+                  "id": "video-6-1-4-1",
                   "title": "How to Publish on Roblox",
-                  "youtubeId": "placeholder_6_1_4_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "28:00",
                   "xpReward": 55,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Publish your first game",
@@ -3176,13 +3374,14 @@
               "title": "D105: Week 21 Project",
               "videos": [
                 {
-                  "id": "video-6-1-5",
+                  "id": "video-6-1-5-1",
                   "title": "Game Launch Strategy",
-                  "youtubeId": "placeholder_6_1_5_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "30:00",
                   "xpReward": 60,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Execute game launch",
@@ -3200,13 +3399,14 @@
               "title": "D106: Developer Products",
               "videos": [
                 {
-                  "id": "video-6-2-1",
+                  "id": "video-6-2-1-1",
                   "title": "Creating Developer Products",
-                  "youtubeId": "placeholder_6_2_1_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "26:00",
                   "xpReward": 52,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Implement developer products",
@@ -3217,13 +3417,14 @@
               "title": "D107: Game Passes",
               "videos": [
                 {
-                  "id": "video-6-2-2",
+                  "id": "video-6-2-2-1",
                   "title": "Game Pass Monetization",
-                  "youtubeId": "placeholder_6_2_2_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "28:00",
                   "xpReward": 55,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create game passes",
@@ -3234,13 +3435,14 @@
               "title": "D108: Premium Benefits",
               "videos": [
                 {
-                  "id": "video-6-2-3",
+                  "id": "video-6-2-3-1",
                   "title": "Roblox Premium Integration",
-                  "youtubeId": "placeholder_6_2_3_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "24:00",
                   "xpReward": 48,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Add premium benefits",
@@ -3251,13 +3453,14 @@
               "title": "D109: Monetization Ethics",
               "videos": [
                 {
-                  "id": "video-6-2-4",
+                  "id": "video-6-2-4-1",
                   "title": "Ethical Monetization Practices",
-                  "youtubeId": "placeholder_6_2_4_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "22:00",
                   "xpReward": 45,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Review monetization strategy",
@@ -3268,13 +3471,14 @@
               "title": "D110: Week 22 Project",
               "videos": [
                 {
-                  "id": "video-6-2-5",
+                  "id": "video-6-2-5-1",
                   "title": "Complete Monetization System",
-                  "youtubeId": "placeholder_6_2_5_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "35:00",
                   "xpReward": 70,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Implement full monetization",
@@ -3292,13 +3496,14 @@
               "title": "D111: Community Building",
               "videos": [
                 {
-                  "id": "video-6-3-1",
+                  "id": "video-6-3-1-1",
                   "title": "Building a Game Community",
-                  "youtubeId": "placeholder_6_3_1_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "26:00",
                   "xpReward": 52,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Plan community strategy",
@@ -3309,13 +3514,14 @@
               "title": "D112: Social Media Marketing",
               "videos": [
                 {
-                  "id": "video-6-3-2",
+                  "id": "video-6-3-2-1",
                   "title": "Marketing Your Game on Social Media",
-                  "youtubeId": "placeholder_6_3_2_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "24:00",
                   "xpReward": 48,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create marketing content",
@@ -3326,13 +3532,14 @@
               "title": "D113: Influencer Collaboration",
               "videos": [
                 {
-                  "id": "video-6-3-3",
+                  "id": "video-6-3-3-1",
                   "title": "Working with Content Creators",
-                  "youtubeId": "placeholder_6_3_3_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "22:00",
                   "xpReward": 45,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Reach out to influencers",
@@ -3343,13 +3550,14 @@
               "title": "D114: Events and Updates",
               "videos": [
                 {
-                  "id": "video-6-3-4",
+                  "id": "video-6-3-4-1",
                   "title": "Keeping Players Engaged",
-                  "youtubeId": "placeholder_6_3_4_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "28:00",
                   "xpReward": 55,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Plan game events",
@@ -3360,13 +3568,14 @@
               "title": "D115: Week 23 Project",
               "videos": [
                 {
-                  "id": "video-6-3-5",
+                  "id": "video-6-3-5-1",
                   "title": "Community Growth Strategy",
-                  "youtubeId": "placeholder_6_3_5_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "30:00",
                   "xpReward": 60,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Execute community plan",
@@ -3384,13 +3593,14 @@
               "title": "D116: Game Analytics",
               "videos": [
                 {
-                  "id": "video-6-4-1",
+                  "id": "video-6-4-1-1",
                   "title": "Understanding Player Data",
-                  "youtubeId": "placeholder_6_4_1_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "28:00",
                   "xpReward": 55,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Set up analytics tracking",
@@ -3401,13 +3611,14 @@
               "title": "D117: Performance Metrics",
               "videos": [
                 {
-                  "id": "video-6-4-2",
+                  "id": "video-6-4-2-1",
                   "title": "Key Performance Indicators",
-                  "youtubeId": "placeholder_6_4_2_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "26:00",
                   "xpReward": 52,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Analyze game metrics",
@@ -3418,13 +3629,14 @@
               "title": "D118: Long-term Growth",
               "videos": [
                 {
-                  "id": "video-6-4-3",
+                  "id": "video-6-4-3-1",
                   "title": "Scaling Your Game Business",
-                  "youtubeId": "placeholder_6_4_3_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "30:00",
                   "xpReward": 60,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Create growth plan",
@@ -3435,13 +3647,14 @@
               "title": "D119: Career Development",
               "videos": [
                 {
-                  "id": "video-6-4-4",
+                  "id": "video-6-4-4-1",
                   "title": "Building a Game Development Career",
-                  "youtubeId": "placeholder_6_4_4_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "32:00",
                   "xpReward": 65,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Plan your career path",
@@ -3452,13 +3665,14 @@
               "title": "D120: Final Capstone Project",
               "videos": [
                 {
-                  "id": "video-6-4-5",
+                  "id": "video-6-4-5-1",
                   "title": "6-Month Journey Complete",
-                  "youtubeId": "placeholder_6_4_5_1",
+                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
                   "duration": "60:00",
                   "xpReward": 120,
                   "creator": "Coming Soon",
-                  "placeholder": true
+                  "placeholder": true,
+                  "isPlaceholder": true
                 }
               ],
               "practiceTask": "Complete final portfolio project",
