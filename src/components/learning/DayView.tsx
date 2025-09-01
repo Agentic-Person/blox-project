@@ -179,7 +179,12 @@ export function DayView({
               >
                 {/* Check if this is an assignment */}
                 {(video as any).type === 'assignment' ? (
-                  <div className="flex items-start gap-4 p-4 rounded-lg bg-gradient-to-br from-blox-module-green/20 to-blox-second-dark-blue/30 hover:bg-blox-module-green/30 cursor-pointer transition-all group border border-blox-module-green/30">
+                  <div className={cn(
+                    "flex items-start gap-4 p-4 rounded-lg cursor-pointer transition-all group",
+                    `bg-gradient-to-br from-${moduleColorScheme.moduleAccents[moduleIndex]}/20 to-blox-second-dark-blue/30`,
+                    `hover:from-${moduleColorScheme.moduleAccents[moduleIndex]}/30 hover:to-blox-second-dark-blue/40`,
+                    `border border-${moduleColorScheme.moduleAccents[moduleIndex]}/30`
+                  )}>
                     {/* Assignment Thumbnails - Show both images side by side */}
                     <div className="flex gap-2 flex-shrink-0">
                       {(video as any).thumbnails?.map((thumbnail: string, index: number) => (
@@ -189,7 +194,10 @@ export function DayView({
                             alt={`${video.title} - Image ${index + 1}`}
                             className="w-full h-full object-cover"
                           />
-                          <div className="absolute top-1 right-1 bg-blox-module-green/90 text-blox-very-dark-blue text-[8px] px-1 py-0.5 rounded font-bold">
+                          <div className={cn(
+                            "absolute top-1 right-1 text-blox-very-dark-blue text-[8px] px-1 py-0.5 rounded font-bold",
+                            `bg-${moduleColorScheme.moduleAccents[moduleIndex]}/90`
+                          )}>
                             ASSIGNMENT
                           </div>
                         </div>
@@ -200,7 +208,7 @@ export function DayView({
                         <div className="flex-1">
                           <h3 className="text-lg font-semibold text-blox-white mb-1 line-clamp-2">{video.title}</h3>
                           {(video as any).subtitle && (
-                            <p className="text-sm text-blox-module-green font-medium">{(video as any).subtitle}</p>
+                            <p className={cn("text-sm font-medium", textColors[moduleIndex])}>{(video as any).subtitle}</p>
                           )}
                         </div>
                         {isCompleted && (
@@ -215,15 +223,19 @@ export function DayView({
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4 text-sm">
                           <div className="flex items-center gap-1">
-                            <Clock className="h-4 w-4 text-blox-module-green" />
-                            <span className="text-blox-module-green font-medium">{video.duration}</span>
+                            <Clock className={cn("h-4 w-4", textColors[moduleIndex])} />
+                            <span className={cn("font-medium", textColors[moduleIndex])}>{video.duration}</span>
                           </div>
                           <div className="flex items-center gap-1">
                             <Zap className="h-4 w-4 text-blox-warning" />
                             <span className="text-blox-warning font-medium">{video.xpReward} XP</span>
                           </div>
                         </div>
-                        <Button size="sm" className="bg-blox-module-green hover:bg-blox-module-green/80 text-blox-very-dark-blue font-semibold">
+                        <Button size="sm" className={cn(
+                          "text-blox-very-dark-blue font-semibold",
+                          moduleColorScheme.buttonBackgrounds[moduleIndex],
+                          moduleColorScheme.buttonHoverBackgrounds[moduleIndex]
+                        )}>
                           Start Assignment
                           <ChevronRight className="h-4 w-4 ml-1" />
                         </Button>
@@ -232,7 +244,13 @@ export function DayView({
                   </div>
                 ) : (
                   <div
-                    className="flex items-start gap-4 p-4 rounded-lg bg-blox-second-dark-blue/30 hover:bg-blox-second-dark-blue/50 cursor-pointer transition-all group border border-blox-glass-border hover:border-blox-teal/30"
+                    className={cn(
+                      "flex items-start gap-4 p-4 rounded-lg cursor-pointer transition-all group",
+                      `bg-${moduleColorScheme.moduleAccents[moduleIndex]}/15`,
+                      `hover:bg-${moduleColorScheme.moduleAccents[moduleIndex]}/25`,
+                      `border border-${moduleColorScheme.moduleAccents[moduleIndex]}/30`,
+                      `hover:border-${moduleColorScheme.moduleAccents[moduleIndex]}/50`
+                    )}
                     onClick={() => onVideoSelect(video.id)}
                   >
                   {/* Enhanced Video Thumbnail */}
