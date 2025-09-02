@@ -30,7 +30,7 @@ export const ROUTES = {
   PROGRESS: '/progress',
   DISCORD: '/discord',
   NOTES: '/notes',
-  AI_ASSISTANT: '/ai-assistant',
+  BLOX_WIZARD: '/blox-wizard',
   PROFILE: '/profile',
   SETTINGS: '/settings',
   HELP: '/help',

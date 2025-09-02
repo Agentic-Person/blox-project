@@ -47,7 +47,7 @@ export const MAIN_NAV: NavItem[] = [
   },
   {
     title: 'Blox Wizard',
-    href: '/ai-assistant',
+    href: '/blox-wizard',
     icon: Bot,
     description: 'AI learning companion',
     badge: 'AI',
