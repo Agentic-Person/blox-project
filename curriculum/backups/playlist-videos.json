@@ -1,0 +1,272 @@
+{
+  "playlistId": "PLn3ukorJv4vvMwZPLzlajVII2zJd-_BM-",
+  "playlistTitle": "YouTube Playlist",
+  "videoCount": 24,
+  "extractedAt": "2025-08-30T20:16:00.081Z",
+  "videos": [
+    {
+      "id": "mock_video_1",
+      "title": "Introduction to Blender Interface",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "16:49",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_2",
+      "title": "Basic Navigation and Controls",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "14:17",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_3",
+      "title": "Working with Objects",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "10:26",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_4",
+      "title": "Mesh Modeling Basics",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "19:31",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_5",
+      "title": "Vertex, Edge, and Face Editing",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "6:36",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_6",
+      "title": "Modifiers Introduction",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "6:25",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_7",
+      "title": "Materials and Texturing",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "15:24",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_8",
+      "title": "Lighting Fundamentals",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "13:05",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_9",
+      "title": "Basic Animation",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "14:57",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_10",
+      "title": "Rendering Basics",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "5:15",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_11",
+      "title": "Scene Setup",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "8:01",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_12",
+      "title": "Keyboard Shortcuts",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "22:57",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_13",
+      "title": "Selection Tools",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "21:33",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_14",
+      "title": "Transform Tools",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "6:53",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_15",
+      "title": "Add-ons and Preferences",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "24:13",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_16",
+      "title": "Sculpting Mode",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "6:47",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_17",
+      "title": "UV Unwrapping",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "10:48",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_18",
+      "title": "Node Editor",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "15:29",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_19",
+      "title": "Camera Setup",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "9:46",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_20",
+      "title": "Output Settings",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "13:47",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_21",
+      "title": "Project Organization",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "16:18",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_22",
+      "title": "Troubleshooting",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "12:34",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_23",
+      "title": "Best Practices",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "24:21",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    },
+    {
+      "id": "mock_video_24",
+      "title": "Final Project",
+      "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
+      "creator": "CG Cookie",
+      "duration": "16:51",
+      "xpReward": 25,
+      "thumbnail": "/images/placeholder-thumbnail.jpg",
+      "isPlaceholder": true,
+      "originalPlaylist": "YouTube Playlist"
+    }
+  ]
+}

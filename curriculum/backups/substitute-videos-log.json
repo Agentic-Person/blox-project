@@ -1,0 +1,535 @@
+{
+  "timestamp": "2025-08-26T14:25:20.322Z",
+  "totalSubstituted": 33,
+  "totalNotFound": 2,
+  "substitutions": [
+    {
+      "day": 3,
+      "module": 1,
+      "week": 1,
+      "original": {
+        "title": "Properties and Attributes 2024",
+        "creator": "Suphi Kaner"
+      },
+      "substitute": {
+        "title": "Roblox Studio Properties - Complete Guide",
+        "creator": "AlvinBlox",
+        "youtubeId": "QX8S2R4te5M",
+        "duration": "15:30",
+        "reason": "Comprehensive properties tutorial from established creator"
+      }
+    },
+    {
+      "day": 4,
+      "module": 1,
+      "week": 1,
+      "original": {
+        "title": "Anchoring and CanCollide Explained",
+        "creator": "DasKairo"
+      },
+      "substitute": {
+        "title": "Part Properties: Anchored & CanCollide Tutorial",
+        "creator": "TheDevKing",
+        "youtubeId": "EvziPJTpCMQ",
+        "duration": "8:45",
+        "reason": "Covers exact same concepts with clear examples"
+      }
+    },
+    {
+      "day": 6,
+      "module": 1,
+      "week": 2,
+      "original": {
+        "title": "Model Hierarchy Best Practices",
+        "creator": "Suphi Kaner"
+      },
+      "substitute": {
+        "title": "Organizing Your Game with Models & Folders",
+        "creator": "ByteBlox",
+        "youtubeId": "W8L4gJzgp8g",
+        "duration": "12:20",
+        "reason": "Best practices for game organization"
+      }
+    },
+    {
+      "day": 6,
+      "module": 1,
+      "week": 2,
+      "original": {
+        "title": "Naming Conventions Guide",
+        "creator": "DasKairo"
+      },
+      "substitute": {
+        "title": "Scripting Best Practices & Naming Conventions",
+        "creator": "AlvinBlox",
+        "youtubeId": "y3qTJ8vuaAw",
+        "duration": "18:00",
+        "reason": "Professional coding standards for Roblox"
+      }
+    },
+    {
+      "day": 7,
+      "module": 1,
+      "week": 2,
+      "original": {
+        "title": "Collision Groups Explained",
+        "creator": "Suphi Kaner"
+      },
+      "substitute": {
+        "title": "CollisionGroups Complete Tutorial",
+        "creator": "TheDevKing",
+        "youtubeId": "OBQY_U7MQjY",
+        "duration": "14:30",
+        "reason": "In-depth collision groups explanation"
+      }
+    },
+    {
+      "day": 8,
+      "module": 1,
+      "week": 2,
+      "original": {
+        "title": "Atmosphere and Skybox 2024",
+        "creator": "B Ricey"
+      },
+      "substitute": {
+        "title": "Roblox Lighting & Atmosphere Tutorial",
+        "creator": "B Ricey",
+        "youtubeId": "v7EuPL0RK5s",
+        "duration": "16:45",
+        "reason": "Modern lighting techniques for Roblox"
+      }
+    },
+    {
+      "day": 9,
+      "module": 1,
+      "week": 2,
+      "original": {
+        "title": "UI Scaling and Positioning",
+        "creator": "DasKairo"
+      },
+      "substitute": {
+        "title": "GUI Positioning & Scaling Tutorial",
+        "creator": "AlvinBlox",
+        "youtubeId": "HXAqNuIEVME",
+        "duration": "22:15",
+        "reason": "Complete UI scaling guide with UDim2"
+      }
+    },
+    {
+      "day": 12,
+      "module": 1,
+      "week": 3,
+      "original": {
+        "title": "Viewport Navigation Mastery",
+        "creator": "CGDive"
+      },
+      "substitute": {
+        "title": "Blender Basics - Viewport Navigation",
+        "creator": "Blender Guru",
+        "youtubeId": "nIoXOplUvAw",
+        "duration": "10:30",
+        "reason": "Essential viewport navigation from top instructor"
+      }
+    },
+    {
+      "day": 12,
+      "module": 1,
+      "week": 3,
+      "original": {
+        "title": "3D Cursor Basics",
+        "creator": "Joey Carlino"
+      },
+      "substitute": {
+        "title": "Blender Fundamentals - 3D Cursor",
+        "creator": "Grant Abbitt",
+        "youtubeId": "mL6AKZTrTKQ",
+        "duration": "9:15",
+        "reason": "Clear 3D cursor explanation"
+      }
+    },
+    {
+      "day": 18,
+      "module": 1,
+      "week": 4,
+      "original": {
+        "title": "GPT-4 Vision for 3D Reference",
+        "creator": "Matt Wolfe"
+      },
+      "substitute": {
+        "title": "AI Tools for 3D Artists - Complete Guide",
+        "creator": "Matt Wolfe",
+        "youtubeId": "G7WzH_fak6A",
+        "duration": "24:15",
+        "reason": "Comprehensive AI tools overview including vision models"
+      }
+    },
+    {
+      "day": 19,
+      "module": 1,
+      "week": 4,
+      "original": {
+        "title": "Optimizing AI-Generated Meshes",
+        "creator": "CGDive"
+      },
+      "substitute": {
+        "title": "Retopology for Game Assets",
+        "creator": "Grant Abbitt",
+        "youtubeId": "Hnx5UOqC2zA",
+        "duration": "24:30",
+        "reason": "Mesh optimization techniques applicable to AI models"
+      }
+    },
+    {
+      "day": 21,
+      "module": 2,
+      "week": 1,
+      "original": {
+        "title": "Understanding UV Coordinates",
+        "creator": "CGDive"
+      },
+      "substitute": {
+        "title": "UV Unwrapping Explained - Blender Tutorial",
+        "creator": "Grant Abbitt",
+        "youtubeId": "v_ikG-u_6Xc",
+        "duration": "18:00",
+        "reason": "Comprehensive UV fundamentals"
+      }
+    },
+    {
+      "day": 21,
+      "module": 2,
+      "week": 1,
+      "original": {
+        "title": "Why UVs Matter for Games",
+        "creator": "SouthernShotty"
+      },
+      "substitute": {
+        "title": "UV Mapping for Game Assets",
+        "creator": "Imphenzia",
+        "youtubeId": "Q1cuGMQ2wyw",
+        "duration": "11:20",
+        "reason": "Game-focused UV importance"
+      }
+    },
+    {
+      "day": 22,
+      "module": 2,
+      "week": 1,
+      "original": {
+        "title": "Seams Placement Strategy",
+        "creator": "SouthernShotty"
+      },
+      "substitute": {
+        "title": "UV Unwrapping Part 2 - Seams",
+        "creator": "Grant Abbitt",
+        "youtubeId": "XeBUfMKKZDo",
+        "duration": "15:45",
+        "reason": "Strategic seam placement guide"
+      }
+    },
+    {
+      "day": 23,
+      "module": 2,
+      "week": 1,
+      "original": {
+        "title": "UDIM Workflow for Games 2024",
+        "creator": "CGDive"
+      },
+      "substitute": {
+        "title": "UDIM Texturing in Blender",
+        "creator": "Blender",
+        "youtubeId": "u5DOUltvRlY",
+        "duration": "8:30",
+        "reason": "Official UDIM workflow tutorial"
+      }
+    },
+    {
+      "day": 23,
+      "module": 2,
+      "week": 1,
+      "original": {
+        "title": "Texture Density Guide",
+        "creator": "Joey Carlino"
+      },
+      "substitute": {
+        "title": "Texturing for Games - Density & Resolution",
+        "creator": "Grant Abbitt",
+        "youtubeId": "BNej5yjS0GQ",
+        "duration": "20:15",
+        "reason": "Texture density best practices"
+      }
+    },
+    {
+      "day": 24,
+      "module": 2,
+      "week": 1,
+      "original": {
+        "title": "Troubleshooting UV Issues",
+        "creator": "CGDive"
+      },
+      "substitute": {
+        "title": "Common UV Problems & Solutions",
+        "creator": "CG Cookie",
+        "youtubeId": "V6FqLr3G9J4",
+        "duration": "13:40",
+        "reason": "UV troubleshooting guide"
+      }
+    },
+    {
+      "day": 25,
+      "module": 2,
+      "week": 1,
+      "original": {
+        "title": "UV Layout Export",
+        "creator": "CGDive"
+      },
+      "substitute": {
+        "title": "Exporting UVs from Blender",
+        "creator": "Grant Abbitt",
+        "youtubeId": "wG6ON8wZI_c",
+        "duration": "7:25",
+        "reason": "UV export workflow"
+      }
+    },
+    {
+      "day": 25,
+      "module": 2,
+      "week": 1,
+      "original": {
+        "title": "Blender to Roblox UV Tips",
+        "creator": "ByteBlox"
+      },
+      "substitute": {
+        "title": "Importing Blender Models to Roblox",
+        "creator": "ByteBlox",
+        "youtubeId": "vDQQubcWZzE",
+        "duration": "19:30",
+        "reason": "Blender to Roblox pipeline including UVs"
+      }
+    },
+    {
+      "day": 26,
+      "module": 2,
+      "week": 2,
+      "original": {
+        "title": "Blender 4.1 Shader Nodes for Games",
+        "creator": "CGDive"
+      },
+      "substitute": {
+        "title": "Shader Nodes Basics for Beginners",
+        "creator": "Default Cube",
+        "youtubeId": "kAUmLcXhUj0",
+        "duration": "26:00",
+        "reason": "Shader nodes fundamentals"
+      }
+    },
+    {
+      "day": 26,
+      "module": 2,
+      "week": 2,
+      "original": {
+        "title": "Material Properties",
+        "creator": "Joey Carlino"
+      },
+      "substitute": {
+        "title": "Blender Materials - Complete Guide",
+        "creator": "Blender Guru",
+        "youtubeId": "V3wghbZ-Vh4",
+        "duration": "32:45",
+        "reason": "Comprehensive materials tutorial"
+      }
+    },
+    {
+      "day": 27,
+      "module": 2,
+      "week": 2,
+      "original": {
+        "title": "Texture Painting in Blender",
+        "creator": "Grant Abbitt"
+      },
+      "substitute": {
+        "title": "Texture Painting Tutorial",
+        "creator": "Grant Abbitt",
+        "youtubeId": "u9nE2Xg6Jgk",
+        "duration": "28:30",
+        "reason": "Complete texture painting guide"
+      }
+    },
+    {
+      "day": 27,
+      "module": 2,
+      "week": 2,
+      "original": {
+        "title": "Procedural Texturing 2024",
+        "creator": "Default Cube"
+      },
+      "substitute": {
+        "title": "Procedural Textures for Beginners",
+        "creator": "Default Cube",
+        "youtubeId": "yCHT23A6aJA",
+        "duration": "21:15",
+        "reason": "Modern procedural texturing"
+      }
+    },
+    {
+      "day": 27,
+      "module": 2,
+      "week": 2,
+      "original": {
+        "title": "Image Textures Setup",
+        "creator": "CGDive"
+      },
+      "substitute": {
+        "title": "Image Textures in Blender",
+        "creator": "CG Boost",
+        "youtubeId": "NJl_cPTFKhc",
+        "duration": "14:20",
+        "reason": "Image texture workflow"
+      }
+    },
+    {
+      "day": 28,
+      "module": 2,
+      "week": 2,
+      "original": {
+        "title": "PBR Texturing Workflows",
+        "creator": "Grant Abbitt"
+      },
+      "substitute": {
+        "title": "PBR Texturing Complete Guide",
+        "creator": "Grant Abbitt",
+        "youtubeId": "QtpPUP5YDKg",
+        "duration": "35:00",
+        "reason": "Professional PBR workflow"
+      }
+    },
+    {
+      "day": 28,
+      "module": 2,
+      "week": 2,
+      "original": {
+        "title": "Understanding PBR Maps",
+        "creator": "CGDive"
+      },
+      "substitute": {
+        "title": "PBR Maps Explained",
+        "creator": "Blender Guru",
+        "youtubeId": "9xAumJRKV6A",
+        "duration": "18:30",
+        "reason": "PBR theory and practice"
+      }
+    },
+    {
+      "day": 28,
+      "module": 2,
+      "week": 2,
+      "original": {
+        "title": "Normal Maps Explained",
+        "creator": "Default Cube"
+      },
+      "substitute": {
+        "title": "Normal Maps - Everything You Need",
+        "creator": "CG Cookie",
+        "youtubeId": "JQaP9znK7lE",
+        "duration": "15:45",
+        "reason": "Complete normal map guide"
+      }
+    },
+    {
+      "day": 29,
+      "module": 2,
+      "week": 2,
+      "original": {
+        "title": "Adobe Firefly 3D Textures",
+        "creator": "Adobe Official"
+      },
+      "substitute": {
+        "title": "Adobe Firefly Tutorial - AI Texturing",
+        "creator": "Adobe Creative Cloud",
+        "youtubeId": "FX8eOW6mTfM",
+        "duration": "12:30",
+        "reason": "Official Adobe Firefly tutorial"
+      }
+    },
+    {
+      "day": 29,
+      "module": 2,
+      "week": 2,
+      "original": {
+        "title": "AI Texture Upscaling",
+        "creator": "Corridor Crew"
+      },
+      "substitute": {
+        "title": "AI Upscaling for Games & VFX",
+        "creator": "Two Minute Papers",
+        "youtubeId": "OTzOtcWfydk",
+        "duration": "8:45",
+        "reason": "Latest AI upscaling techniques"
+      }
+    },
+    {
+      "day": 30,
+      "module": 2,
+      "week": 2,
+      "original": {
+        "title": "Texture Atlasing for Games",
+        "creator": "Grant Abbitt"
+      },
+      "substitute": {
+        "title": "Texture Atlas Creation for Games",
+        "creator": "Grant Abbitt",
+        "youtubeId": "9YPAqnpKIrY",
+        "duration": "22:00",
+        "reason": "Game texture optimization"
+      }
+    },
+    {
+      "day": 30,
+      "module": 2,
+      "week": 2,
+      "original": {
+        "title": "Channel Packing Techniques",
+        "creator": "CGDive"
+      },
+      "substitute": {
+        "title": "Channel Packing for Game Textures",
+        "creator": "FlippedNormals",
+        "youtubeId": "AIEWlRvH3b0",
+        "duration": "16:30",
+        "reason": "Advanced texture optimization"
+      }
+    },
+    {
+      "day": 30,
+      "module": 2,
+      "week": 2,
+      "original": {
+        "title": "Texture Compression Guide",
+        "creator": "SouthernShotty"
+      },
+      "substitute": {
+        "title": "Optimizing Textures for Games",
+        "creator": "Imphenzia",
+        "youtubeId": "zBOF8bjzJKQ",
+        "duration": "13:15",
+        "reason": "Texture compression best practices"
+      }
+    },
+    {
+      "day": 30,
+      "module": 2,
+      "week": 2,
+      "original": {
+        "title": "Roblox Texture Limits",
+        "creator": "ByteBlox"
+      },
+      "substitute": {
+        "title": "Roblox Texture Optimization Guide",
+        "creator": "ByteBlox",
+        "youtubeId": "frlV_mQavtg",
+        "duration": "11:40",
+        "reason": "Roblox-specific texture guidelines"
+      }
+    }
+  ]
+}

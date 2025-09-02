@@ -1,0 +1,207 @@
+const fs = require('fs');
+const path = require('path');
+
+// Read the reference document
+const referenceDoc = fs.readFileSync(path.join(__dirname, '..', 'docs', 'YouTube video titles-content-creator-URL-link-8-23-2025.md'), 'utf8');
+
+// Parse the reference document
+const lines = referenceDoc.split('\n');
+const videosByDay = {};
+
+let currentDay = null;
+for (const line of lines) {
+  // Skip empty lines and headers
+  if (!line.trim() || line.includes('---') || line.startsWith('| Day | Video Title')) continue;
+  
+  // Parse table rows
+  const match = line.match(/\|\s*(\d+)\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*\[Watch\]\(([^)]+)\)/);
+  if (match) {
+    const [, day, title, creator, url] = match;
+    const dayNum = parseInt(day);
+    const youtubeId = url.match(/watch\?v=([^&]+)/)?.[1];
+    
+    if (!videosByDay[dayNum]) {
+      videosByDay[dayNum] = [];
+    }
+    
+    videosByDay[dayNum].push({
+      title: title.trim(),
+      creator: creator.trim(),
+      youtubeId: youtubeId,
+      url: url.trim()
+    });
+  }
+}
+
+// Read current curriculum
+const curriculumPath = path.join(__dirname, '..', 'src', 'data', 'curriculum.json');
+const currentCurriculum = JSON.parse(fs.readFileSync(curriculumPath, 'utf8'));
+
+// Create backup
+const backupPath = path.join(__dirname, '..', 'src', 'data', `curriculum-backup-${new Date().toISOString().replace(/:/g, '-')}.json`);
+fs.writeFileSync(backupPath, JSON.stringify(currentCurriculum, null, 2));
+console.log(`Backup created: ${backupPath}`);
+
+// Function to get week and module for a given day
+function getWeekAndModule(day) {
+  const weekNum = Math.ceil(day / 5); // 5 days per week
+  const moduleNum = Math.ceil(weekNum / 2); // 2 weeks per module
+  const dayInWeek = ((day - 1) % 5) + 1; // Day within the week (1-5)
+  
+  return {
+    module: moduleNum,
+    week: weekNum,
+    dayInWeek: dayInWeek
+  };
+}
+
+// Module titles based on the pattern
+const moduleTitles = {
+  1: "M1: Modern Foundations & 3D Introduction",
+  2: "M2: UV Mapping, Texturing & Character Setup",
+  3: "M3: Advanced Scripting & Systems Architecture",
+  4: "M4: Advanced UI, Animation & Polish",
+  5: "M5: Monetization, Marketing & Professional Development",
+  6: "M6: Entrepreneurship & Platform Mastery"
+};
+
+const weekTitles = {
+  1: "W1: Roblox Studio 2024 Basics",
+  2: "W2: Building & Physics Systems",
+  3: "W3: Blender 4.1+ Fundamentals",
+  4: "W4: AI-Powered 3D Creation",
+  5: "W5: UV Unwrapping Mastery",
+  6: "W6: Materials, Shaders & PBR Texturing",
+  7: "W7: Rigging & Weight Painting",
+  8: "W8: Animation & Motion Capture",
+  9: "W9: Scripting Foundations & Variables",
+  10: "W10: Functions, Events & Game Logic",
+  11: "W11: OOP & Module Scripts",
+  12: "W12: Advanced Systems & APIs",
+  13: "W13: DataStores & Player Progress",
+  14: "W14: Multiplayer & Client-Server",
+  15: "W15: AI Integration & NPCs",
+  16: "W16: Testing, Optimization & Security",
+  17: "W17: Advanced GUI & Effects",
+  18: "W18: Professional Animation",
+  19: "W19: Sound & Atmosphere",
+  20: "W20: Final Polish & Launch Prep",
+  21: "W21: Economy & Virtual Goods",
+  22: "W22: Analytics & LiveOps",
+  23: "W23: Community & Brand Building",
+  24: "W24: Business & Career Paths"
+};
+
+// Restructure curriculum
+const newCurriculum = {
+  modules: []
+};
+
+// Create module structure
+for (let moduleNum = 1; moduleNum <= 12; moduleNum++) {
+  const module = {
+    id: `module-${moduleNum}`,
+    title: moduleTitles[moduleNum] || `Module ${moduleNum}`,
+    description: "",
+    totalHours: 50,
+    totalXP: 750,
+    weeks: []
+  };
+  
+  // Add weeks to module
+  const startWeek = (moduleNum - 1) * 2 + 1;
+  const endWeek = moduleNum * 2;
+  
+  for (let weekNum = startWeek; weekNum <= endWeek && weekNum <= 24; weekNum++) {
+    const week = {
+      id: `week-${weekNum}`,
+      title: weekTitles[weekNum] || `Week ${weekNum}`,
+      description: "",
+      days: []
+    };
+    
+    // Add days to week
+    const startDay = (weekNum - 1) * 5 + 1;
+    const endDay = Math.min(weekNum * 5, 166); // Max 166 days
+    
+    for (let dayNum = startDay; dayNum <= endDay; dayNum++) {
+      const day = {
+        id: `day-${dayNum}`,
+        title: `Day ${dayNum}`,
+        videos: []
+      };
+      
+      // Add videos for this day from reference document
+      if (videosByDay[dayNum]) {
+        videosByDay[dayNum].forEach((refVideo, index) => {
+          const video = {
+            id: `video-${moduleNum}-${weekNum}-${dayNum}-${index + 1}`,
+            title: refVideo.title,
+            youtubeId: refVideo.youtubeId,
+            creator: refVideo.creator,
+            duration: "10:00", // Default duration
+            xpReward: 20,
+            thumbnail: `https://i.ytimg.com/vi/${refVideo.youtubeId}/hqdefault.jpg`
+          };
+          day.videos.push(video);
+        });
+      }
+      
+      if (day.videos.length > 0) {
+        week.days.push(day);
+      }
+    }
+    
+    if (week.days.length > 0) {
+      module.weeks.push(week);
+    }
+  }
+  
+  if (module.weeks.length > 0) {
+    newCurriculum.modules.push(module);
+  }
+}
+
+// Write the new curriculum
+fs.writeFileSync(curriculumPath, JSON.stringify(newCurriculum, null, 2));
+
+// Create a summary report
+console.log('\n=== Curriculum Restructure Summary ===\n');
+console.log(`Total modules created: ${newCurriculum.modules.length}`);
+
+let totalDays = 0;
+let totalVideos = 0;
+
+newCurriculum.modules.forEach(module => {
+  let moduleDays = 0;
+  let moduleVideos = 0;
+  
+  module.weeks.forEach(week => {
+    week.days.forEach(day => {
+      moduleDays++;
+      moduleVideos += day.videos.length;
+    });
+  });
+  
+  totalDays += moduleDays;
+  totalVideos += moduleVideos;
+  
+  console.log(`${module.title}: ${moduleDays} days, ${moduleVideos} videos`);
+});
+
+console.log(`\nTotal days with content: ${totalDays}`);
+console.log(`Total videos: ${totalVideos}`);
+
+// List any missing days
+const missingDays = [];
+for (let day = 1; day <= 166; day++) {
+  if (!videosByDay[day] || videosByDay[day].length === 0) {
+    missingDays.push(day);
+  }
+}
+
+if (missingDays.length > 0) {
+  console.log(`\nDays without videos: ${missingDays.join(', ')}`);
+}
+
+console.log('\n✅ Curriculum successfully restructured!');

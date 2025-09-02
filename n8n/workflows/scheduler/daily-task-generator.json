@@ -1,0 +1,72 @@
+{
+  "name": "Daily Task Generator - Scheduler Engine",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hour",
+              "triggerAtHour": 0
+            },
+            {
+              "field": "minute", 
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      },
+      "id": "daily-cron",
+      "name": "⏰ Daily Cron Trigger",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [200, 200]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-schedule",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "id": "schedule-webhook",
+      "name": "📅 Schedule Generation Webhook", 
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 400],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "📅 **DAILY TASK GENERATOR WORKFLOW**\n\n**Purpose**: Generates personalized daily learning schedules based on user analytics\n\n**Triggers**:\n- Cron: Daily at midnight (automatic)\n- Webhook: /webhook/generate-schedule (manual)\n\n**Features**:\n- AI-powered task generation using GPT-4o-mini\n- Adaptive difficulty adjustment\n- Progress-based optimization \n- Time optimization based on availability\n- PostgreSQL storage in daily_tasks table\n\n**Schedule Types**: daily, weekly, project, review\n**AI Temperature**: 0.7 for creative scheduling\n**Storage**: PostgreSQL daily_tasks table",
+        "height": 320,
+        "width": 360,
+        "color": 7
+      },
+      "id": "sticky-overview",
+      "name": "📋 Scheduler Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1, 
+      "position": [20, 80]
+    }
+  ],
+  "connections": {},
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-01T12:00:00.000Z",
+      "updatedAt": "2025-01-01T12:00:00.000Z",
+      "id": "scheduler",
+      "name": "scheduler"
+    }
+  ],
+  "triggerCount": 2,
+  "updatedAt": "2025-01-01T12:00:00.000Z",
+  "versionId": "1"
+}

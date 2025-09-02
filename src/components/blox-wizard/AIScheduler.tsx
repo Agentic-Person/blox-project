@@ -14,12 +14,15 @@ import {
   Sparkles,
   TrendingUp,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
+  Loader2
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useAIJourney } from '@/hooks/useAIJourney'
+import { useTodoCalendar } from '@/hooks/useTodoCalendar'
+import type { ScheduleItem } from '@/types/calendar'
 
 interface ScheduleTask {
   id: string
@@ -66,11 +69,12 @@ function TaskCard({
   onComplete, 
   onReschedule 
 }: { 
-  task: ScheduleTask
+  task: ScheduleItem
   onComplete: () => void
   onReschedule: (newTime: string) => void
 }) {
-  const Icon = taskTypeIcons[task.type]
+  const Icon = taskTypeIcons[task.taskType]
+  const isCompleted = task.status === 'completed'
   
   return (
     <motion.div
@@ -79,13 +83,13 @@ function TaskCard({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       whileHover={{ scale: 1.02 }}
-      className={`p-3 rounded-lg border ${taskTypeColors[task.type]} 
-        ${task.completed ? 'opacity-60' : ''} transition-all cursor-pointer group`}
+      className={`p-3 rounded-lg border ${taskTypeColors[task.taskType]} 
+        ${isCompleted ? 'opacity-60' : ''} transition-all cursor-pointer group`}
     >
       <div className="flex items-start justify-between">
         <div className="flex items-start gap-2">
-          <div className={`p-1.5 rounded-lg ${task.completed ? 'bg-blox-success/20' : ''}`}>
-            {task.completed ? (
+          <div className={`p-1.5 rounded-lg ${isCompleted ? 'bg-blox-success/20' : ''}`}>
+            {isCompleted ? (
               <CheckCircle className="h-4 w-4 text-blox-success" />
             ) : (
               <Icon className="h-4 w-4" />
@@ -93,15 +97,19 @@ function TaskCard({
           </div>
           <div className="flex-1">
             <h5 className={`text-sm font-medium text-blox-white ${
-              task.completed ? 'line-through' : ''
+              isCompleted ? 'line-through' : ''
             }`}>
               {task.title}
             </h5>
             <div className="flex items-center gap-2 mt-1">
-              <span className="text-xs text-blox-off-white/60">
-                {task.scheduledTime}
-              </span>
-              <span className="text-xs text-blox-off-white/40">•</span>
+              {task.startTime && (
+                <>
+                  <span className="text-xs text-blox-off-white/60">
+                    {task.startTime}
+                  </span>
+                  <span className="text-xs text-blox-off-white/40">•</span>
+                </>
+              )}
               <span className="text-xs text-blox-off-white/60">
                 {task.duration} min
               </span>
@@ -117,7 +125,7 @@ function TaskCard({
           </div>
         </div>
         
-        {!task.completed && (
+        {!isCompleted && (
           <Button
             size="sm"
             variant="ghost"
@@ -132,7 +140,15 @@ function TaskCard({
   )
 }
 
-function DayColumn({ day, isToday }: { day: DaySchedule; isToday: boolean }) {
+function DayColumn({ 
+  day, 
+  isToday, 
+  onComplete 
+}: { 
+  day: DaySchedule; 
+  isToday: boolean; 
+  onComplete: (task: ScheduleItem) => void;
+}) {
   const completionRate = day.totalMinutes > 0 
     ? Math.round((day.completedMinutes / day.totalMinutes) * 100)
     : 0
@@ -179,8 +195,8 @@ function DayColumn({ day, isToday }: { day: DaySchedule; isToday: boolean }) {
           {day.tasks.map((task) => (
             <TaskCard
               key={task.id}
-              task={task}
-              onComplete={() => console.log('Complete:', task.id)}
+              task={task as ScheduleItem}
+              onComplete={() => onComplete(task as ScheduleItem)}
               onReschedule={(time) => console.log('Reschedule:', task.id, time)}
             />
           ))}
@@ -199,10 +215,28 @@ function DayColumn({ day, isToday }: { day: DaySchedule; isToday: boolean }) {
 
 export function AIScheduler({ className = '', onTaskUpdate }: AISchedulerProps) {
   const { journey, todayFocus, markTaskComplete } = useAIJourney()
+  const { 
+    weekSchedule, 
+    loadingSchedule, 
+    markScheduleCompleted, 
+    error,
+    refreshAll
+  } = useTodoCalendar()
   const [viewMode, setViewMode] = useState<ViewMode>('week')
   const [currentWeek, setCurrentWeek] = useState(0) // 0 = current week
+
+  const handleCompleteTask = async (task: ScheduleItem) => {
+    try {
+      await markScheduleCompleted(task.id)
+      if (onTaskUpdate) {
+        onTaskUpdate(task as any) // Type compatibility
+      }
+    } catch (error) {
+      console.error('Failed to complete task:', error)
+    }
+  }
   
-  // Generate mock schedule data
+  // Process real schedule data into week view
   const scheduleData = useMemo(() => {
     const days: DaySchedule[] = []
     const today = new Date()
@@ -210,74 +244,29 @@ export function AIScheduler({ className = '', onTaskUpdate }: AISchedulerProps) 
     for (let i = 0; i < 7; i++) {
       const date = new Date(today)
       date.setDate(today.getDate() - today.getDay() + i + (currentWeek * 7))
+      const dateStr = date.toISOString().split('T')[0]
       
-      const dayTasks: ScheduleTask[] = []
-      
-      // Add tasks based on day
-      if (i === 1 || i === 3 || i === 5) { // Mon, Wed, Fri
-        dayTasks.push({
-          id: `task-${date.toISOString()}-1`,
-          type: 'video',
-          title: 'Watch: Advanced Scripting Techniques',
-          duration: 20,
-          scheduledTime: '10:00',
-          date: date.toISOString(),
-          completed: i < today.getDay(),
-          priority: i === today.getDay() ? 'high' : 'medium'
-        })
-        
-        dayTasks.push({
-          id: `task-${date.toISOString()}-2`,
-          type: 'practice',
-          title: 'Build: Practice Script Implementation',
-          duration: 45,
-          scheduledTime: '14:00',
-          date: date.toISOString(),
-          completed: false
-        })
-      }
-      
-      if (i === 2 || i === 4) { // Tue, Thu
-        dayTasks.push({
-          id: `task-${date.toISOString()}-3`,
-          type: 'project',
-          title: 'Project: Work on Horror Game',
-          duration: 60,
-          scheduledTime: '15:00',
-          date: date.toISOString(),
-          completed: false,
-          priority: 'high'
-        })
-      }
-      
-      if (i === 6) { // Sat
-        dayTasks.push({
-          id: `task-${date.toISOString()}-4`,
-          type: 'review',
-          title: 'Weekly Review & Planning',
-          duration: 30,
-          scheduledTime: '11:00',
-          date: date.toISOString(),
-          completed: false
-        })
-      }
+      // Filter schedule items for this specific date
+      const dayTasks = weekSchedule.filter(item => 
+        item.scheduledDate === dateStr
+      )
       
       const completedMinutes = dayTasks
-        .filter(t => t.completed)
+        .filter(t => t.status === 'completed')
         .reduce((sum, t) => sum + t.duration, 0)
       
       const totalMinutes = dayTasks.reduce((sum, t) => sum + t.duration, 0)
       
       days.push({
         date: date.toISOString(),
-        tasks: dayTasks,
+        tasks: dayTasks as any, // Type compatibility - we'll handle the differences in the UI
         totalMinutes,
         completedMinutes
       })
     }
     
     return days
-  }, [currentWeek])
+  }, [weekSchedule, currentWeek])
 
   const todayIndex = new Date().getDay()
   const weeklyStats = useMemo(() => {
@@ -383,15 +372,34 @@ export function AIScheduler({ className = '', onTaskUpdate }: AISchedulerProps) 
               </div>
 
               {/* Week View */}
-              <div className="flex gap-3 overflow-x-auto pb-4">
-                {scheduleData.map((day, index) => (
-                  <DayColumn
-                    key={day.date}
-                    day={day}
-                    isToday={currentWeek === 0 && index === todayIndex}
-                  />
-                ))}
-              </div>
+              {loadingSchedule ? (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="h-8 w-8 animate-spin text-blox-teal" />
+                </div>
+              ) : error ? (
+                <div className="text-center py-12">
+                  <p className="text-red-400 text-sm mb-4">{error}</p>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    onClick={refreshAll}
+                    className="text-xs"
+                  >
+                    Retry
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex gap-3 overflow-x-auto pb-4">
+                  {scheduleData.map((day, index) => (
+                    <DayColumn
+                      key={day.date}
+                      day={day}
+                      isToday={currentWeek === 0 && index === todayIndex}
+                      onComplete={handleCompleteTask}
+                    />
+                  ))}
+                </div>
+              )}
             </>
           )}
 

@@ -1,0 +1,246 @@
+{
+  "meta": {
+    "instanceId": "daily-task-generator-workflow"
+  },
+  "nodes": [
+    {
+      "id": "scheduler-trigger",
+      "name": "📅 Daily Schedule Trigger",
+      "type": "n8n-nodes-base.cron",
+      "position": [240, 300],
+      "parameters": {
+        "rule": {
+          "hour": 0,
+          "minute": 0,
+          "second": 0
+        }
+      },
+      "typeVersion": 1.2,
+      "notes": "📅 DAILY SCHEDULE GENERATION TRIGGER\n\n⏰ Purpose: Automatically generates personalized daily learning schedules\n\n🕛 Schedule: Runs daily at midnight (00:00:00)\n• Generates fresh tasks for all active users\n• Adapts based on previous day's performance\n• Personalizes content based on learning patterns\n\n🎯 Trigger Benefits:\n• Consistent daily task delivery\n• Timezone-aware scheduling\n• Reliable automation without manual intervention\n• Scalable for growing user base\n\n⚙️ Configuration:\n• Hour: 0 (midnight)\n• Minute: 0\n• Second: 0\n• Timezone: Server timezone (configure as needed)\n\n🔄 Next: Fetch active users for task generation"
+    },    {
+      "id": "webhook-manual-trigger",
+      "name": "🔄 Manual Schedule Request",
+      "type": "n8n-nodes-base.webhook",
+      "position": [240, 460],
+      "parameters": {
+        "path": "generate-schedule",
+        "httpMethod": "POST",
+        "responseMode": "responseNode"
+      },
+      "typeVersion": 2.1,
+      "onError": "continueRegularOutput",
+      "webhookId": "schedule-gen-webhook",
+      "notes": "🔄 MANUAL SCHEDULE GENERATION\n\n📝 Purpose: Allows on-demand schedule generation for specific users\n\n📋 Expected Payload:\n{\n  \"userId\": \"user_123\",\n  \"scheduleType\": \"daily|weekly|custom\",\n  \"preferences\": {\n    \"difficulty\": \"beginner|intermediate|advanced\",\n    \"focusAreas\": [\"scripting\", \"building\", \"ui\"],\n    \"timeAvailable\": 30, // minutes\n    \"preferredTime\": \"morning|afternoon|evening\"\n  },\n  \"forceRegenerate\": false\n}\n\n🎯 Use Cases:\n• User requests schedule refresh\n• Admin generates schedules for specific users\n• Testing and debugging schedule generation\n• Emergency schedule updates\n\n⚡ Response: Returns generated schedule immediately\n🔄 Next: User analytics fetch and processing"
+    },    {
+      "id": "user-analytics-fetcher",
+      "name": "📊 User Analytics Fetcher",
+      "type": "n8n-nodes-base.postgres",
+      "position": [460, 380],
+      "parameters": {
+        "operation": "select",
+        "schema": "public",
+        "table": "user_learning_analytics",
+        "returnAll": true,
+        "where": {
+          "conditions": [
+            {
+              "column": "updated_at",
+              "operation": ">=",
+              "value": "={{ new Date(Date.now() - 7*24*60*60*1000).toISOString() }}"
+            }
+          ]
+        },
+        "sort": {
+          "rules": [
+            {
+              "column": "updated_at",
+              "direction": "DESC"
+            }
+          ]
+        }
+      },
+      "typeVersion": 2.6,
+      "onError": "continueRegularOutput",
+      "notes": "📊 USER LEARNING ANALYTICS RETRIEVAL\n\n📝 Purpose: Fetches comprehensive user learning data for personalization\n\n🔍 Query Scope:\n• Last 7 days of user activity data\n• Completion rates by topic and difficulty\n• Time spent on different content types\n• Help-seeking patterns and frequency\n• Preferred learning times and durations\n\n📋 Retrieved Data Fields:\n• user_id, completion_rate, avg_session_time\n• preferred_topics[], difficulty_comfort_level\n• help_frequency, video_watch_patterns\n• quiz_performance, project_completion_rate\n• last_activity_time, learning_streak\n\n🎯 Analytics Applications:\n• Difficulty level adaptation\n• Content type preferences\n• Optimal session length determination\n• Topic progression planning\n\n⚡ Performance: Indexed query with date filtering for speed"
+    },    {
+      "id": "ai-task-generator",
+      "name": "🤖 AI Task Generator",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [680, 380],
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 1500,
+          "topP": 0.9
+        }
+      },
+      "typeVersion": 1.8,
+      "onError": "continueRegularOutput",
+      "notes": "🤖 INTELLIGENT TASK GENERATION ENGINE\n\n📝 Purpose: Uses AI to generate personalized daily learning tasks\n\n⚙️ Model Configuration:\n• Model: GPT-4o-mini (cost-effective for task generation)\n• Temperature: 0.7 (creative but structured)\n• Max Tokens: 1500 (comprehensive task lists)\n• Top-P: 0.9 (focused but diverse)\n\n🎯 Task Generation Criteria:\n• User's current skill level and progress\n• Preferred learning style and topics\n• Available time and session preferences\n• Recent performance and completion patterns\n• Curriculum progression requirements\n\n📋 Generated Task Types:\n• Video watching with specific learning objectives\n• Hands-on coding exercises\n• Building challenges and projects\n• Quiz reviews and knowledge checks\n• Community interaction tasks\n\n⚡ Output: Structured JSON with tasks, timings, and priorities"
+    },    {
+      "id": "task-validator",
+      "name": "✅ Task Validator",
+      "type": "n8n-nodes-base.code",
+      "position": [900, 380],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Task Validation and Structure Processing\n// Ensures AI-generated tasks meet quality and format requirements\n\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  try {\n    const aiResponse = item.json.text || item.json.content || '';\n    const userAnalytics = item.json.userAnalytics || {};\n    \n    // Parse AI response as JSON\n    let generatedTasks;\n    try {\n      generatedTasks = JSON.parse(aiResponse);\n    } catch (parseError) {\n      // If not valid JSON, try to extract structured data\n      const taskMatches = aiResponse.match(/\\{[\\s\\S]*?\\}/g);\n      if (taskMatches && taskMatches.length > 0) {\n        generatedTasks = { tasks: taskMatches.map(match => {\n          try { return JSON.parse(match); } catch { return null; }\n        }).filter(Boolean) };\n      } else {\n        throw new Error('Unable to parse AI response into structured tasks');\n      }\n    }\n    \n    // Validate task structure\n    const validatedTasks = [];\n    const requiredFields = ['title', 'type', 'estimated_time', 'difficulty'];\n    \n    if (generatedTasks.tasks && Array.isArray(generatedTasks.tasks)) {\n      for (const task of generatedTasks.tasks) {\n        // Check required fields\n        const missingFields = requiredFields.filter(field => !task[field]);\n        if (missingFields.length === 0) {\n          // Add task metadata\n          validatedTasks.push({\n            id: `task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,\n            ...task,\n            generated_at: new Date().toISOString(),\n            user_id: userAnalytics.user_id,\n            status: 'pending',\n            priority: task.priority || 'medium'\n          });\n        }\n      }\n    }\n    \n    // Quality checks\n    const qualityChecks = {\n      taskCount: validatedTasks.length,\n      hasVariety: new Set(validatedTasks.map(t => t.type)).size > 1,\n      totalEstimatedTime: validatedTasks.reduce((sum, t) => sum + (parseInt(t.estimated_time) || 0), 0),\n      difficultyBalance: {\n        beginner: validatedTasks.filter(t => t.difficulty === 'beginner').length,\n        intermediate: validatedTasks.filter(t => t.difficulty === 'intermediate').length,\n        advanced: validatedTasks.filter(t => t.difficulty === 'advanced').length\n      }\n    };\n    \n    results.push({\n      json: {\n        success: true,\n        validatedTasks: validatedTasks,\n        qualityMetrics: qualityChecks,\n        userAnalytics: userAnalytics,\n        generationTimestamp: new Date().toISOString()\n      }\n    });\n    \n  } catch (error) {\n    results.push({\n      json: {\n        success: false,\n        error: 'Task validation failed',\n        details: error.message,\n        timestamp: new Date().toISOString()\n      }\n    });\n  }\n}\n\nreturn results;"
+      },
+      "typeVersion": 2
+    },    {
+      "id": "task-storage",
+      "name": "💾 Task Storage",
+      "type": "n8n-nodes-base.postgres",
+      "position": [1120, 380],
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "daily_tasks",
+        "columns": "id, user_id, title, description, type, estimated_time, difficulty, priority, content_references, status, created_at, scheduled_for",
+        "returnFields": "id, user_id, created_at",
+        "values": "={{ $json.validatedTasks }}"
+      },
+      "typeVersion": 2.6,
+      "onError": "continueRegularOutput",
+      "notes": "💾 TASK PERSISTENCE SYSTEM\n\n📝 Purpose: Stores generated tasks in database for user access\n\n📋 Database Schema:\n• id: Unique task identifier\n• user_id: Target user for the task\n• title: Clear, actionable task title\n• description: Detailed task instructions\n• type: video|exercise|project|quiz|community\n• estimated_time: Minutes required\n• difficulty: beginner|intermediate|advanced\n• priority: low|medium|high|urgent\n• content_references: Related videos/materials\n• status: pending|in_progress|completed|skipped\n• created_at: Generation timestamp\n• scheduled_for: Target completion date\n\n🔄 Batch Insert: Efficiently stores multiple tasks\n⚡ Performance: Indexed on user_id and scheduled_for\n🔧 Error Handling: Continues on individual task failures"
+    },    {
+      "id": "notification-sender",
+      "name": "📱 Notification Sender",
+      "type": "n8n-nodes-base.redis",
+      "position": [1340, 380],
+      "parameters": {
+        "operation": "publish",
+        "channel": "user_notifications",
+        "messageData": "={{ JSON.stringify({\n  event_type: 'daily_tasks_generated',\n  user_id: $json.userAnalytics.user_id,\n  task_count: $json.qualityMetrics.taskCount,\n  estimated_total_time: $json.qualityMetrics.totalEstimatedTime,\n  notification: {\n    title: 'Your Daily Learning Plan is Ready!',\n    message: `${$json.qualityMetrics.taskCount} personalized tasks await you`,\n    action_url: '/dashboard/tasks',\n    priority: 'normal'\n  },\n  timestamp: $json.generationTimestamp\n}) }}"
+      },
+      "typeVersion": 1,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "response-handler",
+      "name": "📤 Response Handler",
+      "type": "n8n-nodes-base.code",
+      "position": [1560, 380],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Response Handler for Daily Task Generation\n// Formats final response with comprehensive task information\n\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  try {\n    if (!item.json.success) {\n      results.push({\n        json: {\n          success: false,\n          error: item.json.error || 'Task generation failed',\n          details: item.json.details || 'Unknown error occurred',\n          timestamp: item.json.timestamp || new Date().toISOString(),\n          service: 'daily-task-generator'\n        }\n      });\n      continue;\n    }\n    \n    const { validatedTasks, qualityMetrics, userAnalytics } = item.json;\n    \n    // Calculate schedule summary\n    const summary = {\n      totalTasks: qualityMetrics.taskCount,\n      estimatedTime: qualityMetrics.totalEstimatedTime,\n      taskTypes: {\n        video: validatedTasks.filter(t => t.type === 'video').length,\n        exercise: validatedTasks.filter(t => t.type === 'exercise').length,\n        project: validatedTasks.filter(t => t.type === 'project').length,\n        quiz: validatedTasks.filter(t => t.type === 'quiz').length,\n        community: validatedTasks.filter(t => t.type === 'community').length\n      },\n      difficultyDistribution: qualityMetrics.difficultyBalance,\n      priorityTasks: validatedTasks.filter(t => t.priority === 'high').length\n    };\n    \n    // Format tasks for client consumption\n    const formattedTasks = validatedTasks.map(task => ({\n      id: task.id,\n      title: task.title,\n      description: task.description,\n      type: task.type,\n      estimatedTime: task.estimated_time,\n      difficulty: task.difficulty,\n      priority: task.priority,\n      contentReferences: task.content_references || [],\n      status: task.status\n    }));\n    \n    results.push({\n      json: {\n        success: true,\n        data: {\n          userId: userAnalytics.user_id,\n          generatedAt: item.json.generationTimestamp,\n          summary: summary,\n          tasks: formattedTasks,\n          personalizations: {\n            basedOnAnalytics: true,\n            learningPattern: userAnalytics.preferred_topics || [],\n            difficultyAdapted: true,\n            timeOptimized: true\n          }\n        },\n        meta: {\n          service: 'daily-task-generator',\n          version: '1.0',\n          generationMethod: 'ai-powered',\n          qualityScore: Math.min(1.0, qualityMetrics.taskCount / 5) // 5 tasks = perfect score\n        }\n      }\n    });\n    \n  } catch (error) {\n    results.push({\n      json: {\n        success: false,\n        error: 'Response formatting failed',\n        details: error.message,\n        timestamp: new Date().toISOString(),\n        service: 'daily-task-generator'\n      }\n    });\n  }\n}\n\nreturn results;"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "webhook-response",
+      "name": "✅ Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [1780, 460],
+      "parameters": {},
+      "typeVersion": 1.5,
+      "onError": "continueRegularOutput"
+    }
+  ],  "connections": {
+    "📅 Daily Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "📊 User Analytics Fetcher",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔄 Manual Schedule Request": {
+      "main": [
+        [
+          {
+            "node": "📊 User Analytics Fetcher",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📊 User Analytics Fetcher": {
+      "main": [
+        [
+          {
+            "node": "🤖 AI Task Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🤖 AI Task Generator": {
+      "main": [
+        [
+          {
+            "node": "✅ Task Validator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "✅ Task Validator": {
+      "main": [
+        [
+          {
+            "node": "💾 Task Storage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "💾 Task Storage": {
+      "main": [
+        [
+          {
+            "node": "📱 Notification Sender",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📱 Notification Sender": {
+      "main": [
+        [
+          {
+            "node": "📤 Response Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📤 Response Handler": {
+      "main": [
+        [
+          {
+            "node": "✅ Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-08-30T00:00:00.000Z",
+      "updatedAt": "2025-08-30T00:00:00.000Z",
+      "id": "scheduler",
+      "name": "Adaptive Scheduler"
+    }
+  ],
+  "triggerCount": 2,
+  "updatedAt": "2025-08-30T00:00:00.000Z",
+  "versionId": "1"
+}

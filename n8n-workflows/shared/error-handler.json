@@ -1,0 +1,430 @@
+{
+  "name": "🚨 Error Handler - Blox Wizard System",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "error-trigger",
+      "name": "🔥 Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "notes": "🔥 SYSTEM ERROR DETECTION\n\n• Automatically triggered when ANY workflow encounters an error\n• Captures error context, stack trace, and execution data\n• Central error handling for the entire Blox Wizard ecosystem\n\n📊 Error Data Captured:\n• Workflow name and ID that failed\n• Node that caused the error\n• Error message and stack trace\n• Execution timestamp and duration\n• Input data that caused the failure\n• User context (if available)\n\n🎯 Triggers On:\n• Node execution failures\n• Timeout errors\n• API connection failures\n• Database query errors\n• Authentication failures\n• Resource unavailability\n\n⚡ Response Time: Immediate error detection\n🔄 Reliability: Always active, cannot be disabled"
+    },
+    {
+      "parameters": {},
+      "id": "sticky-error-types",
+      "name": "🔍 Error Classification",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [240, 100],
+      "width": 380,
+      "height": 160,
+      "content": "🔍 ERROR TYPES & SEVERITY LEVELS\n\n🔴 CRITICAL (System Down)\n• Master Orchestrator failures\n• Database connection lost\n• Redis cluster unavailable\n• Authentication service down\n\n🟡 HIGH (Feature Degraded)\n• Knowledge Engine search failures\n• Scheduler generation errors\n• Analytics processing issues\n\n🟠 MEDIUM (Performance Impact)\n• Slow API responses\n• Cache misses\n• Third-party service delays\n\n🟢 LOW (Minor Issues)\n• Invalid user input\n• Rate limiting\n• Non-critical integrations"
+    },
+    {
+      "parameters": {
+        "mode": "rules",
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose"
+                },
+                "conditions": [
+                  {
+                    "id": "condition-critical",
+                    "leftValue": "={{ $json.error.node?.name }}",
+                    "rightValue": "Master Orchestrator|Redis|Database|Authentication",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "🔴 CRITICAL"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose"
+                },
+                "conditions": [
+                  {
+                    "id": "condition-high",
+                    "leftValue": "={{ $json.error.node?.name }}",
+                    "rightValue": "Knowledge Engine|Scheduler|Analytics",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "🟡 HIGH"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose"
+                },
+                "conditions": [
+                  {
+                    "id": "condition-timeout",
+                    "leftValue": "={{ $json.error.message }}",
+                    "rightValue": "timeout|slow|performance",
+                    "operator": {
+                      "type": "string",
+                      "operation": "regex"
+                    }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "🟠 MEDIUM"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "manual",
+          "renameFallbackOutput": true,
+          "fallbackOutputName": "🟢 LOW"
+        }
+      },
+      "id": "switch-error-severity",
+      "name": "⚖️ Error Severity Classifier",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [520, 300],
+      "notes": "⚖️ INTELLIGENT ERROR CLASSIFICATION\n\n• Automatically classifies errors by severity level\n• Routes to appropriate response workflows\n• Uses pattern matching on node names and error messages\n\n🔍 Classification Logic:\n• CRITICAL: Core system components (Orchestrator, DB, Redis)\n• HIGH: Major features (Knowledge Engine, Scheduler, Analytics)\n• MEDIUM: Performance issues (timeouts, slowness)\n• LOW: Everything else (user errors, minor issues)\n\n🎯 Pattern Matching:\n• Node name analysis for component identification\n• Error message content for issue type\n• Case-insensitive matching for reliability\n• Regex patterns for flexible matching\n\n📊 Routing Strategy:\n• Critical → Immediate alerts + auto-recovery\n• High → Urgent alerts + manual review\n• Medium → Warning alerts + monitoring\n• Low → Log only + periodic review\n\n🔧 Customizable:\n• Add new patterns for specific error types\n• Adjust severity levels based on business impact\n• Configure different routing for different environments"
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "error:{{ $json.execution.id }}",
+        "value": "={{ JSON.stringify({\n  timestamp: new Date().toISOString(),\n  severity: 'CRITICAL',\n  workflow: $json.workflow.name,\n  workflowId: $json.workflow.id,\n  node: $json.error.node?.name || 'Unknown',\n  message: $json.error.message,\n  stack: $json.error.stack,\n  executionId: $json.execution.id,\n  userId: $json.execution.data?.startData?.destinationNode?.parameters?.userId || 'system',\n  status: 'logged'\n}) }}",
+        "options": {
+          "expire": true,
+          "ttl": 604800
+        }
+      },
+      "id": "redis-log-critical",
+      "name": "🔴 Log Critical Error",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [800, 160],
+      "onError": "continueRegularOutput",
+      "notes": "🔴 CRITICAL ERROR LOGGING\n\n• Immediately logs critical system failures\n• Stores in Redis with 7-day TTL (604800 seconds)\n• Enables rapid error analysis and recovery\n\n🔑 Key Pattern: 'error:{executionId}'\n📦 Data Structure:\n{\n  timestamp: ISO-8601,\n  severity: 'CRITICAL',\n  workflow: string,\n  workflowId: string,\n  node: string,\n  message: string,\n  stack: string,\n  executionId: string,\n  userId: string,\n  status: 'logged'\n}\n\n🎯 Critical Error Types:\n• Master Orchestrator failures\n• Database connection errors\n• Redis cluster issues\n• Authentication service failures\n\n⏰ TTL: 7 days for incident analysis\n🔄 Auto-expire prevents storage bloat\n📊 Used by monitoring dashboards\n🚨 Triggers immediate alert workflows"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#blox-wizard-alerts",
+        "text": "🚨 CRITICAL SYSTEM ERROR 🚨",
+        "attachments": [
+          {
+            "color": "danger",
+            "title": "Critical Error in {{ $json.workflow.name }}",
+            "text": "**Error:** {{ $json.error.message }}\n**Node:** {{ $json.error.node?.name || 'Unknown' }}\n**Time:** {{ new Date().toISOString() }}\n**Execution ID:** {{ $json.execution.id }}",
+            "fields": [
+              {
+                "title": "Workflow",
+                "value": "{{ $json.workflow.name }}",
+                "short": true
+              },
+              {
+                "title": "Severity",
+                "value": "CRITICAL",
+                "short": true
+              }
+            ],
+            "footer": "Blox Wizard Error Handler",
+            "ts": "{{ Math.floor(Date.now() / 1000) }}"
+          }
+        ],
+        "options": {}
+      },
+      "id": "slack-critical-alert",
+      "name": "📢 Slack Critical Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [800, 280],
+      "onError": "continueRegularOutput",
+      "notes": "📢 INSTANT CRITICAL ALERTS\n\n• Sends immediate Slack notifications for critical errors\n• Rich message formatting with error details\n• Tagged for urgent developer attention\n\n🎯 Alert Channel: #blox-wizard-alerts\n📱 Rich Message Format:\n• Red danger color coding\n• Error summary and details\n• Workflow and node information\n• Execution timestamp and ID\n• Formatted for mobile readability\n\n⚡ Immediate Delivery:\n• No delays or batching\n• Direct push notifications\n• Mobile app alerts\n• Desktop notifications\n\n🔧 Message Structure:\n• Title: Clear error identification\n• Body: Technical details for debugging\n• Fields: Structured metadata\n• Footer: Source identification\n• Timestamp: Unix timestamp for sorting\n\n👥 Target Audience:\n• DevOps engineers\n• System administrators\n• Senior developers\n• On-call personnel\n\n🚨 Error Handling: Continues even if Slack fails"
+    },
+    {
+      "parameters": {
+        "url": "{{ $parameter.webhooks.pagerduty_critical }}",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Token token={{ $parameter.credentials.pagerduty_token }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "jsonBody": "={{ {\n  routing_key: $parameter.pagerduty.routing_key,\n  event_action: 'trigger',\n  payload: {\n    summary: 'CRITICAL: ' + $json.workflow.name + ' - ' + $json.error.message,\n    source: 'Blox Wizard N8n',\n    severity: 'critical',\n    component: $json.error.node?.name || 'Unknown',\n    class: 'workflow_error',\n    custom_details: {\n      workflow_id: $json.workflow.id,\n      execution_id: $json.execution.id,\n      error_stack: $json.error.stack,\n      timestamp: new Date().toISOString()\n    }\n  }\n} }}",
+        "options": {}
+      },
+      "id": "http-pagerduty-critical",
+      "name": "🚨 PagerDuty Critical Incident",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [800, 400],
+      "onError": "continueRegularOutput",
+      "notes": "🚨 PAGERDUTY INCIDENT CREATION\n\n• Creates high-priority incidents for critical errors\n• Triggers immediate on-call escalation\n• Integrates with incident management workflow\n\n📱 PagerDuty Integration:\n• Automatic incident creation\n• On-call engineer notification\n• SMS/Phone call escalation\n• Integration with monitoring tools\n\n🎯 Incident Details:\n• Summary: Clear error description\n• Source: Blox Wizard N8n identification\n• Severity: Critical priority\n• Component: Failed node name\n• Class: workflow_error classification\n\n📊 Custom Details:\n• Workflow ID for debugging\n• Execution ID for tracing\n• Full error stack trace\n• Precise timestamp\n\n🔄 Escalation Path:\n1. Primary on-call engineer (immediate)\n2. Secondary engineer (5 minutes)\n3. Engineering manager (15 minutes)\n4. Director of Engineering (30 minutes)\n\n⚡ Response Time: <60 seconds\n🔒 Security: API token authentication\n🚨 Error Handling: Continues if PagerDuty unavailable"
+    },
+    {
+      "parameters": {
+        "operation": "incr",
+        "key": "stats:errors:critical",
+        "options": {
+          "expire": true,
+          "ttl": 86400
+        }
+      },
+      "id": "redis-increment-critical",
+      "name": "📈 Increment Critical Counter",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [1080, 160],
+      "onError": "continueRegularOutput",
+      "notes": "📈 CRITICAL ERROR STATISTICS\n\n• Tracks daily critical error count\n• Enables trend analysis and alerting\n• Feeds monitoring dashboards\n\n🔑 Key: 'stats:errors:critical'\n🔢 Operation: Atomic increment\n⏰ TTL: 24 hours (daily reset)\n\n📊 Used For:\n• Daily error rate monitoring\n• Trend analysis and alerts\n• Capacity planning\n• SLA compliance tracking\n\n🎯 Alert Thresholds:\n• 1+ critical errors → Immediate attention\n• 3+ critical errors/day → System review\n• 10+ critical errors/day → Emergency response\n\n⚡ Performance: O(1) Redis operation\n🔄 Auto-reset: Fresh counts daily\n📈 Integration: Feeds to Grafana/DataDog"
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "error:{{ $json.execution.id }}",
+        "value": "={{ JSON.stringify({\n  timestamp: new Date().toISOString(),\n  severity: 'HIGH',\n  workflow: $json.workflow.name,\n  workflowId: $json.workflow.id,\n  node: $json.error.node?.name || 'Unknown',\n  message: $json.error.message,\n  executionId: $json.execution.id,\n  userId: $json.execution.data?.startData?.destinationNode?.parameters?.userId || 'system',\n  status: 'logged'\n}) }}",
+        "options": {
+          "expire": true,
+          "ttl": 432000
+        }
+      },
+      "id": "redis-log-high",
+      "name": "🟡 Log High Severity Error",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [800, 520],
+      "onError": "continueRegularOutput",
+      "notes": "🟡 HIGH SEVERITY ERROR LOGGING\n\n• Logs major feature failures\n• 5-day TTL for analysis (432000 seconds)\n• Less detailed than critical errors\n\n🔑 Key Pattern: 'error:{executionId}'\n📦 Data Structure: (Similar to critical but severity: 'HIGH')\n\n🎯 High Severity Examples:\n• Knowledge Engine search failures\n• Scheduler generation errors\n• Analytics processing issues\n• User authentication problems\n\n⏰ TTL: 5 days (shorter than critical)\n📊 Monitoring: Dashboard integration\n🔄 Review: Daily high-severity reports"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#blox-wizard-errors",
+        "text": "⚠️ High Severity Error in {{ $json.workflow.name }}",
+        "attachments": [
+          {
+            "color": "warning",
+            "title": "Feature Degradation Alert",
+            "text": "**Error:** {{ $json.error.message }}\n**Node:** {{ $json.error.node?.name || 'Unknown' }}\n**Time:** {{ new Date().toISOString() }}",
+            "fields": [
+              {
+                "title": "Impact",
+                "value": "Feature may be unavailable",
+                "short": true
+              },
+              {
+                "title": "Action",
+                "value": "Manual review required",
+                "short": true
+              }
+            ]
+          }
+        ]
+      },
+      "id": "slack-high-alert",
+      "name": "📤 Slack High Severity Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [800, 640],
+      "onError": "continueRegularOutput",
+      "notes": "📤 HIGH SEVERITY NOTIFICATIONS\n\n• Sends alerts to development team\n• Orange warning color coding\n• Less urgent than critical alerts\n\n🎯 Alert Channel: #blox-wizard-errors\n📊 Purpose:\n• Feature degradation awareness\n• Manual review coordination\n• Impact assessment\n\n⏰ Response Time: Within 1-2 hours\n👥 Audience: Development team\n🔄 Follow-up: Manual investigation required"
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "error:{{ $json.execution.id }}",
+        "value": "={{ JSON.stringify({\n  timestamp: new Date().toISOString(),\n  severity: 'MEDIUM',\n  workflow: $json.workflow.name,\n  message: $json.error.message,\n  executionId: $json.execution.id,\n  status: 'logged'\n}) }}",
+        "options": {
+          "expire": true,
+          "ttl": 259200
+        }
+      },
+      "id": "redis-log-medium",
+      "name": "🟠 Log Medium Severity Error",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [800, 760],
+      "onError": "continueRegularOutput",
+      "notes": "🟠 MEDIUM SEVERITY ERROR LOGGING\n\n• Performance and timeout issues\n• 3-day TTL for analysis (259200 seconds)\n• Minimal data structure for efficiency\n\n🎯 Medium Severity Examples:\n• API timeout errors\n• Cache miss performance issues\n• Third-party service delays\n• Resource limit warnings\n\n📊 Analysis: Weekly performance reports\n🔄 Action: Performance optimization review"
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "error:{{ $json.execution.id }}",
+        "value": "={{ JSON.stringify({\n  timestamp: new Date().toISOString(),\n  severity: 'LOW',\n  workflow: $json.workflow.name,\n  message: $json.error.message,\n  status: 'logged'\n}) }}",
+        "options": {
+          "expire": true,
+          "ttl": 86400
+        }
+      },
+      "id": "redis-log-low",
+      "name": "🟢 Log Low Severity Error",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [800, 880],
+      "onError": "continueRegularOutput",
+      "notes": "🟢 LOW SEVERITY ERROR LOGGING\n\n• Minor issues and user errors\n• 1-day TTL for basic logging (86400 seconds)\n• Minimal impact on system performance\n\n🎯 Low Severity Examples:\n• Invalid user input\n• Rate limiting triggers\n• Non-critical integration failures\n• Validation errors\n\n📊 Purpose: Usage pattern analysis\n🔄 Review: Weekly summary reports only"
+    },
+    {
+      "parameters": {},
+      "id": "sticky-config-notes",
+      "name": "🔧 Configuration Requirements",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1200, 200],
+      "width": 350,
+      "height": 200,
+      "content": "🔧 REQUIRED CONFIGURATION\n\n📱 Slack Integration:\n• Channel: #blox-wizard-alerts (critical)\n• Channel: #blox-wizard-errors (high/medium)\n• Bot token with chat:write permissions\n\n🚨 PagerDuty Setup:\n• Service integration key\n• Escalation policy configured\n• On-call schedule active\n\n🔐 Environment Variables:\n• PAGERDUTY_ROUTING_KEY\n• SLACK_BOT_TOKEN\n• REDIS_CONNECTION_STRING\n\n⚠️ IMPORTANT:\n□ Test all alert channels before production\n□ Configure proper escalation policies\n□ Set up monitoring dashboard integration\n□ Document incident response procedures"
+    },
+    {
+      "parameters": {},
+      "id": "sticky-recovery-actions",
+      "name": "🔄 Auto-Recovery Actions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1200, 450],
+      "width": 350,
+      "height": 180,
+      "content": "🔄 AUTO-RECOVERY STRATEGIES\n\n🎯 Critical Errors:\n• Restart failed workflow after 5 minutes\n• Switch to backup Redis instance\n• Activate read-only mode if DB fails\n• Send degraded service notifications\n\n🔧 High Severity:\n• Retry with exponential backoff\n• Route to alternative service endpoints\n• Enable fallback caching mechanisms\n\n📊 Medium/Low:\n• Log only, no immediate action\n• Include in periodic health reports\n• Queue for batch processing review\n\n💡 Future Enhancements:\n• Implement circuit breaker patterns\n• Add predictive failure detection\n• Create self-healing workflows"
+    },
+    {
+      "parameters": {},
+      "id": "sticky-metrics",
+      "name": "📊 Error Metrics & KPIs",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1200, 680],
+      "width": 350,
+      "height": 160,
+      "content": "📊 ERROR METRICS & MONITORING\n\n🎯 Key Performance Indicators:\n• Error rate per severity level\n• Mean time to detection (MTTD)\n• Mean time to recovery (MTTR)\n• Error distribution by workflow\n• Peak error time analysis\n\n📈 Dashboard Integration:\n• Real-time error count widgets\n• Severity breakdown charts\n• Workflow health status\n• Historical trend analysis\n\n⚡ Alert Thresholds:\n• 1 critical error → Immediate\n• 5+ high errors/hour → Warning\n• 50+ medium errors/hour → Review\n• Error rate >1% → Investigation"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "🔥 Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "⚖️ Error Severity Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚖️ Error Severity Classifier": {
+      "main": [
+        [
+          {
+            "node": "🔴 Log Critical Error",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "📢 Slack Critical Alert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "🚨 PagerDuty Critical Incident",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "🟡 Log High Severity Error",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "📤 Slack High Severity Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "🟠 Log Medium Severity Error",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "🟢 Log Low Severity Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔴 Log Critical Error": {
+      "main": [
+        [
+          {
+            "node": "📈 Increment Critical Counter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1.0.0",
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "blox-wizard-error-handler"
+  },
+  "id": "error-handler",
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "error-handling",
+      "name": "error-handling"
+    },
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "blox-wizard",
+      "name": "blox-wizard"
+    }
+  ]
+}

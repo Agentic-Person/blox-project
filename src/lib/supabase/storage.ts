@@ -4,7 +4,8 @@ import { supabase } from './client'
 export const STORAGE_BUCKETS = {
   AVATARS: 'avatars',
   PORTFOLIO: 'portfolio',
-  RECENT_WORK: 'recent-work'
+  RECENT_WORK: 'recent-work',
+  PRACTICE_WHITEBOARDS: 'practice-whiteboards'
 } as const
 
 // Helper to generate unique file names
@@ -237,6 +238,57 @@ export const validateFile = (
   return { valid: true }
 }
 
+// Upload whiteboard image to practice storage
+export const uploadWhiteboardImage = async (
+  file: Blob,
+  userId: string,
+  moduleId: string,
+  weekId: string,
+  dayId: string
+): Promise<{ url: string | null; error: Error | null }> => {
+  try {
+    // Create a unique filename with timestamp
+    const timestamp = Date.now()
+    const fileName = `${userId}/${moduleId}/${weekId}/${dayId}/whiteboard-${timestamp}.svg`
+    
+    // Convert blob to file
+    const imageFile = new File([file], fileName, { type: file.type })
+    
+    // Mock implementation for development
+    if (!supabase || process.env.NEXT_PUBLIC_USE_MOCK_SUPABASE === 'true') {
+      // Simulate upload delay
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      // Return object URL for mock mode
+      const url = URL.createObjectURL(file)
+      return { url, error: null }
+    }
+
+    // Upload to Supabase storage
+    const { data, error } = await supabase.storage
+      .from(STORAGE_BUCKETS.PRACTICE_WHITEBOARDS)
+      .upload(fileName, imageFile, {
+        cacheControl: '3600',
+        upsert: false
+      })
+
+    if (error) {
+      console.error('Supabase upload error:', error)
+      return { url: null, error }
+    }
+
+    // Get public URL
+    const { data: publicUrlData } = supabase.storage
+      .from(STORAGE_BUCKETS.PRACTICE_WHITEBOARDS)
+      .getPublicUrl(data.path)
+
+    return { url: publicUrlData.publicUrl, error: null }
+    
+  } catch (error) {
+    console.error('Upload service error:', error)
+    return { url: null, error: error as Error }
+  }
+}
+
 // Create storage buckets (run once during setup)
 export const createStorageBuckets = async (): Promise<void> => {
   if (!supabase || process.env.NEXT_PUBLIC_USE_MOCK_SUPABASE === 'true') {
@@ -247,11 +299,15 @@ export const createStorageBuckets = async (): Promise<void> => {
   const buckets = Object.values(STORAGE_BUCKETS)
   
   for (const bucketName of buckets) {
-    const { error } = await supabase.storage.createBucket(bucketName, {
+    const bucketConfig = {
       public: true,
-      allowedMimeTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+      allowedMimeTypes: bucketName === STORAGE_BUCKETS.PRACTICE_WHITEBOARDS 
+        ? ['image/svg+xml', 'image/png', 'image/jpeg'] 
+        : ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
       fileSizeLimit: 5242880 // 5MB
-    })
+    }
+    
+    const { error } = await supabase.storage.createBucket(bucketName, bucketConfig)
     
     if (error && !error.message.includes('already exists')) {
       console.error(`Failed to create bucket ${bucketName}:`, error)

@@ -1,0 +1,50 @@
+{
+  "name": "Interaction Tracker - Analytics Engine",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "track-interaction",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "id": "tracker-webhook",
+      "name": "📊 Interaction Tracker Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [200, 300],
+      "webhookId": "blox-interaction-tracker"
+    },
+    {
+      "parameters": {
+        "content": "📊 **INTERACTION TRACKER WORKFLOW**\n\n**Purpose**: Tracks all user interactions for pattern analysis and behavioral insights\n\n**Webhook URL**: /webhook/track-interaction\n**Method**: POST\n\n**Event Types Tracked**:\n- VIDEO_WATCH: Video viewing behavior\n- CHAT_QUERY: AI assistant usage\n- TASK_COMPLETE: Learning progress\n- HELP_REQUEST: Support interactions\n- SESSION_START/END: Session tracking\n\n**Features**:\n- Real-time pattern analysis\n- Flag detection for concerning behavior\n- Learning progress insights\n- Usage optimization recommendations\n- XSS protection and input sanitization\n- Rate limiting ready\n\n**Security**: Input validation, SQL injection protection, rate limiting",
+        "height": 360,
+        "width": 360,
+        "color": 3
+      },
+      "id": "sticky-overview",
+      "name": "📋 Tracker Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [20, 80]
+    }
+  ],
+  "connections": {},
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-01T12:00:00.000Z",
+      "updatedAt": "2025-01-01T12:00:00.000Z",
+      "id": "analytics",
+      "name": "analytics"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-01T12:00:00.000Z",
+  "versionId": "1"
+}

@@ -1,0 +1,1098 @@
+📖 Reading: D:\BloxProject\src\data\curriculum.json
+🔍 Validating curriculum structure...
+# 📋 Curriculum Validation Report
+
+**Validation Date:** 2025-08-30T22:39:54.888Z
+**File:** curriculum.json
+
+## ❌ Validation Status: FAILED
+Critical errors found that need to be fixed.
+
+## 📊 Curriculum Statistics
+
+- **Modules:** 6
+- **Weeks:** 24
+- **Days:** 120
+- **Total Videos:** 213
+- **Valid Videos:** 53
+- **Placeholder Videos:** 0
+- **Substitute Videos:** 0
+- **Invalid YouTube IDs:** 160
+- **Missing Thumbnails:** 193
+- **Duplicate IDs:** 0
+
+## ❌ Errors (160)
+
+1. **Invalid YouTube ID format**
+   📍 Location: Module 1, Week 3, Day 2, Video 4
+
+2. **Invalid YouTube ID format**
+   📍 Location: Module 1, Week 4, Day 4, Video 2
+
+3. **Invalid YouTube ID format**
+   📍 Location: Module 1, Week 4, Day 4, Video 3
+
+4. **Invalid YouTube ID format**
+   📍 Location: Module 1, Week 4, Day 5, Video 1
+
+5. **Invalid YouTube ID format**
+   📍 Location: Module 1, Week 4, Day 5, Video 2
+
+6. **Invalid YouTube ID format**
+   📍 Location: Module 1, Week 4, Day 5, Video 3
+
+7. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 1, Day 1, Video 1
+
+8. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 1, Day 1, Video 2
+
+9. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 1, Day 1, Video 3
+
+10. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 1, Day 1, Video 4
+
+11. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 1, Day 2, Video 1
+
+12. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 1, Day 2, Video 2
+
+13. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 1, Day 2, Video 3
+
+14. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 1, Day 3, Video 1
+
+15. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 1, Day 3, Video 2
+
+16. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 1, Day 3, Video 3
+
+17. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 1, Day 3, Video 4
+
+18. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 1, Day 4, Video 1
+
+19. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 1, Day 4, Video 2
+
+20. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 1, Day 4, Video 3
+
+21. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 1, Day 5, Video 1
+
+22. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 1, Day 5, Video 2
+
+23. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 1, Day 5, Video 3
+
+24. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 1, Day 5, Video 4
+
+25. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 2, Day 1, Video 1
+
+26. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 2, Day 1, Video 2
+
+27. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 2, Day 1, Video 3
+
+28. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 2, Day 1, Video 4
+
+29. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 2, Day 2, Video 1
+
+30. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 2, Day 2, Video 2
+
+31. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 2, Day 2, Video 3
+
+32. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 2, Day 3, Video 1
+
+33. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 2, Day 3, Video 2
+
+34. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 2, Day 3, Video 3
+
+35. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 2, Day 3, Video 4
+
+36. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 2, Day 4, Video 1
+
+37. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 2, Day 4, Video 2
+
+38. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 2, Day 4, Video 3
+
+39. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 2, Day 4, Video 4
+
+40. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 2, Day 5, Video 1
+
+41. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 2, Day 5, Video 2
+
+42. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 2, Day 5, Video 3
+
+43. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 2, Day 5, Video 4
+
+44. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 3, Day 1, Video 1
+
+45. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 3, Day 1, Video 2
+
+46. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 3, Day 1, Video 3
+
+47. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 3, Day 1, Video 4
+
+48. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 3, Day 2, Video 1
+
+49. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 3, Day 2, Video 2
+
+50. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 3, Day 2, Video 3
+
+51. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 3, Day 3, Video 1
+
+52. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 3, Day 3, Video 2
+
+53. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 3, Day 3, Video 3
+
+54. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 3, Day 3, Video 4
+
+55. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 3, Day 4, Video 1
+
+56. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 3, Day 4, Video 2
+
+57. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 3, Day 4, Video 3
+
+58. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 3, Day 5, Video 1
+
+59. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 3, Day 5, Video 2
+
+60. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 3, Day 5, Video 3
+
+61. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 3, Day 5, Video 4
+
+62. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 4, Day 1, Video 1
+
+63. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 4, Day 1, Video 2
+
+64. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 4, Day 1, Video 3
+
+65. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 4, Day 1, Video 4
+
+66. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 4, Day 2, Video 1
+
+67. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 4, Day 2, Video 2
+
+68. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 4, Day 2, Video 3
+
+69. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 4, Day 3, Video 1
+
+70. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 4, Day 3, Video 2
+
+71. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 4, Day 3, Video 3
+
+72. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 4, Day 3, Video 4
+
+73. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 4, Day 4, Video 1
+
+74. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 4, Day 4, Video 2
+
+75. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 4, Day 4, Video 3
+
+76. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 4, Day 4, Video 4
+
+77. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 4, Day 5, Video 1
+
+78. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 4, Day 5, Video 2
+
+79. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 4, Day 5, Video 3
+
+80. **Invalid YouTube ID format**
+   📍 Location: Module 2, Week 4, Day 5, Video 4
+
+81. **Invalid YouTube ID format**
+   📍 Location: Module 3, Week 1, Day 1, Video 1
+
+82. **Invalid YouTube ID format**
+   📍 Location: Module 3, Week 1, Day 2, Video 1
+
+83. **Invalid YouTube ID format**
+   📍 Location: Module 3, Week 1, Day 3, Video 1
+
+84. **Invalid YouTube ID format**
+   📍 Location: Module 3, Week 1, Day 4, Video 1
+
+85. **Invalid YouTube ID format**
+   📍 Location: Module 3, Week 1, Day 5, Video 1
+
+86. **Invalid YouTube ID format**
+   📍 Location: Module 3, Week 2, Day 1, Video 1
+
+87. **Invalid YouTube ID format**
+   📍 Location: Module 3, Week 2, Day 2, Video 1
+
+88. **Invalid YouTube ID format**
+   📍 Location: Module 3, Week 2, Day 3, Video 1
+
+89. **Invalid YouTube ID format**
+   📍 Location: Module 3, Week 2, Day 4, Video 1
+
+90. **Invalid YouTube ID format**
+   📍 Location: Module 3, Week 2, Day 5, Video 1
+
+91. **Invalid YouTube ID format**
+   📍 Location: Module 3, Week 3, Day 1, Video 1
+
+92. **Invalid YouTube ID format**
+   📍 Location: Module 3, Week 3, Day 2, Video 1
+
+93. **Invalid YouTube ID format**
+   📍 Location: Module 3, Week 3, Day 3, Video 1
+
+94. **Invalid YouTube ID format**
+   📍 Location: Module 3, Week 3, Day 4, Video 1
+
+95. **Invalid YouTube ID format**
+   📍 Location: Module 3, Week 3, Day 5, Video 1
+
+96. **Invalid YouTube ID format**
+   📍 Location: Module 3, Week 4, Day 1, Video 1
+
+97. **Invalid YouTube ID format**
+   📍 Location: Module 3, Week 4, Day 2, Video 1
+
+98. **Invalid YouTube ID format**
+   📍 Location: Module 3, Week 4, Day 3, Video 1
+
+99. **Invalid YouTube ID format**
+   📍 Location: Module 3, Week 4, Day 4, Video 1
+
+100. **Invalid YouTube ID format**
+   📍 Location: Module 3, Week 4, Day 5, Video 1
+
+101. **Invalid YouTube ID format**
+   📍 Location: Module 4, Week 1, Day 1, Video 1
+
+102. **Invalid YouTube ID format**
+   📍 Location: Module 4, Week 1, Day 2, Video 1
+
+103. **Invalid YouTube ID format**
+   📍 Location: Module 4, Week 1, Day 3, Video 1
+
+104. **Invalid YouTube ID format**
+   📍 Location: Module 4, Week 1, Day 4, Video 1
+
+105. **Invalid YouTube ID format**
+   📍 Location: Module 4, Week 1, Day 5, Video 1
+
+106. **Invalid YouTube ID format**
+   📍 Location: Module 4, Week 2, Day 1, Video 1
+
+107. **Invalid YouTube ID format**
+   📍 Location: Module 4, Week 2, Day 2, Video 1
+
+108. **Invalid YouTube ID format**
+   📍 Location: Module 4, Week 2, Day 3, Video 1
+
+109. **Invalid YouTube ID format**
+   📍 Location: Module 4, Week 2, Day 4, Video 1
+
+110. **Invalid YouTube ID format**
+   📍 Location: Module 4, Week 2, Day 5, Video 1
+
+111. **Invalid YouTube ID format**
+   📍 Location: Module 4, Week 3, Day 1, Video 1
+
+112. **Invalid YouTube ID format**
+   📍 Location: Module 4, Week 3, Day 2, Video 1
+
+113. **Invalid YouTube ID format**
+   📍 Location: Module 4, Week 3, Day 3, Video 1
+
+114. **Invalid YouTube ID format**
+   📍 Location: Module 4, Week 3, Day 4, Video 1
+
+115. **Invalid YouTube ID format**
+   📍 Location: Module 4, Week 3, Day 5, Video 1
+
+116. **Invalid YouTube ID format**
+   📍 Location: Module 4, Week 4, Day 1, Video 1
+
+117. **Invalid YouTube ID format**
+   📍 Location: Module 4, Week 4, Day 2, Video 1
+
+118. **Invalid YouTube ID format**
+   📍 Location: Module 4, Week 4, Day 3, Video 1
+
+119. **Invalid YouTube ID format**
+   📍 Location: Module 4, Week 4, Day 4, Video 1
+
+120. **Invalid YouTube ID format**
+   📍 Location: Module 4, Week 4, Day 5, Video 1
+
+121. **Invalid YouTube ID format**
+   📍 Location: Module 5, Week 1, Day 1, Video 1
+
+122. **Invalid YouTube ID format**
+   📍 Location: Module 5, Week 1, Day 2, Video 1
+
+123. **Invalid YouTube ID format**
+   📍 Location: Module 5, Week 1, Day 3, Video 1
+
+124. **Invalid YouTube ID format**
+   📍 Location: Module 5, Week 1, Day 4, Video 1
+
+125. **Invalid YouTube ID format**
+   📍 Location: Module 5, Week 1, Day 5, Video 1
+
+126. **Invalid YouTube ID format**
+   📍 Location: Module 5, Week 2, Day 1, Video 1
+
+127. **Invalid YouTube ID format**
+   📍 Location: Module 5, Week 2, Day 2, Video 1
+
+128. **Invalid YouTube ID format**
+   📍 Location: Module 5, Week 2, Day 3, Video 1
+
+129. **Invalid YouTube ID format**
+   📍 Location: Module 5, Week 2, Day 4, Video 1
+
+130. **Invalid YouTube ID format**
+   📍 Location: Module 5, Week 2, Day 5, Video 1
+
+131. **Invalid YouTube ID format**
+   📍 Location: Module 5, Week 3, Day 1, Video 1
+
+132. **Invalid YouTube ID format**
+   📍 Location: Module 5, Week 3, Day 2, Video 1
+
+133. **Invalid YouTube ID format**
+   📍 Location: Module 5, Week 3, Day 3, Video 1
+
+134. **Invalid YouTube ID format**
+   📍 Location: Module 5, Week 3, Day 4, Video 1
+
+135. **Invalid YouTube ID format**
+   📍 Location: Module 5, Week 3, Day 5, Video 1
+
+136. **Invalid YouTube ID format**
+   📍 Location: Module 5, Week 4, Day 1, Video 1
+
+137. **Invalid YouTube ID format**
+   📍 Location: Module 5, Week 4, Day 2, Video 1
+
+138. **Invalid YouTube ID format**
+   📍 Location: Module 5, Week 4, Day 3, Video 1
+
+139. **Invalid YouTube ID format**
+   📍 Location: Module 5, Week 4, Day 4, Video 1
+
+140. **Invalid YouTube ID format**
+   📍 Location: Module 5, Week 4, Day 5, Video 1
+
+141. **Invalid YouTube ID format**
+   📍 Location: Module 6, Week 1, Day 1, Video 1
+
+142. **Invalid YouTube ID format**
+   📍 Location: Module 6, Week 1, Day 2, Video 1
+
+143. **Invalid YouTube ID format**
+   📍 Location: Module 6, Week 1, Day 3, Video 1
+
+144. **Invalid YouTube ID format**
+   📍 Location: Module 6, Week 1, Day 4, Video 1
+
+145. **Invalid YouTube ID format**
+   📍 Location: Module 6, Week 1, Day 5, Video 1
+
+146. **Invalid YouTube ID format**
+   📍 Location: Module 6, Week 2, Day 1, Video 1
+
+147. **Invalid YouTube ID format**
+   📍 Location: Module 6, Week 2, Day 2, Video 1
+
+148. **Invalid YouTube ID format**
+   📍 Location: Module 6, Week 2, Day 3, Video 1
+
+149. **Invalid YouTube ID format**
+   📍 Location: Module 6, Week 2, Day 4, Video 1
+
+150. **Invalid YouTube ID format**
+   📍 Location: Module 6, Week 2, Day 5, Video 1
+
+151. **Invalid YouTube ID format**
+   📍 Location: Module 6, Week 3, Day 1, Video 1
+
+152. **Invalid YouTube ID format**
+   📍 Location: Module 6, Week 3, Day 2, Video 1
+
+153. **Invalid YouTube ID format**
+   📍 Location: Module 6, Week 3, Day 3, Video 1
+
+154. **Invalid YouTube ID format**
+   📍 Location: Module 6, Week 3, Day 4, Video 1
+
+155. **Invalid YouTube ID format**
+   📍 Location: Module 6, Week 3, Day 5, Video 1
+
+156. **Invalid YouTube ID format**
+   📍 Location: Module 6, Week 4, Day 1, Video 1
+
+157. **Invalid YouTube ID format**
+   📍 Location: Module 6, Week 4, Day 2, Video 1
+
+158. **Invalid YouTube ID format**
+   📍 Location: Module 6, Week 4, Day 3, Video 1
+
+159. **Invalid YouTube ID format**
+   📍 Location: Module 6, Week 4, Day 4, Video 1
+
+160. **Invalid YouTube ID format**
+   📍 Location: Module 6, Week 4, Day 5, Video 1
+
+## ⚠️ Warnings (195)
+
+1. **Video missing thumbnail**
+   📍 Location: Module 1, Week 3, Day 1, Video 1
+
+2. **Video missing thumbnail**
+   📍 Location: Module 1, Week 3, Day 1, Video 2
+
+3. **Video missing thumbnail**
+   📍 Location: Module 1, Week 3, Day 1, Video 3
+
+4. **Video missing thumbnail**
+   📍 Location: Module 1, Week 3, Day 1, Video 4
+
+5. **Video missing thumbnail**
+   📍 Location: Module 1, Week 3, Day 2, Video 1
+
+6. **Video missing thumbnail**
+   📍 Location: Module 1, Week 3, Day 2, Video 2
+
+7. **Video missing thumbnail**
+   📍 Location: Module 1, Week 3, Day 2, Video 3
+
+8. **Video missing thumbnail**
+   📍 Location: Module 1, Week 3, Day 2, Video 4
+
+9. **Video missing thumbnail**
+   📍 Location: Module 1, Week 3, Day 3, Video 1
+
+10. **Video missing thumbnail**
+   📍 Location: Module 1, Week 3, Day 3, Video 2
+
+11. **Video missing thumbnail**
+   📍 Location: Module 1, Week 3, Day 3, Video 3
+
+12. **Video missing thumbnail**
+   📍 Location: Module 1, Week 3, Day 3, Video 4
+
+13. **Video missing thumbnail**
+   📍 Location: Module 1, Week 3, Day 4, Video 1
+
+14. **Video missing thumbnail**
+   📍 Location: Module 1, Week 3, Day 4, Video 2
+
+15. **Video missing thumbnail**
+   📍 Location: Module 1, Week 3, Day 4, Video 3
+
+16. **Video missing thumbnail**
+   📍 Location: Module 1, Week 3, Day 4, Video 4
+
+17. **Video missing thumbnail**
+   📍 Location: Module 1, Week 3, Day 5, Video 1
+
+18. **Video missing thumbnail**
+   📍 Location: Module 1, Week 3, Day 5, Video 2
+
+19. **Video missing thumbnail**
+   📍 Location: Module 1, Week 3, Day 5, Video 3
+
+20. **Video missing thumbnail**
+   📍 Location: Module 1, Week 3, Day 5, Video 4
+
+21. **Video missing thumbnail**
+   📍 Location: Module 1, Week 3, Day 5, Video 5
+
+22. **Video missing thumbnail**
+   📍 Location: Module 1, Week 4, Day 1, Video 1
+
+23. **Video missing thumbnail**
+   📍 Location: Module 1, Week 4, Day 1, Video 2
+
+24. **Video missing thumbnail**
+   📍 Location: Module 1, Week 4, Day 1, Video 3
+
+25. **Video missing thumbnail**
+   📍 Location: Module 1, Week 4, Day 1, Video 4
+
+26. **Video missing thumbnail**
+   📍 Location: Module 1, Week 4, Day 2, Video 1
+
+27. **Video missing thumbnail**
+   📍 Location: Module 1, Week 4, Day 2, Video 2
+
+28. **Video missing thumbnail**
+   📍 Location: Module 1, Week 4, Day 2, Video 3
+
+29. **Video missing thumbnail**
+   📍 Location: Module 1, Week 4, Day 2, Video 4
+
+30. **Video missing thumbnail**
+   📍 Location: Module 1, Week 4, Day 3, Video 1
+
+31. **Video missing thumbnail**
+   📍 Location: Module 1, Week 4, Day 3, Video 2
+
+32. **Video missing thumbnail**
+   📍 Location: Module 1, Week 4, Day 3, Video 3
+
+33. **Video missing thumbnail**
+   📍 Location: Module 1, Week 4, Day 3, Video 4
+
+34. **Video missing thumbnail**
+   📍 Location: Module 1, Week 4, Day 4, Video 1
+
+35. **Video missing thumbnail**
+   📍 Location: Module 1, Week 4, Day 4, Video 2
+
+36. **Video missing thumbnail**
+   📍 Location: Module 1, Week 4, Day 4, Video 3
+
+37. **Video missing thumbnail**
+   📍 Location: Module 1, Week 4, Day 5, Video 1
+
+38. **Video missing thumbnail**
+   📍 Location: Module 1, Week 4, Day 5, Video 2
+
+39. **Video missing thumbnail**
+   📍 Location: Module 1, Week 4, Day 5, Video 3
+
+40. **Video missing thumbnail**
+   📍 Location: Module 2, Week 1, Day 1, Video 1
+
+41. **Video missing thumbnail**
+   📍 Location: Module 2, Week 1, Day 1, Video 2
+
+42. **Video missing thumbnail**
+   📍 Location: Module 2, Week 1, Day 1, Video 3
+
+43. **Video missing thumbnail**
+   📍 Location: Module 2, Week 1, Day 1, Video 4
+
+44. **Video missing thumbnail**
+   📍 Location: Module 2, Week 1, Day 2, Video 1
+
+45. **Video missing thumbnail**
+   📍 Location: Module 2, Week 1, Day 2, Video 2
+
+46. **Video missing thumbnail**
+   📍 Location: Module 2, Week 1, Day 2, Video 3
+
+47. **Video missing thumbnail**
+   📍 Location: Module 2, Week 1, Day 3, Video 1
+
+48. **Video missing thumbnail**
+   📍 Location: Module 2, Week 1, Day 3, Video 2
+
+49. **Video missing thumbnail**
+   📍 Location: Module 2, Week 1, Day 3, Video 3
+
+50. **Video missing thumbnail**
+   📍 Location: Module 2, Week 1, Day 3, Video 4
+
+51. **Video missing thumbnail**
+   📍 Location: Module 2, Week 1, Day 4, Video 1
+
+52. **Video missing thumbnail**
+   📍 Location: Module 2, Week 1, Day 4, Video 2
+
+53. **Video missing thumbnail**
+   📍 Location: Module 2, Week 1, Day 4, Video 3
+
+54. **Video missing thumbnail**
+   📍 Location: Module 2, Week 1, Day 5, Video 1
+
+55. **Video missing thumbnail**
+   📍 Location: Module 2, Week 1, Day 5, Video 2
+
+56. **Video missing thumbnail**
+   📍 Location: Module 2, Week 1, Day 5, Video 3
+
+57. **Video missing thumbnail**
+   📍 Location: Module 2, Week 1, Day 5, Video 4
+
+58. **Video missing thumbnail**
+   📍 Location: Module 2, Week 2, Day 1, Video 1
+
+59. **Video missing thumbnail**
+   📍 Location: Module 2, Week 2, Day 1, Video 2
+
+60. **Video missing thumbnail**
+   📍 Location: Module 2, Week 2, Day 1, Video 3
+
+61. **Video missing thumbnail**
+   📍 Location: Module 2, Week 2, Day 1, Video 4
+
+62. **Video missing thumbnail**
+   📍 Location: Module 2, Week 2, Day 2, Video 1
+
+63. **Video missing thumbnail**
+   📍 Location: Module 2, Week 2, Day 2, Video 2
+
+64. **Video missing thumbnail**
+   📍 Location: Module 2, Week 2, Day 2, Video 3
+
+65. **Video missing thumbnail**
+   📍 Location: Module 2, Week 2, Day 3, Video 1
+
+66. **Video missing thumbnail**
+   📍 Location: Module 2, Week 2, Day 3, Video 2
+
+67. **Video missing thumbnail**
+   📍 Location: Module 2, Week 2, Day 3, Video 3
+
+68. **Video missing thumbnail**
+   📍 Location: Module 2, Week 2, Day 3, Video 4
+
+69. **Video missing thumbnail**
+   📍 Location: Module 2, Week 2, Day 4, Video 1
+
+70. **Video missing thumbnail**
+   📍 Location: Module 2, Week 2, Day 4, Video 2
+
+71. **Video missing thumbnail**
+   📍 Location: Module 2, Week 2, Day 4, Video 3
+
+72. **Video missing thumbnail**
+   📍 Location: Module 2, Week 2, Day 4, Video 4
+
+73. **Video missing thumbnail**
+   📍 Location: Module 2, Week 2, Day 5, Video 1
+
+74. **Video missing thumbnail**
+   📍 Location: Module 2, Week 2, Day 5, Video 2
+
+75. **Video missing thumbnail**
+   📍 Location: Module 2, Week 2, Day 5, Video 3
+
+76. **Video missing thumbnail**
+   📍 Location: Module 2, Week 2, Day 5, Video 4
+
+77. **Video missing thumbnail**
+   📍 Location: Module 2, Week 3, Day 1, Video 1
+
+78. **Video missing thumbnail**
+   📍 Location: Module 2, Week 3, Day 1, Video 2
+
+79. **Video missing thumbnail**
+   📍 Location: Module 2, Week 3, Day 1, Video 3
+
+80. **Video missing thumbnail**
+   📍 Location: Module 2, Week 3, Day 1, Video 4
+
+81. **Video missing thumbnail**
+   📍 Location: Module 2, Week 3, Day 2, Video 1
+
+82. **Video missing thumbnail**
+   📍 Location: Module 2, Week 3, Day 2, Video 2
+
+83. **Video missing thumbnail**
+   📍 Location: Module 2, Week 3, Day 2, Video 3
+
+84. **Video missing thumbnail**
+   📍 Location: Module 2, Week 3, Day 3, Video 1
+
+85. **Video missing thumbnail**
+   📍 Location: Module 2, Week 3, Day 3, Video 2
+
+86. **Video missing thumbnail**
+   📍 Location: Module 2, Week 3, Day 3, Video 3
+
+87. **Video missing thumbnail**
+   📍 Location: Module 2, Week 3, Day 3, Video 4
+
+88. **Video missing thumbnail**
+   📍 Location: Module 2, Week 3, Day 4, Video 1
+
+89. **Video missing thumbnail**
+   📍 Location: Module 2, Week 3, Day 4, Video 2
+
+90. **Video missing thumbnail**
+   📍 Location: Module 2, Week 3, Day 4, Video 3
+
+91. **Video missing thumbnail**
+   📍 Location: Module 2, Week 3, Day 5, Video 1
+
+92. **Video missing thumbnail**
+   📍 Location: Module 2, Week 3, Day 5, Video 2
+
+93. **Video missing thumbnail**
+   📍 Location: Module 2, Week 3, Day 5, Video 3
+
+94. **Video missing thumbnail**
+   📍 Location: Module 2, Week 3, Day 5, Video 4
+
+95. **Video missing thumbnail**
+   📍 Location: Module 2, Week 4, Day 1, Video 1
+
+96. **Video missing thumbnail**
+   📍 Location: Module 2, Week 4, Day 1, Video 2
+
+97. **Video missing thumbnail**
+   📍 Location: Module 2, Week 4, Day 1, Video 3
+
+98. **Video missing thumbnail**
+   📍 Location: Module 2, Week 4, Day 1, Video 4
+
+99. **Video missing thumbnail**
+   📍 Location: Module 2, Week 4, Day 2, Video 1
+
+100. **Video missing thumbnail**
+   📍 Location: Module 2, Week 4, Day 2, Video 2
+
+101. **Video missing thumbnail**
+   📍 Location: Module 2, Week 4, Day 2, Video 3
+
+102. **Video missing thumbnail**
+   📍 Location: Module 2, Week 4, Day 3, Video 1
+
+103. **Video missing thumbnail**
+   📍 Location: Module 2, Week 4, Day 3, Video 2
+
+104. **Video missing thumbnail**
+   📍 Location: Module 2, Week 4, Day 3, Video 3
+
+105. **Video missing thumbnail**
+   📍 Location: Module 2, Week 4, Day 3, Video 4
+
+106. **Video missing thumbnail**
+   📍 Location: Module 2, Week 4, Day 4, Video 1
+
+107. **Video missing thumbnail**
+   📍 Location: Module 2, Week 4, Day 4, Video 2
+
+108. **Video missing thumbnail**
+   📍 Location: Module 2, Week 4, Day 4, Video 3
+
+109. **Video missing thumbnail**
+   📍 Location: Module 2, Week 4, Day 4, Video 4
+
+110. **Video missing thumbnail**
+   📍 Location: Module 2, Week 4, Day 5, Video 1
+
+111. **Video missing thumbnail**
+   📍 Location: Module 2, Week 4, Day 5, Video 2
+
+112. **Video missing thumbnail**
+   📍 Location: Module 2, Week 4, Day 5, Video 3
+
+113. **Video missing thumbnail**
+   📍 Location: Module 2, Week 4, Day 5, Video 4
+
+114. **Video missing thumbnail**
+   📍 Location: Module 3, Week 1, Day 1, Video 1
+
+115. **Video missing thumbnail**
+   📍 Location: Module 3, Week 1, Day 2, Video 1
+
+116. **Video missing thumbnail**
+   📍 Location: Module 3, Week 1, Day 3, Video 1
+
+117. **Video missing thumbnail**
+   📍 Location: Module 3, Week 1, Day 4, Video 1
+
+118. **Video missing thumbnail**
+   📍 Location: Module 3, Week 1, Day 5, Video 1
+
+119. **Video missing thumbnail**
+   📍 Location: Module 3, Week 2, Day 1, Video 1
+
+120. **Video missing thumbnail**
+   📍 Location: Module 3, Week 2, Day 2, Video 1
+
+121. **Video missing thumbnail**
+   📍 Location: Module 3, Week 2, Day 3, Video 1
+
+122. **Video missing thumbnail**
+   📍 Location: Module 3, Week 2, Day 4, Video 1
+
+123. **Video missing thumbnail**
+   📍 Location: Module 3, Week 2, Day 5, Video 1
+
+124. **Video missing thumbnail**
+   📍 Location: Module 3, Week 3, Day 1, Video 1
+
+125. **Video missing thumbnail**
+   📍 Location: Module 3, Week 3, Day 2, Video 1
+
+126. **Video missing thumbnail**
+   📍 Location: Module 3, Week 3, Day 3, Video 1
+
+127. **Video missing thumbnail**
+   📍 Location: Module 3, Week 3, Day 4, Video 1
+
+128. **Video missing thumbnail**
+   📍 Location: Module 3, Week 3, Day 5, Video 1
+
+129. **Video missing thumbnail**
+   📍 Location: Module 3, Week 4, Day 1, Video 1
+
+130. **Video missing thumbnail**
+   📍 Location: Module 3, Week 4, Day 2, Video 1
+
+131. **Video missing thumbnail**
+   📍 Location: Module 3, Week 4, Day 3, Video 1
+
+132. **Video missing thumbnail**
+   📍 Location: Module 3, Week 4, Day 4, Video 1
+
+133. **Video missing thumbnail**
+   📍 Location: Module 3, Week 4, Day 5, Video 1
+
+134. **Video missing thumbnail**
+   📍 Location: Module 4, Week 1, Day 1, Video 1
+
+135. **Video missing thumbnail**
+   📍 Location: Module 4, Week 1, Day 2, Video 1
+
+136. **Video missing thumbnail**
+   📍 Location: Module 4, Week 1, Day 3, Video 1
+
+137. **Video missing thumbnail**
+   📍 Location: Module 4, Week 1, Day 4, Video 1
+
+138. **Video missing thumbnail**
+   📍 Location: Module 4, Week 1, Day 5, Video 1
+
+139. **Video missing thumbnail**
+   📍 Location: Module 4, Week 2, Day 1, Video 1
+
+140. **Video missing thumbnail**
+   📍 Location: Module 4, Week 2, Day 2, Video 1
+
+141. **Video missing thumbnail**
+   📍 Location: Module 4, Week 2, Day 3, Video 1
+
+142. **Video missing thumbnail**
+   📍 Location: Module 4, Week 2, Day 4, Video 1
+
+143. **Video missing thumbnail**
+   📍 Location: Module 4, Week 2, Day 5, Video 1
+
+144. **Video missing thumbnail**
+   📍 Location: Module 4, Week 3, Day 1, Video 1
+
+145. **Video missing thumbnail**
+   📍 Location: Module 4, Week 3, Day 2, Video 1
+
+146. **Video missing thumbnail**
+   📍 Location: Module 4, Week 3, Day 3, Video 1
+
+147. **Video missing thumbnail**
+   📍 Location: Module 4, Week 3, Day 4, Video 1
+
+148. **Video missing thumbnail**
+   📍 Location: Module 4, Week 3, Day 5, Video 1
+
+149. **Video missing thumbnail**
+   📍 Location: Module 4, Week 4, Day 1, Video 1
+
+150. **Video missing thumbnail**
+   📍 Location: Module 4, Week 4, Day 2, Video 1
+
+151. **Video missing thumbnail**
+   📍 Location: Module 4, Week 4, Day 3, Video 1
+
+152. **Video missing thumbnail**
+   📍 Location: Module 4, Week 4, Day 4, Video 1
+
+153. **Video missing thumbnail**
+   📍 Location: Module 4, Week 4, Day 5, Video 1
+
+154. **Video missing thumbnail**
+   📍 Location: Module 5, Week 1, Day 1, Video 1
+
+155. **Video missing thumbnail**
+   📍 Location: Module 5, Week 1, Day 2, Video 1
+
+156. **Video missing thumbnail**
+   📍 Location: Module 5, Week 1, Day 3, Video 1
+
+157. **Video missing thumbnail**
+   📍 Location: Module 5, Week 1, Day 4, Video 1
+
+158. **Video missing thumbnail**
+   📍 Location: Module 5, Week 1, Day 5, Video 1
+
+159. **Video missing thumbnail**
+   📍 Location: Module 5, Week 2, Day 1, Video 1
+
+160. **Video missing thumbnail**
+   📍 Location: Module 5, Week 2, Day 2, Video 1
+
+161. **Video missing thumbnail**
+   📍 Location: Module 5, Week 2, Day 3, Video 1
+
+162. **Video missing thumbnail**
+   📍 Location: Module 5, Week 2, Day 4, Video 1
+
+163. **Video missing thumbnail**
+   📍 Location: Module 5, Week 2, Day 5, Video 1
+
+164. **Video missing thumbnail**
+   📍 Location: Module 5, Week 3, Day 1, Video 1
+
+165. **Video missing thumbnail**
+   📍 Location: Module 5, Week 3, Day 2, Video 1
+
+166. **Video missing thumbnail**
+   📍 Location: Module 5, Week 3, Day 3, Video 1
+
+167. **Video missing thumbnail**
+   📍 Location: Module 5, Week 3, Day 4, Video 1
+
+168. **Video missing thumbnail**
+   📍 Location: Module 5, Week 3, Day 5, Video 1
+
+169. **Video missing thumbnail**
+   📍 Location: Module 5, Week 4, Day 1, Video 1
+
+170. **Video missing thumbnail**
+   📍 Location: Module 5, Week 4, Day 2, Video 1
+
+171. **Video missing thumbnail**
+   📍 Location: Module 5, Week 4, Day 3, Video 1
+
+172. **Video missing thumbnail**
+   📍 Location: Module 5, Week 4, Day 4, Video 1
+
+173. **XP reward seems unusual (should be 1-100)**
+   📍 Location: Module 5, Week 4, Day 5, Video 1
+
+174. **Video missing thumbnail**
+   📍 Location: Module 5, Week 4, Day 5, Video 1
+
+175. **Video missing thumbnail**
+   📍 Location: Module 6, Week 1, Day 1, Video 1
+
+176. **Video missing thumbnail**
+   📍 Location: Module 6, Week 1, Day 2, Video 1
+
+177. **Video missing thumbnail**
+   📍 Location: Module 6, Week 1, Day 3, Video 1
+
+178. **Video missing thumbnail**
+   📍 Location: Module 6, Week 1, Day 4, Video 1
+
+179. **Video missing thumbnail**
+   📍 Location: Module 6, Week 1, Day 5, Video 1
+
+180. **Video missing thumbnail**
+   📍 Location: Module 6, Week 2, Day 1, Video 1
+
+181. **Video missing thumbnail**
+   📍 Location: Module 6, Week 2, Day 2, Video 1
+
+182. **Video missing thumbnail**
+   📍 Location: Module 6, Week 2, Day 3, Video 1
+
+183. **Video missing thumbnail**
+   📍 Location: Module 6, Week 2, Day 4, Video 1
+
+184. **Video missing thumbnail**
+   📍 Location: Module 6, Week 2, Day 5, Video 1
+
+185. **Video missing thumbnail**
+   📍 Location: Module 6, Week 3, Day 1, Video 1
+
+186. **Video missing thumbnail**
+   📍 Location: Module 6, Week 3, Day 2, Video 1
+
+187. **Video missing thumbnail**
+   📍 Location: Module 6, Week 3, Day 3, Video 1
+
+188. **Video missing thumbnail**
+   📍 Location: Module 6, Week 3, Day 4, Video 1
+
+189. **Video missing thumbnail**
+   📍 Location: Module 6, Week 3, Day 5, Video 1
+
+190. **Video missing thumbnail**
+   📍 Location: Module 6, Week 4, Day 1, Video 1
+
+191. **Video missing thumbnail**
+   📍 Location: Module 6, Week 4, Day 2, Video 1
+
+192. **Video missing thumbnail**
+   📍 Location: Module 6, Week 4, Day 3, Video 1
+
+193. **Video missing thumbnail**
+   📍 Location: Module 6, Week 4, Day 4, Video 1
+
+194. **XP reward seems unusual (should be 1-100)**
+   📍 Location: Module 6, Week 4, Day 5, Video 1
+
+195. **Video missing thumbnail**
+   📍 Location: Module 6, Week 4, Day 5, Video 1
+
+## 💡 Recommendations
+
+- Fix 160 invalid YouTube ID formats
+- Add thumbnail URLs for 193 videos
+
+📄 Full report saved to: D:\BloxProject\docs\curriculum-validation-report.md

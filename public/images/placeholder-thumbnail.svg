@@ -1,0 +1,35 @@
+<svg width="480" height="360" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 360">
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#001D39;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#002246;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#001D39;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="teal-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#36B0D9;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9333EA;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="480" height="360" fill="url(#bg-gradient)"/>
+  
+  <!-- Border -->
+  <rect x="2" y="2" width="476" height="356" fill="none" stroke="rgba(54, 176, 217, 0.3)" stroke-width="2"/>
+  
+  <!-- BLOX BUDDY Text -->
+  <text x="240" y="130" font-family="Arial, sans-serif" font-weight="bold" font-size="32" fill="url(#teal-gradient)" text-anchor="middle">BLOX BUDDY</text>
+  
+  <!-- Play button background -->
+  <circle cx="240" cy="180" r="35" fill="rgba(54, 176, 217, 0.2)" stroke="rgba(54, 176, 217, 0.8)" stroke-width="3"/>
+  
+  <!-- Play triangle -->
+  <polygon points="225,165 225,195 260,180" fill="rgba(54, 176, 217, 0.9)"/>
+  
+  <!-- Coming Soon text -->
+  <text x="240" y="220" font-family="Arial, sans-serif" font-size="16" fill="#DDDDDD" text-anchor="middle">Coming Soon</text>
+  <text x="240" y="245" font-family="Arial, sans-serif" font-size="12" fill="#9AB6E0" text-anchor="middle">Video content will be available soon</text>
+  
+  <!-- Bottom right corner logo -->
+  <text x="460" y="345" font-family="Arial, sans-serif" font-size="10" fill="rgba(54, 176, 217, 0.6)" text-anchor="end">BLOX</text>
+</svg>

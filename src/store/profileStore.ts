@@ -131,7 +131,7 @@ const mockProfile: ProfileData = {
   username: 'blocks-builder-1-2-3',
   fullName: 'Alex Thompson',
   email: 'alex.thompson@example.com',
-  avatarUrl: '/images/avatars/jimmyWizard.jpg',
+  avatarUrl: '/images/avatars/JimmyCozyMtns.png',
   joinDate: 'January 15, 2024',
   background: 'I started my journey in game development about 2 years ago when I discovered Roblox Studio.',
   currentStatus: 'Currently working on a multiplayer adventure game called "Mystic Realms"',

@@ -1,13 +1,13 @@
-// Feature flags for progressive enhancement
+// Feature flags for Chat Wizard real data integration
 export const FEATURES = {
-  // Core Features (Always On in Dev)
-  USE_MOCK_AUTH: true,
-  USE_MOCK_DATA: true,
+  // Core Features - Real Data Mode
+  USE_MOCK_AUTH: false,
+  USE_MOCK_DATA: false,
   SHOW_DEV_CONTROLS: true,
   
-  // Features to Enable Progressively
-  USE_REAL_AUTH: false,
-  USE_REAL_DB: false,
+  // Features Enabled for Chat Wizard
+  USE_REAL_AUTH: true,
+  USE_REAL_DB: true,
   USE_DISCORD_INTEGRATION: false,
   USE_TEAM_FEATURES: true,
   USE_NOTES_FEATURE: true,

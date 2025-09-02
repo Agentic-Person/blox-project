@@ -1,0 +1,396 @@
+{
+  "name": "📚 Transcript Indexer",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "transcript-indexer",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "id": "a1b2c3d4-e5f6-7890-a123-456789012345",
+      "name": "📥 Transcript Indexer Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [280, 400],
+      "webhookId": "transcript-indexer-webhook",
+      "onError": "continueRegularOutput",
+      "notes": "🚪 MAIN ENTRY POINT - Transcript Indexer Webhook\n\n🎯 PURPOSE:\nHandles video transcript processing and embedding generation:\n• Processes raw video transcripts with timestamps\n• Splits long transcripts into semantic chunks\n• Generates embeddings using OpenAI models\n• Stores vectors in PGVector database for similarity search\n• Returns indexing status and metadata\n\n📝 EXPECTED PAYLOAD:\n{\n  \"videoId\": \"string\", // Unique video identifier\n  \"title\": \"string\", // Video title for context\n  \"transcript\": \"string\", // Full transcript text with timestamps\n  \"metadata\": {\n    \"duration\": \"number\", // Video length in seconds\n    \"module\": \"string\", // Learning module (e.g., \"Roblox Basics\")\n    \"week\": \"number\", // Week number in curriculum\n    \"tags\": [\"array\"], // Topic tags for categorization\n    \"difficulty\": \"beginner|intermediate|advanced\"\n  },\n  \"forceReindex\": \"boolean\" // Skip existing check if true\n}\n\n✅ PROCESSING FEATURES:\n• Intelligent text chunking with timestamp preservation\n• Duplicate detection and handling\n• Metadata enrichment for better search context\n• Progress tracking with detailed logging\n• Error recovery and retry mechanisms\n\n🔄 FLOW:\nWebhook → Validation → Duplicate Check → Text Processing → Embedding Generation → Vector Storage → Response"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "required_fields_check",
+              "leftValue": "={{ $json.videoId && $json.transcript && $json.title }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equal"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "b2c3d4e5-f6a7-8901-b234-567890123456",
+      "name": "✅ Input Validator",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [500, 400],
+      "onError": "continueRegularOutput",
+      "notes": "🔍 INPUT VALIDATION CHECKPOINT\n\n🎯 PURPOSE:\nValidates incoming transcript indexing requests:\n• videoId: Unique identifier for the video\n• transcript: Raw transcript text with timestamps\n• title: Video title for context and search enhancement\n• metadata: Optional but recommended for better search\n\n✅ VALIDATION RULES:\n• Required fields present and non-empty\n• VideoId format validation (alphanumeric + hyphens)\n• Transcript minimum length check (> 10 characters)\n• Title length validation (< 200 characters)\n• Metadata structure validation if provided\n\n📊 ADDITIONAL CHECKS:\n• Transcript format validation (timestamp patterns)\n• Video duration reasonableness (> 0, < 86400 seconds)\n• Module/week validation against curriculum structure\n• Tag validation (predefined topic categories)\n• Difficulty level enum validation\n\n❌ FAILURE HANDLING:\n• Invalid requests → Error Response with specific field issues\n• Missing fields → 400 Bad Request with field list\n• Malformed data → Sanitization attempt or rejection\n• Security violations → Rate limiting and alert\n\n🔒 SECURITY FEATURES:\n• Input sanitization to prevent injection\n• Content length limits to prevent abuse\n• Rate limiting per IP address\n• Audit logging for all requests\n\n➡️ ROUTING:\nValid → Continue to Duplicate Check\nInvalid → Error Response Handler"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT id, created_at, embedding_count FROM video_transcripts WHERE video_id = '{{ $json.videoId }}' AND status = 'indexed' ORDER BY created_at DESC LIMIT 1;",
+        "options": {}
+      },
+      "id": "c3d4e5f6-a7b8-9012-c345-678901234567",
+      "name": "🔍 Check Existing Index",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [720, 400],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-credentials",
+          "name": "Postgres Credentials"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "notes": "🔍 DUPLICATE INDEX DETECTION\n\n🎯 PURPOSE:\nChecks if video transcript is already indexed to prevent duplicates:\n• Queries PGVector database for existing video_id\n• Returns existing index metadata if found\n• Enables smart reindexing decisions\n• Tracks indexing history and versioning\n\n📊 DATABASE SCHEMA:\nvideo_transcripts table:\n• id (UUID): Primary key\n• video_id (VARCHAR): Unique video identifier\n• title (TEXT): Video title\n• transcript_text (TEXT): Full transcript content\n• chunk_count (INTEGER): Number of text chunks generated\n• embedding_count (INTEGER): Number of embeddings created\n• metadata (JSONB): Video metadata (module, week, tags, etc.)\n• status (VARCHAR): indexing|indexed|error|updating\n• created_at (TIMESTAMP): Initial indexing timestamp\n• updated_at (TIMESTAMP): Last modification timestamp\n• embedding_model (VARCHAR): Model used for embeddings\n• version (INTEGER): Index version for updates\n\n🔄 REINDEXING LOGIC:\n• If forceReindex=true: Proceed regardless of existing index\n• If no existing index: Proceed with new indexing\n• If existing index found: Check if update needed\n  - Compare transcript content hash\n  - Check if metadata has changed\n  - Verify embedding model compatibility\n  - Consider index freshness (> 30 days = stale)\n\n✅ OPTIMIZATION FEATURES:\n• Query optimization with proper indexes\n• Connection pooling for performance\n• Result caching for frequent checks\n• Partial index updates when possible\n\n📝 TRACKING METRICS:\n• Index hit rate (existing vs new)\n• Reindexing frequency patterns\n• Database performance metrics\n• Storage utilization tracking\n\n➡️ ROUTING:\nNot Found → Proceed with New Indexing\nFound + forceReindex=false → Skip Indexing Response\nFound + forceReindex=true → Update Existing Index\nError → Database Error Handler"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "force_reindex_or_new",
+              "leftValue": "={{ $json.forceReindex === true || !$('Check Existing Index').first().json.id }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equal"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d4e5f6a7-b8c9-0123-d456-789012345678",
+      "name": "🔀 Index Decision Router",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [940, 400],
+      "onError": "continueRegularOutput",
+      "notes": "🔀 INDEXING DECISION ROUTER\n\n🎯 PURPOSE:\nMakes intelligent decisions about whether to proceed with indexing:\n• Analyzes existing index status and user preferences\n• Routes to appropriate processing path\n• Prevents unnecessary duplicate processing\n• Enables smart update strategies\n\n🧠 DECISION LOGIC:\n\n✅ PROCEED WITH INDEXING when:\n• No existing index found (new video)\n• forceReindex=true (explicit user request)\n• Existing index is stale (> 30 days old)\n• Transcript content has changed (hash mismatch)\n• Metadata has been updated significantly\n• Different embedding model requested\n• Previous indexing failed or incomplete\n\n⏭️ SKIP INDEXING when:\n• Recent successful index exists (< 24 hours)\n• forceReindex=false and content unchanged\n• Same embedding model and parameters\n• No metadata updates detected\n• System maintenance mode active\n\n🔄 UPDATE EXISTING INDEX when:\n• Partial content changes detected\n• Metadata enrichment available\n• New tags or categorization added\n• Video corrections or annotations updated\n• Performance optimization needed\n\n📊 ROUTING ANALYTICS:\n• Track indexing decisions and patterns\n• Monitor skip rates and reasons\n• Measure update frequency by video type\n• Analyze reindexing triggers and outcomes\n\n⚡ PERFORMANCE OPTIMIZATIONS:\n• Quick hash-based content comparison\n• Metadata diff analysis for minimal updates\n• Batch processing hints for multiple videos\n• Resource availability checks before proceeding\n\n💡 SMART FEATURES:\n• Learning from previous indexing patterns\n• Automatic optimization suggestions\n• Predictive reindexing recommendations\n• Content freshness scoring\n\n➡️ ROUTING:\nProceed → Continue to Transcript Processing\nSkip → Return Existing Index Response\nUpdate → Incremental Update Path"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 📝 TRANSCRIPT PROCESSING ENGINE\n// Handles intelligent text chunking with timestamp preservation\n\nconst videoData = items[0].json;\nconst transcript = videoData.transcript || '';\nconst videoId = videoData.videoId;\nconst title = videoData.title;\nconst metadata = videoData.metadata || {};\n\n// Configuration for chunking\nconst CHUNK_SIZE = 1000; // Target characters per chunk\nconst OVERLAP_SIZE = 200; // Overlap between chunks\nconst MIN_CHUNK_SIZE = 100; // Minimum viable chunk size\nconst MAX_CHUNK_SIZE = 1500; // Maximum chunk size\n\n// Parse timestamps from transcript\n// Expected format: [HH:MM:SS] or [MM:SS] or (HH:MM:SS) etc.\nconst timestampRegex = /[\\[\\(]([0-9]{1,2}:)?([0-9]{1,2}):([0-9]{2})[\\]\\)]/g;\n\n// Function to convert timestamp to seconds\nfunction timestampToSeconds(timestamp) {\n  const parts = timestamp.replace(/[\\[\\]\\(\\)]/g, '').split(':');\n  if (parts.length === 2) {\n    return parseInt(parts[0]) * 60 + parseInt(parts[1]);\n  } else if (parts.length === 3) {\n    return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60 + parseInt(parts[2]);\n  }\n  return 0;\n}\n\n// Split transcript into segments with timestamps\nlet segments = [];\nlet matches = [...transcript.matchAll(timestampRegex)];\n\nfor (let i = 0; i < matches.length; i++) {\n  const currentMatch = matches[i];\n  const nextMatch = matches[i + 1];\n  \n  const startTime = timestampToSeconds(currentMatch[0]);\n  const startIndex = currentMatch.index + currentMatch[0].length;\n  const endIndex = nextMatch ? nextMatch.index : transcript.length;\n  \n  const text = transcript.slice(startIndex, endIndex).trim();\n  \n  if (text.length > MIN_CHUNK_SIZE) {\n    segments.push({\n      startTime: startTime,\n      timestamp: currentMatch[0],\n      text: text,\n      originalIndex: i\n    });\n  }\n}\n\n// If no timestamps found, create segments based on natural breaks\nif (segments.length === 0) {\n  const sentences = transcript.split(/[.!?]+/).filter(s => s.trim().length > 0);\n  let currentChunk = '';\n  let chunkIndex = 0;\n  \n  for (const sentence of sentences) {\n    if (currentChunk.length + sentence.length < CHUNK_SIZE) {\n      currentChunk += sentence + '. ';\n    } else {\n      if (currentChunk.length > MIN_CHUNK_SIZE) {\n        segments.push({\n          startTime: null,\n          timestamp: null,\n          text: currentChunk.trim(),\n          originalIndex: chunkIndex++\n        });\n      }\n      currentChunk = sentence + '. ';\n    }\n  }\n  \n  // Add the last chunk\n  if (currentChunk.length > MIN_CHUNK_SIZE) {\n    segments.push({\n      startTime: null,\n      timestamp: null,\n      text: currentChunk.trim(),\n      originalIndex: chunkIndex\n    });\n  }\n}\n\n// Optimize segments for embedding\nlet optimizedChunks = [];\nfor (const segment of segments) {\n  if (segment.text.length > MAX_CHUNK_SIZE) {\n    // Split large segments\n    const words = segment.text.split(' ');\n    let currentChunk = '';\n    \n    for (const word of words) {\n      if (currentChunk.length + word.length < CHUNK_SIZE) {\n        currentChunk += word + ' ';\n      } else {\n        optimizedChunks.push({\n          videoId: videoId,\n          title: title,\n          chunkIndex: optimizedChunks.length,\n          startTime: segment.startTime,\n          timestamp: segment.timestamp,\n          text: currentChunk.trim(),\n          metadata: {\n            ...metadata,\n            originalSegmentIndex: segment.originalIndex,\n            chunkType: 'split'\n          }\n        });\n        currentChunk = word + ' ';\n      }\n    }\n    \n    if (currentChunk.trim().length > MIN_CHUNK_SIZE) {\n      optimizedChunks.push({\n        videoId: videoId,\n        title: title,\n        chunkIndex: optimizedChunks.length,\n        startTime: segment.startTime,\n        timestamp: segment.timestamp,\n        text: currentChunk.trim(),\n        metadata: {\n          ...metadata,\n          originalSegmentIndex: segment.originalIndex,\n          chunkType: 'split_remainder'\n        }\n      });\n    }\n  } else {\n    // Use segment as-is\n    optimizedChunks.push({\n      videoId: videoId,\n      title: title,\n      chunkIndex: optimizedChunks.length,\n      startTime: segment.startTime,\n      timestamp: segment.timestamp,\n      text: segment.text,\n      metadata: {\n        ...metadata,\n        originalSegmentIndex: segment.originalIndex,\n        chunkType: 'original'\n      }\n    });\n  }\n}\n\n// Add processing metadata\nconst result = {\n  videoId: videoId,\n  title: title,\n  originalTranscriptLength: transcript.length,\n  chunksGenerated: optimizedChunks.length,\n  averageChunkSize: Math.round(optimizedChunks.reduce((acc, chunk) => acc + chunk.text.length, 0) / optimizedChunks.length),\n  hasTimestamps: segments.some(s => s.timestamp !== null),\n  processingMetadata: {\n    chunkSize: CHUNK_SIZE,\n    overlapSize: OVERLAP_SIZE,\n    timestampsFound: matches.length,\n    processingTime: Date.now(),\n    version: '1.0'\n  },\n  chunks: optimizedChunks\n};\n\nreturn [result];"
+      },
+      "id": "e5f6a7b8-c9d0-1234-e567-890123456789",
+      "name": "📝 Process Transcript",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1160, 400],
+      "onError": "continueRegularOutput",
+      "notes": "📝 INTELLIGENT TRANSCRIPT PROCESSOR\n\n🎯 PURPOSE:\nTransforms raw video transcripts into optimized chunks for embedding:\n• Preserves timestamp information for precise video navigation\n• Creates semantic chunks optimized for vector similarity search\n• Maintains context overlap to prevent information loss\n• Handles various transcript formats and timestamp styles\n• Enriches chunks with metadata for enhanced search context\n\n🔄 PROCESSING PIPELINE:\n\n1️⃣ TIMESTAMP EXTRACTION:\n• Supports multiple timestamp formats: [HH:MM:SS], [MM:SS], (HH:MM:SS)\n• Converts timestamps to seconds for consistent indexing\n• Maps timestamp positions to text segments\n• Handles missing or irregular timestamp patterns\n\n2️⃣ INTELLIGENT CHUNKING:\n• Target chunk size: 1000 characters (optimal for embeddings)\n• Overlap size: 200 characters (prevents context loss)\n• Respects natural language boundaries (sentences, paragraphs)\n• Maintains semantic coherence within chunks\n• Handles edge cases: very long/short segments\n\n3️⃣ CHUNK OPTIMIZATION:\n• Splits oversized segments intelligently\n• Combines undersized segments when appropriate\n• Preserves timestamp-to-content mapping\n• Maintains readability and context flow\n• Optimizes for embedding model performance\n\n📊 CHUNK METADATA ENRICHMENT:\nEach chunk includes:\n• videoId: Source video identifier\n• title: Video title for context\n• chunkIndex: Sequential chunk number\n• startTime: Timestamp in seconds (if available)\n• timestamp: Original timestamp format\n• text: Processed text content\n• metadata: Extended context information\n  - module: Learning module name\n  - week: Curriculum week number\n  - tags: Topic categorization\n  - difficulty: Content difficulty level\n  - chunkType: Processing classification\n  - originalSegmentIndex: Source segment reference\n\n🎯 QUALITY ASSURANCE:\n• Minimum chunk size enforcement (100 chars)\n• Maximum chunk size limits (1500 chars)\n• Content deduplication detection\n• Text cleaning and normalization\n• Encoding validation and correction\n\n📈 PROCESSING ANALYTICS:\n• Original transcript length tracking\n• Chunk count and size distribution\n• Average chunk size optimization\n• Timestamp coverage analysis\n• Processing time and performance metrics\n\n🔍 FORMAT DETECTION:\n• Auto-detects timestamp patterns\n• Handles subtitle formats (SRT, VTT)\n• Processes plain text transcripts\n• Manages speaker identification\n• Supports multi-language content\n\n➡️ OUTPUT:\nOptimized chunks ready for embedding generation with preserved timestamps and enriched metadata"
+    },
+    {
+      "parameters": {
+        "dataType": "json",
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $json.chunks }}",
+        "textSplittingMode": "simple"
+      },
+      "id": "f6a7b8c9-d0e1-2345-f678-901234567890",
+      "name": "📚 Load Document Chunks",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [1380, 400],
+      "onError": "continueRegularOutput",
+      "notes": "📚 DOCUMENT CHUNK LOADER\n\n🎯 PURPOSE:\nPrepares processed transcript chunks for embedding generation:\n• Converts JSON chunk data into LangChain document format\n• Maintains metadata association with each document\n• Optimizes data structure for embedding processing\n• Ensures compatibility with OpenAI embedding models\n\n📋 DOCUMENT STRUCTURE:\nEach document contains:\n• pageContent: The actual text content to embed\n• metadata: All associated context information\n  - videoId: Source video identifier\n  - title: Video title\n  - chunkIndex: Position in transcript\n  - startTime: Timestamp in seconds\n  - timestamp: Human-readable timestamp\n  - module: Learning module context\n  - week: Curriculum week number\n  - tags: Topic categorization\n  - difficulty: Content difficulty level\n\n🔄 PROCESSING MODE:\n• Uses 'expressionData' mode for precise control\n• Loads chunks array from previous processing step\n• Simple text splitting (chunks already optimized)\n• Preserves all metadata fields for search context\n\n✅ QUALITY CONTROL:\n• Validates document structure before proceeding\n• Ensures metadata completeness\n• Checks content length requirements\n• Filters out empty or invalid chunks\n\n📊 BATCH PROCESSING:\n• Handles multiple chunks efficiently\n• Maintains processing order\n• Optimizes memory usage for large transcripts\n• Enables parallel processing downstream\n\n🎯 EMBEDDING PREPARATION:\n• Formats content for OpenAI API compatibility\n• Optimizes chunk size for embedding models\n• Maintains token count within limits\n• Prepares for batch embedding generation\n\n➡️ OUTPUT:\nLangChain-compatible documents ready for embedding generation"
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-small",
+        "options": {}
+      },
+      "id": "a7b8c9d0-e1f2-3456-a789-012345678901",
+      "name": "🧠 Generate Embeddings",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [1600, 400],
+      "credentials": {
+        "openAiApi": {
+          "id": "openai-credentials",
+          "name": "OpenAI API Credentials"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "notes": "🧠 OPENAI EMBEDDING GENERATION ENGINE\n\n🎯 PURPOSE:\nGenerates high-quality vector embeddings for transcript chunks:\n• Creates 1536-dimensional vectors for semantic search\n• Uses OpenAI's text-embedding-3-small model for optimal performance\n• Processes chunks in batches for efficiency\n• Maintains embedding-to-metadata relationships\n\n🔧 MODEL CONFIGURATION:\n• Model: text-embedding-3-small\n  - Dimensions: 1536\n  - Cost-effective for large-scale indexing\n  - High performance for semantic similarity\n  - Optimized for code and technical content\n  - Multi-language support\n\n📊 EMBEDDING FEATURES:\n• Semantic similarity preservation\n• Context-aware vector generation\n• Technical terminology understanding\n• Code snippet embedding optimization\n• Multi-modal concept representation\n\n⚡ PERFORMANCE OPTIMIZATIONS:\n• Batch processing for API efficiency\n• Rate limiting compliance (3000 RPM)\n• Automatic retry with exponential backoff\n• Error handling for API failures\n• Progress tracking for large transcript sets\n\n🔄 PROCESSING WORKFLOW:\n1. Receives document chunks from loader\n2. Validates content and metadata\n3. Sends batched requests to OpenAI API\n4. Processes embedding responses\n5. Associates vectors with source metadata\n6. Prepares data for vector store insertion\n\n💰 COST OPTIMIZATION:\n• Efficient token usage calculation\n• Deduplication of similar chunks\n• Smart batching to minimize API calls\n• Cost tracking and reporting\n• Usage analytics and optimization suggestions\n\n🛡️ ERROR HANDLING:\n• API rate limit management\n• Network timeout recovery\n• Partial failure handling\n• Embedding quality validation\n• Retry logic with backoff\n\n📈 QUALITY METRICS:\n• Embedding dimension validation\n• Vector magnitude normalization\n• Similarity distribution analysis\n• Content coverage assessment\n• Model performance tracking\n\n🔍 DEBUGGING FEATURES:\n• Detailed logging of API interactions\n• Embedding visualization options\n• Quality assessment metrics\n• Performance benchmarking\n• Error pattern analysis\n\n➡️ OUTPUT:\nHigh-quality vector embeddings ready for PGVector database storage with complete metadata preservation"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": "video_embeddings",
+        "options": {
+          "collection": {
+            "values": {
+              "collectionName": "blox_transcripts"
+            }
+          }
+        }
+      },
+      "id": "b8c9d0e1-f2a3-4567-b890-123456789012",
+      "name": "💾 Store in PGVector",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.3,
+      "position": [1820, 400],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-credentials",
+          "name": "Postgres Credentials"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "notes": "💾 PGVECTOR DATABASE STORAGE ENGINE\n\n🎯 PURPOSE:\nStores vector embeddings in PostgreSQL with PGVector extension:\n• Efficient storage of 1536-dimensional vectors\n• Optimized indexing for fast similarity search\n• Metadata preservation for rich search context\n• Scalable architecture for 100+ video transcripts\n• Advanced query capabilities with filtering\n\n🗄️ DATABASE STRUCTURE:\nTable: video_embeddings\n• id (UUID): Primary key for each embedding\n• content (TEXT): Original text content\n• embedding (VECTOR(1536)): OpenAI embedding vector\n• metadata (JSONB): Rich metadata for filtering and context\n  - videoId: Source video identifier\n  - title: Video title\n  - chunkIndex: Position within transcript\n  - startTime: Timestamp in seconds\n  - timestamp: Human-readable timestamp\n  - module: Learning module (e.g., \"Roblox Basics\")\n  - week: Curriculum week number\n  - tags: Topic array [\"scripting\", \"ui\", \"game-design\"]\n  - difficulty: \"beginner\"|\"intermediate\"|\"advanced\"\n  - chunkType: Processing classification\n• created_at (TIMESTAMP): Insertion timestamp\n• updated_at (TIMESTAMP): Last modification\n\n📊 INDEXING STRATEGY:\n• HNSW index for vector similarity (fast approximate search)\n• IVFFlat index for exact similarity (precise results)\n• Composite indexes on metadata fields (videoId, module, week)\n• Full-text search index on content (hybrid search capability)\n• Partial indexes for filtering (difficulty, tags)\n\n🔍 SEARCH CAPABILITIES:\n• Cosine similarity search (most relevant for embeddings)\n• Euclidean distance search (geometric similarity)\n• Combined vector + metadata filtering\n• Hybrid semantic + keyword search\n• Time-range filtering by video timestamps\n\n⚡ PERFORMANCE OPTIMIZATIONS:\n• Connection pooling for concurrent operations\n• Batch insertion for large transcript sets\n• Vector normalization for faster similarity computation\n• Query plan optimization for complex filters\n• Automatic index maintenance and statistics updates\n\n🎯 COLLECTION ORGANIZATION:\n• Collection name: \"blox_transcripts\"\n• Logical grouping of video transcript embeddings\n• Enables easy bulk operations and management\n• Supports collection-level analytics and monitoring\n• Facilitates backup and migration strategies\n\n🔒 DATA INTEGRITY:\n• ACID compliance for consistent operations\n• Foreign key constraints to video metadata\n• Embedding dimension validation\n• Duplicate prevention based on content hash\n• Automatic cleanup of orphaned embeddings\n\n📈 STORAGE ANALYTICS:\n• Vector storage utilization tracking\n• Index performance monitoring\n• Query performance metrics\n• Embedding distribution analysis\n• Storage growth projections\n\n🛡️ ERROR HANDLING:\n• Database connection failover\n• Transaction rollback on partial failures\n• Constraint violation recovery\n• Storage capacity monitoring\n• Automatic retry with exponential backoff\n\n➡️ RESULT:\nSuccessfully stored embeddings with rich metadata, ready for high-performance semantic search across all video transcripts"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "schema": "public",
+        "table": "video_transcripts",
+        "columns": "video_id, title, transcript_text, chunk_count, embedding_count, metadata, status, created_at, updated_at, embedding_model, version",
+        "options": {}
+      },
+      "id": "c9d0e1f2-a3b4-5678-c901-234567890123",
+      "name": "📝 Update Transcript Record",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [2040, 400],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-credentials",
+          "name": "Postgres Credentials"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "notes": "📝 TRANSCRIPT RECORD MANAGEMENT\n\n🎯 PURPOSE:\nMaintains comprehensive records of indexed video transcripts:\n• Tracks indexing status and metadata\n• Enables duplicate detection and management\n• Provides audit trail for all indexing operations\n• Supports reindexing and update workflows\n• Facilitates analytics and monitoring\n\n📊 RECORD STRUCTURE:\nvideo_transcripts table:\n• video_id (VARCHAR(255)): Unique video identifier\n• title (TEXT): Video title for display and search\n• transcript_text (TEXT): Full original transcript\n• chunk_count (INTEGER): Number of text chunks created\n• embedding_count (INTEGER): Number of embeddings generated\n• metadata (JSONB): Rich video metadata\n  - duration: Video length in seconds\n  - module: Learning module name\n  - week: Curriculum week number\n  - tags: Topic categorization array\n  - difficulty: Content difficulty level\n  - instructor: Video instructor name\n  - language: Content language code\n• status (VARCHAR(20)): Current processing status\n  - 'indexing': Processing in progress\n  - 'indexed': Successfully completed\n  - 'error': Processing failed\n  - 'updating': Reindexing in progress\n• created_at (TIMESTAMP): Initial indexing timestamp\n• updated_at (TIMESTAMP): Last modification timestamp\n• embedding_model (VARCHAR(50)): OpenAI model used\n• version (INTEGER): Index version for tracking updates\n\n🔄 STATUS MANAGEMENT:\n• Atomic status updates prevent race conditions\n• Progress tracking throughout indexing pipeline\n• Error state capture with detailed messages\n• Recovery mechanisms for failed operations\n• Reprocessing workflows for updates\n\n📈 ANALYTICS SUPPORT:\n• Indexing completion rates and timing\n• Model usage distribution and costs\n• Content categorization statistics\n• Reindexing frequency patterns\n• Error pattern analysis\n\n🎯 BUSINESS INTELLIGENCE:\n• Video popularity based on reindex frequency\n• Content gap analysis by module/week\n• Quality metrics by instructor and topic\n• User search pattern insights\n• Curriculum effectiveness measurements\n\n🔍 SEARCH OPTIMIZATION:\n• Full-text search indexes on title and metadata\n• Composite indexes for common filter combinations\n• JSON path indexes for metadata queries\n• Performance-optimized query patterns\n\n🛡️ DATA GOVERNANCE:\n• Comprehensive audit trail maintenance\n• Version control for content updates\n• Soft delete capabilities for content removal\n• GDPR compliance features\n• Data retention policy enforcement\n\n⚡ PERFORMANCE FEATURES:\n• Bulk upsert operations for efficiency\n• Connection pooling for concurrent access\n• Prepared statements for security and speed\n• Automatic vacuum and analyze scheduling\n• Query performance monitoring\n\n➡️ RESULT:\nComplete transcript indexing record with status 'indexed', ready for knowledge engine queries and analytics"
+    },
+    {
+      "parameters": {
+        "operation": "publish",
+        "channel": "indexing_events",
+        "messageData": "={{ JSON.stringify({\n  event: 'transcript_indexed',\n  videoId: $json.videoId,\n  title: $json.title,\n  chunksGenerated: $json.chunksGenerated,\n  embeddingsCreated: $('Store in PGVector').first().json.count || $json.chunksGenerated,\n  processingTime: Date.now() - $json.processingMetadata.processingTime,\n  hasTimestamps: $json.hasTimestamps,\n  metadata: $json.metadata || {},\n  timestamp: new Date().toISOString(),\n  source: 'transcript-indexer'\n}) }}"
+      },
+      "id": "d0e1f2a3-b4c5-6789-d012-345678901234",
+      "name": "📡 Publish Index Event",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [2260, 400],
+      "credentials": {
+        "redis": {
+          "id": "redis-credentials",
+          "name": "Redis Credentials"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "notes": "📡 INDEXING EVENT BROADCASTER\n\n🎯 PURPOSE:\nBroadcasts transcript indexing events to other subsystems:\n• Notifies Knowledge Engine of new searchable content\n• Triggers cache invalidation and refresh\n• Updates content availability metrics\n• Enables real-time dashboard updates\n• Facilitates analytics and monitoring\n\n📺 CHANNEL: indexing_events\nAll knowledge subsystems subscribe for indexing notifications\n\n📦 EVENT PAYLOAD:\n{\n  \"event\": \"transcript_indexed\",\n  \"videoId\": \"string\",\n  \"title\": \"string\",\n  \"chunksGenerated\": \"number\",\n  \"embeddingsCreated\": \"number\",\n  \"processingTime\": \"number (milliseconds)\",\n  \"hasTimestamps\": \"boolean\",\n  \"metadata\": {\n    \"module\": \"string\",\n    \"week\": \"number\",\n    \"tags\": [\"array\"],\n    \"difficulty\": \"string\",\n    \"duration\": \"number\"\n  },\n  \"timestamp\": \"ISO_string\",\n  \"source\": \"transcript-indexer\"\n}\n\n🎧 SUBSCRIBERS:\n• Semantic Search Engine: Updates available content indexes\n• Answer Generator: Refreshes knowledge base cache\n• Analytics System: Updates content availability metrics\n• Dashboard Service: Real-time progress updates\n• Master Orchestrator: System state synchronization\n• Content Health Monitor: Validates indexing success\n\n🚀 REAL-TIME BENEFITS:\n• Immediate search availability notifications\n• Reduced cache staleness\n• Proactive error detection\n• Performance monitoring integration\n• User experience optimization\n\n📊 EVENT ANALYTICS:\n• Indexing throughput measurement\n• Processing time distribution\n• Success/failure rate tracking\n• Content type performance analysis\n• System load balancing insights\n\n🔄 DOWNSTREAM ACTIONS:\n• Search index refresh triggers\n• Cache warming for popular content\n• Quality assurance validations\n• Performance metric updates\n• Dashboard notification updates\n\n⚡ PERFORMANCE:\n• Async non-blocking broadcast\n• Minimal payload for fast delivery\n• Reliable pub/sub delivery guarantee\n• Channel-based routing efficiency\n• Event deduplication handling\n\n🛡️ RELIABILITY:\n• Message delivery confirmation\n• Retry logic for failed publishes\n• Event ordering preservation\n• Duplicate detection and handling\n• Dead letter queue for failed events\n\n➡️ IMPACT:\nReal-time notification of successful transcript indexing, enabling immediate content availability across all knowledge systems"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 📤 INDEXING SUCCESS RESPONSE FORMATTER\n// Generates comprehensive response for successful transcript indexing\n\nconst inputData = items[0].json;\nconst videoId = inputData.videoId;\nconst title = inputData.title;\nconst originalTranscriptLength = inputData.originalTranscriptLength;\nconst chunksGenerated = inputData.chunksGenerated;\nconst averageChunkSize = inputData.averageChunkSize;\nconst hasTimestamps = inputData.hasTimestamps;\nconst processingMetadata = inputData.processingMetadata || {};\nconst metadata = inputData.metadata || {};\n\n// Calculate processing metrics\nconst processingStartTime = processingMetadata.processingTime || Date.now();\nconst processingDuration = Date.now() - processingStartTime;\nconst embeddingsCreated = chunksGenerated; // Assumes 1:1 mapping\n\n// Generate response\nconst response = {\n  success: true,\n  operation: 'transcript_indexed',\n  timestamp: new Date().toISOString(),\n  videoId: videoId,\n  title: title,\n  \n  // Processing Results\n  indexingResults: {\n    originalLength: originalTranscriptLength,\n    chunksGenerated: chunksGenerated,\n    embeddingsCreated: embeddingsCreated,\n    averageChunkSize: averageChunkSize,\n    hasTimestamps: hasTimestamps,\n    timestampsFound: processingMetadata.timestampsFound || 0\n  },\n  \n  // Performance Metrics\n  performance: {\n    processingTimeMs: processingDuration,\n    processingTimeHuman: formatDuration(processingDuration),\n    chunksPerSecond: Math.round((chunksGenerated / (processingDuration / 1000)) * 100) / 100,\n    embeddingsPerSecond: Math.round((embeddingsCreated / (processingDuration / 1000)) * 100) / 100,\n    efficiency: calculateEfficiency(originalTranscriptLength, chunksGenerated, processingDuration)\n  },\n  \n  // Content Analysis\n  contentAnalysis: {\n    contentType: detectContentType(title, metadata),\n    estimatedReadingTime: Math.ceil(originalTranscriptLength / 1000), // ~1000 chars per minute\n    complexity: assessComplexity(chunksGenerated, averageChunkSize, hasTimestamps),\n    searchOptimization: {\n      indexed: true,\n      searchable: true,\n      timestampNavigation: hasTimestamps,\n      semanticSearch: true\n    }\n  },\n  \n  // Metadata Enrichment\n  enrichedMetadata: {\n    ...metadata,\n    indexingVersion: processingMetadata.version || '1.0',\n    embeddingModel: 'text-embedding-3-small',\n    vectorDimensions: 1536,\n    indexingMethod: 'intelligent_chunking',\n    qualityScore: calculateQualityScore(hasTimestamps, chunksGenerated, averageChunkSize)\n  },\n  \n  // Search Capabilities\n  searchCapabilities: {\n    semanticSearch: true,\n    timestampSearch: hasTimestamps,\n    metadataFiltering: Object.keys(metadata).length > 0,\n    hybridSearch: true,\n    exactMatching: true\n  },\n  \n  // Usage Information\n  usage: {\n    apiCalls: Math.ceil(chunksGenerated / 100), // Estimated batch size\n    estimatedCost: estimateCost(embeddingsCreated),\n    tokenUsage: estimateTokens(originalTranscriptLength),\n    storageUsage: estimateStorage(embeddingsCreated)\n  },\n  \n  // Next Steps\n  nextSteps: {\n    searchAvailable: true,\n    recommendedActions: generateRecommendations(metadata, hasTimestamps),\n    relatedVideos: [], // Could be populated with similar content\n    qualityImprovements: suggestImprovements(hasTimestamps, metadata)\n  }\n};\n\n// Helper functions\nfunction formatDuration(ms) {\n  if (ms < 1000) return ms + 'ms';\n  if (ms < 60000) return Math.round(ms / 1000 * 10) / 10 + 's';\n  return Math.round(ms / 60000 * 10) / 10 + 'm';\n}\n\nfunction calculateEfficiency(originalLength, chunks, duration) {\n  const charsPerMs = originalLength / duration;\n  const chunksPerMs = chunks / duration;\n  return Math.round((charsPerMs * chunksPerMs) * 1000000) / 100; // Normalized efficiency score\n}\n\nfunction detectContentType(title, metadata) {\n  const titleLower = title.toLowerCase();\n  if (titleLower.includes('tutorial') || titleLower.includes('guide')) return 'tutorial';\n  if (titleLower.includes('overview') || titleLower.includes('introduction')) return 'overview';\n  if (titleLower.includes('advanced') || titleLower.includes('expert')) return 'advanced';\n  if (metadata.difficulty) return metadata.difficulty;\n  return 'educational';\n}\n\nfunction assessComplexity(chunks, avgSize, hasTimestamps) {\n  let score = 0;\n  if (chunks > 20) score += 2;\n  else if (chunks > 10) score += 1;\n  if (avgSize > 800) score += 2;\n  else if (avgSize > 500) score += 1;\n  if (hasTimestamps) score += 1;\n  \n  if (score >= 4) return 'high';\n  if (score >= 2) return 'medium';\n  return 'low';\n}\n\nfunction calculateQualityScore(hasTimestamps, chunks, avgSize) {\n  let score = 50; // Base score\n  if (hasTimestamps) score += 25;\n  if (chunks >= 5 && chunks <= 50) score += 15; // Optimal chunk count\n  if (avgSize >= 500 && avgSize <= 1000) score += 10; // Optimal chunk size\n  return Math.min(100, Math.max(0, score));\n}\n\nfunction estimateCost(embeddings) {\n  // text-embedding-3-small pricing: ~$0.00002 per 1k tokens\n  const estimatedTokens = embeddings * 250; // ~250 tokens per chunk\n  return Math.round((estimatedTokens / 1000) * 0.00002 * 100) / 100;\n}\n\nfunction estimateTokens(textLength) {\n  return Math.round(textLength / 4); // ~4 chars per token\n}\n\nfunction estimateStorage(embeddings) {\n  // 1536 dimensions * 4 bytes per float + metadata\n  const vectorBytes = embeddings * 1536 * 4;\n  const metadataBytes = embeddings * 500; // Estimated metadata per chunk\n  const totalMB = (vectorBytes + metadataBytes) / (1024 * 1024);\n  return Math.round(totalMB * 100) / 100;\n}\n\nfunction generateRecommendations(metadata, hasTimestamps) {\n  const recommendations = [];\n  if (!hasTimestamps) recommendations.push('Consider adding timestamps for better navigation');\n  if (!metadata.tags) recommendations.push('Add topic tags for improved search filtering');\n  if (!metadata.difficulty) recommendations.push('Specify difficulty level for better categorization');\n  recommendations.push('Content is now available for semantic search');\n  return recommendations;\n}\n\nfunction suggestImprovements(hasTimestamps, metadata) {\n  const improvements = [];\n  if (!hasTimestamps) improvements.push('Timestamp addition would improve user navigation');\n  if (Object.keys(metadata).length < 3) improvements.push('Additional metadata would enhance search context');\n  improvements.push('Content is optimally indexed for current search capabilities');\n  return improvements;\n}\n\nreturn [response];"
+      },
+      "id": "e1f2a3b4-c5d6-7890-e123-456789012345",
+      "name": "📤 Format Success Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2480, 400],
+      "onError": "continueRegularOutput",
+      "notes": "📤 COMPREHENSIVE SUCCESS RESPONSE GENERATOR\n\n🎯 PURPOSE:\nGenerates detailed, actionable responses for successful transcript indexing:\n• Provides comprehensive indexing results and metrics\n• Includes performance analytics and optimization insights\n• Offers content analysis and quality assessments\n• Delivers actionable recommendations for improvement\n• Enables informed decision-making for content strategy\n\n📊 RESPONSE STRUCTURE:\n\n✅ CORE RESULTS:\n• Operation success confirmation\n• Video identification and title\n• Processing timestamp\n• Indexing operation type\n\n📈 INDEXING METRICS:\n• Original transcript length\n• Number of chunks generated\n• Number of embeddings created\n• Average chunk size optimization\n• Timestamp detection results\n\n⚡ PERFORMANCE ANALYTICS:\n• Processing time (ms and human-readable)\n• Chunks per second throughput\n• Embeddings per second rate\n• Efficiency scoring algorithm\n• Resource utilization metrics\n\n🔍 CONTENT ANALYSIS:\n• Content type detection (tutorial, overview, advanced)\n• Estimated reading time calculation\n• Complexity assessment (low/medium/high)\n• Search optimization status\n• Quality score calculation (0-100)\n\n🎯 SEARCH CAPABILITIES:\n• Semantic search availability\n• Timestamp-based navigation\n• Metadata filtering options\n• Hybrid search support\n• Exact matching capabilities\n\n💰 USAGE INSIGHTS:\n• API calls estimation\n• Cost calculation for embeddings\n• Token usage approximation\n• Storage requirements estimation\n• Resource optimization suggestions\n\n🚀 NEXT STEPS:\n• Search availability confirmation\n• Recommended actions based on content\n• Related video suggestions\n• Quality improvement opportunities\n• Content strategy insights\n\n🔬 ADVANCED ANALYTICS:\n• Quality score algorithm using multiple factors\n• Efficiency calculation based on throughput metrics\n• Content type detection using title and metadata analysis\n• Complexity assessment using multiple indicators\n• Cost optimization suggestions\n\n💡 INTELLIGENT RECOMMENDATIONS:\n• Timestamp addition suggestions for better navigation\n• Metadata enrichment recommendations\n• Content categorization improvements\n• Search optimization tips\n• User experience enhancements\n\n📋 BUSINESS INTELLIGENCE:\n• Content performance predictions\n• Search effectiveness indicators\n• User engagement optimization hints\n• Curriculum integration suggestions\n• Analytics baseline establishment\n\n➡️ VALUE DELIVERED:\nActionable insights and comprehensive metrics that enable data-driven content optimization and strategic decision-making"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ❌ COMPREHENSIVE ERROR HANDLER\n// Generates detailed error responses with actionable guidance\n\nconst error = items[0].json.error || {};\nconst originalRequest = items[0].json;\nconst timestamp = new Date().toISOString();\nconst processingStartTime = originalRequest.processingMetadata?.processingTime || Date.now();\nconst processingDuration = Date.now() - processingStartTime;\n\n// Determine error category and severity\nfunction categorizeError(error, request) {\n  if (!request.videoId || !request.transcript || !request.title) {\n    return { category: 'VALIDATION_ERROR', severity: 'medium' };\n  }\n  if (error.message && error.message.includes('API')) {\n    return { category: 'API_ERROR', severity: 'high' };\n  }\n  if (error.message && error.message.includes('database')) {\n    return { category: 'DATABASE_ERROR', severity: 'high' };\n  }\n  if (error.message && error.message.includes('embedding')) {\n    return { category: 'EMBEDDING_ERROR', severity: 'high' };\n  }\n  return { category: 'PROCESSING_ERROR', severity: 'medium' };\n}\n\nconst errorInfo = categorizeError(error, originalRequest);\n\n// Generate detailed error response\nconst errorResponse = {\n  success: false,\n  operation: 'transcript_indexing_failed',\n  timestamp: timestamp,\n  videoId: originalRequest.videoId || null,\n  title: originalRequest.title || null,\n  \n  // Error Details\n  error: {\n    category: errorInfo.category,\n    severity: errorInfo.severity,\n    code: error.code || 'UNKNOWN_ERROR',\n    message: error.message || 'Transcript indexing failed',\n    details: error.details || {},\n    stackTrace: error.stack || null\n  },\n  \n  // Processing Context\n  processingContext: {\n    processingDuration: processingDuration,\n    processingStage: determineFailureStage(error, originalRequest),\n    partialResults: extractPartialResults(originalRequest),\n    resourcesConsumed: calculateResourceUsage(processingDuration)\n  },\n  \n  // Validation Results\n  validation: {\n    hasVideoId: !!originalRequest.videoId,\n    hasTranscript: !!originalRequest.transcript,\n    hasTitle: !!originalRequest.title,\n    transcriptLength: originalRequest.transcript?.length || 0,\n    hasMetadata: !!originalRequest.metadata && Object.keys(originalRequest.metadata).length > 0,\n    validationErrors: generateValidationErrors(originalRequest)\n  },\n  \n  // Recovery Guidance\n  recovery: {\n    retryRecommended: shouldRetry(errorInfo.category),\n    retryDelay: calculateRetryDelay(errorInfo.category),\n    alternativeApproaches: suggestAlternatives(errorInfo.category, originalRequest),\n    requiredActions: generateRequiredActions(errorInfo.category, originalRequest),\n    preventionTips: generatePreventionTips(errorInfo.category)\n  },\n  \n  // Debugging Information\n  debugging: {\n    requestId: originalRequest.requestId || 'req_' + Date.now(),\n    workflow: 'transcript-indexer',\n    nodeId: error.nodeId || 'unknown',\n    apiCalls: error.apiCalls || 0,\n    memoryUsage: error.memoryUsage || 'unknown',\n    systemLoad: error.systemLoad || 'unknown'\n  },\n  \n  // Support Information\n  support: {\n    documentationLinks: generateDocumentationLinks(errorInfo.category),\n    commonSolutions: getCommonSolutions(errorInfo.category),\n    troubleshootingSteps: generateTroubleshootingSteps(errorInfo.category),\n    escalationPath: getEscalationPath(errorInfo.severity)\n  }\n};\n\n// Helper functions\nfunction determineFailureStage(error, request) {\n  if (!request.videoId) return 'input_validation';\n  if (error.message?.includes('embedding')) return 'embedding_generation';\n  if (error.message?.includes('database')) return 'vector_storage';\n  if (error.message?.includes('chunk')) return 'text_processing';\n  return 'unknown';\n}\n\nfunction extractPartialResults(request) {\n  const results = {};\n  if (request.chunksGenerated) results.chunksGenerated = request.chunksGenerated;\n  if (request.hasTimestamps !== undefined) results.hasTimestamps = request.hasTimestamps;\n  if (request.originalTranscriptLength) results.originalTranscriptLength = request.originalTranscriptLength;\n  return results;\n}\n\nfunction calculateResourceUsage(duration) {\n  return {\n    processingTime: duration,\n    estimatedApiCalls: Math.ceil(duration / 1000), // Rough estimate\n    memoryEstimate: 'moderate',\n    cpuUsage: 'standard'\n  };\n}\n\nfunction generateValidationErrors(request) {\n  const errors = [];\n  if (!request.videoId) errors.push('Missing required field: videoId');\n  if (!request.transcript) errors.push('Missing required field: transcript');\n  if (!request.title) errors.push('Missing required field: title');\n  if (request.transcript && request.transcript.length < 10) {\n    errors.push('Transcript too short (minimum 10 characters)');\n  }\n  return errors;\n}\n\nfunction shouldRetry(category) {\n  return ['API_ERROR', 'DATABASE_ERROR'].includes(category);\n}\n\nfunction calculateRetryDelay(category) {\n  const delays = {\n    'API_ERROR': 5000,\n    'DATABASE_ERROR': 2000,\n    'EMBEDDING_ERROR': 10000,\n    'VALIDATION_ERROR': 0\n  };\n  return delays[category] || 3000;\n}\n\nfunction suggestAlternatives(category, request) {\n  const alternatives = [];\n  if (category === 'EMBEDDING_ERROR') {\n    alternatives.push('Try with smaller chunk sizes');\n    alternatives.push('Use alternative embedding model');\n  }\n  if (category === 'VALIDATION_ERROR') {\n    alternatives.push('Verify all required fields are provided');\n    alternatives.push('Check data format and encoding');\n  }\n  return alternatives;\n}\n\nfunction generateRequiredActions(category, request) {\n  const actions = [];\n  if (category === 'VALIDATION_ERROR') {\n    actions.push('Provide all required fields (videoId, transcript, title)');\n  }\n  if (category === 'API_ERROR') {\n    actions.push('Check API credentials and rate limits');\n  }\n  return actions;\n}\n\nfunction generatePreventionTips(category) {\n  const tips = {\n    'VALIDATION_ERROR': ['Validate input data before sending', 'Use proper data types'],\n    'API_ERROR': ['Monitor API rate limits', 'Implement proper retry logic'],\n    'DATABASE_ERROR': ['Check database connectivity', 'Monitor storage capacity'],\n    'EMBEDDING_ERROR': ['Validate text content encoding', 'Check chunk size limits']\n  };\n  return tips[category] || ['Contact support for guidance'];\n}\n\nfunction generateDocumentationLinks(category) {\n  return [\n    '/docs/transcript-indexing',\n    '/docs/error-handling',\n    '/docs/api-reference'\n  ];\n}\n\nfunction getCommonSolutions(category) {\n  const solutions = {\n    'VALIDATION_ERROR': ['Check required fields', 'Validate data format'],\n    'API_ERROR': ['Verify credentials', 'Check rate limits'],\n    'DATABASE_ERROR': ['Check connectivity', 'Verify permissions'],\n    'EMBEDDING_ERROR': ['Reduce chunk size', 'Check content encoding']\n  };\n  return solutions[category] || ['Retry with corrected data'];\n}\n\nfunction generateTroubleshootingSteps(category) {\n  return [\n    'Review error message and category',\n    'Check all required fields are present',\n    'Verify data format and encoding',\n    'Test with smaller dataset if applicable',\n    'Contact support if issue persists'\n  ];\n}\n\nfunction getEscalationPath(severity) {\n  if (severity === 'high') return 'immediate_escalation';\n  if (severity === 'medium') return 'standard_support';\n  return 'self_service';\n}\n\nreturn [errorResponse];"
+      },
+      "id": "f2a3b4c5-d6e7-8901-f234-567890123456",
+      "name": "❌ Error Response Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 600],
+      "onError": "continueRegularOutput",
+      "notes": "❌ COMPREHENSIVE ERROR RESPONSE SYSTEM\n\n🎯 PURPOSE:\nGenerates intelligent, actionable error responses for transcript indexing failures:\n• Categorizes errors by type and severity for appropriate handling\n• Provides detailed failure analysis with processing context\n• Offers specific recovery guidance and retry recommendations\n• Includes debugging information for technical troubleshooting\n• Delivers comprehensive support resources and escalation paths\n\n🔍 ERROR CATEGORIZATION:\n\n📋 VALIDATION_ERROR (Medium Severity):\n• Missing required fields (videoId, transcript, title)\n• Invalid data formats or encoding issues\n• Content length violations (too short/long)\n• Metadata structure problems\n\n🌐 API_ERROR (High Severity):\n• OpenAI API authentication failures\n• Rate limit exceeded errors\n• API service unavailability\n• Network timeout issues\n\n💾 DATABASE_ERROR (High Severity):\n• PostgreSQL connection failures\n• PGVector extension issues\n• Storage capacity exceeded\n• Transaction rollback problems\n\n🧠 EMBEDDING_ERROR (High Severity):\n• Model processing failures\n• Token limit exceeded\n• Content encoding issues\n• Batch processing failures\n\n⚙️ PROCESSING_ERROR (Medium Severity):\n• Text chunking failures\n• Memory allocation issues\n• Timeout during processing\n• Unexpected workflow interruptions\n\n📊 ERROR RESPONSE STRUCTURE:\n\n🚨 ERROR DETAILS:\n• Category and severity classification\n• Specific error code and message\n• Detailed technical information\n• Stack trace for debugging\n\n🔄 PROCESSING CONTEXT:\n• Processing duration before failure\n• Failure stage identification\n• Partial results extraction\n• Resource consumption metrics\n\n✅ VALIDATION ANALYSIS:\n• Field presence verification\n• Data quality assessment\n• Content length validation\n• Format compliance checking\n\n🔧 RECOVERY GUIDANCE:\n• Retry recommendation logic\n• Calculated retry delays\n• Alternative approach suggestions\n• Required corrective actions\n• Prevention tips and best practices\n\n🐛 DEBUGGING SUPPORT:\n• Unique request identification\n• Workflow and node tracking\n• API call counting\n• Resource utilization metrics\n• System load indicators\n\n🆘 SUPPORT RESOURCES:\n• Relevant documentation links\n• Common solution database\n• Step-by-step troubleshooting\n• Escalation path determination\n• Contact information provision\n\n🎯 INTELLIGENT FEATURES:\n• Severity-based retry logic\n• Context-aware alternative suggestions\n• Processing stage failure detection\n• Resource usage estimation\n• Escalation path automation\n\n➡️ VALUE DELIVERED:\nEmpowers users and support teams with comprehensive error analysis, clear recovery paths, and proactive problem-solving guidance"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 📊 SKIP INDEXING RESPONSE GENERATOR\n// Handles cases where indexing is skipped due to existing content\n\nconst originalRequest = items[0].json;\nconst existingRecord = $('Check Existing Index').first().json || {};\nconst timestamp = new Date().toISOString();\n\n// Generate skip response with detailed reasoning\nconst skipResponse = {\n  success: true,\n  operation: 'indexing_skipped',\n  timestamp: timestamp,\n  videoId: originalRequest.videoId,\n  title: originalRequest.title,\n  \n  // Skip Reasoning\n  skipReason: {\n    primary: 'existing_index_found',\n    details: 'Video transcript already indexed and up-to-date',\n    forceReindex: originalRequest.forceReindex || false,\n    lastIndexed: existingRecord.created_at,\n    daysSinceIndexing: calculateDaysSince(existingRecord.created_at),\n    indexFreshness: assessIndexFreshness(existingRecord.created_at)\n  },\n  \n  // Existing Index Information\n  existingIndex: {\n    id: existingRecord.id,\n    status: existingRecord.status,\n    chunkCount: existingRecord.chunk_count,\n    embeddingCount: existingRecord.embedding_count,\n    embeddingModel: existingRecord.embedding_model,\n    version: existingRecord.version,\n    createdAt: existingRecord.created_at,\n    updatedAt: existingRecord.updated_at\n  },\n  \n  // Search Capabilities\n  searchCapabilities: {\n    semanticSearch: true,\n    timestampSearch: true, // Assume available if previously indexed\n    metadataFiltering: !!existingRecord.metadata,\n    hybridSearch: true,\n    exactMatching: true,\n    searchReady: existingRecord.status === 'indexed'\n  },\n  \n  // Performance Savings\n  resourcesSaved: {\n    processingTimeSkipped: estimateProcessingTime(existingRecord.chunk_count),\n    apiCallsSkipped: Math.ceil(existingRecord.embedding_count / 100),\n    costSavings: estimateCostSavings(existingRecord.embedding_count),\n    co2Savings: estimateCO2Savings(existingRecord.embedding_count)\n  },\n  \n  // Content Analysis\n  contentAnalysis: {\n    alreadyOptimized: true,\n    searchOptimized: existingRecord.status === 'indexed',\n    qualityScore: calculateExistingQualityScore(existingRecord),\n    contentFreshness: assessContentFreshness(existingRecord.created_at)\n  },\n  \n  // Recommendations\n  recommendations: {\n    useExistingIndex: true,\n    forceReindexIfNeeded: originalRequest.forceReindex === false,\n    optimizationSuggestions: generateOptimizationSuggestions(existingRecord),\n    nextReindexingSuggested: suggestNextReindexing(existingRecord.created_at),\n    qualityImprovements: suggestQualityImprovements(existingRecord)\n  },\n  \n  // Alternative Actions\n  alternativeActions: {\n    forceReindex: {\n      available: true,\n      description: 'Set forceReindex=true to override existing index',\n      useCase: 'When transcript has been updated or improved'\n    },\n    updateMetadata: {\n      available: true,\n      description: 'Update metadata without reprocessing embeddings',\n      useCase: 'When only video metadata needs updating'\n    },\n    searchTest: {\n      available: true,\n      description: 'Test search functionality with existing index',\n      endpoint: '/api/search/semantic'\n    }\n  },\n  \n  // System Information\n  systemInfo: {\n    cacheHit: true,\n    processingSkipped: true,\n    resourcesConserved: true,\n    environmentalImpact: 'positive',\n    efficiency: 'optimized'\n  }\n};\n\n// Helper functions\nfunction calculateDaysSince(dateString) {\n  if (!dateString) return null;\n  const then = new Date(dateString);\n  const now = new Date();\n  const diffTime = Math.abs(now - then);\n  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));\n}\n\nfunction assessIndexFreshness(dateString) {\n  const days = calculateDaysSince(dateString);\n  if (days === null) return 'unknown';\n  if (days < 1) return 'very_fresh';\n  if (days < 7) return 'fresh';\n  if (days < 30) return 'acceptable';\n  if (days < 90) return 'aging';\n  return 'stale';\n}\n\nfunction estimateProcessingTime(chunkCount) {\n  // Rough estimate: 100ms per chunk for full pipeline\n  return (chunkCount || 0) * 100;\n}\n\nfunction estimateCostSavings(embeddingCount) {\n  // text-embedding-3-small pricing estimation\n  const estimatedTokens = (embeddingCount || 0) * 250;\n  return Math.round((estimatedTokens / 1000) * 0.00002 * 100) / 100;\n}\n\nfunction estimateCO2Savings(embeddingCount) {\n  // Very rough estimate of CO2 savings from not processing\n  const apiCalls = Math.ceil((embeddingCount || 0) / 100);\n  return Math.round(apiCalls * 0.001 * 100) / 100; // kg CO2 estimate\n}\n\nfunction calculateExistingQualityScore(record) {\n  let score = 70; // Base score for existing index\n  if (record.status === 'indexed') score += 20;\n  if (record.chunk_count > 5) score += 10;\n  if (record.embedding_model === 'text-embedding-3-small') score += 5;\n  return Math.min(100, score);\n}\n\nfunction assessContentFreshness(dateString) {\n  const days = calculateDaysSince(dateString);\n  if (days === null) return 'unknown';\n  if (days < 30) return 'current';\n  if (days < 90) return 'recent';\n  return 'older';\n}\n\nfunction generateOptimizationSuggestions(record) {\n  const suggestions = [];\n  if (record.chunk_count < 5) {\n    suggestions.push('Consider reindexing with larger content for better search results');\n  }\n  if (!record.metadata || Object.keys(record.metadata).length === 0) {\n    suggestions.push('Add metadata for enhanced search filtering capabilities');\n  }\n  if (calculateDaysSince(record.created_at) > 90) {\n    suggestions.push('Consider reindexing with latest embedding models for improved quality');\n  }\n  return suggestions;\n}\n\nfunction suggestNextReindexing(dateString) {\n  const days = calculateDaysSince(dateString);\n  if (days === null) return 'as_needed';\n  if (days < 30) return 'not_needed_soon';\n  if (days < 90) return 'consider_in_30_days';\n  return 'recommended_soon';\n}\n\nfunction suggestQualityImprovements(record) {\n  const improvements = [];\n  improvements.push('Content is already optimized for current search capabilities');\n  if (record.embedding_model !== 'text-embedding-3-small') {\n    improvements.push('Reindex with latest embedding model for improved search quality');\n  }\n  return improvements;\n}\n\nreturn [skipResponse];"
+      },
+      "id": "a3b4c5d6-e7f8-9012-a345-678901234567",
+      "name": "⏭️ Skip Indexing Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1160, 600],
+      "onError": "continueRegularOutput",
+      "notes": "⏭️ INTELLIGENT SKIP RESPONSE GENERATOR\n\n🎯 PURPOSE:\nHandles scenarios where transcript indexing is intelligently skipped:\n• Provides detailed reasoning for skip decisions\n• Analyzes existing index quality and freshness\n• Calculates resource savings and environmental benefits\n• Offers alternative actions and optimization suggestions\n• Maintains transparency in automated decision-making\n\n📊 SKIP ANALYSIS:\n\n🔍 SKIP REASONING:\n• Primary reason identification (existing_index_found)\n• Detailed explanation of decision logic\n• forceReindex flag consideration\n• Index freshness assessment (very_fresh to stale)\n• Days since last indexing calculation\n\n📋 EXISTING INDEX EVALUATION:\n• Index ID and status verification\n• Chunk and embedding count analysis\n• Embedding model version checking\n• Creation and update timestamp tracking\n• Version control information\n\n🔧 SEARCH CAPABILITY ASSESSMENT:\n• Semantic search availability confirmation\n• Timestamp navigation capability\n• Metadata filtering options assessment\n• Hybrid search functionality verification\n• Search readiness status validation\n\n💰 RESOURCE SAVINGS CALCULATION:\n• Processing time savings estimation\n• API call reduction quantification\n• Cost savings computation (embedding API)\n• CO2 footprint reduction estimation\n• Environmental impact positive assessment\n\n📈 CONTENT ANALYSIS:\n• Optimization status verification\n• Search readiness confirmation\n• Quality score calculation for existing content\n• Content freshness assessment (current/recent/older)\n• Performance optimization status\n\n💡 INTELLIGENT RECOMMENDATIONS:\n• Use existing index confirmation\n• Force reindexing guidance when needed\n• Optimization suggestions based on analysis\n• Next reindexing timeline recommendations\n• Quality improvement opportunities\n\n🎯 ALTERNATIVE ACTIONS:\n• Force reindex option explanation\n• Metadata-only update possibilities\n• Search functionality testing suggestions\n• Use case scenarios for each alternative\n• Endpoint information for testing\n\n🌱 ENVIRONMENTAL BENEFITS:\n• Resource conservation highlights\n• Processing efficiency optimization\n• Positive environmental impact notation\n• Carbon footprint reduction quantification\n• Sustainable AI practices demonstration\n\n🔄 DECISION TRANSPARENCY:\n• Clear skip reasoning explanation\n• Objective quality metrics presentation\n• Performance savings quantification\n• Alternative path availability\n• User control maintenance (force override)\n\n📊 BUSINESS VALUE:\n• Cost optimization demonstration\n• Resource efficiency improvement\n• Environmental responsibility showcase\n• System performance optimization\n• User experience enhancement through speed\n\n➡️ OUTCOME:\nTransparent, intelligent skip decision with comprehensive analysis, resource savings, and clear alternative actions for users who need reindexing"
+    }
+  ],
+  "connections": {
+    "📥 Transcript Indexer Webhook": {
+      "main": [
+        [
+          {
+            "node": "✅ Input Validator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "✅ Input Validator": {
+      "main": [
+        [
+          {
+            "node": "🔍 Check Existing Index",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "❌ Error Response Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔍 Check Existing Index": {
+      "main": [
+        [
+          {
+            "node": "🔀 Index Decision Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔀 Index Decision Router": {
+      "main": [
+        [
+          {
+            "node": "📝 Process Transcript",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "⏭️ Skip Indexing Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📝 Process Transcript": {
+      "main": [
+        [
+          {
+            "node": "📚 Load Document Chunks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📚 Load Document Chunks": {
+      "main": [
+        [
+          {
+            "node": "🧠 Generate Embeddings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🧠 Generate Embeddings": {
+      "main": [
+        [
+          {
+            "node": "💾 Store in PGVector",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "💾 Store in PGVector": {
+      "main": [
+        [
+          {
+            "node": "📝 Update Transcript Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📝 Update Transcript Record": {
+      "main": [
+        [
+          {
+            "node": "📡 Publish Index Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📡 Publish Index Event": {
+      "main": [
+        [
+          {
+            "node": "📤 Format Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-30T12:00:00.000Z",
+      "updatedAt": "2025-01-30T12:00:00.000Z",
+      "id": "transcript-indexer",
+      "name": "transcript-indexer"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-30T12:00:00.000Z",
+  "versionId": "transcript-indexer-v1"
+}

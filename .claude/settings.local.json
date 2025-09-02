@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(git add:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "mcp__n8n-mcp__tools_documentation",
+      "mcp__desktop-commander__create_directory"
     ],
     "deny": [],
     "ask": []

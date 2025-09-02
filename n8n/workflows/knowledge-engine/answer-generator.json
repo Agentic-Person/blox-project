@@ -1,0 +1,50 @@
+{
+  "name": "Answer Generator - Knowledge Engine",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "answer-generator", 
+        "options": {
+          "rawBody": true
+        }
+      },
+      "id": "generator-webhook",
+      "name": "🤖 Answer Generator Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [200, 300],
+      "webhookId": "blox-answer-generator"
+    },
+    {
+      "parameters": {
+        "content": "🤖 **ANSWER GENERATOR WORKFLOW**\n\n**Purpose**: AI-powered response generation with citations from search results\n\n**Webhook URL**: /webhook/answer-generator\n**Method**: POST\n\n**Features**:\n- GPT-4o-mini integration (temperature: 0.3)\n- Citation system with video references\n- Response quality scoring\n- Usage tracking and analytics\n- Multi-style response generation\n\n**Input**: Search results + user query\n**Output**: Structured answers with video references and timestamps\n**Model**: GPT-4o-mini for optimal cost/performance",
+        "height": 300,
+        "width": 360,
+        "color": 2
+      },
+      "id": "sticky-overview",
+      "name": "📋 Generator Overview", 
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [20, 80]
+    }
+  ],
+  "connections": {},
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-01T12:00:00.000Z",
+      "updatedAt": "2025-01-01T12:00:00.000Z", 
+      "id": "knowledge-engine",
+      "name": "knowledge-engine"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-01T12:00:00.000Z",
+  "versionId": "1"
+}

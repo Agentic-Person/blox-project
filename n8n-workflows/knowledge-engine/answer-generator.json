@@ -1,0 +1,215 @@
+{
+  "meta": {
+    "instanceId": "answer-generator-workflow"
+  },
+  "nodes": [
+    {
+      "id": "webhook-trigger",
+      "name": "Answer Generation Request",
+      "type": "n8n-nodes-base.webhook",
+      "position": [240, 300],
+      "parameters": {
+        "path": "answer-generator",
+        "httpMethod": "POST",
+        "responseMode": "responseNode"
+      },
+      "typeVersion": 2.1,
+      "onError": "continueRegularOutput",
+      "webhookId": "answer-gen-webhook",
+      "notes": "🎯 ANSWER GENERATOR ENTRY POINT\n\n📝 Purpose: Receives requests to generate AI-powered answers from search results\n\n📋 Expected Payload:\n{\n  \"query\": \"user's original question\",\n  \"searchResults\": [...], // from semantic search\n  \"userId\": \"user_123\",\n  \"sessionId\": \"session_456\", \n  \"conversationHistory\": [...], // previous messages\n  \"responseStyle\": \"detailed|concise|beginner|advanced\",\n  \"maxTokens\": 1000\n}\n\n🔄 Response Mode: Uses responseNode for structured output\n⚡ Triggers: POST requests to /webhook/answer-generator\n🎯 Next: Request validation and sanitization\n\n💡 Integration: Called by semantic search after finding relevant transcripts"
+    },
+    {
+      "id": "request-validator",
+      "name": "Request Validator",
+      "type": "n8n-nodes-base.code",
+      "position": [460, 300],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Answer Generator Request Validation\n// Validates incoming request and prepares for AI processing\n\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  try {\n    const body = item.json.body || {};\n    const {\n      query = '',\n      searchResults = [],\n      userId = '',\n      sessionId = '',\n      conversationHistory = [],\n      responseStyle = 'detailed',\n      maxTokens = 1000\n    } = body;\n\n    // Validation checks\n    const errors = [];\n    \n    if (!query || typeof query !== 'string' || query.trim().length === 0) {\n      errors.push('Query is required and must be a non-empty string');\n    }\n    \n    if (!Array.isArray(searchResults) || searchResults.length === 0) {\n      errors.push('Search results are required and must be a non-empty array');\n    }\n    \n    if (!userId || typeof userId !== 'string') {\n      errors.push('User ID is required');\n    }\n    \n    if (!sessionId || typeof sessionId !== 'string') {\n      errors.push('Session ID is required');\n    }\n    \n    if (errors.length > 0) {\n      results.push({\n        json: {\n          success: false,\n          error: 'Validation failed',\n          details: errors,\n          timestamp: new Date().toISOString()\n        }\n      });\n      continue;\n    }\n    \n    // Prepare validated data\n    results.push({\n      json: {\n        success: true,\n        validatedData: {\n          query: query.trim(),\n          searchResults: searchResults.slice(0, 10), // Limit to top 10 results\n          userId,\n          sessionId,\n          conversationHistory: conversationHistory.slice(-10), // Last 10 messages\n          responseStyle,\n          maxTokens: Math.min(maxTokens, 2000), // Cap at 2000 tokens\n          timestamp: new Date().toISOString()\n        }\n      }\n    });\n    \n  } catch (error) {\n    results.push({\n      json: {\n        success: false,\n        error: 'Request processing failed',\n        details: error.message,\n        timestamp: new Date().toISOString()\n      }\n    });\n  }\n}\n\nreturn results;"
+      },
+      "typeVersion": 2
+    },    {
+      "id": "context-builder",
+      "name": "Context Builder",
+      "type": "n8n-nodes-base.code",
+      "position": [680, 300],
+      "notes": "🏗️ CONTEXT ASSEMBLY ENGINE\n\n📝 Purpose: Constructs comprehensive context from search results and conversation history\n\n🔄 Processing Steps:\n1. Extract video titles, timestamps, and content from search results\n2. Build citation system with numbered references [Citation 1], [Citation 2], etc.\n3. Compile conversation history for context continuity\n4. Prepare style-specific instruction guidelines\n\n📊 Citation Management:\n• Creates structured citation objects with IDs, titles, timestamps, URLs\n• Limits to top 10 search results for context window management\n• Maintains relevance scores for quality assessment\n\n💬 Conversation Context:\n• Includes last 10 messages for context continuity\n• Formats previous Q&A pairs for better responses\n• Maintains user/assistant role distinctions\n\n🎯 Output: Ready-to-use context for AI prompt construction",
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Context Builder for AI Response Generation\n// Constructs comprehensive context from search results and conversation history\n\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  try {\n    if (!item.json.success) {\n      results.push(item);\n      continue;\n    }\n    \n    const { validatedData } = item.json;\n    const { query, searchResults, conversationHistory, responseStyle } = validatedData;\n    \n    // Build context from search results\n    const contextChunks = [];\n    const citations = [];\n    \n    searchResults.forEach((result, index) => {\n      const citationId = index + 1;\n      \n      // Extract key information\n      const videoTitle = result.video_title || 'Unknown Video';\n      const timestamp = result.timestamp || '00:00';\n      const content = result.content || '';\n      const relevanceScore = result.relevance_score || 0;\n      \n      // Build context chunk\n      const contextChunk = `[Citation ${citationId}] From \"${videoTitle}\" at ${timestamp}:\\n${content}`;\n      contextChunks.push(contextChunk);\n      \n      // Store citation for reference\n      citations.push({\n        id: citationId,\n        videoTitle,\n        timestamp,\n        relevanceScore,\n        url: result.video_url || '',\n        transcriptId: result.transcript_id || ''\n      });\n    });\n    \n    // Build conversation context\n    let conversationContext = '';\n    if (conversationHistory && conversationHistory.length > 0) {\n      conversationContext = '\\n\\nRecent Conversation:\\n';\n      conversationHistory.forEach((msg, index) => {\n        const role = msg.role || 'user';\n        const content = msg.content || '';\n        conversationContext += `${role}: ${content}\\n`;\n      });\n    }\n    \n    // Combine all context\n    const fullContext = contextChunks.join('\\n\\n');\n    \n    // Determine response style instructions\n    const styleInstructions = {\n      'detailed': 'Provide a comprehensive, detailed response with clear explanations and step-by-step guidance.',\n      'concise': 'Keep the response brief and to-the-point while covering the essential information.',\n      'beginner': 'Use simple language and explain concepts clearly for someone new to Roblox development.',\n      'advanced': 'Provide technical details and assume familiarity with Roblox development concepts.'\n    };\n    \n    const instruction = styleInstructions[responseStyle] || styleInstructions['detailed'];\n    \n    results.push({\n      json: {\n        success: true,\n        aiContext: {\n          query: query,\n          fullContext: fullContext,\n          conversationContext: conversationContext,\n          citations: citations,\n          styleInstruction: instruction,\n          timestamp: validatedData.timestamp,\n          contextLength: fullContext.length,\n          citationCount: citations.length\n        },\n        originalData: validatedData\n      }\n    });\n    \n  } catch (error) {\n    results.push({\n      json: {\n        success: false,\n        error: 'Context building failed',\n        details: error.message,\n        timestamp: new Date().toISOString()\n      }\n    });\n  }\n}\n\nreturn results;"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "ai-response-generator",
+      "name": "AI Response Generator",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [900, 300],
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {
+          "temperature": 0.3,
+          "maxTokens": "={{ $json.originalData.maxTokens }}",
+          "topP": 0.9
+        }
+      },
+      "typeVersion": 1.8,
+      "onError": "continueRegularOutput",
+      "notes": "🧠 AI RESPONSE GENERATION\n\n📝 Purpose: Generates intelligent, contextual answers using OpenAI\n\n⚙️ Model Configuration:\n• Model: GPT-4o-mini (cost-effective, fast)\n• Temperature: 0.3 (balanced creativity/consistency)\n• Max Tokens: Dynamic based on request (capped at 2000)\n• Top-P: 0.9 (focused but diverse responses)\n\n🎯 Input: System + user prompts with full context\n📤 Output: Raw AI response text with citations\n\n💡 Optimization Notes:\n• Low temperature ensures consistent, factual responses\n• Token limit prevents overly long responses\n• Model choice balances cost and quality for educational content\n\n🔄 Next: Response processing and metadata extraction"
+    },    {
+      "id": "prompt-constructor",
+      "name": "AI Prompt Constructor",
+      "type": "n8n-nodes-base.code",
+      "position": [900, 160],
+      "notes": "🤖 AI PROMPT ENGINEERING ENGINE\n\n📝 Purpose: Creates optimized prompts for high-quality AI responses\n\n🎯 System Prompt Features:\n• Establishes 'Blox Wizard' expert persona\n• Defines Roblox development expertise scope\n• Sets citation requirements and formatting standards\n• Configures response style guidelines\n\n📋 Prompt Components:\n• System: Role definition, expertise areas, citation rules\n• User: Question + context + conversation history\n• Config: Model settings (gpt-4o-mini, temp=0.3)\n\n🎨 Style Adaptation:\n• Detailed: Comprehensive explanations with step-by-step guidance\n• Concise: Brief, essential information only\n• Beginner: Simple language, concept explanations\n• Advanced: Technical details, assumes expertise\n\n🔗 Citation System: Enforces [Citation X] format with timestamps\n⚡ Output: Ready-to-send AI prompt with all context",
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// AI Prompt Constructor for Answer Generation\n// Creates optimized prompts for AI response generation\n\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  try {\n    if (!item.json.success) {\n      results.push(item);\n      continue;\n    }\n    \n    const { aiContext, originalData } = item.json;\n    const { query, fullContext, conversationContext, styleInstruction } = aiContext;\n    \n    // Construct comprehensive AI prompt\n    const systemPrompt = `You are Blox Wizard, an expert Roblox development assistant with access to comprehensive video tutorial transcripts.\n\nYour role:\n- Provide accurate, helpful answers about Roblox development\n- Use ONLY the provided context from video transcripts\n- Include specific citations with timestamps for all information\n- ${styleInstruction}\n\nCitation Format:\n- Use format: [Citation X] for inline references\n- Always include video timestamps when available\n- Prefer recent or highly relevant content\n\nRoblox Development Focus:\n- Scripting (Lua programming)\n- Studio tools and interface\n- Game mechanics and systems\n- Building and modeling techniques\n- Publishing and monetization\n\nGuidelines:\n- If information isn't in the provided context, state this clearly\n- For code examples, always explain the logic\n- Suggest related topics when helpful\n- Be encouraging and supportive for learners`;\n    \n    const userPrompt = `Question: ${query}\n\nAvailable Context from Video Transcripts:\n${fullContext}\n${conversationContext}\n\nPlease provide a helpful answer using the provided context. Include citations and timestamps for all information used.`;\n    \n    results.push({\n      json: {\n        success: true,\n        prompt: {\n          system: systemPrompt,\n          user: userPrompt,\n          model: 'gpt-4o-mini',\n          temperature: 0.3,\n          maxTokens: originalData.maxTokens\n        },\n        aiContext: aiContext,\n        originalData: originalData\n      }\n    });\n    \n  } catch (error) {\n    results.push({\n      json: {\n        success: false,\n        error: 'Prompt construction failed',\n        details: error.message,\n        timestamp: new Date().toISOString()\n      }\n    });\n  }\n}\n\nreturn results;"
+      },
+      "typeVersion": 2
+    },    {
+      "id": "response-processor",
+      "name": "Response Processor",
+      "type": "n8n-nodes-base.code",
+      "position": [1120, 300],
+      "notes": "📊 RESPONSE ANALYSIS & ENHANCEMENT\n\n📝 Purpose: Processes AI response and adds comprehensive metadata\n\n🔍 Analysis Features:\n• Citation extraction: Identifies [Citation X] references used\n• Quality scoring: Multi-factor quality assessment (0.0-1.0)\n• Content analysis: Word count, code examples, timestamps\n• Performance metrics: Response time calculation\n\n📈 Quality Scoring Factors:\n• Base score: 0.5\n• +0.2 for citations used\n• +0.15 for code examples\n• +0.1 for timestamp references\n• +0.05 for optimal length (50-500 words)\n\n🏷️ Metadata Enrichment:\n• Used citations with video references\n• Response metrics and quality indicators\n• Session and user tracking data\n• Timestamp and service identification\n\n⚡ Output: Structured response object ready for client consumption",
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Response Processor for Answer Generation\n// Processes AI response and adds metadata for client consumption\n\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  try {\n    // Get AI response from the ChatOpenAI node\n    const aiResponse = item.json.text || item.json.content || '';\n    const originalData = item.json.originalData || {};\n    const aiContext = item.json.aiContext || {};\n    \n    if (!aiResponse) {\n      results.push({\n        json: {\n          success: false,\n          error: 'No AI response received',\n          timestamp: new Date().toISOString()\n        }\n      });\n      continue;\n    }\n    \n    // Extract citation references from the response\n    const citationMatches = aiResponse.match(/\\[Citation \\d+\\]/g) || [];\n    const usedCitations = citationMatches.map(match => {\n      const citationId = parseInt(match.match(/\\d+/)[0]);\n      return aiContext.citations?.find(c => c.id === citationId);\n    }).filter(Boolean);\n    \n    // Calculate response metrics\n    const wordCount = aiResponse.split(/\\s+/).length;\n    const hasCodeExamples = /```|`[^`]+`/.test(aiResponse);\n    const hasTimestamps = /\\d{1,2}:\\d{2}/.test(aiResponse);\n    \n    // Determine response quality score\n    let qualityScore = 0.5; // Base score\n    if (usedCitations.length > 0) qualityScore += 0.2;\n    if (hasCodeExamples) qualityScore += 0.15;\n    if (hasTimestamps) qualityScore += 0.1;\n    if (wordCount > 50 && wordCount < 500) qualityScore += 0.05;\n    qualityScore = Math.min(qualityScore, 1.0);\n    \n    // Build structured response\n    const processedResponse = {\n      answer: aiResponse,\n      metadata: {\n        citationsUsed: usedCitations,\n        allCitations: aiContext.citations || [],\n        metrics: {\n          wordCount,\n          citationCount: usedCitations.length,\n          qualityScore: Math.round(qualityScore * 100) / 100,\n          hasCodeExamples,\n          hasTimestamps,\n          responseTime: Date.now() - new Date(originalData.timestamp).getTime()\n        },\n        query: originalData.query,\n        sessionId: originalData.sessionId,\n        userId: originalData.userId,\n        timestamp: new Date().toISOString()\n      }\n    };\n    \n    results.push({\n      json: {\n        success: true,\n        response: processedResponse\n      }\n    });\n    \n  } catch (error) {\n    results.push({\n      json: {\n        success: false,\n        error: 'Response processing failed',\n        details: error.message,\n        timestamp: new Date().toISOString()\n      }\n    });\n  }\n}\n\nreturn results;"
+      },
+      "typeVersion": 2
+    },    {
+      "id": "usage-tracker",
+      "name": "Usage Tracker",
+      "type": "n8n-nodes-base.redis",
+      "position": [1340, 300],
+      "parameters": {
+        "operation": "publish",
+        "channel": "ai_usage_events",
+        "messageData": "={{ JSON.stringify({\n  event_type: 'answer_generated',\n  user_id: $json.response?.metadata?.userId,\n  session_id: $json.response?.metadata?.sessionId,\n  query: $json.response?.metadata?.query,\n  citation_count: $json.response?.metadata?.metrics?.citationCount,\n  word_count: $json.response?.metadata?.metrics?.wordCount,\n  quality_score: $json.response?.metadata?.metrics?.qualityScore,\n  response_time_ms: $json.response?.metadata?.metrics?.responseTime,\n  timestamp: $json.response?.metadata?.timestamp\n}) }}",
+        "options": {}\n      },\n      "typeVersion": 1\n    },\n    {\n      "id": "response-formatter",\n      "name": "Response Formatter",\n      "type": "n8n-nodes-base.code",\n      "position": [1560, 300],\n      "parameters": {\n        "mode": "runOnceForAllItems",\n        "jsCode": "// Response Formatter for Answer Generation\n// Final formatting and client response preparation\n\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  try {\n    if (!item.json.success) {\n      // Format error response\n      results.push({\n        json: {\n          success: false,\n          error: item.json.error || 'Unknown error',\n          details: item.json.details || 'No details available',\n          timestamp: item.json.timestamp || new Date().toISOString(),\n          service: 'answer-generator'\n        }\n      });\n      continue;\n    }\n    \n    const { response } = item.json;\n    \n    // Format successful response for client\n    const clientResponse = {\n      success: true,\n      data: {\n        answer: response.answer,\n        citations: response.metadata.citationsUsed.map(citation => ({\n          id: citation.id,\n          videoTitle: citation.videoTitle,\n          timestamp: citation.timestamp,\n          url: citation.url,\n          relevanceScore: citation.relevanceScore\n        })),\n        metrics: {\n          qualityScore: response.metadata.metrics.qualityScore,\n          citationCount: response.metadata.metrics.citationCount,\n          wordCount: response.metadata.metrics.wordCount,\n          responseTimeMs: response.metadata.metrics.responseTime\n        },\n        meta: {\n          sessionId: response.metadata.sessionId,\n          timestamp: response.metadata.timestamp,\n          service: 'answer-generator',\n          version: '1.0'\n        }\n      }\n    };\n    \n    results.push({ json: clientResponse });\n    \n  } catch (error) {\n    results.push({\n      json: {\n        success: false,\n        error: 'Response formatting failed',\n        details: error.message,\n        timestamp: new Date().toISOString(),\n        service: 'answer-generator'\n      }\n    });\n  }\n}\n\nreturn results;"\n      },\n      "typeVersion": 2\n    },    {
+      "id": "webhook-response",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "position": [1780, 300],
+      "parameters": {
+        "options": {}
+      },
+      "typeVersion": 1.5,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "error-handler",
+      "name": "Error Handler",
+      "type": "n8n-nodes-base.code",
+      "position": [900, 500],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Error Handler for Answer Generation\n// Comprehensive error handling and recovery guidance\n\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  const error = item.json;\n  \n  // Determine error type and severity\n  let errorType = 'unknown';\n  let severity = 'medium';\n  let recoveryAction = 'retry';\n  \n  const errorMessage = error.message || error.error || 'Unknown error';\n  \n  // Classify error types\n  if (errorMessage.includes('validation') || errorMessage.includes('required')) {\n    errorType = 'validation_error';\n    severity = 'low';\n    recoveryAction = 'fix_input';\n  } else if (errorMessage.includes('timeout') || errorMessage.includes('network')) {\n    errorType = 'network_error';\n    severity = 'medium';\n    recoveryAction = 'retry_with_backoff';\n  } else if (errorMessage.includes('rate limit') || errorMessage.includes('quota')) {\n    errorType = 'rate_limit_error';\n    severity = 'high';\n    recoveryAction = 'wait_and_retry';\n  } else if (errorMessage.includes('unauthorized') || errorMessage.includes('authentication')) {\n    errorType = 'auth_error';\n    severity = 'high';\n    recoveryAction = 'check_credentials';\n  } else if (errorMessage.includes('ai') || errorMessage.includes('openai')) {\n    errorType = 'ai_service_error';\n    severity = 'high';\n    recoveryAction = 'fallback_model';\n  }\n  \n  // Recovery suggestions\n  const recoveryGuide = {\n    'fix_input': 'Check request validation requirements and fix input parameters',\n    'retry_with_backoff': 'Retry request with exponential backoff delay',\n    'wait_and_retry': 'Wait for rate limit reset period before retrying',\n    'check_credentials': 'Verify API keys and authentication configuration',\n    'fallback_model': 'Try alternative AI model or cached response',\n    'retry': 'Simple retry with same parameters'\n  };\n  \n  const errorResponse = {\n    success: false,\n    error: {\n      type: errorType,\n      severity: severity,\n      message: errorMessage,\n      timestamp: new Date().toISOString(),\n      service: 'answer-generator',\n      recovery: {\n        action: recoveryAction,\n        guidance: recoveryGuide[recoveryAction],\n        retryable: ['retry', 'retry_with_backoff', 'wait_and_retry'].includes(recoveryAction)\n      }\n    }\n  };\n  \n  results.push({ json: errorResponse });\n}\n\nreturn results;"\n      },\n      "typeVersion": 2\n    },  ],
+  "connections": {
+    "Answer Generation Request": {
+      "main": [
+        [
+          {
+            "node": "Request Validator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Request Validator": {
+      "main": [
+        [
+          {
+            "node": "Context Builder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Context Builder": {
+      "main": [
+        [
+          {
+            "node": "AI Prompt Constructor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Prompt Constructor": {
+      "main": [
+        [
+          {
+            "node": "AI Response Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Response Generator": {
+      "main": [
+        [
+          {
+            "node": "Response Processor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Response Processor": {
+      "main": [
+        [
+          {
+            "node": "Usage Tracker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Usage Tracker": {
+      "main": [
+        [
+          {
+            "node": "Response Formatter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Response Formatter": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-08-30T00:00:00.000Z",
+      "updatedAt": "2025-08-30T00:00:00.000Z",
+      "id": "answer-gen",
+      "name": "Knowledge Engine"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-08-30T00:00:00.000Z",
+  "versionId": "1"
+}

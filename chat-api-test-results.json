@@ -1,0 +1,57 @@
+{
+  "timestamp": "2025-09-01T19:49:40.267Z",
+  "testQueries": [
+    "How do I create a part in Roblox Studio?",
+    "Can you help me with scripting?",
+    "What are variables in Lua?",
+    "How do I make a GUI button?",
+    "Building techniques for beginners"
+  ],
+  "results": [
+    {
+      "query": "How do I create a part in Roblox Studio?",
+      "success": true,
+      "responseTime": "15645ms",
+      "videoReferences": 10,
+      "answerLength": 1960,
+      "suggestedQuestions": 4
+    },
+    {
+      "query": "Can you help me with scripting?",
+      "success": true,
+      "responseTime": "7198ms",
+      "videoReferences": 10,
+      "answerLength": 1590,
+      "suggestedQuestions": 4
+    },
+    {
+      "query": "What are variables in Lua?",
+      "success": true,
+      "responseTime": "9186ms",
+      "videoReferences": 8,
+      "answerLength": 1684,
+      "suggestedQuestions": 4
+    },
+    {
+      "query": "How do I make a GUI button?",
+      "success": true,
+      "responseTime": "11467ms",
+      "videoReferences": 4,
+      "answerLength": 1860,
+      "suggestedQuestions": 4
+    },
+    {
+      "query": "Building techniques for beginners",
+      "success": true,
+      "responseTime": "10096ms",
+      "videoReferences": 10,
+      "answerLength": 2145,
+      "suggestedQuestions": 4
+    }
+  ],
+  "summary": {
+    "successful": 5,
+    "total": 5,
+    "successRate": "100.0%"
+  }
+}

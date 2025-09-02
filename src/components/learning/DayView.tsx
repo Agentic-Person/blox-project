@@ -14,10 +14,12 @@ import {
   Zap,
   User,
   FileText,
-  ArrowLeft
+  ArrowLeft,
+  Edit3
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useLearningStore } from '@/store/learningStore'
+import { useRouter } from 'next/navigation'
 import * as Progress from '@radix-ui/react-progress'
 import { moduleColorScheme } from '@/lib/constants/moduleColors'
 import { cn } from '@/lib/utils/cn'
@@ -46,6 +48,7 @@ export function DayView({
   onBack
 }: DayViewProps) {
   const { isVideoCompleted } = useLearningStore()
+  const router = useRouter()
   
   // Calculate day progress
   const completedVideos = day.videos.filter(v => isVideoCompleted(v.id)).length
@@ -65,6 +68,7 @@ export function DayView({
   const {
     dayBackgrounds,
     dayHoverBackgrounds,
+    dayBorders,
     dayActiveBorders,
     textColors,
     progressBarColors
@@ -181,9 +185,9 @@ export function DayView({
                 {(video as any).type === 'assignment' ? (
                   <div className={cn(
                     "flex items-start gap-4 p-4 rounded-lg cursor-pointer transition-all group",
-                    `bg-gradient-to-br from-${moduleColorScheme.moduleAccents[moduleIndex]}/20 to-blox-second-dark-blue/30`,
-                    `hover:from-${moduleColorScheme.moduleAccents[moduleIndex]}/30 hover:to-blox-second-dark-blue/40`,
-                    `border border-${moduleColorScheme.moduleAccents[moduleIndex]}/30`
+                    dayBackgrounds[moduleIndex],
+                    dayHoverBackgrounds[moduleIndex], 
+                    dayBorders[moduleIndex]
                   )}>
                     {/* Assignment Thumbnails - Show both images side by side */}
                     <div className="flex gap-2 flex-shrink-0">
@@ -196,7 +200,7 @@ export function DayView({
                           />
                           <div className={cn(
                             "absolute top-1 right-1 text-blox-very-dark-blue text-[8px] px-1 py-0.5 rounded font-bold",
-                            `bg-${moduleColorScheme.moduleAccents[moduleIndex]}/90`
+                            moduleColorScheme.buttonBackgrounds[moduleIndex]
                           )}>
                             ASSIGNMENT
                           </div>
@@ -246,10 +250,9 @@ export function DayView({
                   <div
                     className={cn(
                       "flex items-start gap-4 p-4 rounded-lg cursor-pointer transition-all group",
-                      `bg-${moduleColorScheme.moduleAccents[moduleIndex]}/15`,
-                      `hover:bg-${moduleColorScheme.moduleAccents[moduleIndex]}/25`,
-                      `border border-${moduleColorScheme.moduleAccents[moduleIndex]}/30`,
-                      `hover:border-${moduleColorScheme.moduleAccents[moduleIndex]}/50`
+                      dayBackgrounds[moduleIndex],
+                      dayHoverBackgrounds[moduleIndex],
+                      dayBorders[moduleIndex]
                     )}
                     onClick={() => onVideoSelect(video.id)}
                   >
@@ -379,15 +382,33 @@ export function DayView({
                     : day.practiceTask?.description || 'Practice task available'
                   }
                 </p>
-                <div className="flex items-center gap-4 text-xs text-blox-off-white/60">
-                  <div className="flex items-center gap-1">
-                    <FileText className="h-3 w-3" />
-                    <span>Complete after watching all videos</span>
+                <div className="flex items-center justify-between mt-4">
+                  <div className="flex items-center gap-4 text-xs text-blox-off-white/60">
+                    <div className="flex items-center gap-1">
+                      <FileText className="h-3 w-3" />
+                      <span>Complete after watching all videos</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Zap className="h-3 w-3 text-blox-teal" />
+                      <span className="text-blox-teal">+100 XP on completion</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Zap className="h-3 w-3 text-blox-teal" />
-                    <span className="text-blox-teal">+100 XP on completion</span>
-                  </div>
+                  <Button
+                    onClick={() => {
+                      const practiceUrl = `/learning/${moduleInfo.id}/${weekInfo.id}/${day.id}/practice`
+                      console.log('Practice button clicked, navigating to:', practiceUrl)
+                      router.push(practiceUrl)
+                    }}
+                    size="sm"
+                    className={cn(
+                      "text-blox-very-dark-blue font-semibold",
+                      moduleColorScheme.buttonBackgrounds[moduleIndex],
+                      moduleColorScheme.buttonHoverBackgrounds[moduleIndex]
+                    )}
+                  >
+                    <Edit3 className="h-4 w-4 mr-2" />
+                    Start Practice
+                  </Button>
                 </div>
               </div>
             </div>

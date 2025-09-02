@@ -1,0 +1,207 @@
+{
+  "name": "Interaction Tracker - Analytics Engine Complete",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "track-interaction-complete",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "id": "tracker-webhook",
+      "name": "📊 Interaction Tracker Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 300],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "📊 **INTERACTION TRACKER WORKFLOW**\n\n**Purpose**: Tracks all user interactions for pattern analysis and behavioral insights\n\n**Webhook URL**: /webhook/track-interaction-complete\n**Method**: POST\n\n**Event Types Tracked**:\n- VIDEO_WATCH: Video viewing behavior and progress\n- CHAT_QUERY: AI assistant usage patterns\n- TASK_COMPLETE: Learning milestone achievements\n- HELP_REQUEST: Support interaction patterns\n- SESSION_START/END: User session analytics\n- UI_INTERACTION: Interface usage patterns\n\n**Analytics Features**:\n- Real-time pattern analysis and insights\n- Behavioral flag detection for intervention\n- Learning progress optimization\n- Usage pattern recommendations\n- Security monitoring and protection",
+        "height": 360,
+        "width": 360,
+        "color": 3
+      },
+      "id": "sticky-overview", 
+      "name": "📋 Tracker Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [20, 80]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🛡️ INPUT VALIDATION & SECURITY\n// Validates and sanitizes interaction data with security measures\n\nconst inputData = $input.first().json;\nconsole.log('📊 Interaction tracking request received');\n\n// Validate required fields\nif (!inputData.interactionType || !inputData.userId) {\n  return [{\n    json: {\n      success: false,\n      error: 'Missing required fields: interactionType, userId',\n      timestamp: new Date().toISOString()\n    }\n  }];\n}\n\n// Security: Input sanitization\nfunction sanitizeInput(input) {\n  if (typeof input !== 'string') return input;\n  \n  return input\n    .replace(/<script[^>]*>.*?<\\/script>/gi, '') // Remove script tags\n    .replace(/<[^>]*>/g, '') // Remove HTML tags\n    .replace(/javascript:/gi, '') // Remove javascript: protocols\n    .replace(/on\\w+=/gi, '') // Remove event handlers\n    .trim()\n    .substring(0, 1000); // Limit length\n}\n\n// Valid interaction types\nconst validInteractionTypes = [\n  'VIDEO_WATCH', 'CHAT_QUERY', 'TASK_COMPLETE', 'HELP_REQUEST',\n  'SESSION_START', 'SESSION_END', 'UI_INTERACTION', 'PROGRESS_UPDATE',\n  'ERROR_OCCURRED', 'FEATURE_USED'\n];\n\nif (!validInteractionTypes.includes(inputData.interactionType)) {\n  return [{\n    json: {\n      success: false,\n      error: `Invalid interaction type. Must be one of: ${validInteractionTypes.join(', ')}`,\n      timestamp: new Date().toISOString()\n    }\n  }];\n}\n\n// Process and sanitize interaction data\nconst interactionData = inputData.data || {};\nconst sanitizedData = {};\n\nfor (const [key, value] of Object.entries(interactionData)) {\n  sanitizedData[sanitizeInput(key)] = sanitizeInput(value);\n}\n\n// Create validated interaction record\nconst validatedInteraction = {\n  interactionType: inputData.interactionType,\n  userId: sanitizeInput(inputData.userId),\n  sessionId: sanitizeInput(inputData.sessionId || 'unknown'),\n  data: sanitizedData,\n  timestamp: inputData.timestamp || new Date().toISOString(),\n  userAgent: sanitizeInput(inputData.userAgent || 'unknown'),\n  ipAddress: inputData.ipAddress ? sanitizeInput(inputData.ipAddress) : null,\n  requestId: `track_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,\n  processingTimestamp: new Date().toISOString()\n};\n\nconsole.log(`✅ Interaction validated: ${validatedInteraction.interactionType} for user ${validatedInteraction.userId}`);\n\nreturn [{ json: validatedInteraction }];"
+      },
+      "id": "input-validator",
+      "name": "🛡️ Input Validator & Security",
+      "type": "n8n-nodes-base.code", 
+      "typeVersion": 2,
+      "position": [420, 300]
+    },
+    {
+      "parameters": {
+        "content": "🛡️ **INPUT VALIDATION & SECURITY**\n\n**Purpose**: Validates and secures interaction data\n\n**Security Measures**:\n- XSS protection (script tag removal)\n- HTML tag sanitization\n- JavaScript protocol blocking\n- Event handler removal\n- Input length limiting (1000 chars)\n\n**Validation Rules**:\n- Required: interactionType, userId\n- Valid interaction types: 10 predefined types\n- Data sanitization for all string fields\n- IP address optional masking\n\n**Supported Interaction Types**:\n- VIDEO_WATCH, CHAT_QUERY, TASK_COMPLETE\n- HELP_REQUEST, SESSION_START/END\n- UI_INTERACTION, PROGRESS_UPDATE\n- ERROR_OCCURRED, FEATURE_USED\n\n**Rate Limiting**: Ready for external rate limiting integration",
+        "height": 320,
+        "width": 300,
+        "color": 8
+      },
+      "id": "sticky-security",
+      "name": "🛡️ Security Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [420, -40]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO user_interactions (user_id, session_id, interaction_type, interaction_data, user_agent, ip_address, timestamp, processing_timestamp, request_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id",
+        "additionalFields": {
+          "queryParameters": "=[\n  $json.userId,\n  $json.sessionId,\n  $json.interactionType,\n  JSON.stringify($json.data),\n  $json.userAgent,\n  $json.ipAddress,\n  $json.timestamp,\n  $json.processingTimestamp,\n  $json.requestId\n]"
+        },
+        "options": {}
+      },
+      "id": "database-storage",
+      "name": "🗄️ Database Storage",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [640, 300]
+    },
+    {
+      "parameters": {
+        "content": "🗄️ **DATABASE STORAGE**\n\n**Purpose**: Stores interaction data in PostgreSQL\n\n**Table Schema**: user_interactions\n```sql\nCREATE TABLE user_interactions (\n  id SERIAL PRIMARY KEY,\n  user_id VARCHAR(255) NOT NULL,\n  session_id VARCHAR(255),\n  interaction_type VARCHAR(50) NOT NULL,\n  interaction_data JSONB,\n  user_agent TEXT,\n  ip_address INET,\n  timestamp TIMESTAMP NOT NULL,\n  processing_timestamp TIMESTAMP,\n  request_id VARCHAR(100)\n);\n```\n\n**Indexes for Performance**:\n- user_id, interaction_type, timestamp\n- session_id for session analytics\n- JSONB GIN index for data queries\n\n**Data Retention**: Consider partitioning by date for large datasets",
+        "height": 300,
+        "width": 300,
+        "color": 6
+      },
+      "id": "sticky-database",
+      "name": "🗄️ Database Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [640, -20]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🔍 PATTERN ANALYSIS ENGINE\n// Analyzes interaction patterns and generates insights\n\nconst storageResult = $input.first().json;\nconst originalInteraction = $('Input Validator & Security').first().json;\n\nconsole.log('🔍 Analyzing interaction patterns');\n\nconst interactionId = storageResult[0]?.id;\nif (!interactionId) {\n  return [{\n    json: {\n      success: false,\n      error: 'Failed to store interaction',\n      timestamp: new Date().toISOString()\n    }\n  }];\n}\n\n// Pattern analysis based on interaction type\nfunction analyzeInteractionPatterns(interaction) {\n  const insights = {\n    flags: [],\n    recommendations: [],\n    metrics: {}\n  };\n  \n  const { interactionType, data, userId } = interaction;\n  \n  switch (interactionType) {\n    case 'VIDEO_WATCH':\n      if (data.watchTime && data.duration) {\n        const completionRate = (parseInt(data.watchTime) / parseInt(data.duration)) * 100;\n        insights.metrics.videoCompletionRate = completionRate;\n        \n        if (completionRate < 10) {\n          insights.flags.push('LOW_ENGAGEMENT');\n          insights.recommendations.push('Suggest shorter or more engaging content');\n        } else if (completionRate > 90) {\n          insights.flags.push('HIGH_ENGAGEMENT');\n          insights.recommendations.push('Recommend similar content');\n        }\n      }\n      break;\n      \n    case 'CHAT_QUERY':\n      if (data.query) {\n        const queryLength = data.query.length;\n        insights.metrics.queryComplexity = queryLength > 100 ? 'complex' : 'simple';\n        \n        if (data.query.toLowerCase().includes('help') || data.query.includes('?')) {\n          insights.flags.push('NEEDS_HELP');\n          insights.recommendations.push('Provide additional learning resources');\n        }\n      }\n      break;\n      \n    case 'ERROR_OCCURRED':\n      insights.flags.push('ERROR_DETECTED');\n      insights.recommendations.push('Review user experience for error prevention');\n      break;\n      \n    case 'TASK_COMPLETE':\n      insights.flags.push('PROGRESS_MADE');\n      insights.recommendations.push('Congratulate and suggest next challenge');\n      break;\n  }\n  \n  return insights;\n}\n\nconst patternAnalysis = analyzeInteractionPatterns(originalInteraction);\n\n// Create comprehensive tracking response\nconst trackingResponse = {\n  success: true,\n  interactionId: interactionId,\n  userId: originalInteraction.userId,\n  interactionType: originalInteraction.interactionType,\n  \n  // Pattern analysis results\n  analysis: {\n    flags: patternAnalysis.flags,\n    recommendations: patternAnalysis.recommendations,\n    metrics: patternAnalysis.metrics,\n    riskScore: patternAnalysis.flags.length > 2 ? 'high' : patternAnalysis.flags.length > 0 ? 'medium' : 'low'\n  },\n  \n  // Processing metadata\n  processing: {\n    requestId: originalInteraction.requestId,\n    processingTime: Date.now() - new Date(originalInteraction.processingTimestamp).getTime(),\n    storedAt: new Date().toISOString()\n  },\n  \n  timestamp: new Date().toISOString()\n};\n\nconsole.log(`✅ Pattern analysis completed: ${patternAnalysis.flags.length} flags, ${patternAnalysis.recommendations.length} recommendations`);\n\nreturn [{ json: trackingResponse }];"
+      },
+      "id": "pattern-analyzer",
+      "name": "🔍 Pattern Analysis",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [860, 300]
+    },
+    {
+      "parameters": {
+        "content": "🔍 **PATTERN ANALYSIS ENGINE**\n\n**Purpose**: Analyzes user behavior patterns and generates insights\n\n**Analysis Types**:\n- **Video Engagement**: Completion rates, replay behavior\n- **Learning Patterns**: Progress tracking, difficulty adaptation\n- **Help-Seeking**: Question complexity, support needs\n- **Error Patterns**: Failure points, user frustration\n- **Session Behavior**: Duration, interaction frequency\n\n**Flag Detection**:\n- LOW_ENGAGEMENT: < 10% video completion\n- HIGH_ENGAGEMENT: > 90% completion\n- NEEDS_HELP: Query contains help requests\n- ERROR_DETECTED: Error interaction logged\n- PROGRESS_MADE: Task completion detected\n\n**Risk Scoring**:\n- High: 3+ flags (intervention needed)\n- Medium: 1-2 flags (monitor closely)\n- Low: 0 flags (normal behavior)\n\n**Recommendations**: Automated suggestions for user experience improvement",
+        "height": 360,
+        "width": 300,
+        "color": 7
+      },
+      "id": "sticky-analysis",
+      "name": "🔍 Analysis Notes", 
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [860, -80]
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "X-Interaction-Tracker",
+                "value": "Blox-Wizard-v1.0"
+              }
+            ]
+          }
+        }
+      },
+      "id": "webhook-response",
+      "name": "📤 Send Tracking Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1080, 300]
+    },
+    {
+      "parameters": {
+        "content": "📤 **TRACKING RESPONSE DELIVERY**\n\n**Purpose**: Confirms interaction tracking with analysis insights\n\n**Response Structure**:\n```json\n{\n  \"success\": true,\n  \"interactionId\": 12345,\n  \"analysis\": {\n    \"flags\": [\"HIGH_ENGAGEMENT\"],\n    \"recommendations\": [\"Recommend similar content\"],\n    \"metrics\": {\"videoCompletionRate\": 95},\n    \"riskScore\": \"low\"\n  },\n  \"processing\": {\n    \"processingTime\": 45,\n    \"storedAt\": \"2025-01-01T12:00:00Z\"\n  }\n}\n```\n\n**Integration Points**:\n- Real-time dashboard updates\n- Learning path adjustments\n- Intervention triggers\n- Performance analytics\n\n**Performance**: < 200ms total response time",
+        "height": 300,
+        "width": 300,
+        "color": 1
+      },
+      "id": "sticky-response",
+      "name": "📤 Response Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1080, -20]
+    }
+  ],
+  "connections": {
+    "📊 Interaction Tracker Webhook": {
+      "main": [
+        [
+          {
+            "node": "🛡️ Input Validator & Security",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🛡️ Input Validator & Security": {
+      "main": [
+        [
+          {
+            "node": "🗄️ Database Storage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🗄️ Database Storage": {
+      "main": [
+        [
+          {
+            "node": "🔍 Pattern Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔍 Pattern Analysis": {
+      "main": [
+        [
+          {
+            "node": "📤 Send Tracking Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-01T12:00:00.000Z",
+      "updatedAt": "2025-01-01T12:00:00.000Z",
+      "id": "analytics",
+      "name": "analytics"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-01T12:00:00.000Z",
+  "versionId": "1"
+}

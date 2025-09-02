@@ -87,6 +87,33 @@ export function WeekPreview({
     'bg-blox-module-yellow hover:bg-blox-module-yellow/80'
   ]
   
+  const videoCardBackgrounds = [
+    'bg-blox-module-green/15',
+    'bg-blox-module-blue/15',
+    'bg-blox-module-violet/15',
+    'bg-blox-module-red/15',
+    'bg-blox-module-orange/15',
+    'bg-blox-module-yellow/15'
+  ]
+  
+  const videoCardHoverBackgrounds = [
+    'hover:bg-blox-module-green/25',
+    'hover:bg-blox-module-blue/25',
+    'hover:bg-blox-module-violet/25',
+    'hover:bg-blox-module-red/25',
+    'hover:bg-blox-module-orange/25',
+    'hover:bg-blox-module-yellow/25'
+  ]
+  
+  const videoCardBorders = [
+    'border border-blox-module-green/30 hover:border-blox-module-green/50',
+    'border border-blox-module-blue/30 hover:border-blox-module-blue/50',
+    'border border-blox-module-violet/30 hover:border-blox-module-violet/50',
+    'border border-blox-module-red/30 hover:border-blox-module-red/50',
+    'border border-blox-module-orange/30 hover:border-blox-module-orange/50',
+    'border border-blox-module-yellow/30 hover:border-blox-module-yellow/50'
+  ]
+  
   // Calculate day progress locally since calculateDayProgress might not exist
   const calculateDayProgress = (dayId: string): DayProgress => {
     const day = week.days.find(d => d.id === dayId)
@@ -191,13 +218,18 @@ export function WeekPreview({
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: dayIndex * 0.1 }}
               >
-                <Card className={`border-2 transition-all ${
+                <Card className={cn(
+                  "border-2 transition-all",
                   dayProgress.status === 'completed' 
                     ? 'bg-blox-success/5 border-blox-success/30 shadow-lg shadow-blox-success/10' 
                     : dayProgress.status === 'in_progress'
-                      ? 'bg-blox-warning/5 border-blox-warning/30 shadow-lg shadow-blox-warning/10'
-                      : 'bg-blox-second-dark-blue/20 border-blox-glass-border hover:border-blox-teal/50 hover:shadow-lg hover:shadow-blox-teal/10'
-                }`}>
+                      ? `bg-blox-warning/5 border-blox-warning/30 shadow-lg shadow-blox-warning/10`
+                      : cn(
+                          videoCardBackgrounds[moduleIndex],
+                          videoCardBorders[moduleIndex],
+                          "hover:shadow-lg hover:shadow-blox-teal/10"
+                        )
+                )}>
                   <CardHeader className="pb-4 bg-gradient-to-r from-blox-very-dark-blue/50 to-transparent rounded-t-lg">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -251,42 +283,69 @@ export function WeekPreview({
                         return (
                           <div
                             key={video.id}
-                            className="flex items-start gap-4 p-4 rounded-lg bg-blox-second-dark-blue/30 hover:bg-blox-second-dark-blue/50 cursor-pointer transition-all group border border-blox-glass-border hover:border-blox-teal/30"
+                            className={cn(
+                              "flex items-start gap-4 p-4 rounded-lg cursor-pointer transition-all group",
+                              videoCardBackgrounds[moduleIndex],
+                              videoCardHoverBackgrounds[moduleIndex],
+                              videoCardBorders[moduleIndex]
+                            )}
                             onClick={() => onVideoSelect?.(video.id, day.id)}
                           >
-                            {/* Enhanced Video Thumbnail */}
-                            <div className="relative w-32 h-20 bg-blox-very-dark-blue rounded-lg overflow-hidden flex-shrink-0 shadow-lg">
-                              {video.youtubeId ? (
-                                <>
-                                  <img
-                                    src={`https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`}
-                                    alt={video.title}
-                                    className="w-full h-full object-cover"
-                                  />
-                                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <div className={cn("rounded-full p-2", playButtonColors[moduleIndex])}>
-                                      <Play className="h-6 w-6 text-white fill-white" />
+                            {/* Enhanced Video/Assignment Thumbnail */}
+                            {(video as any).type === 'assignment' ? (
+                              /* Assignment Thumbnails */
+                              <div className="flex gap-1 flex-shrink-0">
+                                {(video as any).thumbnails?.map((thumbnail: string, index: number) => (
+                                  <div key={index} className="relative w-16 h-20 bg-blox-very-dark-blue rounded-lg overflow-hidden shadow-lg">
+                                    <img
+                                      src={thumbnail}
+                                      alt={`${video.title} - Image ${index + 1}`}
+                                      className="w-full h-full object-cover"
+                                    />
+                                    <div className={cn(
+                                      "absolute top-0.5 right-0.5 text-blox-very-dark-blue text-[6px] px-1 py-0.5 rounded font-bold",
+                                      buttonColors[moduleIndex]
+                                    )}>
+                                      TASK
                                     </div>
                                   </div>
-                                  {/* Duration Badge */}
-                                  <div className="absolute bottom-1 right-1 bg-black/80 px-1.5 py-0.5 rounded text-xs text-white">
-                                    {video.duration}
+                                ))}
+                              </div>
+                            ) : (
+                              /* Regular Video Thumbnail */
+                              <div className="relative w-32 h-20 bg-blox-very-dark-blue rounded-lg overflow-hidden flex-shrink-0 shadow-lg">
+                                {video.youtubeId ? (
+                                  <>
+                                    <img
+                                      src={`https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`}
+                                      alt={video.title}
+                                      className="w-full h-full object-cover"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                      <div className={cn("rounded-full p-2", playButtonColors[moduleIndex])}>
+                                        <Play className="h-6 w-6 text-white fill-white" />
+                                      </div>
+                                    </div>
+                                    {/* Duration Badge */}
+                                    <div className="absolute bottom-1 right-1 bg-black/80 px-1.5 py-0.5 rounded text-xs text-white">
+                                      {video.duration}
+                                    </div>
+                                  </>
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blox-medium-blue-gray to-blox-dark-blue">
+                                    <div className="text-center">
+                                      <span className="text-2xl font-bold text-blox-white/80">{videoIndex + 1}</span>
+                                      <p className="text-xs text-blox-off-white/60 mt-1">Video</p>
+                                    </div>
                                   </div>
-                                </>
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blox-medium-blue-gray to-blox-dark-blue">
-                                  <div className="text-center">
-                                    <span className="text-2xl font-bold text-blox-white/80">{videoIndex + 1}</span>
-                                    <p className="text-xs text-blox-off-white/60 mt-1">Video</p>
+                                )}
+                                {isCompleted && (
+                                  <div className="absolute top-1 right-1 bg-blox-success rounded-full p-1">
+                                    <CheckCircle className="h-4 w-4 text-white" />
                                   </div>
-                                </div>
-                              )}
-                              {isCompleted && (
-                                <div className="absolute top-1 right-1 bg-blox-success rounded-full p-1">
-                                  <CheckCircle className="h-4 w-4 text-white" />
-                                </div>
-                              )}
-                            </div>
+                                )}
+                              </div>
+                            )}
                             
                             {/* Enhanced Video Info */}
                             <div className="flex-1 min-w-0">

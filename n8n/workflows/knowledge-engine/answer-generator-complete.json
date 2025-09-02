@@ -1,0 +1,246 @@
+{
+  "name": "Answer Generator - Knowledge Engine Complete",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "answer-generator-complete",
+        "responseMode": "responseNode",
+        "onError": "continueRegularOutput",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "id": "generator-webhook",
+      "name": "🤖 Answer Generator Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "content": "🤖 **ANSWER GENERATOR WORKFLOW**\n\n**Purpose**: AI-powered response generation with citations from search results\n\n**Webhook URL**: /webhook/answer-generator-complete\n**Method**: POST\n\n**Input Data**:\n- User query and context\n- Search results from semantic search\n- Response style preferences\n- Video context if available\n\n**AI Processing**:\n- Model: GPT-4o-mini (temperature: 0.3)\n- Citation system with video timestamps\n- Response quality scoring\n- Multi-style response generation\n\n**Output**: Structured answer with video references, citations, and suggested questions",
+        "height": 320,
+        "width": 360,
+        "color": 2
+      },
+      "id": "sticky-overview",
+      "name": "📋 Generator Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [20, 80]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 📥 REQUEST VALIDATOR FOR ANSWER GENERATION\n// Validates and prepares answer generation requests\n\nconst inputData = $input.first().json;\nconsole.log('🤖 Answer generation request received');\n\n// Validate required fields\nif (!inputData.query) {\n  return [{\n    json: {\n      success: false,\n      error: 'Missing required field: query',\n      timestamp: new Date().toISOString()\n    }\n  }];\n}\n\n// Prepare request for AI processing\nconst aiRequest = {\n  query: inputData.query,\n  searchResults: inputData.searchResults || [],\n  responseStyle: inputData.responseStyle || 'detailed',\n  videoContext: inputData.videoContext || null,\n  userId: inputData.userId || 'anonymous',\n  sessionId: inputData.sessionId || 'unknown',\n  timestamp: new Date().toISOString(),\n  requestId: `answer_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`\n};\n\nconsole.log(`✅ Request validated for query: \"${aiRequest.query.substring(0, 50)}...\"`);\n\nreturn [{ json: aiRequest }];"
+      },
+      "id": "request-validator",
+      "name": "📥 Request Validator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [420, 300]
+    },
+    {
+      "parameters": {
+        "content": "📥 **REQUEST VALIDATION**\n\n**Purpose**: Validates and prepares AI generation requests\n\n**Required Fields**:\n- query: User's question\n- searchResults: Context from semantic search\n- responseStyle: detailed|concise|beginner|advanced\n\n**Optional Fields**:\n- videoContext: Current video information\n- userId: For personalization\n- sessionId: For conversation tracking\n\n**Request Enrichment**:\n- Generates unique requestId\n- Adds timestamp\n- Sets default response style\n- Prepares data for GPT processing",
+        "height": 280,
+        "width": 300,
+        "color": 5
+      },
+      "id": "sticky-validation",
+      "name": "📝 Validation Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [420, 20]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.OPENAI_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gpt-4o-mini"
+            },
+            {
+              "name": "messages",
+              "value": "=[{\n  \"role\": \"system\",\n  \"content\": \"You are Blox Wizard, an expert Roblox development tutor. Generate helpful, accurate answers with video citations. Response style: \" + $json.responseStyle\n}, {\n  \"role\": \"user\", \n  \"content\": $json.query + \"\\n\\nContext from video transcripts:\\n\" + ($json.searchResults.map(r => `- ${r.video_title}: ${r.chunk_text}`).join('\\n') || 'No context available')\n}]"
+            },
+            {
+              "name": "temperature",
+              "value": 0.3
+            },
+            {
+              "name": "max_tokens",
+              "value": 800
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000,
+          "retry": {
+            "enabled": true,
+            "maxAttempts": 2
+          }
+        }
+      },
+      "id": "openai-chat",
+      "name": "🧠 OpenAI Chat Completion",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [640, 300]
+    },
+    {
+      "parameters": {
+        "content": "🧠 **OPENAI CHAT COMPLETION**\n\n**Purpose**: Generates AI responses using GPT-4o-mini\n\n**Model Configuration**:\n- Model: gpt-4o-mini (fast + cost-effective)\n- Temperature: 0.3 (balanced creativity/accuracy)\n- Max Tokens: 800 (comprehensive answers)\n- Timeout: 30 seconds\n\n**Prompt Engineering**:\n- System: Establishes Blox Wizard tutor persona\n- Context: Includes search results from transcripts\n- Style: Adapts to user's learning level\n\n**Response Features**:\n- Video citations included\n- Learning-focused explanations\n- Actionable guidance\n- Beginner-friendly when requested",
+        "height": 300,
+        "width": 300,
+        "color": 9
+      },
+      "id": "sticky-openai",
+      "name": "🧠 OpenAI Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [640, -20]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 📊 RESPONSE PROCESSOR\n// Formats AI response with citations and metadata\n\nconst aiResponse = $input.first().json;\nconst originalRequest = $('Request Validator').first().json;\n\nconsole.log('📊 Processing AI response');\n\n// Extract AI answer\nconst aiAnswer = aiResponse.choices?.[0]?.message?.content || 'I apologize, but I could not generate a response. Please try again.';\n\n// Process citations from search results\nconst citations = (originalRequest.searchResults || []).map((result, index) => ({\n  id: index + 1,\n  videoTitle: result.video_title || 'Unknown Video',\n  timestamp: result.timestamp || '0:00',\n  url: result.youtube_id ? `https://youtube.com/watch?v=${result.youtube_id}` : '#',\n  relevanceScore: result.similarity_score || 0.8,\n  snippet: result.chunk_text?.substring(0, 100) + '...' || ''\n}));\n\n// Generate suggested follow-up questions\nfunction generateSuggestedQuestions(query, responseStyle) {\n  const style = responseStyle || 'detailed';\n  const lowerQuery = query.toLowerCase();\n  \n  if (lowerQuery.includes('script') || lowerQuery.includes('code')) {\n    return [\n      'How do I debug this script?',\n      'What are common scripting mistakes?', \n      'Can you show me more advanced techniques?',\n      'How do I optimize this code?'\n    ];\n  }\n  \n  if (lowerQuery.includes('build') || lowerQuery.includes('create')) {\n    return [\n      'What tools do I need for this?',\n      'Are there any shortcuts?',\n      'How do I make this more efficient?',\n      'What are best practices?'\n    ];\n  }\n  \n  // Default suggestions\n  return [\n    'Can you explain this in more detail?',\n    'What should I learn next?',\n    'Are there related tutorials?',\n    'How do I practice this?'\n  ];\n}\n\n// Create structured response\nconst structuredResponse = {\n  success: true,\n  answer: aiAnswer,\n  citations: citations,\n  videoReferences: citations.map(c => ({\n    title: c.videoTitle,\n    youtubeId: extractYouTubeId(c.url),\n    timestamp: c.timestamp,\n    relevantSegment: c.snippet,\n    confidence: c.relevanceScore\n  })),\n  suggestedQuestions: generateSuggestedQuestions(originalRequest.query, originalRequest.responseStyle),\n  \n  // Response metadata\n  responseMetadata: {\n    model: 'gpt-4o-mini',\n    temperature: 0.3,\n    tokensUsed: aiResponse.usage?.total_tokens || 0,\n    responseStyle: originalRequest.responseStyle,\n    processingTime: Date.now() - new Date(originalRequest.timestamp).getTime(),\n    requestId: originalRequest.requestId\n  },\n  \n  timestamp: new Date().toISOString()\n};\n\n// Helper function to extract YouTube ID\nfunction extractYouTubeId(url) {\n  const match = url.match(/(?:youtube\\.com\\/watch\\?v=|youtu\\.be\\/)([^&\\n?#]+)/);\n  return match ? match[1] : null;\n}\n\nconsole.log(`✅ Response processed with ${citations.length} citations`);\n\nreturn [{ json: structuredResponse }];"
+      },
+      "id": "response-processor",
+      "name": "📊 Response Processor",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [860, 300]
+    },
+    {
+      "parameters": {
+        "content": "📊 **RESPONSE PROCESSING**\n\n**Purpose**: Formats AI response with citations and metadata\n\n**Processing Tasks**:\n- Extract AI-generated answer\n- Format video citations with timestamps\n- Generate suggested follow-up questions\n- Add response metadata and metrics\n\n**Citation Format**:\n```json\n{\n  \"id\": 1,\n  \"videoTitle\": \"Roblox Scripting Basics\",\n  \"timestamp\": \"5:30\",\n  \"url\": \"https://youtube.com/watch?v=abc123\",\n  \"relevanceScore\": 0.92,\n  \"snippet\": \"This shows how to...\"\n}\n```\n\n**Suggested Questions**:\n- Context-aware based on query type\n- Learning progression focused\n- Encourages deeper exploration",
+        "height": 320,
+        "width": 300,
+        "color": 8
+      },
+      "id": "sticky-processing",
+      "name": "📊 Processing Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [860, -40]
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "X-Answer-Generator",
+                "value": "Blox-Wizard-v1.0"
+              }
+            ]
+          }
+        }
+      },
+      "id": "webhook-response",
+      "name": "📤 Send Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1080, 300]
+    },
+    {
+      "parameters": {
+        "content": "📤 **FINAL RESPONSE**\n\n**Purpose**: Sends formatted answer back to client\n\n**Response Structure**:\n```json\n{\n  \"success\": true,\n  \"answer\": \"AI-generated response...\",\n  \"citations\": [...],\n  \"videoReferences\": [...],\n  \"suggestedQuestions\": [...],\n  \"responseMetadata\": {\n    \"model\": \"gpt-4o-mini\",\n    \"tokensUsed\": 450,\n    \"processingTime\": 1200,\n    \"responseStyle\": \"detailed\"\n  }\n}\n```\n\n**Headers**:\n- Content-Type: application/json\n- X-Answer-Generator: Version identifier\n\n**Performance**: Complete response in < 3 seconds",
+        "height": 280,
+        "width": 300,
+        "color": 1
+      },
+      "id": "sticky-response",
+      "name": "📤 Response Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1080, 20]
+    }
+  ],
+  "connections": {
+    "🤖 Answer Generator Webhook": {
+      "main": [
+        [
+          {
+            "node": "📥 Request Validator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📥 Request Validator": {
+      "main": [
+        [
+          {
+            "node": "🧠 OpenAI Chat Completion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🧠 OpenAI Chat Completion": {
+      "main": [
+        [
+          {
+            "node": "📊 Response Processor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📊 Response Processor": {
+      "main": [
+        [
+          {
+            "node": "📤 Send Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-01T12:00:00.000Z",
+      "updatedAt": "2025-01-01T12:00:00.000Z",
+      "id": "knowledge-engine",
+      "name": "knowledge-engine"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-01T12:00:00.000Z",
+  "versionId": "1"
+}

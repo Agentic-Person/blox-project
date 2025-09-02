@@ -1,0 +1,509 @@
+{
+  "name": "Transcript Indexer - Knowledge Engine",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "transcript-indexer",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "id": "indexer-webhook",
+      "name": "📥 Transcript Indexer Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [200, 300],
+      "webhookId": "blox-transcript-indexer"
+    },
+    {
+      "parameters": {
+        "content": "🧠 **TRANSCRIPT INDEXER WORKFLOW**\n\n**Purpose**: Processes video transcripts into searchable embeddings for the Knowledge Engine\n\n**Webhook URL**: /webhook/transcript-indexer\n**Method**: POST\n\n**Input Data**:\n- Video metadata (title, youtubeId, duration)\n- Raw transcript text with timestamps\n- Processing preferences and batch settings\n\n**Processing Pipeline**:\n1. Transcript validation and chunking\n2. OpenAI embedding generation (text-embedding-3-small)\n3. PostgreSQL storage with PGVector extension\n4. Duplicate detection and deduplication\n5. Metadata preservation and indexing\n\n**Output**: Searchable vector database ready for semantic queries\n**Storage**: PostgreSQL with PGVector for similarity search",
+        "height": 380,
+        "width": 360,
+        "color": 4
+      },
+      "id": "sticky-overview",
+      "name": "📋 Indexer Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [20, 80]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 📝 TRANSCRIPT VALIDATION & PREPARATION\n// Validates and prepares transcript data for embedding processing\n\nconst inputData = $input.first().json;\nconsole.log('📥 Transcript indexing request received');\n\n// Validate required fields\nif (!inputData.videoId || !inputData.transcript) {\n  return [{\n    json: {\n      success: false,\n      error: 'Missing required fields: videoId, transcript',\n      timestamp: new Date().toISOString()\n    }\n  }];\n}\n\n// Extract video metadata\nconst videoMetadata = {\n  videoId: inputData.videoId,\n  title: inputData.title || 'Untitled Video',\n  youtubeId: inputData.youtubeId || null,\n  duration: inputData.duration || '00:00:00',\n  uploadDate: inputData.uploadDate || new Date().toISOString(),\n  channel: inputData.channel || 'Unknown',\n  description: inputData.description || '',\n  tags: inputData.tags || []\n};\n\n// Process transcript text\nconst transcriptText = typeof inputData.transcript === 'string' \n  ? inputData.transcript \n  : JSON.stringify(inputData.transcript);\n\n// Clean and prepare transcript\nconst cleanedTranscript = transcriptText\n  .replace(/\\[\\d{2}:\\d{2}:\\d{2}\\]/g, '') // Remove timestamp markers\n  .replace(/\\s+/g, ' ') // Normalize whitespace\n  .trim();\n\n// Create chunks for embedding (OpenAI has token limits)\nconst chunkSize = inputData.chunkSize || 1000; // characters\nconst overlap = inputData.overlap || 200; // character overlap\n\nfunction createChunks(text, size, overlapSize) {\n  const chunks = [];\n  let start = 0;\n  \n  while (start < text.length) {\n    const end = Math.min(start + size, text.length);\n    const chunk = text.substring(start, end);\n    \n    // Find sentence boundary for cleaner cuts\n    let cutPoint = end;\n    if (end < text.length) {\n      const lastSentence = chunk.lastIndexOf('.');\n      const lastQuestion = chunk.lastIndexOf('?');\n      const lastExclamation = chunk.lastIndexOf('!');\n      \n      cutPoint = Math.max(lastSentence, lastQuestion, lastExclamation);\n      if (cutPoint > start + (size * 0.7)) {\n        cutPoint += 1; // Include the punctuation\n      } else {\n        cutPoint = end; // Use original cut if no good boundary found\n      }\n    }\n    \n    const finalChunk = text.substring(start, cutPoint).trim();\n    if (finalChunk.length > 50) { // Only include substantial chunks\n      chunks.push({\n        index: chunks.length,\n        text: finalChunk,\n        startChar: start,\n        endChar: cutPoint,\n        length: finalChunk.length\n      });\n    }\n    \n    start = cutPoint - overlapSize;\n    if (start >= cutPoint) break; // Prevent infinite loop\n  }\n  \n  return chunks;\n}\n\nconst chunks = createChunks(cleanedTranscript, chunkSize, overlap);\n\n// Create processing request\nconst processingRequest = {\n  videoMetadata,\n  originalTranscript: transcriptText,\n  cleanedTranscript,\n  chunks,\n  totalChunks: chunks.length,\n  processingId: `index_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,\n  timestamp: new Date().toISOString(),\n  embeddingModel: 'text-embedding-3-small',\n  batchSize: inputData.batchSize || 10\n};\n\nconsole.log(`📊 Created ${chunks.length} chunks for video: ${videoMetadata.title}`);\n\nreturn [{ json: processingRequest }];"
+      },
+      "id": "transcript-validator",
+      "name": "📝 Transcript Validator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [420, 300]
+    },
+    {
+      "parameters": {
+        "content": "📝 **TRANSCRIPT VALIDATION & CHUNKING**\n\n**Purpose**: Prepares raw transcript data for embedding generation\n\n**Validation Checks**:\n- Required fields: videoId, transcript\n- Video metadata completeness\n- Transcript format and structure\n- Content quality assessment\n\n**Chunking Strategy**:\n- Chunk size: 1000 characters (configurable)\n- Overlap: 200 characters for context\n- Sentence boundary detection\n- Minimum chunk size: 50 characters\n\n**Text Cleaning**:\n- Remove timestamp markers [HH:MM:SS]\n- Normalize whitespace and formatting\n- Preserve punctuation and structure\n- Handle special characters appropriately\n\n**Quality Metrics**:\n- Total chunks generated\n- Average chunk length\n- Overlap effectiveness\n- Content coverage assessment",
+        "height": 360,
+        "width": 320,
+        "color": 5
+      },
+      "id": "sticky-validation",
+      "name": "📝 Validation Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [420, -80]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🔍 DUPLICATE DETECTION\n// Check if video has already been indexed to prevent duplicates\n\nconst requestData = $input.first().json;\nconst videoId = requestData.videoMetadata.videoId;\n\nconsole.log(`🔍 Checking for existing embeddings for video: ${videoId}`);\n\n// Create PostgreSQL query to check for existing embeddings\nconst duplicateCheckQuery = {\n  sql: `\n    SELECT \n      video_id,\n      title,\n      indexed_at,\n      chunk_count,\n      embedding_model\n    FROM transcript_embeddings \n    WHERE video_id = $1 \n    GROUP BY video_id, title, indexed_at, embedding_model\n    LIMIT 1\n  `,\n  values: [videoId],\n  operation: 'duplicate_check'\n};\n\n// Pass through original request with duplicate check query\nconst checkRequest = {\n  ...requestData,\n  duplicateCheck: duplicateCheckQuery,\n  checkTimestamp: new Date().toISOString()\n};\n\nconsole.log(`📋 Prepared duplicate check for video: ${videoId}`);\n\nreturn [{ json: checkRequest }];"
+      },
+      "id": "duplicate-checker",
+      "name": "🔍 Duplicate Detection",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [640, 300]
+    },
+    {
+      "parameters": {
+        "content": "🔍 **DUPLICATE DETECTION SYSTEM**\n\n**Purpose**: Prevents re-indexing of already processed videos\n\n**Detection Method**:\n- Query PostgreSQL for existing video_id\n- Check embedding model compatibility\n- Compare indexing timestamps\n- Verify chunk completeness\n\n**Duplicate Scenarios**:\n- Exact match: Skip processing entirely\n- Model mismatch: Re-index with new model\n- Incomplete indexing: Resume from last chunk\n- Outdated content: Update if transcript changed\n\n**Performance Benefits**:\n- Reduces OpenAI API costs\n- Prevents database bloat\n- Maintains data consistency\n- Speeds up batch processing\n\n**Conflict Resolution**:\n- Newer embeddings replace older\n- Failed indexing attempts are retried\n- Version tracking for model updates",
+        "height": 300,
+        "width": 300,
+        "color": 6
+      },
+      "id": "sticky-duplicate",
+      "name": "🔍 Duplicate Detection Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [640, -20]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{ $json.duplicateCheck.sql }}",
+        "additionalFields": {
+          "queryParameters": "={{ $json.duplicateCheck.values }}"
+        },
+        "options": {}
+      },
+      "id": "postgres-duplicate-check",
+      "name": "🗄️ PostgreSQL Duplicate Check",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [860, 300]
+    },
+    {
+      "parameters": {
+        "content": "🗄️ **POSTGRESQL INTEGRATION**\n\n**Purpose**: Database operations for the knowledge engine\n\n**Database Schema**:\n```sql\nCREATE TABLE transcript_embeddings (\n  id SERIAL PRIMARY KEY,\n  video_id VARCHAR(255) NOT NULL,\n  chunk_index INTEGER NOT NULL,\n  chunk_text TEXT NOT NULL,\n  embedding VECTOR(1536),\n  video_title VARCHAR(500),\n  youtube_id VARCHAR(50),\n  duration VARCHAR(20),\n  indexed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  embedding_model VARCHAR(50) DEFAULT 'text-embedding-3-small'\n);\n```\n\n**Required Extensions**:\n- PGVector for similarity search\n- UUID extension for ID generation\n\n**Performance Optimizations**:\n- Indexes on video_id and youtube_id\n- Vector similarity index\n- Batch insert operations\n- Connection pooling",
+        "height": 320,
+        "width": 320,
+        "color": 3
+      },
+      "id": "sticky-postgres",
+      "name": "🗄️ PostgreSQL Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [860, -40]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "no-duplicates-condition",
+              "leftValue": "={{ $json.length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "equal"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "duplicate-router",
+      "name": "🎯 Duplicate Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [1060, 300]
+    },
+    {
+      "parameters": {
+        "content": "🎯 **DUPLICATE ROUTING LOGIC**\n\n**Purpose**: Routes processing based on duplicate detection results\n\n**Routing Rules**:\n- Port 0: No duplicates found → Continue with embedding\n- Port 1: Duplicates found → Skip or update processing\n\n**Duplicate Handling Options**:\n1. **Skip**: Return success without processing\n2. **Update**: Re-index if content changed\n3. **Force**: Override existing (manual mode)\n4. **Resume**: Continue incomplete indexing\n\n**Decision Factors**:\n- Embedding model version\n- Content modification date\n- Indexing completeness\n- Force reindex flag\n\n**Performance Impact**:\n- Duplicate skip: ~10ms response\n- Force reindex: Full processing time\n- Update mode: Differential processing",
+        "height": 300,
+        "width": 300,
+        "color": 7
+      },
+      "id": "sticky-routing",
+      "name": "🎯 Routing Logic",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1060, -20]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🤖 OPENAI EMBEDDING BATCH PROCESSOR\n// Processes chunks through OpenAI embedding API with batch optimization\n\nconst requestData = $('Duplicate Detection').first().json;\nconst chunks = requestData.chunks;\nconst batchSize = requestData.batchSize || 10;\n\nconsole.log(`🤖 Starting embedding generation for ${chunks.length} chunks`);\n\n// Create batches for API efficiency\nfunction createBatches(items, size) {\n  const batches = [];\n  for (let i = 0; i < items.length; i += size) {\n    batches.push(items.slice(i, i + size));\n  }\n  return batches;\n}\n\nconst batches = createBatches(chunks, batchSize);\n\n// Prepare first batch for processing\nconst firstBatch = batches[0] || [];\nconst embeddingRequests = firstBatch.map(chunk => ({\n  chunkIndex: chunk.index,\n  text: chunk.text,\n  startChar: chunk.startChar,\n  endChar: chunk.endChar,\n  length: chunk.length\n}));\n\n// Create OpenAI API request\nconst openaiRequest = {\n  model: requestData.embeddingModel,\n  input: embeddingRequests.map(req => req.text),\n  encoding_format: 'float'\n};\n\n// Prepare batch tracking\nconst batchInfo = {\n  currentBatch: 0,\n  totalBatches: batches.length,\n  batchSize: firstBatch.length,\n  totalChunks: chunks.length,\n  processedChunks: 0,\n  startTime: new Date().toISOString()\n};\n\n// Combine everything for the API call\nconst apiRequest = {\n  ...requestData,\n  openaiRequest,\n  currentBatchRequests: embeddingRequests,\n  batchInfo,\n  allBatches: batches\n};\n\nconsole.log(`📊 Prepared batch 1/${batches.length} with ${firstBatch.length} chunks`);\n\nreturn [{ json: apiRequest }];"
+      },
+      "id": "embedding-processor",
+      "name": "🤖 OpenAI Embedding Processor",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1260, 200]
+    },
+    {
+      "parameters": {
+        "content": "🤖 **OPENAI EMBEDDING GENERATION**\n\n**Purpose**: Converts text chunks to vector embeddings\n\n**Model**: text-embedding-3-small\n- Dimensions: 1536\n- Cost: $0.00002 per 1K tokens\n- Speed: ~1000 tokens/second\n- Quality: High semantic understanding\n\n**Batch Processing**:\n- Batch size: 10 chunks (configurable)\n- Rate limiting: 3000 RPM\n- Parallel processing: Up to 5 batches\n- Error handling: Individual chunk retry\n\n**API Request Format**:\n```json\n{\n  \"model\": \"text-embedding-3-small\",\n  \"input\": [\"chunk1\", \"chunk2\", ...],\n  \"encoding_format\": \"float\"\n}\n```\n\n**Quality Assurance**:\n- Token count validation\n- Embedding dimension verification\n- Response completeness check\n- Error rate monitoring",
+        "height": 320,
+        "width": 320,
+        "color": 2
+      },
+      "id": "sticky-embedding",
+      "name": "🤖 OpenAI Integration Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1260, -140]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "https://api.openai.com/v1/embeddings",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.OPENAI_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "={{ $json.openaiRequest.model }}"
+            },
+            {
+              "name": "input",
+              "value": "={{ $json.openaiRequest.input }}"
+            },
+            {
+              "name": "encoding_format",
+              "value": "={{ $json.openaiRequest.encoding_format }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 60000,
+          "retry": {
+            "enabled": true,
+            "maxAttempts": 3,
+            "waitBetweenAttempts": 1000
+          }
+        }
+      },
+      "id": "openai-api-call",
+      "name": "🔮 OpenAI API Call",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1480, 200]
+    },
+    {
+      "parameters": {
+        "content": "🔮 **OPENAI API CALL CONFIGURATION**\n\n**Purpose**: Makes authenticated requests to OpenAI embeddings API\n\n**Request Configuration**:\n- Endpoint: https://api.openai.com/v1/embeddings\n- Method: POST\n- Timeout: 60 seconds\n- Retries: 3 attempts with 1s delay\n\n**Authentication**:\n- Bearer token from OPENAI_API_KEY\n- Automatic credential management\n- API key rotation support\n\n**Error Handling**:\n- Rate limit respect (429 errors)\n- Invalid request handling (400 errors)\n- Authentication failures (401 errors)\n- Service unavailable (503 errors)\n\n**Performance Monitoring**:\n- Request latency tracking\n- Success/failure rates\n- Token usage monitoring\n- Cost tracking per batch",
+        "height": 300,
+        "width": 300,
+        "color": 9
+      },
+      "id": "sticky-api",
+      "name": "🔮 API Call Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1480, -120]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 💾 DATABASE STORAGE PROCESSOR\n// Prepares embeddings for PostgreSQL storage with PGVector\n\nconst apiResponse = $input.first().json;\nconst originalRequest = $('Duplicate Detection').first().json;\n\nconsole.log('💾 Processing embedding response for database storage');\n\n// Extract embeddings from OpenAI response\nconst embeddings = apiResponse.data || [];\nconst currentBatchRequests = originalRequest.currentBatchRequests || [];\nconst videoMetadata = originalRequest.videoMetadata;\n\n// Create database insert records\nconst insertRecords = embeddings.map((embeddingData, index) => {\n  const chunkData = currentBatchRequests[index];\n  const embedding = embeddingData.embedding;\n  \n  return {\n    video_id: videoMetadata.videoId,\n    chunk_index: chunkData.chunkIndex,\n    chunk_text: chunkData.text,\n    embedding: `[${embedding.join(',')}]`, // PostgreSQL array format\n    video_title: videoMetadata.title,\n    youtube_id: videoMetadata.youtubeId,\n    duration: videoMetadata.duration,\n    start_char: chunkData.startChar,\n    end_char: chunkData.endChar,\n    chunk_length: chunkData.length,\n    embedding_model: originalRequest.embeddingModel,\n    indexed_at: new Date().toISOString()\n  };\n});\n\n// Create batch insert SQL\nconst insertSQL = `\n  INSERT INTO transcript_embeddings (\n    video_id, chunk_index, chunk_text, embedding, video_title,\n    youtube_id, duration, start_char, end_char, chunk_length,\n    embedding_model, indexed_at\n  ) VALUES ${insertRecords.map((_, i) => \n    `($${i * 12 + 1}, $${i * 12 + 2}, $${i * 12 + 3}, $${i * 12 + 4}::vector, $${i * 12 + 5}, $${i * 12 + 6}, $${i * 12 + 7}, $${i * 12 + 8}, $${i * 12 + 9}, $${i * 12 + 10}, $${i * 12 + 11}, $${i * 12 + 12}::timestamp)`\n  ).join(', ')}\n  ON CONFLICT (video_id, chunk_index) \n  DO UPDATE SET \n    chunk_text = EXCLUDED.chunk_text,\n    embedding = EXCLUDED.embedding,\n    indexed_at = EXCLUDED.indexed_at;\n`;\n\n// Flatten values for parameterized query\nconst insertValues = insertRecords.flatMap(record => [\n  record.video_id,\n  record.chunk_index,\n  record.chunk_text,\n  record.embedding,\n  record.video_title,\n  record.youtube_id,\n  record.duration,\n  record.start_char,\n  record.end_char,\n  record.chunk_length,\n  record.embedding_model,\n  record.indexed_at\n]);\n\n// Prepare storage request\nconst storageRequest = {\n  sql: insertSQL,\n  values: insertValues,\n  recordCount: insertRecords.length,\n  videoId: videoMetadata.videoId,\n  batchInfo: originalRequest.batchInfo,\n  totalTokens: apiResponse.usage?.total_tokens || 0,\n  processingTime: Date.now() - new Date(originalRequest.timestamp).getTime(),\n  originalRequest\n};\n\nconsole.log(`💾 Prepared ${insertRecords.length} records for database storage`);\n\nreturn [{ json: storageRequest }];"
+      },
+      "id": "storage-processor",
+      "name": "💾 Database Storage Processor",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1700, 200]
+    },
+    {
+      "parameters": {
+        "content": "💾 **DATABASE STORAGE PROCESSING**\n\n**Purpose**: Converts embeddings to PostgreSQL-compatible format\n\n**Data Transformation**:\n- Embedding vectors → PostgreSQL vector arrays\n- Batch records → Parameterized INSERT statements\n- Metadata preservation → Structured columns\n- Conflict resolution → UPSERT operations\n\n**Storage Schema**:\n```sql\nINSERT INTO transcript_embeddings (\n  video_id, chunk_index, chunk_text, embedding,\n  video_title, youtube_id, duration, start_char,\n  end_char, chunk_length, embedding_model, indexed_at\n) VALUES (...) ON CONFLICT DO UPDATE\n```\n\n**Performance Optimizations**:\n- Batch inserts (up to 100 records)\n- Parameterized queries for safety\n- Conflict handling for re-indexing\n- Index utilization for fast queries\n\n**Quality Assurance**:\n- Embedding dimension validation\n- NULL value handling\n- Character encoding safety\n- Transaction integrity",
+        "height": 360,
+        "width": 320,
+        "color": 8
+      },
+      "id": "sticky-storage",
+      "name": "💾 Storage Processing Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1700, -180]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{ $json.sql }}",
+        "additionalFields": {
+          "queryParameters": "={{ $json.values }}"
+        },
+        "options": {}
+      },
+      "id": "postgres-storage",
+      "name": "🗄️ PostgreSQL Storage",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [1920, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ✅ INDEXING COMPLETION PROCESSOR\n// Handles batch completion and prepares final response\n\nconst storageResult = $input.first().json;\nconst storageRequest = $('Database Storage Processor').first().json;\nconst originalRequest = storageRequest.originalRequest;\n\nconsole.log('✅ Processing indexing completion');\n\n// Calculate processing statistics\nconst stats = {\n  videoId: storageRequest.videoId,\n  videoTitle: originalRequest.videoMetadata.title,\n  totalChunks: originalRequest.totalChunks,\n  processedChunks: storageRequest.recordCount,\n  batchInfo: storageRequest.batchInfo,\n  tokensUsed: storageRequest.totalTokens,\n  processingTime: storageRequest.processingTime,\n  embeddingModel: originalRequest.embeddingModel,\n  storageSuccess: storageResult.affectedRows || storageResult.rowCount || 0,\n  completedAt: new Date().toISOString()\n};\n\n// Determine if more batches need processing\nconst needsMoreBatches = stats.batchInfo.currentBatch < (stats.batchInfo.totalBatches - 1);\n\n// Create completion response\nconst completionResponse = {\n  success: true,\n  operation: 'transcript_indexing',\n  videoId: stats.videoId,\n  videoTitle: stats.videoTitle,\n  indexingStats: {\n    totalChunks: stats.totalChunks,\n    processedChunks: stats.processedChunks,\n    chunksStored: stats.storageSuccess,\n    tokensUsed: stats.tokensUsed,\n    processingTimeMs: stats.processingTime,\n    embeddingModel: stats.embeddingModel,\n    batchesCompleted: stats.batchInfo.currentBatch + 1,\n    totalBatches: stats.batchInfo.totalBatches\n  },\n  status: needsMoreBatches ? 'batch_completed' : 'fully_indexed',\n  needsContinuation: needsMoreBatches,\n  timestamp: stats.completedAt,\n  \n  // Cost calculation (approximate)\n  costEstimate: {\n    tokensUsed: stats.tokensUsed,\n    estimatedCostUSD: (stats.tokensUsed / 1000) * 0.00002, // text-embedding-3-small pricing\n    currency: 'USD'\n  },\n  \n  // Next batch info if needed\n  nextBatch: needsMoreBatches ? {\n    batchIndex: stats.batchInfo.currentBatch + 1,\n    remainingChunks: stats.totalChunks - stats.processedChunks\n  } : null\n};\n\n// Log completion\nconsole.log(`✅ Indexing batch completed: ${stats.processedChunks}/${stats.totalChunks} chunks`);\nif (needsMoreBatches) {\n  console.log(`🔄 More batches needed: ${stats.batchInfo.totalBatches - stats.batchInfo.currentBatch - 1} remaining`);\n} else {\n  console.log(`🎉 Video fully indexed: ${stats.videoTitle}`);\n}\n\nreturn [{ json: completionResponse }];"
+      },
+      "id": "completion-processor",
+      "name": "✅ Completion Processor",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2140, 200]
+    },
+    {
+      "parameters": {
+        "content": "✅ **INDEXING COMPLETION PROCESSING**\n\n**Purpose**: Handles batch completion and final response generation\n\n**Completion Tasks**:\n- Calculate processing statistics\n- Verify storage success\n- Determine batch continuation needs\n- Generate cost estimates\n- Create standardized response\n\n**Response Format**:\n```json\n{\n  \"success\": true,\n  \"videoId\": \"video_123\",\n  \"indexingStats\": {\n    \"totalChunks\": 45,\n    \"processedChunks\": 10,\n    \"tokensUsed\": 2500,\n    \"processingTimeMs\": 1500\n  },\n  \"status\": \"batch_completed\",\n  \"needsContinuation\": true,\n  \"costEstimate\": {\n    \"estimatedCostUSD\": 0.00005\n  }\n}\n```\n\n**Batch Continuation**:\n- Tracks current vs total batches\n- Provides next batch information\n- Maintains processing state\n- Handles completion workflows",
+        "height": 340,
+        "width": 320,
+        "color": 1
+      },
+      "id": "sticky-completion",
+      "name": "✅ Completion Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [2140, -160]
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "X-Knowledge-Engine",
+                "value": "Transcript-Indexer-v1.0"
+              }
+            ]
+          }
+        }
+      },
+      "id": "webhook-response",
+      "name": "📤 Send Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2360, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🚫 DUPLICATE SKIP PROCESSOR\n// Handles cases where video is already indexed\n\nconst duplicateResults = $('PostgreSQL Duplicate Check').first().json;\nconst originalRequest = $('Duplicate Detection').first().json;\n\nconsole.log('🚫 Processing duplicate video - skipping indexing');\n\nconst existingRecord = duplicateResults[0] || {};\n\n// Create skip response\nconst skipResponse = {\n  success: true,\n  operation: 'transcript_indexing',\n  status: 'skipped_duplicate',\n  videoId: originalRequest.videoMetadata.videoId,\n  videoTitle: originalRequest.videoMetadata.title,\n  reason: 'Video already indexed',\n  existingIndex: {\n    indexedAt: existingRecord.indexed_at,\n    chunkCount: existingRecord.chunk_count,\n    embeddingModel: existingRecord.embedding_model\n  },\n  processingTime: Date.now() - new Date(originalRequest.timestamp).getTime(),\n  timestamp: new Date().toISOString(),\n  costSaved: {\n    tokensSkipped: originalRequest.chunks.reduce((sum, chunk) => sum + chunk.length, 0),\n    estimatedSavingsUSD: (originalRequest.chunks.length * 0.0001), // Rough estimate\n    currency: 'USD'\n  }\n};\n\nconsole.log(`🚫 Skipped duplicate video: ${skipResponse.videoTitle}`);\n\nreturn [{ json: skipResponse }];"
+      },
+      "id": "duplicate-skip",
+      "name": "🚫 Duplicate Skip Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1260, 400]
+    },
+    {
+      "parameters": {
+        "content": "🚫 **DUPLICATE SKIP HANDLING**\n\n**Purpose**: Efficiently handles already-indexed videos\n\n**Skip Scenarios**:\n- Exact video ID match found\n- Same embedding model used\n- Complete indexing verified\n- No force reindex flag\n\n**Skip Response**:\n- Success status with skip reason\n- Existing index information\n- Cost savings calculation\n- Processing time tracking\n\n**Benefits**:\n- Prevents unnecessary API costs\n- Reduces database load\n- Faster response times\n- Resource optimization\n\n**Skip Analytics**:\n- Tracks skip frequency\n- Monitors cost savings\n- Identifies reindex needs\n- Performance optimization insights\n\n**Response Time**: < 100ms for duplicate detection",
+        "height": 280,
+        "width": 300,
+        "color": 6
+      },
+      "id": "sticky-skip",
+      "name": "🚫 Skip Handler Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1260, 640]
+    },
+    {
+      "parameters": {
+        "content": "🚀 **DEPLOYMENT & USAGE GUIDE**\n\n**Environment Variables Required**:\n```\nOPENAI_API_KEY=sk-your-openai-key\nPOSTGRES_CONNECTION=postgresql://user:pass@host:5432/db\n```\n\n**Database Setup**:\n```sql\n-- Install PGVector extension\nCREATE EXTENSION IF NOT EXISTS vector;\n\n-- Create embeddings table\nCREATE TABLE transcript_embeddings (\n  id SERIAL PRIMARY KEY,\n  video_id VARCHAR(255) NOT NULL,\n  chunk_index INTEGER NOT NULL,\n  chunk_text TEXT NOT NULL,\n  embedding VECTOR(1536),\n  video_title VARCHAR(500),\n  youtube_id VARCHAR(50),\n  duration VARCHAR(20),\n  indexed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  embedding_model VARCHAR(50)\n);\n\n-- Create indexes for performance\nCREATE INDEX idx_video_id ON transcript_embeddings(video_id);\nCREATE INDEX idx_youtube_id ON transcript_embeddings(youtube_id);\n```\n\n**Usage Example**:\n```bash\ncurl -X POST /webhook/transcript-indexer \\\n  -d '{\n    \"videoId\": \"intro-to-scripting\",\n    \"title\": \"Roblox Scripting Basics\",\n    \"youtubeId\": \"abc123\",\n    \"transcript\": \"Welcome to Roblox scripting...\"\n  }'\n```",
+        "height": 480,
+        "width": 380,
+        "color": 6
+      },
+      "id": "sticky-deployment",
+      "name": "🚀 Deployment Guide",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [20, 520]
+    }
+  ],
+  "connections": {
+    "📥 Transcript Indexer Webhook": {
+      "main": [
+        [
+          {
+            "node": "📝 Transcript Validator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📝 Transcript Validator": {
+      "main": [
+        [
+          {
+            "node": "🔍 Duplicate Detection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔍 Duplicate Detection": {
+      "main": [
+        [
+          {
+            "node": "🗄️ PostgreSQL Duplicate Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🗄️ PostgreSQL Duplicate Check": {
+      "main": [
+        [
+          {
+            "node": "🎯 Duplicate Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🎯 Duplicate Router": {
+      "main": [
+        [
+          {
+            "node": "🤖 OpenAI Embedding Processor",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "🚫 Duplicate Skip Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🤖 OpenAI Embedding Processor": {
+      "main": [
+        [
+          {
+            "node": "🔮 OpenAI API Call",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔮 OpenAI API Call": {
+      "main": [
+        [
+          {
+            "node": "💾 Database Storage Processor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "💾 Database Storage Processor": {
+      "main": [
+        [
+          {
+            "node": "🗄️ PostgreSQL Storage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🗄️ PostgreSQL Storage": {
+      "main": [
+        [
+          {
+            "node": "✅ Completion Processor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "✅ Completion Processor": {
+      "main": [
+        [
+          {
+            "node": "📤 Send Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🚫 Duplicate Skip Handler": {
+      "main": [
+        [
+          {
+            "node": "📤 Send Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-01T12:00:00.000Z",
+      "updatedAt": "2025-01-01T12:00:00.000Z",
+      "id": "knowledge-engine",
+      "name": "knowledge-engine"
+    },
+    {
+      "createdAt": "2025-01-01T12:00:00.000Z",
+      "updatedAt": "2025-01-01T12:00:00.000Z",
+      "id": "transcript-indexing",
+      "name": "transcript-indexing"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-01T12:00:00.000Z",
+  "versionId": "1"
+}

@@ -1,0 +1,50 @@
+{
+  "name": "Semantic Search - Knowledge Engine",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST", 
+        "path": "semantic-search",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "id": "search-webhook",
+      "name": "🔍 Semantic Search Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [200, 300],
+      "webhookId": "blox-semantic-search"
+    },
+    {
+      "parameters": {
+        "content": "🔍 **SEMANTIC SEARCH WORKFLOW**\n\n**Purpose**: Vector similarity search through transcript database using OpenAI embeddings\n\n**Webhook URL**: /webhook/semantic-search\n**Method**: POST\n\n**Input Data**:\n- User query text\n- Search preferences (limit, threshold)\n- Video context for filtering\n- Response style requirements\n\n**Search Process**:\n1. Query enhancement and intent detection\n2. OpenAI embedding generation for query\n3. Vector similarity search in PostgreSQL\n4. Relevance scoring and ranking\n5. Context extraction and formatting\n\n**Output**: Ranked search results with video references, timestamps, and relevance scores\n**Performance**: Sub-2 second response times",
+        "height": 360,
+        "width": 360,
+        "color": 4
+      },
+      "id": "sticky-overview",
+      "name": "📋 Search Overview",
+      "type": "n8n-nodes-base.stickyNote", 
+      "typeVersion": 1,
+      "position": [20, 80]
+    }
+  ],
+  "connections": {},
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-01T12:00:00.000Z",
+      "updatedAt": "2025-01-01T12:00:00.000Z",
+      "id": "knowledge-engine",
+      "name": "knowledge-engine"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-01T12:00:00.000Z",
+  "versionId": "1"
+}

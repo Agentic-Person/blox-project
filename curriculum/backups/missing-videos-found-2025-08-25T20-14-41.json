@@ -1,0 +1,374 @@
+{
+  "found": [],
+  "notFound": [
+    {
+      "day": 3,
+      "module": 1,
+      "week": 1,
+      "title": "Properties and Attributes 2024",
+      "creator": "Suphi Kaner",
+      "searchQuery": "Properties and Attributes 2024 Suphi Kaner Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 6,
+      "module": 1,
+      "week": 2,
+      "title": "Model Hierarchy Best Practices",
+      "creator": "Suphi Kaner",
+      "searchQuery": "Model Hierarchy Best Practices Suphi Kaner Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 6,
+      "module": 1,
+      "week": 2,
+      "title": "Naming Conventions Guide",
+      "creator": "DasKairo",
+      "searchQuery": "Naming Conventions Guide DasKairo Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 8,
+      "module": 1,
+      "week": 2,
+      "title": "Atmosphere and Skybox 2024",
+      "creator": "B Ricey",
+      "searchQuery": "Atmosphere and Skybox 2024 B Ricey Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 9,
+      "module": 1,
+      "week": 2,
+      "title": "UI Scaling and Positioning",
+      "creator": "DasKairo",
+      "searchQuery": "UI Scaling and Positioning DasKairo Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 22,
+      "module": 2,
+      "week": 1,
+      "title": "Seams Placement Strategy",
+      "creator": "SouthernShotty",
+      "searchQuery": "Seams Placement Strategy SouthernShotty Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 12,
+      "module": 1,
+      "week": 3,
+      "title": "Viewport Navigation Mastery",
+      "creator": "CGDive",
+      "searchQuery": "Viewport Navigation Mastery CGDive Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 12,
+      "module": 1,
+      "week": 3,
+      "title": "3D Cursor Basics",
+      "creator": "Joey Carlino",
+      "searchQuery": "3D Cursor Basics Joey Carlino Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 19,
+      "module": 1,
+      "week": 4,
+      "title": "Optimizing AI-Generated Meshes",
+      "creator": "CGDive",
+      "searchQuery": "Optimizing AI-Generated Meshes CGDive Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 21,
+      "module": 2,
+      "week": 1,
+      "title": "Understanding UV Coordinates",
+      "creator": "CGDive",
+      "searchQuery": "Understanding UV Coordinates CGDive Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 21,
+      "module": 2,
+      "week": 1,
+      "title": "Why UVs Matter for Games",
+      "creator": "SouthernShotty",
+      "searchQuery": "Why UVs Matter for Games SouthernShotty Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 23,
+      "module": 2,
+      "week": 1,
+      "title": "UDIM Workflow for Games 2024",
+      "creator": "CGDive",
+      "searchQuery": "UDIM Workflow for Games 2024 CGDive Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 23,
+      "module": 2,
+      "week": 1,
+      "title": "Texture Density Guide",
+      "creator": "Joey Carlino",
+      "searchQuery": "Texture Density Guide Joey Carlino Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 24,
+      "module": 2,
+      "week": 1,
+      "title": "Troubleshooting UV Issues",
+      "creator": "CGDive",
+      "searchQuery": "Troubleshooting UV Issues CGDive Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 25,
+      "module": 2,
+      "week": 1,
+      "title": "UV Layout Export",
+      "creator": "CGDive",
+      "searchQuery": "UV Layout Export CGDive Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 25,
+      "module": 2,
+      "week": 1,
+      "title": "Blender to Roblox UV Tips",
+      "creator": "ByteBlox",
+      "searchQuery": "Blender to Roblox UV Tips ByteBlox Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 26,
+      "module": 2,
+      "week": 2,
+      "title": "Blender 4.1 Shader Nodes for Games",
+      "creator": "CGDive",
+      "searchQuery": "Blender 4.1 Shader Nodes for Games CGDive Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 26,
+      "module": 2,
+      "week": 2,
+      "title": "Material Properties",
+      "creator": "Joey Carlino",
+      "searchQuery": "Material Properties Joey Carlino Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 27,
+      "module": 2,
+      "week": 2,
+      "title": "Texture Painting in Blender",
+      "creator": "Grant Abbitt",
+      "searchQuery": "Texture Painting in Blender Grant Abbitt Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 27,
+      "module": 2,
+      "week": 2,
+      "title": "Procedural Texturing 2024",
+      "creator": "Default Cube",
+      "searchQuery": "Procedural Texturing 2024 Default Cube Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 27,
+      "module": 2,
+      "week": 2,
+      "title": "Image Textures Setup",
+      "creator": "CGDive",
+      "searchQuery": "Image Textures Setup CGDive Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 28,
+      "module": 2,
+      "week": 2,
+      "title": "PBR Texturing Workflows",
+      "creator": "Grant Abbitt",
+      "searchQuery": "PBR Texturing Workflows Grant Abbitt Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 28,
+      "module": 2,
+      "week": 2,
+      "title": "Understanding PBR Maps",
+      "creator": "CGDive",
+      "searchQuery": "Understanding PBR Maps CGDive Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 28,
+      "module": 2,
+      "week": 2,
+      "title": "Normal Maps Explained",
+      "creator": "Default Cube",
+      "searchQuery": "Normal Maps Explained Default Cube Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 29,
+      "module": 2,
+      "week": 2,
+      "title": "Adobe Firefly 3D Textures",
+      "creator": "Adobe Official",
+      "searchQuery": "Adobe Firefly 3D Textures Adobe Official Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 29,
+      "module": 2,
+      "week": 2,
+      "title": "AI Texture Upscaling",
+      "creator": "Corridor Crew",
+      "searchQuery": "AI Texture Upscaling Corridor Crew Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 30,
+      "module": 2,
+      "week": 2,
+      "title": "Texture Atlasing for Games",
+      "creator": "Grant Abbitt",
+      "searchQuery": "Texture Atlasing for Games Grant Abbitt Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 30,
+      "module": 2,
+      "week": 2,
+      "title": "Channel Packing Techniques",
+      "creator": "CGDive",
+      "searchQuery": "Channel Packing Techniques CGDive Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 30,
+      "module": 2,
+      "week": 2,
+      "title": "Texture Compression Guide",
+      "creator": "SouthernShotty",
+      "searchQuery": "Texture Compression Guide SouthernShotty Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 30,
+      "module": 2,
+      "week": 2,
+      "title": "Roblox Texture Limits",
+      "creator": "ByteBlox",
+      "searchQuery": "Roblox Texture Limits ByteBlox Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 4,
+      "module": 1,
+      "week": 1,
+      "title": "Anchoring and CanCollide Explained",
+      "creator": "DasKairo",
+      "searchQuery": "Anchoring and CanCollide Explained DasKairo Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 7,
+      "module": 1,
+      "week": 2,
+      "title": "Collision Groups Explained",
+      "creator": "Suphi Kaner",
+      "searchQuery": "Collision Groups Explained Suphi Kaner Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 18,
+      "module": 1,
+      "week": 4,
+      "title": "GPT-4 Vision for 3D Reference",
+      "creator": "Matt Wolfe",
+      "searchQuery": "GPT-4 Vision for 3D Reference Matt Wolfe Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 29,
+      "module": 2,
+      "week": 2,
+      "title": "Magnific AI Pro Features 2024",
+      "creator": "Two Minute Papers",
+      "searchQuery": "Magnific AI Pro Features 2024 Two Minute Papers Roblox",
+      "found": false,
+      "attempts": 5
+    },
+    {
+      "day": 29,
+      "module": 2,
+      "week": 2,
+      "title": "Stability AI Material Generator",
+      "creator": "Matt Wolfe",
+      "searchQuery": "Stability AI Material Generator Matt Wolfe Roblox",
+      "found": false,
+      "attempts": 5
+    }
+  ],
+  "statistics": {
+    "total": 35,
+    "found": 0,
+    "notFound": 35,
+    "byType": {
+      "roblox": {
+        "found": 0,
+        "notFound": 6
+      },
+      "blender": {
+        "found": 0,
+        "notFound": 24
+      },
+      "ai": {
+        "found": 0,
+        "notFound": 5
+      }
+    }
+  }
+}

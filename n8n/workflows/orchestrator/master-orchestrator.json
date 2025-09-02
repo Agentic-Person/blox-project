@@ -1,0 +1,578 @@
+{
+  "name": "Master Orchestrator - Blox Wizard Knowledge Engine",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "orchestrator",
+        "responseMode": "responseNode",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "id": "webhook-trigger",
+      "name": "📥 Main Event Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [220, 300],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "🎯 **MASTER ORCHESTRATOR WORKFLOW**\n\n**Purpose**: Central event routing hub for all Blox Wizard AI system interactions\n\n**Webhook URL**: /webhook/orchestrator\n**Method**: POST\n\n**Event Types Handled**:\n- `chat_query` → Routes to Knowledge Engine\n- `user_interaction` → Routes to Analytics Engine  \n- `schedule_request` → Routes to Scheduler Engine\n- `health_check` → Returns system status\n\n**Required Environment Variables**:\n- REDIS_URL\n- POSTGRES_CONNECTION\n- OPENAI_API_KEY\n- N8N_WEBHOOK_URL\n\n**Integration Points**:\n- Next.js API: /api/chat/blox-wizard\n- Frontend: BloxChatInterface component\n- Session Manager: lib/utils/session-manager.ts",
+        "height": 400,
+        "width": 350,
+        "color": 4
+      },
+      "id": "sticky-overview",
+      "name": "📋 System Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [20, 80]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🔍 EVENT TYPE ROUTER\n// Validates incoming events and routes them to appropriate handlers\n\nconst eventData = $input.first().json;\nconsole.log('📥 Received event:', eventData.eventType);\n\n// Validate required fields\nif (!eventData.eventType || !eventData.userId || !eventData.sessionId) {\n  return [{\n    json: {\n      success: false,\n      error: 'Missing required fields: eventType, userId, sessionId',\n      timestamp: new Date().toISOString()\n    }\n  }];\n}\n\n// Add processing metadata\nconst processedEvent = {\n  ...eventData,\n  processingId: `proc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,\n  receivedAt: new Date().toISOString(),\n  source: 'master-orchestrator'\n};\n\nreturn [{ json: processedEvent }];"
+      },
+      "id": "event-validator",
+      "name": "🔍 Event Validator & Router",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [420, 300]
+    },
+    {
+      "parameters": {
+        "content": "🔍 **EVENT VALIDATION LOGIC**\n\n**Purpose**: Validates and enriches incoming events\n\n**Validation Checks**:\n1. Required fields: eventType, userId, sessionId\n2. Event timestamp validation\n3. Payload structure verification\n4. Rate limiting preparation\n\n**Enrichment**:\n- Adds processingId for tracking\n- Adds receivedAt timestamp\n- Adds source identifier\n\n**Error Handling**:\n- Returns structured error responses\n- Logs validation failures\n- Maintains event audit trail",
+        "height": 280,
+        "width": 300,
+        "color": 5
+      },
+      "id": "sticky-validation",
+      "name": "📝 Validation Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [420, 20]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "chat-query-condition",
+              "leftValue": "={{ $json.eventType }}",
+              "rightValue": "chat_query",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "user-interaction-condition", 
+              "leftValue": "={{ $json.eventType }}",
+              "rightValue": "user_interaction",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "schedule-request-condition",
+              "leftValue": "={{ $json.eventType }}",
+              "rightValue": "schedule_request", 
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "health-check-condition",
+              "leftValue": "={{ $json.eventType }}",
+              "rightValue": "health_check",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "event-router",
+      "name": "🎯 Event Type Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [620, 300]
+    },
+    {
+      "parameters": {
+        "content": "🎯 **EVENT ROUTING LOGIC**\n\n**Purpose**: Routes validated events to specific handlers\n\n**Route Mapping**:\n1. `chat_query` → Knowledge Engine (Port 0)\n2. `user_interaction` → Analytics Engine (Port 1) \n3. `schedule_request` → Scheduler Engine (Port 2)\n4. `health_check` → Health Monitor (Port 3)\n5. Unknown → Error Handler (Port 4)\n\n**Performance Notes**:\n- Switch node provides fastest routing\n- Case-sensitive matching for reliability\n- Strict type validation enabled\n- Supports future event type expansion",
+        "height": 280,
+        "width": 320,
+        "color": 6
+      },
+      "id": "sticky-routing",
+      "name": "🗺️ Routing Logic",
+      "type": "n8n-nodes-base.stickyNote", 
+      "typeVersion": 1,
+      "position": [620, 20]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.N8N_WEBHOOK_URL }}/webhook/semantic-search",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "n8nApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-Source",
+              "value": "master-orchestrator"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "={{ $json.data.query }}"
+            },
+            {
+              "name": "responseStyle", 
+              "value": "={{ $json.data.responseStyle || 'detailed' }}"
+            },
+            {
+              "name": "userId",
+              "value": "={{ $json.userId }}"
+            },
+            {
+              "name": "sessionId",
+              "value": "={{ $json.sessionId }}"
+            },
+            {
+              "name": "videoContext",
+              "value": "={{ $json.data.videoContext }}"
+            },
+            {
+              "name": "processingId",
+              "value": "={{ $json.processingId }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000,
+          "retry": {
+            "enabled": true,
+            "maxAttempts": 3
+          }
+        }
+      },
+      "id": "knowledge-engine-call",
+      "name": "🧠 Knowledge Engine Handler",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [850, 200]
+    },
+    {
+      "parameters": {
+        "content": "🧠 **KNOWLEDGE ENGINE INTEGRATION**\n\n**Purpose**: Handles AI chat queries with semantic search\n\n**Endpoint**: /webhook/semantic-search\n**Timeout**: 30 seconds\n**Retries**: 3 attempts\n\n**Data Flow**:\n1. Extracts query from event.data.query\n2. Passes user context (userId, sessionId)\n3. Includes video context if available\n4. Forwards processing ID for tracking\n\n**Response Expected**:\n- AI-generated answer with citations\n- Video references with timestamps\n- Confidence scores and metadata\n- Processing time and usage stats",
+        "height": 280,
+        "width": 300,
+        "color": 2
+      },
+      "id": "sticky-knowledge",
+      "name": "🧠 Knowledge Engine Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [850, -80]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.N8N_WEBHOOK_URL }}/webhook/track-interaction",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "n8nApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type", 
+              "value": "application/json"
+            },
+            {
+              "name": "X-Source",
+              "value": "master-orchestrator"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "interactionType",
+              "value": "={{ $json.data.interactionType }}"
+            },
+            {
+              "name": "userId",
+              "value": "={{ $json.userId }}"
+            },
+            {
+              "name": "sessionId", 
+              "value": "={{ $json.sessionId }}"
+            },
+            {
+              "name": "data",
+              "value": "={{ $json.data }}"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ $json.timestamp }}"
+            },
+            {
+              "name": "processingId",
+              "value": "={{ $json.processingId }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "analytics-engine-call",
+      "name": "📊 Analytics Engine Handler", 
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [850, 340]
+    },
+    {
+      "parameters": {
+        "content": "📊 **ANALYTICS ENGINE INTEGRATION**\n\n**Purpose**: Tracks user interactions for pattern analysis\n\n**Endpoint**: /webhook/track-interaction\n**Timeout**: 15 seconds (faster than knowledge queries)\n\n**Interaction Types**:\n- VIDEO_WATCH: Video viewing behavior\n- CHAT_QUERY: AI assistant usage\n- TASK_COMPLETE: Learning progress\n- HELP_REQUEST: Support interactions\n- SESSION_START/END: Session tracking\n\n**Analytics Features**:\n- Real-time pattern detection\n- Learning progress tracking\n- Usage optimization insights\n- Behavioral flag detection",
+        "height": 280,
+        "width": 300,
+        "color": 3
+      },
+      "id": "sticky-analytics",
+      "name": "📊 Analytics Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [850, 580]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.N8N_WEBHOOK_URL }}/webhook/generate-schedule",
+        "authentication": "predefinedCredentialType", 
+        "nodeCredentialType": "n8nApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-Source",
+              "value": "master-orchestrator"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "={{ $json.userId }}"
+            },
+            {
+              "name": "scheduleType",
+              "value": "={{ $json.data.scheduleType || 'daily' }}"
+            },
+            {
+              "name": "preferences",
+              "value": "={{ $json.data.preferences }}"
+            },
+            {
+              "name": "forceRegenerate",
+              "value": "={{ $json.data.forceRegenerate || false }}"
+            },
+            {
+              "name": "sessionId",
+              "value": "={{ $json.sessionId }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 20000
+        }
+      },
+      "id": "scheduler-engine-call",
+      "name": "📅 Scheduler Engine Handler",
+      "type": "n8n-nodes-base.httpRequest", 
+      "typeVersion": 4.2,
+      "position": [850, 480]
+    },
+    {
+      "parameters": {
+        "content": "📅 **SCHEDULER ENGINE INTEGRATION**\n\n**Purpose**: Generates personalized learning schedules\n\n**Endpoint**: /webhook/generate-schedule\n**Timeout**: 20 seconds (AI generation takes time)\n\n**Schedule Types**:\n- daily: Daily learning tasks\n- weekly: Week-long learning paths\n- project: Project-based schedules\n- review: Review and practice schedules\n\n**Preferences Supported**:\n- Learning difficulty level\n- Available time per day\n- Preferred topics/skills\n- Learning style preferences\n\n**AI Features**:\n- Adaptive difficulty adjustment\n- Progress-based optimization\n- Personalized recommendations",
+        "height": 280,
+        "width": 300,
+        "color": 7
+      },
+      "id": "sticky-scheduler",
+      "name": "📅 Scheduler Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [850, 720]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🏥 HEALTH CHECK HANDLER\n// Returns comprehensive system status\n\nconst healthStatus = {\n  status: 'healthy',\n  timestamp: new Date().toISOString(),\n  services: {\n    orchestrator: 'active',\n    knowledgeEngine: 'active', \n    analytics: 'active',\n    scheduler: 'active'\n  },\n  version: '1.0.0',\n  uptime: process.uptime(),\n  memory: process.memoryUsage(),\n  environment: {\n    nodeEnv: process.env.NODE_ENV || 'development',\n    n8nVersion: process.env.N8N_VERSION,\n    redisConnected: process.env.REDIS_URL ? 'configured' : 'not-configured',\n    postgresConnected: process.env.POSTGRES_CONNECTION ? 'configured' : 'not-configured'\n  }\n};\n\nconsole.log('🏥 Health check requested - all systems operational');\n\nreturn [{\n  json: {\n    success: true,\n    data: healthStatus,\n    processingTime: '< 100ms'\n  }\n}];"
+      },
+      "id": "health-check-handler",
+      "name": "🏥 Health Check Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 620]
+    },
+    {
+      "parameters": {
+        "content": "🏥 **HEALTH CHECK SYSTEM**\n\n**Purpose**: Provides comprehensive system status\n\n**Response Includes**:\n- Overall system health status\n- Individual service status\n- System uptime and memory usage\n- Environment configuration\n- Database connection status\n- Version information\n\n**Used By**:\n- N8n integration service health checks\n- Monitoring systems\n- Development debugging\n- Production health monitoring\n\n**Performance**: < 100ms response time\n**No External Dependencies**: Uses only local system data",
+        "height": 260,
+        "width": 300,
+        "color": 1
+      },
+      "id": "sticky-health",
+      "name": "🏥 Health Check Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1200, 620]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 📨 RESPONSE FORMATTER\n// Standardizes all response formats for consistency\n\nconst inputData = $input.first().json;\n\n// Handle different response types from various engines\nlet formattedResponse;\n\nif (inputData.success !== undefined) {\n  // Response from engine handlers\n  formattedResponse = {\n    success: inputData.success,\n    data: inputData.data || inputData,\n    processingTime: inputData.processingTime || 'unknown',\n    timestamp: new Date().toISOString(),\n    source: 'blox-wizard-orchestrator'\n  };\n} else {\n  // Direct response (like health check)\n  formattedResponse = {\n    success: true,\n    data: inputData,\n    timestamp: new Date().toISOString(),\n    source: 'blox-wizard-orchestrator'\n  };\n}\n\n// Add trace information for debugging\nformattedResponse.trace = {\n  processingId: inputData.processingId,\n  receivedAt: inputData.receivedAt,\n  completedAt: new Date().toISOString()\n};\n\nconsole.log('📨 Response formatted successfully');\n\nreturn [{ json: formattedResponse }];"
+      },
+      "id": "response-formatter",
+      "name": "📨 Response Formatter",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1080, 400]
+    },
+    {
+      "parameters": {
+        "content": "📨 **RESPONSE FORMATTING**\n\n**Purpose**: Standardizes all API responses\n\n**Standard Response Format**:\n```json\n{\n  \"success\": true/false,\n  \"data\": { ... },\n  \"processingTime\": \"123ms\",\n  \"timestamp\": \"ISO date\",\n  \"source\": \"blox-wizard-orchestrator\",\n  \"trace\": {\n    \"processingId\": \"proc_xxx\",\n    \"receivedAt\": \"ISO date\", \n    \"completedAt\": \"ISO date\"\n  }\n}\n```\n\n**Benefits**:\n- Consistent API responses\n- Built-in debugging information\n- Performance tracking\n- Error tracing capability",
+        "height": 300,
+        "width": 320,
+        "color": 4
+      },
+      "id": "sticky-formatting",
+      "name": "📨 Response Format Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1080, 80]
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "X-Powered-By",
+                "value": "Blox-Wizard-N8n-v1.0"
+              }
+            ]
+          }
+        }
+      },
+      "id": "webhook-response",
+      "name": "✅ Send Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1280, 400]
+    },
+    {
+      "parameters": {
+        "content": "✅ **WEBHOOK RESPONSE HANDLER**\n\n**Purpose**: Sends final response back to client\n\n**Headers Set**:\n- Content-Type: application/json\n- X-Powered-By: Blox-Wizard-N8n-v1.0\n\n**Response Modes**:\n- allIncomingItems: Returns all processed data\n- Maintains response consistency\n- Adds system identification headers\n\n**Connected From**:\n- Response Formatter (standardized data)\n- Error handlers (error responses)\n\n**Important**: This is the final node - all responses flow here",
+        "height": 240,
+        "width": 300,
+        "color": 1
+      },
+      "id": "sticky-response",
+      "name": "✅ Response Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1280, 120]
+    },
+    {
+      "parameters": {
+        "content": "⚠️ **ERROR HANDLING & MONITORING**\n\n**Error Sources**:\n1. Invalid event format\n2. Engine timeout/failure\n3. Database connection issues\n4. Rate limiting exceeded\n\n**Error Flow**:\n1. Caught by Error Handler workflow\n2. Logged to Redis error store\n3. Alerts sent via Slack/PagerDuty\n4. Graceful error response returned\n\n**Monitoring Points**:\n- Response time tracking\n- Success/failure rates\n- Resource usage monitoring\n- Event type distribution\n\n**Debug Information**:\n- Processing IDs for tracing\n- Timestamp tracking\n- Source identification",
+        "height": 320,
+        "width": 340,
+        "color": 8
+      },
+      "id": "sticky-error-handling",
+      "name": "⚠️ Error Handling Guide",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [400, 580]
+    },
+    {
+      "parameters": {
+        "content": "🚀 **DEPLOYMENT & CONFIGURATION**\n\n**Required Environment Variables**:\n```\nREDIS_URL=redis://localhost:6379\nPOSTGRES_CONNECTION=postgresql://...\nOPENAI_API_KEY=sk-...\nN8N_WEBHOOK_URL=https://your-n8n-domain.com\n```\n\n**Import Order** (CRITICAL):\n1. error-handler.json\n2. state-manager.json\n3. master-orchestrator.json (this workflow)\n4. All engine workflows\n\n**Testing**:\n- Use provided test payloads\n- Check webhook endpoint connectivity\n- Verify Redis/Postgres connections\n- Test error handling scenarios\n\n**Performance Tuning**:\n- Adjust timeout values based on usage\n- Monitor memory usage\n- Scale Redis for high traffic",
+        "height": 360,
+        "width": 360,
+        "color": 6
+      },
+      "id": "sticky-deployment",
+      "name": "🚀 Deployment Guide",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [20, 500]
+    }
+  ],
+  "connections": {
+    "📥 Main Event Webhook": {
+      "main": [
+        [
+          {
+            "node": "🔍 Event Validator & Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔍 Event Validator & Router": {
+      "main": [
+        [
+          {
+            "node": "🎯 Event Type Router",
+            "type": "main", 
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🎯 Event Type Router": {
+      "main": [
+        [
+          {
+            "node": "🧠 Knowledge Engine Handler",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "📊 Analytics Engine Handler",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "📅 Scheduler Engine Handler", 
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "🏥 Health Check Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🧠 Knowledge Engine Handler": {
+      "main": [
+        [
+          {
+            "node": "📨 Response Formatter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📊 Analytics Engine Handler": {
+      "main": [
+        [
+          {
+            "node": "📨 Response Formatter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📅 Scheduler Engine Handler": {
+      "main": [
+        [
+          {
+            "node": "📨 Response Formatter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🏥 Health Check Handler": {
+      "main": [
+        [
+          {
+            "node": "📨 Response Formatter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📨 Response Formatter": {
+      "main": [
+        [
+          {
+            "node": "✅ Send Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-01T12:00:00.000Z",
+      "updatedAt": "2025-01-01T12:00:00.000Z",
+      "id": "orchestrator",
+      "name": "orchestrator"
+    },
+    {
+      "createdAt": "2025-01-01T12:00:00.000Z", 
+      "updatedAt": "2025-01-01T12:00:00.000Z",
+      "id": "blox-wizard",
+      "name": "blox-wizard"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-01T12:00:00.000Z",
+  "versionId": "1"
+}

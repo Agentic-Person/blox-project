@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createN8nService, createSessionId, determineResponseStyle, type VideoContext } from '@/lib/services/n8n-integration'
+import { supabaseAdmin } from '@/lib/supabase/client'
+import OpenAI from 'openai'
 
 interface BloxWizardRequest {
   message: string
@@ -32,25 +33,10 @@ interface BloxWizardResponse {
   }>
 }
 
-// Mock video database for testing
-const mockVideoReferences: VideoReference[] = [
-  {
-    title: "Roblox Studio 2024 Complete Beginner Guide",
-    youtubeId: "dQw4w9WgXcQ",
-    timestamp: "15:30",
-    relevantSegment: "This section covers workspace customization and basic interface navigation for new developers...",
-    thumbnailUrl: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-    confidence: 0.92
-  },
-  {
-    title: "Modern Studio Interface 2024",
-    youtubeId: "dQw4w9WgXcQ",
-    timestamp: "8:45",
-    relevantSegment: "Learn about the new Creator Hub features and how to set up your development environment...",
-    thumbnailUrl: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-    confidence: 0.87
-  }
-]
+// Initialize OpenAI client
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+})
 
 export async function POST(request: NextRequest) {
   try {
@@ -64,90 +50,61 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Initialize N8n service
-    const n8nService = createN8nService()
-
+    // Search for relevant transcript chunks using multiple strategies
+    let searchResults = []
+    let searchMethod = 'none'
+    
     try {
-      // First, check if N8n is available
-      const isHealthy = await n8nService.healthCheck()
-      if (!isHealthy) {
-        console.warn('N8n system is not healthy, falling back to mock responses')
-        return generateMockResponse(message, startTime)
-      }
-
-      // Determine response style based on user context
-      const responseStyle = determineResponseStyle(undefined, videoContext)
-
-      // Create chat query request for N8n
-      const chatRequest = {
-        eventType: 'chat_query' as const,
-        userId,
-        sessionId,
-        data: {
-          query: message,
-          responseStyle,
-          conversationHistory: [], // TODO: Implement conversation history
-          videoContext
-        },
-        timestamp: new Date().toISOString()
-      }
-
-      // Send to N8n Knowledge Engine via orchestrator
-      const n8nResponse = await n8nService.sendChatQuery(chatRequest)
-
-      if (!n8nResponse.success) {
-        throw new Error('N8n processing failed')
-      }
-
-      // Track user interaction asynchronously (don't await)
-      n8nService.trackInteraction({
-        eventType: 'user_interaction',
-        userId,
-        sessionId,
-        data: {
-          interactionType: 'CHAT_QUERY',
-          query: message,
-          satisfaction: undefined // Will be tracked later
-        },
-        timestamp: new Date().toISOString()
-      }).catch(err => console.warn('Failed to track interaction:', err))
-
-      // Transform N8n response to our API format
-      const videoReferences: VideoReference[] = n8nResponse.data.citations.map(citation => ({
-        title: citation.videoTitle,
-        youtubeId: extractYouTubeId(citation.url) || 'unknown',
-        timestamp: citation.timestamp,
-        relevantSegment: `From "${citation.videoTitle}" at ${citation.timestamp}`,
-        thumbnailUrl: `https://img.youtube.com/vi/${extractYouTubeId(citation.url)}/maxresdefault.jpg`,
-        confidence: citation.relevanceScore
-      }))
-
-      // Generate intelligent follow-up questions based on the response
-      const suggestedQuestions = generateSuggestedQuestions(message, n8nResponse.data.answer)
-
-      // Mock usage tracking (TODO: Implement real usage tracking)
-      const usageRemaining = 5
-
-      const responseTime = `${Date.now() - startTime}ms`
-
-      const response: BloxWizardResponse = {
-        answer: n8nResponse.data.answer,
-        videoReferences,
-        suggestedQuestions,
-        usageRemaining,
-        responseTime,
-        citations: n8nResponse.data.citations
-      }
-
-      return NextResponse.json(response)
-
-    } catch (n8nError) {
-      console.error('N8n integration error:', n8nError)
-      console.log('Falling back to mock response due to N8n error')
+      // Try vector search first
+      const embedding = await generateEmbedding(message)
+      searchResults = await searchTranscriptChunks(embedding, 0.3, 10) // Lower threshold for better matches
+      searchMethod = 'vector'
       
-      // Fall back to mock response if N8n fails
-      return generateMockResponse(message, startTime)
+      console.log(`Vector search found ${searchResults.length} results`)
+      
+      // Fallback to text search if vector search returns few results
+      if (searchResults.length < 3) {
+        const textResults = await searchTranscriptText(message, 5)
+        searchResults = [...searchResults, ...textResults]
+        searchMethod = searchResults.length > 0 ? 'hybrid' : 'text'
+        console.log(`Added ${textResults.length} text search results, total: ${searchResults.length}`)
+      }
+    } catch (searchError) {
+      console.warn('Search failed, using fallback:', searchError)
+      searchResults = await searchTranscriptText(message, 5)
+      searchMethod = 'text-fallback'
     }
+    
+    // Generate AI response using OpenAI with relevant context
+    const aiResponse = await generateAIResponse(message, searchResults, searchMethod)
+    
+    // Format video references from search results
+    const videoReferences: VideoReference[] = searchResults.map(result => ({
+      title: result.title,
+      youtubeId: result.youtube_id,
+      timestamp: result.start_timestamp,
+      relevantSegment: result.chunk_text.substring(0, 200) + '...',
+      thumbnailUrl: `https://img.youtube.com/vi/${result.youtube_id}/maxresdefault.jpg`,
+      confidence: result.similarity_score
+    }))
+    
+    // Generate contextual follow-up questions
+    const suggestedQuestions = generateSuggestedQuestions(message, aiResponse)
+    
+    // TODO: Implement real usage tracking
+    const usageRemaining = 5
+    
+    const responseTime = `${Date.now() - startTime}ms`
+    
+    const response: BloxWizardResponse = {
+      answer: aiResponse,
+      videoReferences,
+      suggestedQuestions,
+      usageRemaining,
+      responseTime
+    }
+    
+    return NextResponse.json(response)
 
   } catch (error) {
     console.error('Blox Wizard API error:', error)
@@ -159,54 +116,158 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * Generate mock response as fallback when N8n is unavailable
+ * Generate embedding for a text using OpenAI
  */
-function generateMockResponse(message: string, startTime: number): NextResponse {
-  let answer = "I understand you're asking about Roblox development. Let me help you with that!"
-  let videoReferences: VideoReference[] = []
-  let suggestedQuestions: string[] = []
+async function generateEmbedding(text: string): Promise<number[]> {
+  const response = await openai.embeddings.create({
+    model: process.env.OPENAI_EMBEDDING_MODEL || 'text-embedding-3-small',
+    input: text,
+  })
+  return response.data[0].embedding
+}
 
-  const lowerMessage = message.toLowerCase()
-  
-  if (lowerMessage.includes('script') || lowerMessage.includes('lua') || lowerMessage.includes('code')) {
-    answer = "Great question about scripting! 🔧 Lua is the programming language used in Roblox, and it's perfect for creating game logic, handling player interactions, and building complex systems. Here are some video tutorials that will help you master Roblox scripting from beginner to advanced levels."
-    videoReferences = mockVideoReferences
-    suggestedQuestions = [
-      "How do I create my first script?",
-      "What's the difference between ServerScript and LocalScript?",
-      "How do I handle player events in Lua?",
-      "Show me how to create a simple GUI script"
-    ]
-  } else if (lowerMessage.includes('studio') || lowerMessage.includes('interface') || lowerMessage.includes('2024')) {
-    answer = "Roblox Studio 2024 has amazing new features! 🚀 The interface has been completely redesigned with better organization, new tools, and improved workflow. The Creator Hub integration makes publishing and managing your games much easier. I've found some excellent tutorials that cover all the modern Studio features."
-    videoReferences = [mockVideoReferences[1]]
-    suggestedQuestions = [
-      "What are the best new 2024 Studio features?",
-      "How do I customize my Studio workspace?",
-      "Where can I find the new terrain tools?",
-      "How do I use the new animation editor?"
-    ]
-  } else {
-    answer = `I see you're asking about "${message}". 🤔 While I'm currently running in fallback mode (N8n system unavailable), I can still help with general Roblox development concepts! Try asking about specific areas like scripting, Studio features, or game mechanics.`
-    suggestedQuestions = [
-      "How do I get started with Roblox scripting?",
-      "What are the basics of Roblox Studio 2024?",
-      "How do I create my first game?",
-      "Show me how to make a simple obby"
-    ]
+/**
+ * Search transcript chunks using vector similarity
+ */
+async function searchTranscriptChunks(embedding: number[], similarityThreshold: number = 0.7, maxResults: number = 10) {
+  const { data, error } = await supabaseAdmin
+    .rpc('search_transcript_chunks', {
+      query_embedding: embedding,
+      similarity_threshold: similarityThreshold,
+      max_results: maxResults
+    })
+
+  if (error) {
+    console.error('Error searching transcript chunks:', error)
+    throw new Error('Failed to search transcript chunks')
   }
 
-  const responseTime = `${Date.now() - startTime}ms`
+  return data || []
+}
 
-  const response: BloxWizardResponse = {
-    answer,
-    videoReferences,
-    suggestedQuestions,
-    usageRemaining: 2,
-    responseTime
+/**
+ * Search transcript chunks using text similarity (fallback)
+ */
+async function searchTranscriptText(query: string, maxResults: number = 5) {
+  try {
+    // Use PostgreSQL full-text search as fallback
+    const { data, error } = await supabaseAdmin
+      .from('transcript_chunks')
+      .select(`
+        id,
+        transcript_id,
+        chunk_text,
+        start_timestamp,
+        end_timestamp,
+        start_seconds,
+        end_seconds,
+        video_transcripts!inner (
+          video_id,
+          youtube_id, 
+          title,
+          creator
+        )
+      `)
+      .textSearch('chunk_text', query.replace(/[^\w\s]/g, ''), { 
+        type: 'websearch',
+        config: 'english'
+      })
+      .limit(maxResults)
+
+    if (error) {
+      console.warn('Text search error:', error)
+      
+      // Even simpler fallback: ILIKE search
+      const { data: likeData, error: likeError } = await supabaseAdmin
+        .from('transcript_chunks')
+        .select(`
+          id,
+          transcript_id,
+          chunk_text,
+          start_timestamp,
+          end_timestamp,
+          start_seconds,
+          end_seconds,
+          video_transcripts!inner (
+            video_id,
+            youtube_id,
+            title,
+            creator
+          )
+        `)
+        .ilike('chunk_text', `%${query}%`)
+        .limit(maxResults)
+
+      if (likeError) {
+        console.error('Fallback search also failed:', likeError)
+        return []
+      }
+      
+      return transformTextSearchResults(likeData || [])
+    }
+
+    return transformTextSearchResults(data || [])
+  } catch (error) {
+    console.warn('Text search failed:', error)
+    return []
   }
+}
 
-  return NextResponse.json(response)
+/**
+ * Transform text search results to match vector search format
+ */
+function transformTextSearchResults(results: any[]) {
+  return results.map(result => ({
+    chunk_id: result.id,
+    transcript_id: result.transcript_id,
+    video_id: result.video_transcripts.video_id,
+    youtube_id: result.video_transcripts.youtube_id,
+    title: result.video_transcripts.title,
+    creator: result.video_transcripts.creator,
+    chunk_text: result.chunk_text,
+    start_timestamp: result.start_timestamp,
+    end_timestamp: result.end_timestamp,
+    start_seconds: result.start_seconds,
+    end_seconds: result.end_seconds,
+    similarity_score: 0.8 // Default score for text matches
+  }))
+}
+
+/**
+ * Generate AI response using OpenAI with relevant context from search results
+ */
+async function generateAIResponse(userMessage: string, searchResults: any[], searchMethod: string = 'vector'): Promise<string> {
+  const contextText = searchResults
+    .map(result => `[${result.title} at ${result.start_timestamp}]: ${result.chunk_text}`)
+    .join('\n\n')
+
+  const contextPrompt = contextText 
+    ? `Context from video transcripts:\n${contextText}\n\nUse this context to provide specific, helpful answers with video references.`
+    : 'No specific video context found. Provide general Roblox development guidance based on your knowledge.'
+
+  const systemPrompt = `You are Blox Wizard, an AI assistant specializing in Roblox game development education. You help young developers (ages 10-25) learn Roblox scripting, building, and game design.
+
+${contextPrompt}
+
+Guidelines:
+- Be encouraging and supportive
+- Use simple language appropriate for young developers
+- Include practical examples when possible
+- Reference specific video timestamps when they're relevant (format: "VideoTitle at MM:SS")
+- If no specific context is available, provide helpful general guidance
+- Always end with a suggestion for what to learn next`
+
+  const response = await openai.chat.completions.create({
+    model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+    messages: [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userMessage }
+    ],
+    max_tokens: 500,
+    temperature: 0.7,
+  })
+
+  return response.choices[0].message.content || "I'm sorry, I couldn't generate a response. Please try asking your question again."
 }
 
 /**

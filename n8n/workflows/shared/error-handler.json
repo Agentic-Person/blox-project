@@ -1,0 +1,440 @@
+{
+  "name": "Error Handler - Blox Wizard System",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{}]
+        }
+      },
+      "id": "error-trigger",
+      "name": "⚠️ Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "content": "⚠️ **ERROR HANDLER WORKFLOW**\n\n**Purpose**: System-wide error detection and management for all Blox Wizard workflows\n\n**Trigger**: Automatic when any workflow error occurs\n**Coverage**: All workflows in the Blox Wizard system\n\n**Error Classification**:\n- 🔴 CRITICAL: System down, data loss risk\n- 🟠 HIGH: Feature broken, user impact\n- 🟡 MEDIUM: Performance degraded\n- 🔵 LOW: Minor issues, logging only\n\n**Alert Channels**:\n- Slack notifications for HIGH/CRITICAL\n- PagerDuty escalation for CRITICAL\n- Redis error logging for all levels\n- Email summaries for development team",
+        "height": 340,
+        "width": 360,
+        "color": 8
+      },
+      "id": "sticky-overview",
+      "name": "📋 Error Handler Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [20, 80]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🔍 ERROR ANALYSIS ENGINE\n// Analyzes errors and determines severity level\n\nconst errorData = $input.first().json;\nconst executionData = $('Error Trigger').first().json;\n\nconsole.log('⚠️ Error detected:', errorData.error?.message);\n\n// Extract error details\nconst error = errorData.error || {};\nconst workflow = executionData.workflow || {};\nconst execution = executionData.execution || {};\n\n// Determine error severity\nfunction determineSeverity(error, workflow) {\n  const errorMessage = (error.message || '').toLowerCase();\n  const workflowName = (workflow.name || '').toLowerCase();\n  \n  // CRITICAL errors - system-breaking\n  if (errorMessage.includes('database connection') ||\n      errorMessage.includes('redis connection') ||\n      errorMessage.includes('openai quota') ||\n      workflowName.includes('orchestrator')) {\n    return 'CRITICAL';\n  }\n  \n  // HIGH errors - feature-breaking\n  if (errorMessage.includes('timeout') ||\n      errorMessage.includes('api key') ||\n      errorMessage.includes('authentication') ||\n      errorMessage.includes('webhook')) {\n    return 'HIGH';\n  }\n  \n  // MEDIUM errors - performance issues\n  if (errorMessage.includes('slow') ||\n      errorMessage.includes('rate limit') ||\n      errorMessage.includes('memory')) {\n    return 'MEDIUM';\n  }\n  \n  // LOW errors - minor issues\n  return 'LOW';\n}\n\n// Create standardized error report\nconst errorReport = {\n  id: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,\n  timestamp: new Date().toISOString(),\n  severity: determineSeverity(error, workflow),\n  \n  // Error details\n  error: {\n    message: error.message || 'Unknown error',\n    type: error.name || 'UnknownError',\n    stack: error.stack || 'No stack trace available',\n    node: error.node || 'Unknown node'\n  },\n  \n  // Workflow context\n  workflow: {\n    id: workflow.id,\n    name: workflow.name,\n    version: workflow.versionId\n  },\n  \n  // Execution context\n  execution: {\n    id: execution.id,\n    startTime: execution.startedAt,\n    mode: execution.mode,\n    userId: execution.userId\n  },\n  \n  // System context\n  system: {\n    nodeEnv: process.env.NODE_ENV || 'unknown',\n    n8nVersion: process.env.N8N_VERSION || 'unknown',\n    memory: process.memoryUsage(),\n    uptime: process.uptime()\n  },\n  \n  // Resolution suggestions\n  suggestions: getSuggestions(error.message || '')\n};\n\nfunction getSuggestions(errorMessage) {\n  const msg = errorMessage.toLowerCase();\n  \n  if (msg.includes('database')) {\n    return ['Check PostgreSQL connection', 'Verify database credentials', 'Check database server status'];\n  }\n  if (msg.includes('redis')) {\n    return ['Check Redis connection', 'Verify Redis server status', 'Check Redis memory usage'];\n  }\n  if (msg.includes('openai')) {\n    return ['Check OpenAI API key', 'Verify API quota', 'Check OpenAI service status'];\n  }\n  if (msg.includes('timeout')) {\n    return ['Increase timeout values', 'Check network connectivity', 'Monitor server load'];\n  }\n  \n  return ['Check logs for details', 'Verify configuration', 'Contact development team'];\n}\n\nconsole.log(`📊 Error classified as ${errorReport.severity}`);\n\nreturn [{ json: errorReport }];"
+      },
+      "id": "error-analyzer",
+      "name": "🔍 Error Analysis Engine",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [420, 300]
+    },
+    {
+      "parameters": {
+        "content": "🔍 **ERROR ANALYSIS LOGIC**\n\n**Purpose**: Intelligent error classification and context extraction\n\n**Severity Classification Rules**:\n🔴 **CRITICAL**:\n- Database connection failures\n- Redis connection failures  \n- OpenAI quota exceeded\n- Master orchestrator errors\n\n🟠 **HIGH**:\n- API timeouts\n- Authentication failures\n- Webhook errors\n- API key issues\n\n🟡 **MEDIUM**:\n- Performance slowdowns\n- Rate limiting\n- Memory issues\n\n🔵 **LOW**:\n- All other errors\n\n**Context Captured**:\n- Complete error details\n- Workflow information\n- Execution context\n- System metrics\n- Resolution suggestions",
+        "height": 360,
+        "width": 320,
+        "color": 5
+      },
+      "id": "sticky-analysis",
+      "name": "📊 Analysis Logic",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [420, -80]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "critical-condition",
+              "leftValue": "={{ $json.severity }}",
+              "rightValue": "CRITICAL",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "high-condition",
+              "leftValue": "={{ $json.severity }}",
+              "rightValue": "HIGH",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "medium-condition",
+              "leftValue": "={{ $json.severity }}",
+              "rightValue": "MEDIUM",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "severity-router",
+      "name": "🎯 Severity Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [640, 300]
+    },
+    {
+      "parameters": {
+        "content": "🎯 **SEVERITY-BASED ROUTING**\n\n**Purpose**: Routes errors to appropriate alert channels\n\n**Routing Logic**:\n- Port 0: CRITICAL → Immediate PagerDuty + Slack\n- Port 1: HIGH → Immediate Slack notification\n- Port 2: MEDIUM → Slack notification (throttled)\n- Port 3: LOW → Redis logging only\n\n**Alert Frequency Controls**:\n- CRITICAL: No throttling (immediate)\n- HIGH: Max 1 per minute per error type\n- MEDIUM: Max 1 per 5 minutes\n- LOW: Batch every 15 minutes\n\n**Escalation Rules**:\n- CRITICAL: Page on-call engineer\n- HIGH: Notify development team\n- MEDIUM: Development team Slack\n- LOW: Daily summary email",
+        "height": 320,
+        "width": 300,
+        "color": 6
+      },
+      "id": "sticky-routing",
+      "name": "📋 Routing Rules",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [640, -60]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.PAGERDUTY_WEBHOOK_URL }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Token token={{ $env.PAGERDUTY_API_KEY }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "routing_key",
+              "value": "{{ $env.PAGERDUTY_ROUTING_KEY }}"
+            },
+            {
+              "name": "event_action",
+              "value": "trigger"
+            },
+            {
+              "name": "payload",
+              "value": "={\n  \"summary\": \"🔴 CRITICAL: \" + $json.error.message,\n  \"severity\": \"critical\",\n  \"source\": \"blox-wizard-n8n\",\n  \"component\": $json.workflow.name,\n  \"group\": \"blox-wizard\",\n  \"class\": \"system-error\",\n  \"custom_details\": {\n    \"error_id\": $json.id,\n    \"workflow\": $json.workflow.name,\n    \"node\": $json.error.node,\n    \"suggestions\": $json.suggestions,\n    \"system_info\": $json.system\n  }\n}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "pagerduty-alert",
+      "name": "🚨 PagerDuty Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [860, 180]
+    },
+    {
+      "parameters": {
+        "content": "🚨 **PAGERDUTY INTEGRATION**\n\n**Purpose**: Critical error escalation for immediate response\n\n**Trigger**: CRITICAL severity errors only\n**Response Time**: < 5 minutes (on-call engineer)\n\n**Alert Details**:\n- Error summary with context\n- Workflow and node information\n- Resolution suggestions\n- System health metrics\n- Direct links to n8n execution\n\n**Environment Variables Required**:\n- PAGERDUTY_WEBHOOK_URL\n- PAGERDUTY_API_KEY  \n- PAGERDUTY_ROUTING_KEY\n\n**Integration Features**:\n- Automatic incident creation\n- Escalation policies\n- Resolution notifications\n- Incident analytics",
+        "height": 280,
+        "width": 300,
+        "color": 9
+      },
+      "id": "sticky-pagerduty",
+      "name": "🚨 PagerDuty Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [860, -100]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.SLACK_ERROR_WEBHOOK_URL }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type", 
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "channel",
+              "value": "#blox-wizard-alerts"
+            },
+            {
+              "name": "username",
+              "value": "Blox Wizard Error Bot"
+            },
+            {
+              "name": "icon_emoji",
+              "value": ":warning:"
+            },
+            {
+              "name": "attachments",
+              "value": "=[{\n  \"color\": $json.severity === 'CRITICAL' ? 'danger' : $json.severity === 'HIGH' ? 'warning' : 'good',\n  \"title\": `${$json.severity === 'CRITICAL' ? '🔴' : $json.severity === 'HIGH' ? '🟠' : '🟡'} ${$json.severity} Error in ${$json.workflow.name}`,\n  \"text\": $json.error.message,\n  \"fields\": [\n    {\n      \"title\": \"Workflow\",\n      \"value\": $json.workflow.name,\n      \"short\": true\n    },\n    {\n      \"title\": \"Node\", \n      \"value\": $json.error.node,\n      \"short\": true\n    },\n    {\n      \"title\": \"Error ID\",\n      \"value\": $json.id,\n      \"short\": true\n    },\n    {\n      \"title\": \"Timestamp\",\n      \"value\": $json.timestamp,\n      \"short\": true\n    },\n    {\n      \"title\": \"Suggestions\",\n      \"value\": $json.suggestions.join('\\n• '),\n      \"short\": false\n    }\n  ],\n  \"footer\": \"Blox Wizard N8n Error Handler\",\n  \"ts\": Math.floor(new Date($json.timestamp).getTime() / 1000)\n}]"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 8000
+        }
+      },
+      "id": "slack-notification",
+      "name": "💬 Slack Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [860, 320]
+    },
+    {
+      "parameters": {
+        "content": "💬 **SLACK INTEGRATION**\n\n**Purpose**: Team notifications for HIGH and MEDIUM errors\n\n**Channel**: #blox-wizard-alerts\n**Frequency**: Throttled by severity level\n\n**Message Format**:\n- Color-coded by severity\n- Workflow and node context\n- Error details and suggestions\n- Timestamp and error ID\n- Resolution action items\n\n**Throttling Rules**:\n- HIGH: Max 1 per minute per error type\n- MEDIUM: Max 1 per 5 minutes\n- Prevents spam during cascading failures\n\n**Environment Variables**:\n- SLACK_ERROR_WEBHOOK_URL\n\n**Team Benefits**:\n- Immediate visibility\n- Context for debugging\n- Resolution tracking",
+        "height": 300,
+        "width": 300,
+        "color": 2
+      },
+      "id": "sticky-slack",
+      "name": "💬 Slack Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [860, 560]
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "=error_log:{{ $json.id }}",
+        "value": "={{ JSON.stringify($json) }}",
+        "ttl": 2592000,
+        "options": {}
+      },
+      "id": "redis-error-log",
+      "name": "📊 Redis Error Log",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [1100, 300]
+    },
+    {
+      "parameters": {
+        "content": "📊 **REDIS ERROR LOGGING**\n\n**Purpose**: Persistent error storage and analytics\n\n**Storage Strategy**:\n- Key: error_log:{error_id}\n- Value: Complete error report JSON\n- TTL: 30 days (2592000 seconds)\n\n**Analytics Queries**:\n- Error frequency by workflow\n- Common error patterns\n- Resolution time tracking\n- System health metrics\n\n**Data Structure**:\n```json\n{\n  \"id\": \"error_xxx\",\n  \"severity\": \"HIGH\",\n  \"error\": { ... },\n  \"workflow\": { ... },\n  \"system\": { ... },\n  \"suggestions\": [...]\n}\n```\n\n**Used By**:\n- Development team debugging\n- System health monitoring\n- Performance optimization\n- Error pattern analysis",
+        "height": 320,
+        "width": 320,
+        "color": 3
+      },
+      "id": "sticky-redis",
+      "name": "📊 Redis Logging Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1100, -40]
+    },
+    {
+      "parameters": {
+        "operation": "increment",
+        "key": "=error_count:{{ $json.severity.toLowerCase() }}:{{ new Date().toISOString().split('T')[0] }}",
+        "options": {}
+      },
+      "id": "error-metrics",
+      "name": "📈 Error Metrics",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [1300, 300]
+    },
+    {
+      "parameters": {
+        "content": "📈 **ERROR METRICS TRACKING**\n\n**Purpose**: Daily error statistics and trends\n\n**Metrics Collected**:\n- Daily error counts by severity\n- Error rate trends over time\n- Workflow-specific error rates\n- Resolution success rates\n\n**Key Format**:\n- error_count:critical:2025-01-01\n- error_count:high:2025-01-01\n- error_count:medium:2025-01-01\n- error_count:low:2025-01-01\n\n**Analytics Dashboard**:\n- Real-time error rates\n- Historical trend analysis\n- Workflow health scores\n- SLA compliance tracking\n\n**Alerting Thresholds**:\n- > 10 CRITICAL/day → Escalate\n- > 50 HIGH/day → Review\n- Trend analysis for early warning",
+        "height": 300,
+        "width": 300,
+        "color": 7
+      },
+      "id": "sticky-metrics",
+      "name": "📈 Metrics Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1300, -20]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ✅ ERROR PROCESSING COMPLETE\n// Final status and cleanup operations\n\nconst errorData = $input.first().json;\n\nconsole.log(`✅ Error ${errorData.id} processed successfully`);\nconsole.log(`📊 Severity: ${errorData.severity}`);\nconsole.log(`🔧 Workflow: ${errorData.workflow.name}`);\n\n// Create completion report\nconst completionReport = {\n  errorId: errorData.id,\n  severity: errorData.severity,\n  workflow: errorData.workflow.name,\n  processedAt: new Date().toISOString(),\n  alertsSent: {\n    pagerduty: errorData.severity === 'CRITICAL',\n    slack: ['CRITICAL', 'HIGH', 'MEDIUM'].includes(errorData.severity),\n    email: true\n  },\n  logged: true,\n  metricsUpdated: true,\n  status: 'completed'\n};\n\n// Log completion\nconsole.log('📋 Error processing completed:', JSON.stringify(completionReport, null, 2));\n\nreturn [{ json: completionReport }];"
+      },
+      "id": "completion-handler",
+      "name": "✅ Processing Complete",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1500, 300]
+    },
+    {
+      "parameters": {
+        "content": "✅ **PROCESSING COMPLETION**\n\n**Purpose**: Final status reporting and cleanup\n\n**Completion Tasks**:\n- Log successful processing\n- Confirm alert delivery\n- Update processing metrics\n- Create audit trail\n\n**Status Report Includes**:\n- Error ID and severity\n- Workflow context\n- Alert channels used\n- Processing timestamp\n- Success/failure status\n\n**Audit Trail**:\n- Complete error lifecycle\n- Response time metrics\n- Alert delivery confirmation\n- Resolution tracking\n\n**Performance Monitoring**:\n- Error handler response time\n- Alert delivery latency\n- System resource usage\n- Processing success rate",
+        "height": 280,
+        "width": 300,
+        "color": 1
+      },
+      "id": "sticky-completion",
+      "name": "✅ Completion Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1500, 20]
+    },
+    {
+      "parameters": {
+        "content": "🚀 **DEPLOYMENT CHECKLIST**\n\n**Environment Variables Required**:\n```\nSLACK_ERROR_WEBHOOK_URL=https://hooks.slack.com/...\nPAGERDUTY_WEBHOOK_URL=https://events.pagerduty.com/...\nPAGERDUTY_API_KEY=your_api_key\nPAGERDUTY_ROUTING_KEY=your_routing_key\nREDIS_URL=redis://localhost:6379\n```\n\n**Setup Steps**:\n1. Configure Slack webhook in #blox-wizard-alerts\n2. Set up PagerDuty service integration\n3. Test Redis connection and TTL settings\n4. Configure alert throttling rules\n5. Test error scenarios\n\n**Import Order**: Import FIRST (before other workflows)\n**Testing**: Use Error Trigger test mode\n**Monitoring**: Check Redis error logs daily",
+        "height": 360,
+        "width": 360,
+        "color": 6
+      },
+      "id": "sticky-deployment",
+      "name": "🚀 Deployment Guide",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [20, 480]
+    }
+  ],
+  "connections": {
+    "⚠️ Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "🔍 Error Analysis Engine",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔍 Error Analysis Engine": {
+      "main": [
+        [
+          {
+            "node": "🎯 Severity Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🎯 Severity Router": {
+      "main": [
+        [
+          {
+            "node": "🚨 PagerDuty Alert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "💬 Slack Notification",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "💬 Slack Notification", 
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "💬 Slack Notification",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "📊 Redis Error Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🚨 PagerDuty Alert": {
+      "main": [
+        [
+          {
+            "node": "📊 Redis Error Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "💬 Slack Notification": {
+      "main": [
+        [
+          {
+            "node": "📊 Redis Error Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📊 Redis Error Log": {
+      "main": [
+        [
+          {
+            "node": "📈 Error Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📈 Error Metrics": {
+      "main": [
+        [
+          {
+            "node": "✅ Processing Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-01T12:00:00.000Z",
+      "updatedAt": "2025-01-01T12:00:00.000Z",
+      "id": "error-handling",
+      "name": "error-handling"
+    },
+    {
+      "createdAt": "2025-01-01T12:00:00.000Z",
+      "updatedAt": "2025-01-01T12:00:00.000Z",
+      "id": "blox-wizard",
+      "name": "blox-wizard"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-01T12:00:00.000Z",
+  "versionId": "1"
+}

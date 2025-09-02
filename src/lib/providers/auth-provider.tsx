@@ -30,7 +30,7 @@ const MOCK_USER: User = {
   email: 'developer@bloxbuddy.com',
   username: 'DevUser',
   discordId: '123456789',
-  avatar: '/images/avatars/jimmyWizard.jpg',
+  avatar: '/images/avatars/JimmyCozyMtns.png',
   role: 'student',
   ageRange: '13-17'
 }
