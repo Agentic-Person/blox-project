@@ -3,12 +3,14 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Play, Pause, Volume2, SkipBack, SkipForward, CheckCircle, Clock, Zap, Book, Award } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Play, Pause, Volume2, SkipBack, SkipForward, CheckCircle, Clock, Zap, Book, Award, Bot } from 'lucide-react'
 import * as Progress from '@radix-ui/react-progress'
 import { useLearningStore } from '@/store/learningStore'
 import { useTimeManagementStore } from '@/store/timeManagementStore'
 import { Breadcrumb } from './Breadcrumb'
 import { loadYouTubeAPI, createYouTubePlayer, PlayerState } from '@/lib/youtube/youtube-api'
+import { AIChat } from '@/components/blox-wizard/AIChat'
 // import { toast } from 'sonner'
 
 interface VideoPlayerProps {
@@ -382,6 +384,34 @@ export function VideoPlayer({
             </CardContent>
           </Card>
         )}
+
+        {/* Blox Wizard AI Chat Assistant */}
+        <Card className="card-hover mb-6 border-blox-teal/20">
+          <CardHeader>
+            <div className="flex items-center space-x-2">
+              <Bot className="h-5 w-5 text-blox-teal" />
+              <CardTitle className="text-blox-white">Blox Wizard - AI Learning Assistant</CardTitle>
+              <Badge className="bg-blox-teal/20 text-blox-teal border-blox-teal/30">
+                <div className="w-2 h-2 bg-blox-teal rounded-full mr-2 animate-pulse" />
+                AI Active
+              </Badge>
+            </div>
+            <p className="text-sm text-blox-off-white/60 mt-1">
+              Ask questions about this video or get help with your practice tasks
+            </p>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[500px]">
+              <AIChat 
+                videoContext={{
+                  title: video.title,
+                  youtubeId: video.youtubeId,
+                  currentTime: watchProgress
+                }}
+              />
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Practice Task */}
         {practiceTask && (

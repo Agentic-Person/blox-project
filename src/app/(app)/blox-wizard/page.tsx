@@ -26,7 +26,7 @@ import { AIScheduler } from '@/components/blox-wizard/AIScheduler'
 import { SkillTree } from '@/components/blox-wizard/SkillTree'
 import { AIChat } from '@/components/blox-wizard/AIChat'
 import { GamePreview } from '@/components/blox-wizard/GamePreview'
-import { AIJourneyDatabaseTest } from '@/components/debug/AIJourneyDatabaseTest'
+// import { AIJourneyDatabaseTest } from '@/components/debug/AIJourneyDatabaseTest'
 import { useAIJourney } from '@/hooks/useAIJourney'
 import Link from 'next/link'
 
@@ -208,7 +208,9 @@ export default function BloxWizardPage() {
                     </TabsContent>
                     
                     <TabsContent value="test" className="mt-0">
-                      <AIJourneyDatabaseTest />
+                      <div className="p-8 text-center text-blox-off-white/60">
+                        Database Test Component (Coming Soon)
+                      </div>
                     </TabsContent>
                   </motion.div>
                 </AnimatePresence>

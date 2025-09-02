@@ -109,7 +109,7 @@ export function AIJourneyWidget({ className = '' }: AIJourneyWidgetProps) {
                 <p className="text-blox-off-white/70 mb-4">
                   Start your personalized Roblox learning journey with AI guidance
                 </p>
-                <Link href="/ai-assistant">
+                <Link href="/blox-wizard">
                   <Button className="bg-gradient-to-r from-blox-teal to-blox-teal-dark">
                     Start Journey
                     <ExternalLink className="ml-2 h-4 w-4" />
@@ -263,7 +263,7 @@ export function AIJourneyWidget({ className = '' }: AIJourneyWidgetProps) {
 
                 {/* Quick Actions */}
                 <div className="flex flex-wrap gap-3">
-                  <Link href="/ai-assistant">
+                  <Link href="/blox-wizard">
                     <Button 
                       className="bg-gradient-to-r from-blox-teal to-blox-teal-dark hover:scale-105 transition-transform"
                       size="sm"
