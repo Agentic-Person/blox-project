@@ -4,6 +4,7 @@
  */
 
 import OpenAI from 'openai'
+import { supabaseTranscriptService, type VideoReference } from './supabase-transcript-service'
 
 export interface ChatMessage {
   role: 'user' | 'assistant' | 'system'
@@ -96,8 +97,8 @@ class OpenAIService {
       // Generate suggested questions based on the response
       const suggestedQuestions = await this.generateSuggestedQuestions(message, aiResponse, videoContext)
       
-      // Mock video references for now (can be enhanced with vector search later)
-      const videoReferences = this.generateMockVideoReferences(message, videoContext)
+      // Get real video references from Supabase transcript search
+      const videoReferences = await this.findRelevantVideoReferences(message, videoContext)
 
       const responseTime = Date.now() - startTime
 
@@ -224,59 +225,69 @@ Return only the questions, one per line:`
   }
 
   /**
-   * Generate mock video references (placeholder for future vector search)
+   * Find relevant video references using Supabase transcript search
    */
-  private generateMockVideoReferences(
-    message: string, 
+  private async findRelevantVideoReferences(
+    message: string,
     videoContext?: VideoContext
-  ): Array<{
-    title: string
-    youtubeId: string
-    timestamp: string
-    relevantSegment: string
-    thumbnailUrl: string
-    confidence: number
-  }> {
-    // For now, return contextual mock data
-    // TODO: Implement vector search against video transcripts
-    
-    const baseReferences = [
-      {
-        title: "Roblox Scripting Fundamentals for Beginners",
-        youtubeId: "dQw4w9WgXcQ",
-        timestamp: "5:30",
-        relevantSegment: "This section covers the basics of Lua scripting in Roblox Studio...",
-        thumbnailUrl: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-        confidence: 0.85
-      },
-      {
-        title: "Building Your First Roblox Game - Complete Tutorial",
-        youtubeId: "dQw4w9WgXcQ", 
-        timestamp: "12:15",
-        relevantSegment: "Learn how to set up your first game environment and basic mechanics...",
-        thumbnailUrl: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-        confidence: 0.78
+  ): Promise<VideoReference[]> {
+    try {
+      // Search for relevant video segments based on the user's message
+      const videoReferences = await supabaseTranscriptService.findRelevantVideoSegments(message, 5)
+      
+      // If we found relevant videos, return them
+      if (videoReferences.length > 0) {
+        return videoReferences
       }
-    ]
-
-    // If we have video context, include it as the primary reference
-    if (videoContext?.title && videoContext?.youtubeId) {
-      return [
-        {
+      
+      // Fallback to contextual references if current video context exists
+      if (videoContext?.title && videoContext?.youtubeId) {
+        return [{
           title: videoContext.title,
           youtubeId: videoContext.youtubeId,
           timestamp: videoContext.currentTime ? 
             `${Math.floor(videoContext.currentTime / 60)}:${(videoContext.currentTime % 60).toString().padStart(2, '0')}` : 
             "0:00",
-          relevantSegment: "Current video context - continue watching for more details...",
+          relevantSegment: videoContext.transcript?.slice(0, 150) + "..." || "Current video section",
           thumbnailUrl: `https://img.youtube.com/vi/${videoContext.youtubeId}/maxresdefault.jpg`,
-          confidence: 0.95
-        },
-        ...baseReferences.slice(0, 1)
-      ]
+          confidence: 0.9
+        }]
+      }
+      
+      // Ultimate fallback - empty array (no mock data)
+      return []
+      
+    } catch (error) {
+      console.error('Error finding relevant video references:', error)
+      
+      // Fallback to mock data if Supabase search fails
+      return this.generateFallbackReferences(message, videoContext)
+    }
+  }
+
+  /**
+   * Generate fallback references when Supabase search fails
+   */
+  private generateFallbackReferences(
+    message: string, 
+    videoContext?: VideoContext
+  ): VideoReference[] {
+    // If we have video context, use it
+    if (videoContext?.title && videoContext?.youtubeId) {
+      return [{
+        title: videoContext.title,
+        youtubeId: videoContext.youtubeId,
+        timestamp: videoContext.currentTime ? 
+          `${Math.floor(videoContext.currentTime / 60)}:${(videoContext.currentTime % 60).toString().padStart(2, '0')}` : 
+          "0:00",
+        relevantSegment: "Current video context - continue watching for more details...",
+        thumbnailUrl: `https://img.youtube.com/vi/${videoContext.youtubeId}/maxresdefault.jpg`,
+        confidence: 0.95
+      }]
     }
 
-    return baseReferences
+    // Return empty array - no fallback mock data
+    return []
   }
 
   /**
