@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createN8nService, createSessionId, determineResponseStyle, type VideoContext } from '@/lib/services/n8n-integration'
+import { openaiService, type ChatMessage, type VideoContext as OpenAIVideoContext } from '@/lib/services/openai-service'
 
 interface BloxWizardRequest {
   message: string
   sessionId: string
   userId?: string
-  videoContext?: VideoContext
+  videoContext?: OpenAIVideoContext
+  conversationHistory?: ChatMessage[]
+  responseStyle?: 'detailed' | 'concise' | 'beginner' | 'advanced'
 }
 
 interface VideoReference {
@@ -55,7 +57,14 @@ const mockVideoReferences: VideoReference[] = [
 export async function POST(request: NextRequest) {
   try {
     const startTime = Date.now()
-    const { message, sessionId, userId = 'anonymous', videoContext }: BloxWizardRequest = await request.json()
+    const { 
+      message, 
+      sessionId, 
+      userId = 'anonymous', 
+      videoContext,
+      conversationHistory = [],
+      responseStyle = 'beginner'
+    }: BloxWizardRequest = await request.json()
 
     if (!message || !sessionId) {
       return NextResponse.json(
@@ -64,88 +73,43 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Initialize N8n service
-    const n8nService = createN8nService()
-
     try {
-      // First, check if N8n is available
-      const isHealthy = await n8nService.healthCheck()
-      if (!isHealthy) {
-        console.warn('N8n system is not healthy, falling back to mock responses')
-        return generateMockResponse(message, startTime)
-      }
-
-      // Determine response style based on user context
-      const responseStyle = determineResponseStyle(undefined, videoContext)
-
-      // Create chat query request for N8n
-      const chatRequest = {
-        eventType: 'chat_query' as const,
+      // Call OpenAI service directly
+      const openaiResponse = await openaiService.generateChatCompletion({
+        message,
+        conversationHistory,
+        videoContext,
+        responseStyle,
         userId,
-        sessionId,
-        data: {
-          query: message,
-          responseStyle,
-          conversationHistory: [], // TODO: Implement conversation history
-          videoContext
-        },
-        timestamp: new Date().toISOString()
-      }
+        sessionId
+      })
 
-      // Send to N8n Knowledge Engine via orchestrator
-      const n8nResponse = await n8nService.sendChatQuery(chatRequest)
-
-      if (!n8nResponse.success) {
-        throw new Error('N8n processing failed')
-      }
-
-      // Track user interaction asynchronously (don't await)
-      n8nService.trackInteraction({
-        eventType: 'user_interaction',
-        userId,
-        sessionId,
-        data: {
-          interactionType: 'CHAT_QUERY',
-          query: message,
-          satisfaction: undefined // Will be tracked later
-        },
-        timestamp: new Date().toISOString()
-      }).catch(err => console.warn('Failed to track interaction:', err))
-
-      // Transform N8n response to our API format
-      const videoReferences: VideoReference[] = n8nResponse.data.citations.map(citation => ({
-        title: citation.videoTitle,
-        youtubeId: extractYouTubeId(citation.url) || 'unknown',
-        timestamp: citation.timestamp,
-        relevantSegment: `From "${citation.videoTitle}" at ${citation.timestamp}`,
-        thumbnailUrl: `https://img.youtube.com/vi/${extractYouTubeId(citation.url)}/maxresdefault.jpg`,
-        confidence: citation.relevanceScore
+      // Transform video references to our API format
+      const videoReferences: VideoReference[] = openaiResponse.videoReferences.map(ref => ({
+        title: ref.title,
+        youtubeId: ref.youtubeId,
+        timestamp: ref.timestamp,
+        relevantSegment: ref.relevantSegment,
+        thumbnailUrl: ref.thumbnailUrl,
+        confidence: ref.confidence
       }))
-
-      // Generate intelligent follow-up questions based on the response
-      const suggestedQuestions = generateSuggestedQuestions(message, n8nResponse.data.answer)
-
-      // Mock usage tracking (TODO: Implement real usage tracking)
-      const usageRemaining = 5
 
       const responseTime = `${Date.now() - startTime}ms`
 
       const response: BloxWizardResponse = {
-        answer: n8nResponse.data.answer,
+        answer: openaiResponse.answer,
         videoReferences,
-        suggestedQuestions,
-        usageRemaining,
-        responseTime,
-        citations: n8nResponse.data.citations
+        suggestedQuestions: openaiResponse.suggestedQuestions,
+        usageRemaining: 10, // No limits for now
+        responseTime
       }
 
       return NextResponse.json(response)
 
-    } catch (n8nError) {
-      console.error('N8n integration error:', n8nError)
-      console.log('Falling back to mock response due to N8n error')
+    } catch (openaiError) {
+      console.error('OpenAI service error:', openaiError)
       
-      // Fall back to mock response if N8n fails
+      // Fall back to mock response if OpenAI fails
       return generateMockResponse(message, startTime)
     }
 

@@ -216,25 +216,62 @@ export function AIChat({ className = '', onMessageSend }: AIChatProps) {
     setInput('')
     setIsTyping(true)
     
-    // Simulate AI response
-    setTimeout(() => {
+    // Call the actual API
+    try {
+      const messageToSend = input
+      
+      const response = await fetch('/api/chat/blox-wizard', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: messageToSend,
+          sessionId: `session_${Date.now()}`,
+          userId: 'user',
+          conversationHistory: messages.slice(-10).map(msg => ({
+            role: msg.role,
+            content: msg.content
+          })),
+          responseStyle: 'beginner'
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`)
+      }
+
+      const data = await response.json()
+      
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: `I understand you're asking about "${input}". Based on your current progress in ${
-          journey?.currentSkill || 'your learning journey'
-        }, here's what I recommend...`,
+        content: data.answer,
         timestamp: new Date(),
-        suggestions: ['Tell me more', 'Show examples', 'What\'s next?']
+        suggestions: data.suggestedQuestions || ['Tell me more', 'Show examples', 'What\'s next?']
       }
       
       setMessages(prev => [...prev, aiMessage])
       setIsTyping(false)
       
       if (onMessageSend) {
-        onMessageSend(input)
+        onMessageSend(messageToSend)
       }
-    }, 1500)
+    } catch (error) {
+      console.error('Failed to send message:', error)
+      
+      // Fallback message on error
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: "Sorry, I'm having trouble connecting right now. Please try again in a moment!",
+        timestamp: new Date(),
+        suggestions: ['Try again', 'Ask something else']
+      }
+      
+      setMessages(prev => [...prev, errorMessage])
+      setIsTyping(false)
+    }
   }
   
   const handleQuickAction = (action: QuickAction) => {

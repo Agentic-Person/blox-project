@@ -154,3 +154,145 @@ When working on this project:
 - Keep commits focused on single features or fixes taht were updated
 - Write clear commit messages that explain the "why" not just the "what"
 
+## MANDATORY GIT WORKFLOW - PREVENT "SLOPPY GIT"
+
+**CRITICAL: Follow this workflow to avoid accumulating uncommitted changes**
+
+### Daily Git Routine (MANDATORY)
+
+#### 1. Start of Every Session
+```bash
+# Check status and pull latest changes
+git status
+git pull origin feature/current-branch
+```
+
+#### 2. During Development - THE "RULE OF 3"
+**STOP and commit when ANY of these happen:**
+- ✅ **3+ files modified** → Commit immediately
+- ✅ **30+ minutes of coding** → Commit your progress  
+- ✅ **Feature/fix completed** → Commit the completion
+- ✅ **Before switching tasks** → Commit what you have
+
+#### 3. Commit Process (Use This Exact Sequence)
+```bash
+# 1. Check what's changed
+git status
+
+# 2. Add files in logical groups (NOT git add .)
+git add src/components/feature-name/
+git add src/lib/services/new-service.ts
+
+# 3. Commit with proper message
+git commit -m "feat(scope): what you accomplished"
+
+# 4. Push immediately (don't let commits pile up)
+git push origin feature/current-branch
+```
+
+#### 4. End of Every Session
+```bash
+# NEVER leave uncommitted changes
+git status  # Should show "working tree clean"
+
+# If you have changes, commit them:
+git add relevant-files
+git commit -m "progress: end of session - working on X"
+git push origin feature/current-branch
+```
+
+### What Caused the "Sloppy Git" Problem
+
+**❌ What Went Wrong:**
+- 28 uncommitted files sitting for days/weeks
+- No intermediate commits during development
+- Missing database migrations (types created but not SQL)
+- No regular pushes to GitHub
+- Working in isolation without backup
+
+**✅ How to Prevent It:**
+
+#### A. Never Accumulate Changes
+```bash
+# BAD: Let changes pile up for days
+# 28 files modified, 5 new features, 3 bug fixes all mixed together
+
+# GOOD: Commit after each logical piece
+git commit -m "feat(transcript): add YouTube API integration"
+git commit -m "feat(ai): implement OpenAI service"  
+git commit -m "ui(wizard): update chat interface"
+```
+
+#### B. Complete Your Database Work
+```bash
+# BAD: Create TypeScript types but forget SQL migrations
+src/types/migrations.ts  ✅ Created
+supabase/migrations/      ❌ Forgot this!
+
+# GOOD: Always complete both parts
+src/types/migrations.ts           ✅ 
+supabase/migrations/002_video.sql ✅
+```
+
+#### C. Push Regularly (Daily Minimum)
+```bash
+# Push after every significant commit
+git push origin feature/your-branch
+
+# NEVER go more than 24 hours without pushing
+```
+
+### Emergency "Uncommitted Changes" Recovery
+
+If you find yourself with many uncommitted changes again:
+
+#### 1. Create Backup Branch First
+```bash
+git branch backup/emergency-$(date +%Y%m%d)
+```
+
+#### 2. Organize Changes by Feature
+```bash
+git status --short  # See what's changed
+
+# Group related changes
+git add scripts/transcript-related-files*
+git commit -m "feat(transcript): implement transcript system"
+
+git add src/components/ui-related*  
+git commit -m "ui(components): update interface components"
+
+git add supabase/migrations*
+git commit -m "db(migrations): add video and transcript tables"
+```
+
+#### 3. Push Immediately
+```bash
+git push origin feature/current-branch
+```
+
+### Git Health Checks (Run Weekly)
+
+```bash
+# 1. Check for uncommitted changes
+git status  # Should be clean
+
+# 2. Check branch is pushed
+git log origin/feature/branch..HEAD  # Should be empty
+
+# 3. Check recent commit frequency  
+git log --oneline -10  # Should see regular commits, not huge gaps
+```
+
+### Claude Instructions for Git
+
+**When working on this project, Claude should:**
+
+1. **After every significant code change**: Commit immediately
+2. **Before creating new files**: Check git status first
+3. **When adding new features**: Break into multiple commits
+4. **Always**: Push after committing
+5. **Never**: Let more than 5 files accumulate without committing
+
+**Commit Early, Commit Often, Push Regularly = No More Sloppy Git!**
+

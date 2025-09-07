@@ -607,300 +607,396 @@
         },
         {
           "id": "week-3",
-          "title": "W3: Advanced Building Techniques",
-          "description": "Master complex building systems",
+          "title": "W3: Unity 6 Game Development Fundamentals",
+          "description": "Complete Unity 6 tutorial series covering basics, materials, prefabs, lighting, physics, and game development fundamentals",
           "days": [
             {
               "id": "day-11",
-              "title": "D11: Union and Negation",
+              "title": "D11: Unity Basics & Materials",
               "videos": [
                 {
                   "id": "video-1-3-1-1",
-                  "title": "Character modeling for beginners - Blender",
-                  "youtubeId": "O6HQhs-gk50",
-                  "creator": "Joey Carlino",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Blender 4.1 for Beginners",
-                    "creator": "Joey Carlino"
+                  "title": "UNITY 6 TUTORIAL PART 1 - LEARN THE BASICS - HOW TO MAKE A GAME FOR BEGINNERS",
+                  "creator": "Jimmy Vegas",
+                  "description": "A brand new series from Jimmy Vegas on how to make a game in Unity 6. This full series will be a guide for beginners on how to use the Unity 6 game development engine\n✦ Patreon: http://patreon.com/jimmyvegas/\n✦ Subscribe: https://www.youtube.com/channel/UCRMXHQ2rJ9_0CHS7mhL7erg?sub_confirmation=1\n✦ ...",
+                  "youtubeId": "HwI90YLqMaY",
+                  "duration": "12:55",
+                  "totalMinutes": 13,
+                  "thumbnail": "https://i.ytimg.com/vi/HwI90YLqMaY/hqdefault.jpg",
+                  "xpReward": 20,
+                  "hasTranscript": false,
+                  "source": {
+                    "playlistId": "PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8",
+                    "originalPosition": 1,
+                    "extractedAt": "2025-09-02T23:32:14.616Z"
                   }
                 },
                 {
                   "id": "video-1-3-1-2",
-                  "title": "Beginner Blender Tutorial (Donut Part 1)",
-                  "youtubeId": "B0J27sf9N1Y",
-                  "creator": "Blender Guru",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Donut Tutorial 4.0 Version Part 1",
-                    "creator": "Blender Guru"
+                  "title": "UNITY 6 TUTORIAL PART 2 - TEXTURES & MATERIALS - HOW TO MAKE A GAME FOR BEGINNERS",
+                  "creator": "Jimmy Vegas",
+                  "description": "In this tutorial we learn how to import textures into Unity 6 and we learn how to make materials\n✦ Patreon: http://patreon.com/jimmyvegas/\n✦ Assets for this Tutorial: https://www.patreon.com/posts/117433042\n✦ Subscribe: https://www.youtube.com/channel/UCRMXHQ2rJ9_0CHS7mhL7erg?sub_confirmation=1\n✦ Bl...",
+                  "youtubeId": "yuLcssPwGLc",
+                  "duration": "13:11",
+                  "totalMinutes": 14,
+                  "thumbnail": "https://i.ytimg.com/vi/yuLcssPwGLc/hqdefault.jpg",
+                  "xpReward": 20,
+                  "hasTranscript": false,
+                  "source": {
+                    "playlistId": "PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8",
+                    "originalPosition": 2,
+                    "extractedAt": "2025-09-02T23:32:14.617Z"
                   }
                 },
                 {
                   "id": "video-1-3-1-3",
-                  "title": "[NEWS] Blender 4.1: Rigging / Animation / Rigify",
-                  "youtubeId": "Hrtps1I2ytM",
-                  "creator": "CGDive (Blender Rigging Tuts)",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "What's New in Blender 4.1",
-                    "creator": "CGDive"
+                  "title": "UNITY 6 TUTORIAL PART 3 - MAKE PREFABS AND OBJECTS - HOW TO MAKE A GAME FOR BEGINNERS",
+                  "creator": "Jimmy Vegas",
+                  "description": "In this tutorial we learn how to make prefabs from game objects\n✦ Patreon: http://patreon.com/jimmyvegas/\n✦ Assets for this Tutorial: https://www.patreon.com/posts/117433831\n✦ Subscribe: https://www.youtube.com/channel/UCRMXHQ2rJ9_0CHS7mhL7erg?sub_confirmation=1\n✦ Bluesky: https://bsky.app/profile/j...",
+                  "youtubeId": "1Gw_olVUgcA",
+                  "duration": "12:28",
+                  "totalMinutes": 13,
+                  "thumbnail": "https://i.ytimg.com/vi/1Gw_olVUgcA/hqdefault.jpg",
+                  "xpReward": 20,
+                  "hasTranscript": false,
+                  "source": {
+                    "playlistId": "PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8",
+                    "originalPosition": 3,
+                    "extractedAt": "2025-09-02T23:32:14.617Z"
                   }
                 },
                 {
                   "id": "video-1-3-1-4",
-                  "title": "iPhone vs Android Customization",
-                  "youtubeId": "FJakVpXnDlY",
-                  "creator": "Parker Burton",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Interface Customization",
-                    "creator": "Grant Abbitt"
+                  "title": "UNITY 6 TUTORIAL PART 4 - LIGHT AND SHADOWS - HOW TO MAKE A GAME FOR BEGINNERS",
+                  "creator": "Jimmy Vegas",
+                  "description": "In this tutorial we learn about lighting and shadows in Unity 6\n✦ Patreon: http://patreon.com/jimmyvegas/\n✦ Subscribe: https://www.youtube.com/channel/UCRMXHQ2rJ9_0CHS7mhL7erg?sub_confirmation=1\n✦ Bluesky: https://bsky.app/profile/jimmyvegas17.bsky.social\n✦ My Website: http://jvunity.com\n\nUnity 6 Tu...",
+                  "youtubeId": "9Yh_p8rpysc",
+                  "duration": "11:52",
+                  "totalMinutes": 12,
+                  "thumbnail": "https://i.ytimg.com/vi/9Yh_p8rpysc/hqdefault.jpg",
+                  "xpReward": 20,
+                  "hasTranscript": false,
+                  "source": {
+                    "playlistId": "PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8",
+                    "originalPosition": 4,
+                    "extractedAt": "2025-09-02T23:32:14.617Z"
+                  }
+                },
+                {
+                  "id": "video-1-3-1-5",
+                  "title": "UNITY 6 TUTORIAL PART 5 - GRAVITY AND PHYSICS - HOW TO MAKE A GAME FOR BEGINNERS",
+                  "creator": "Jimmy Vegas",
+                  "description": "In this tutorial we learn about implementing physics and gravity\n✦ Patreon: http://patreon.com/jimmyvegas/\n✦ Subscribe: https://www.youtube.com/channel/UCRMXHQ2rJ9_0CHS7mhL7erg?sub_confirmation=1\n✦ Bluesky: https://bsky.app/profile/jimmyvegas17.bsky.social\n✦ My Website: http://jvunity.com\n\nUnity 6 T...",
+                  "youtubeId": "cx43BJTr6Lc",
+                  "duration": "14:41",
+                  "totalMinutes": 15,
+                  "thumbnail": "https://i.ytimg.com/vi/cx43BJTr6Lc/hqdefault.jpg",
+                  "xpReward": 20,
+                  "hasTranscript": false,
+                  "source": {
+                    "playlistId": "PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8",
+                    "originalPosition": 5,
+                    "extractedAt": "2025-09-02T23:32:14.617Z"
                   }
                 }
               ],
-              "practiceTask": "Practice boolean operations",
+              "practiceTask": "Set up Unity 6, explore the interface, create basic materials and textures",
               "estimatedTime": "2.5h"
             },
             {
               "id": "day-12",
-              "title": "D12: Terrain Building",
+              "title": "D12: Prefabs, Lighting & Physics",
               "videos": [
                 {
                   "id": "video-1-3-2-1",
-                  "title": "Essential Keyboard Shortcuts You Might Not Know - Blender 3",
-                  "youtubeId": "2icDGy4lgdM",
-                  "creator": "Grant Abbitt (Gabbitt)",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Essential Shortcuts for Beginners",
-                    "creator": "Grant Abbitt"
+                  "title": "UNITY 6 TUTORIAL PART 6 - ANIMATIONS IN UNITY - HOW TO MAKE A GAME FOR BEGINNERS",
+                  "creator": "Jimmy Vegas",
+                  "description": "In this tutorial we learn how to use the animation tools in Unity 6\n✦ Patreon: http://patreon.com/jimmyvegas/\n✦ Subscribe: https://www.youtube.com/channel/UCRMXHQ2rJ9_0CHS7mhL7erg?sub_confirmation=1\n✦ Bluesky: https://bsky.app/profile/jimmyvegas17.bsky.social\n✦ My Website: http://jvunity.com\n\nUnity ...",
+                  "youtubeId": "CGqWi5wjeTM",
+                  "duration": "10:42",
+                  "totalMinutes": 11,
+                  "thumbnail": "https://i.ytimg.com/vi/CGqWi5wjeTM/hqdefault.jpg",
+                  "xpReward": 20,
+                  "hasTranscript": false,
+                  "source": {
+                    "playlistId": "PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8",
+                    "originalPosition": 6,
+                    "extractedAt": "2025-09-02T23:32:14.617Z"
                   }
                 },
                 {
                   "id": "video-1-3-2-2",
-                  "title": "Beginner Blender Tutorial (Donut Part 1)",
-                  "youtubeId": "B0J27sf9N1Y",
-                  "creator": "Blender Guru",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Donut Tutorial 4.0 Version Part 2",
-                    "creator": "Blender Guru"
+                  "title": "UNITY 6 TUTORIAL PART 7 - HOW TO CODE IN UNITY WITH C# - HOW TO MAKE A GAME FOR BEGINNERS",
+                  "creator": "Jimmy Vegas",
+                  "description": "In this tutorial we start learning programming in C#\n✦ Patreon: http://patreon.com/jimmyvegas/\n✦ Assets for this Tutorial: https://www.patreon.com/posts/121749033\n✦ Subscribe: https://www.youtube.com/channel/UCRMXHQ2rJ9_0CHS7mhL7erg?sub_confirmation=1\n✦ Bluesky: https://bsky.app/profile/jimmyvegas17...",
+                  "youtubeId": "fheKzs9F8_U",
+                  "duration": "18:53",
+                  "totalMinutes": 19,
+                  "thumbnail": "https://i.ytimg.com/vi/fheKzs9F8_U/hqdefault.jpg",
+                  "xpReward": 20,
+                  "hasTranscript": false,
+                  "source": {
+                    "playlistId": "PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8",
+                    "originalPosition": 7,
+                    "extractedAt": "2025-09-02T23:32:14.617Z"
                   }
                 },
                 {
                   "id": "video-1-3-2-3",
-                  "title": "Getting started - Blender for complete beginners",
-                  "youtubeId": "uOmYInaX-wE",
-                  "creator": "Joey Carlino",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "3D Cursor Basics",
-                    "creator": "Joey Carlino"
+                  "title": "UNITY 6 TUTORIAL PART 8 - HOW TO IMPORT A PLAYER - HOW TO MAKE A GAME FOR BEGINNERS",
+                  "creator": "Jimmy Vegas",
+                  "description": "In this tutorial we import our player and explore the asset store\n✦ Patreon: http://patreon.com/jimmyvegas/\n✦ Subscribe: https://www.youtube.com/channel/UCRMXHQ2rJ9_0CHS7mhL7erg?sub_confirmation=1\n✦ Bluesky: https://bsky.app/profile/jimmyvegas17.bsky.social\n✦ My Website: http://jvunity.com\n\nUnity 6 ...",
+                  "youtubeId": "Hug0LZDFCH4",
+                  "duration": "11:17",
+                  "totalMinutes": 12,
+                  "thumbnail": "https://i.ytimg.com/vi/Hug0LZDFCH4/hqdefault.jpg",
+                  "xpReward": 20,
+                  "hasTranscript": false,
+                  "source": {
+                    "playlistId": "PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8",
+                    "originalPosition": 8,
+                    "extractedAt": "2025-09-02T23:32:14.617Z"
                   }
                 },
                 {
                   "id": "video-1-3-2-4",
-                  "title": "3D Cursor Basics",
-                  "youtubeId": "YOUTUBE_ID_PLACEHOLDER",
-                  "creator": "Joey Carlino",
-                  "duration": "25:00",
-                  "xpReward": 50,
-                  "placeholder": true,
-                  "isPlaceholder": true
+                  "title": "UNITY 6 TUTORIAL PART 9 - HOW TO USE THE CANVAS IN UNITY - HOW TO MAKE A GAME FOR BEGINNERS",
+                  "creator": "Jimmy Vegas",
+                  "description": "In this tutorial we explore the Canvas and UI elements for our game\n✦ Patreon: http://patreon.com/jimmyvegas/\n✦ Subscribe: https://www.youtube.com/channel/UCRMXHQ2rJ9_0CHS7mhL7erg?sub_confirmation=1\n✦ Bluesky: https://bsky.app/profile/jimmyvegas17.bsky.social\n✦ My Website: http://jvunity.com\n\nUnity ...",
+                  "youtubeId": "iHK_92QOvzo",
+                  "duration": "11:03",
+                  "totalMinutes": 12,
+                  "thumbnail": "https://i.ytimg.com/vi/iHK_92QOvzo/hqdefault.jpg",
+                  "xpReward": 20,
+                  "hasTranscript": false,
+                  "source": {
+                    "playlistId": "PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8",
+                    "originalPosition": 9,
+                    "extractedAt": "2025-09-02T23:32:14.617Z"
+                  }
+                },
+                {
+                  "id": "video-1-3-2-5",
+                  "title": "UNITY 6 TUTORIAL PART 10 - HOW TO USE TEXT MESH PRO - HOW TO MAKE A GAME FOR BEGINNERS",
+                  "creator": "Jimmy Vegas",
+                  "description": "In this tutorial we use TextMesh Pro to create on screen text\n✦ Patreon: http://patreon.com/jimmyvegas/\n✦ Assets for this Tutorial: https://www.patreon.com/posts/125912419\n✦ Subscribe: https://www.youtube.com/channel/UCRMXHQ2rJ9_0CHS7mhL7erg?sub_confirmation=1\n✦ Bluesky: https://bsky.app/profile/jim...",
+                  "youtubeId": "geRIMokPsNQ",
+                  "duration": "12:16",
+                  "totalMinutes": 13,
+                  "thumbnail": "https://i.ytimg.com/vi/geRIMokPsNQ/hqdefault.jpg",
+                  "xpReward": 20,
+                  "hasTranscript": false,
+                  "source": {
+                    "playlistId": "PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8",
+                    "originalPosition": 10,
+                    "extractedAt": "2025-09-02T23:32:14.617Z"
+                  }
                 }
               ],
-              "practiceTask": "Create custom terrain",
+              "practiceTask": "Build prefabs, experiment with lighting and shadows, test physics systems",
               "estimatedTime": "3h"
             },
             {
               "id": "day-13",
-              "title": "D13: Lighting Systems",
+              "title": "D13: Animation & UI Systems",
               "videos": [
                 {
                   "id": "video-1-3-3-1",
-                  "title": "Blender: Mixamo Control rig + Rigify face rig",
-                  "youtubeId": "7WDBqXTAKDg",
-                  "creator": "CGDive (Blender Rigging Tuts)",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Selecting and Transforming",
-                    "creator": "CGDive"
+                  "title": "UNITY 6 TUTORIAL PART 11 - HOW TO IMPORT FONTS IN UNITY - HOW TO MAKE A GAME FOR BEGINNERS",
+                  "creator": "Jimmy Vegas",
+                  "description": "In this tutorial we import fonts and explore how we make them work with TextMesh Pro\n✦ Patreon: http://patreon.com/jimmyvegas/\n✦ Subscribe: https://www.youtube.com/channel/UCRMXHQ2rJ9_0CHS7mhL7erg?sub_confirmation=1\n✦ Bluesky: https://bsky.app/profile/jimmyvegas17.bsky.social\n✦ My Website: http://jv...",
+                  "youtubeId": "cv43iZv6sh4",
+                  "duration": "10:32",
+                  "totalMinutes": 11,
+                  "thumbnail": "https://i.ytimg.com/vi/cv43iZv6sh4/hqdefault.jpg",
+                  "xpReward": 20,
+                  "hasTranscript": false,
+                  "source": {
+                    "playlistId": "PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8",
+                    "originalPosition": 11,
+                    "extractedAt": "2025-09-02T23:32:14.617Z"
                   }
                 },
                 {
                   "id": "video-1-3-3-2",
-                  "title": "This #blender Tool Teaches You Everything #tutorial",
-                  "youtubeId": "WWNfEFhusqI",
-                  "creator": "SouthernShotty",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Basic Modeling Tools",
-                    "creator": "SouthernShotty"
+                  "title": "UNITY 6 TUTORIAL PART 12 - HOW TO MAKE BUTTONS WORK IN UNITY - HOW TO MAKE A GAME FOR BEGINNERS",
+                  "creator": "Jimmy Vegas",
+                  "description": "In this tutorial we add buttons to our Canvas and write code to make them work\n✦ Patreon: http://patreon.com/jimmyvegas/\n✦ Assets for this Tutorial: https://www.patreon.com/posts/126648056\n✦ Subscribe: https://www.youtube.com/channel/UCRMXHQ2rJ9_0CHS7mhL7erg?sub_confirmation=1\n✦ Bluesky: https://bsk...",
+                  "youtubeId": "TmP-AEUSpck",
+                  "duration": "14:47",
+                  "totalMinutes": 15,
+                  "thumbnail": "https://i.ytimg.com/vi/TmP-AEUSpck/hqdefault.jpg",
+                  "xpReward": 20,
+                  "hasTranscript": false,
+                  "source": {
+                    "playlistId": "PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8",
+                    "originalPosition": 12,
+                    "extractedAt": "2025-09-02T23:32:14.617Z"
                   }
                 },
                 {
                   "id": "video-1-3-3-3",
-                  "title": "Top Tips for Making Game Assets & Packs - Blender 3",
-                  "youtubeId": "Cdh2IZmW5ZQ",
-                  "creator": "Grant Abbitt (Gabbitt)",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Blender 4.0 Game Asset Creation Episode 1",
-                    "creator": "Grant Abbitt"
+                  "title": "UNITY 6 TUTORIAL PART 13 - HOW TO A FADE SCREEN IN UNITY - HOW TO MAKE A GAME FOR BEGINNERS",
+                  "creator": "Jimmy Vegas",
+                  "description": "In this Unity tutorial we learn how to make a fadescreen using UI and animation\n✦ Patreon: http://patreon.com/jimmyvegas/\n✦ Subscribe: https://www.youtube.com/channel/UCRMXHQ2rJ9_0CHS7mhL7erg?sub_confirmation=1\n✦ Bluesky: https://bsky.app/profile/jimmyvegas17.bsky.social\n✦ My Website: http://jvunity...",
+                  "youtubeId": "E7g3A45UVt0",
+                  "duration": "10:18",
+                  "totalMinutes": 11,
+                  "thumbnail": "https://i.ytimg.com/vi/E7g3A45UVt0/hqdefault.jpg",
+                  "xpReward": 20,
+                  "hasTranscript": false,
+                  "source": {
+                    "playlistId": "PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8",
+                    "originalPosition": 13,
+                    "extractedAt": "2025-09-02T23:32:14.617Z"
                   }
                 },
                 {
                   "id": "video-1-3-3-4",
-                  "title": "Modeling in Blender for complete beginners",
-                  "youtubeId": "8VmXzjgWQEg",
-                  "creator": "Joey Carlino",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Edit Mode Fundamentals",
-                    "creator": "Joey Carlino"
+                  "title": "UNITY 6 TUTORIAL PART 14 - HOW TO CODE A COROUTINE IN UNITY - HOW TO MAKE A GAME FOR BEGINNERS",
+                  "creator": "Jimmy Vegas",
+                  "description": "In this Unity 6 tutorial we learn what a coroutine is for and how to code one\n✦ Patreon: http://patreon.com/jimmyvegas/\n✦ Subscribe: https://www.youtube.com/channel/UCRMXHQ2rJ9_0CHS7mhL7erg?sub_confirmation=1\n✦ Bluesky: https://bsky.app/profile/jimmyvegas17.bsky.social\n✦ My Website: http://jvunity.c...",
+                  "youtubeId": "ji0Ucrd6cOU",
+                  "duration": "11:48",
+                  "totalMinutes": 12,
+                  "thumbnail": "https://i.ytimg.com/vi/ji0Ucrd6cOU/hqdefault.jpg",
+                  "xpReward": 20,
+                  "hasTranscript": false,
+                  "source": {
+                    "playlistId": "PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8",
+                    "originalPosition": 14,
+                    "extractedAt": "2025-09-02T23:32:14.617Z"
+                  }
+                },
+                {
+                  "id": "video-1-3-3-5",
+                  "title": "UNITY 6 TUTORIAL PART 15 - HOW TO ADD MUSIC AND SOUND FX IN UNITY - HOW TO MAKE A GAME FOR BEGINNERS",
+                  "creator": "Jimmy Vegas",
+                  "description": "In this tutorial we add some music to the game and code in some sound effects\n✦ Patreon: http://patreon.com/jimmyvegas/\n✦ Assets for this Tutorial: https://www.patreon.com/posts/127987681\n✦ Subscribe: https://www.youtube.com/channel/UCRMXHQ2rJ9_0CHS7mhL7erg?sub_confirmation=1\n✦ Bluesky: https://bsky...",
+                  "youtubeId": "T78WxOx4ojU",
+                  "duration": "10:15",
+                  "totalMinutes": 11,
+                  "thumbnail": "https://i.ytimg.com/vi/T78WxOx4ojU/hqdefault.jpg",
+                  "xpReward": 20,
+                  "hasTranscript": false,
+                  "source": {
+                    "playlistId": "PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8",
+                    "originalPosition": 15,
+                    "extractedAt": "2025-09-02T23:32:14.617Z"
                   }
                 }
               ],
-              "practiceTask": "Design lighting scenes",
+              "practiceTask": "Create animations, design UI elements, work with Text Mesh Pro components",
               "estimatedTime": "2.5h"
             },
             {
               "id": "day-14",
-              "title": "D14: Particle Effects",
+              "title": "D14: Audio, Collectables & Interactions",
               "videos": [
                 {
                   "id": "video-1-3-4-1",
-                  "title": "Rigging for impatient people - Blender Tutorial",
-                  "youtubeId": "DDeB4tDVCGY",
-                  "creator": "Joey Carlino",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Origin Points Explained",
-                    "creator": "Joey Carlino"
+                  "title": "UNITY 6 TUTORIAL PART 16 - HOW TO CREATE COLLACTABLES IN UNITY - HOW TO MAKE A GAME FOR BEGINNERS",
+                  "creator": "Jimmy Vegas",
+                  "description": "In this Unity tutorial we create the ability to collect things - collectables\n✦ Patreon: http://patreon.com/jimmyvegas/\n✦ Assets for this Tutorial: https://www.patreon.com/posts/128564252\n✦ Subscribe: https://www.youtube.com/channel/UCRMXHQ2rJ9_0CHS7mhL7erg?sub_confirmation=1\n✦ Bluesky: https://bsky...",
+                  "youtubeId": "PIxTdytTCsk",
+                  "duration": "11:28",
+                  "totalMinutes": 12,
+                  "thumbnail": "https://i.ytimg.com/vi/PIxTdytTCsk/hqdefault.jpg",
+                  "xpReward": 20,
+                  "hasTranscript": false,
+                  "source": {
+                    "playlistId": "PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8",
+                    "originalPosition": 16,
+                    "extractedAt": "2025-09-02T23:32:14.618Z"
                   }
                 },
                 {
                   "id": "video-1-3-4-2",
-                  "title": "Top Tips for Making Game Assets & Packs - Blender 3",
-                  "youtubeId": "Cdh2IZmW5ZQ",
-                  "creator": "Grant Abbitt (Gabbitt)",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Blender 4.0 Game Asset Creation Episode 2",
-                    "creator": "Grant Abbitt"
+                  "title": "UNITY 6 TUTORIAL PART 17 - HOW TO CODE RAYCAST IN UNITY - HOW TO MAKE A GAME FOR BEGINNERS",
+                  "creator": "Jimmy Vegas",
+                  "description": "In this tutorial we understand the use of Raycast and we code our own.\n✦ Patreon: http://patreon.com/jimmyvegas/\n✦ Assets for this Tutorial: https://www.patreon.com/posts/129180505\n✦ Subscribe: https://www.youtube.com/channel/UCRMXHQ2rJ9_0CHS7mhL7erg?sub_confirmation=1\n✦ Bluesky: https://bsky.app/pr...",
+                  "youtubeId": "-PIIZL4IoRk",
+                  "duration": "11:29",
+                  "totalMinutes": 12,
+                  "thumbnail": "https://i.ytimg.com/vi/-PIIZL4IoRk/hqdefault.jpg",
+                  "xpReward": 20,
+                  "hasTranscript": false,
+                  "source": {
+                    "playlistId": "PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8",
+                    "originalPosition": 17,
+                    "extractedAt": "2025-09-02T23:32:14.618Z"
                   }
                 },
                 {
                   "id": "video-1-3-4-3",
-                  "title": "Blender 4.0 New Tool Speeds up Your Workflow!",
-                  "youtubeId": "okegUpW-g88",
-                  "creator": "SouthernShotty",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Basic Transformations",
-                    "creator": "SouthernShotty"
+                  "title": "UNITY 6 TUTORIAL PART 18 - HOW TO INTERACT WITH OBJECTS IN UNITY - HOW TO MAKE A GAME FOR BEGINNERS",
+                  "creator": "Jimmy Vegas",
+                  "description": "In this tutorial we learn how we can use Raycast and UI to interact with game object in-game\n✦ Patreon: http://patreon.com/jimmyvegas/\n✦ Assets for this Tutorial: https://www.patreon.com/posts/129750379\n✦ Subscribe: https://www.youtube.com/channel/UCRMXHQ2rJ9_0CHS7mhL7erg?sub_confirmation=1\n✦ Bluesk...",
+                  "youtubeId": "gtHJ5p5A-5Y",
+                  "duration": "13:22",
+                  "totalMinutes": 14,
+                  "thumbnail": "https://i.ytimg.com/vi/gtHJ5p5A-5Y/hqdefault.jpg",
+                  "xpReward": 20,
+                  "hasTranscript": false,
+                  "source": {
+                    "playlistId": "PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8",
+                    "originalPosition": 18,
+                    "extractedAt": "2025-09-02T23:32:14.618Z"
                   }
                 },
                 {
                   "id": "video-1-3-4-4",
-                  "title": "FIX Mesh symmetry in Blender!",
-                  "youtubeId": "RbUqHzJz7gw",
-                  "creator": "CGDive (Blender Rigging Tuts)",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Understanding Object vs Edit Mode",
-                    "creator": "CGDive"
+                  "title": "UNITY 6 TUTORIAL PART 19 - SIMPLE PATH FOLLOWING IN UNITY - HOW TO MAKE A GAME FOR BEGINNERS",
+                  "creator": "Jimmy Vegas",
+                  "description": "In this tutorial we create a simple path following script to allow objects to move.\n✦ Patreon: http://patreon.com/jimmyvegas/\n✦ Assets for this Tutorial: https://www.patreon.com/posts/130259369\n✦ Subscribe: https://www.youtube.com/channel/UCRMXHQ2rJ9_0CHS7mhL7erg?sub_confirmation=1\n✦ Bluesky: https:...",
+                  "youtubeId": "wQcapkjgguk",
+                  "duration": "16:40",
+                  "totalMinutes": 17,
+                  "thumbnail": "https://i.ytimg.com/vi/wQcapkjgguk/hqdefault.jpg",
+                  "xpReward": 20,
+                  "hasTranscript": false,
+                  "source": {
+                    "playlistId": "PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8",
+                    "originalPosition": 19,
+                    "extractedAt": "2025-09-02T23:32:14.618Z"
+                  }
+                },
+                {
+                  "id": "video-1-3-4-5",
+                  "title": "UNITY 6 TUTORIAL FINAL PART 20 - HOW TO BUILD A GAME IN UNITY - HOW TO MAKE A GAME FOR BEGINNERS",
+                  "creator": "Jimmy Vegas",
+                  "description": "In this final tutorial for How To Make A Game In Unity 6 we look at how to build your game and where you can go from here to learn more\n✦ Patreon: http://patreon.com/jimmyvegas/\n✦ Subscribe: https://www.youtube.com/channel/UCRMXHQ2rJ9_0CHS7mhL7erg?sub_confirmation=1\n✦ Bluesky: https://bsky.app/profi...",
+                  "youtubeId": "7Q_-vjFBe5I",
+                  "duration": "10:46",
+                  "totalMinutes": 11,
+                  "thumbnail": "https://i.ytimg.com/vi/7Q_-vjFBe5I/hqdefault.jpg",
+                  "xpReward": 20,
+                  "hasTranscript": false,
+                  "source": {
+                    "playlistId": "PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8",
+                    "originalPosition": 20,
+                    "extractedAt": "2025-09-02T23:32:14.618Z"
                   }
                 }
               ],
-              "practiceTask": "Add particle effects",
+              "practiceTask": "Add sound effects and music, implement collectables, create object interactions",
               "estimatedTime": "3h"
             },
             {
               "id": "day-15",
-              "title": "D15: Week 3 Project",
-              "videos": [
-                {
-                  "id": "video-1-3-5-1",
-                  "title": "Let's model a JELLYFISH in 10 Minutes - Episode 116",
-                  "youtubeId": "n4OTECyDohQ",
-                  "creator": "Imphenzia",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "10-minute modeling 2024 Episode 1",
-                    "creator": "Imphenzia"
-                  }
-                },
-                {
-                  "id": "video-1-3-5-2",
-                  "title": "Let's model a JELLYFISH in 10 Minutes - Episode 116",
-                  "youtubeId": "n4OTECyDohQ",
-                  "creator": "Imphenzia",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "10-minute modeling 2024 Episode 2",
-                    "creator": "Imphenzia"
-                  }
-                },
-                {
-                  "id": "video-1-3-5-3",
-                  "title": "3D Cat - Blender Character Modeling for Beginners | Real-Time Tutorial",
-                  "youtubeId": "C1CFWDWTamo",
-                  "creator": "SouthernShotty",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Low Poly Modeling 2024",
-                    "creator": "SouthernShotty"
-                  }
-                },
-                {
-                  "id": "video-1-3-5-4",
-                  "title": "Blender Makes Sculpting Easy: Block to Beast in 1 Hour",
-                  "youtubeId": "AsygBRaRnUA",
-                  "creator": "Grant Abbitt (Gabbitt)",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Creating Game-Ready Props",
-                    "creator": "Grant Abbitt"
-                  }
-                },
-                {
-                  "id": "video-1-3-5-5",
-                  "title": "Wordpress SEO Tutorial for Beginners (Search Engine Optimization Basics)",
-                  "youtubeId": "jN_xx9jGDVc",
-                  "creator": "Ahrefs",
-                  "duration": "20:00",
-                  "xpReward": 30,
-                  "originalSearch": {
-                    "title": "Optimization Basics",
-                    "creator": "CGDive"
-                  }
-                }
-              ],
-              "practiceTask": "Complete advanced building project",
+              "title": "D15: Week Review & Practice",
+              "videos": [],
+              "practiceTask": "Review the week's concepts and practice building your own Unity project",
               "estimatedTime": "4h"
             }
-          ]
+          ],
+          "metadata": {
+            "lastUpdated": "2025-09-02T23:32:14.618Z",
+            "videoSource": "Jimmy Vegas Unity 6 Tutorial Playlist",
+            "playlistId": "PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8",
+            "totalVideos": 20,
+            "updatedBy": "curriculum-update-script"
+          }
         },
         {
           "id": "week-4",

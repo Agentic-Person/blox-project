@@ -39,8 +39,8 @@ export function BloxWizardDashboard() {
   ])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [isPremium] = useState(false) // Mock premium status
-  const [remainingQuestions] = useState(3) // Mock remaining questions
+  const [isPremium] = useState(true) // No premium restrictions
+  const [remainingQuestions] = useState(999) // Unlimited questions
   const [isMounted, setIsMounted] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -87,19 +87,58 @@ export function BloxWizardDashboard() {
     setInput('')
     setIsLoading(true)
 
-    // Simulate AI response (same as full page)
-    setTimeout(() => {
+    // Call the actual API
+    try {
+      const messageToSend = input
+      
+      const response = await fetch('/api/chat/blox-wizard', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: messageToSend,
+          sessionId: `dashboard_session_${Date.now()}`,
+          userId: 'user',
+          conversationHistory: messages.slice(-10).map(msg => ({
+            role: msg.role,
+            content: msg.content
+          })),
+          responseStyle: 'beginner'
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`)
+      }
+
+      const data = await response.json()
+      
       const aiMessage: Message = {
         id: `assistant-${Date.now()}`,
         role: 'assistant',
-        content: isPremium 
-          ? `I understand you're asking about "${input}". Let me provide you with a detailed explanation...`
-          : "This feature requires a premium subscription. Upgrade to get unlimited AI assistance!",
+        content: data.answer,
         timestamp: new Date(),
+        videoReferences: data.videoReferences,
+        suggestedQuestions: data.suggestedQuestions
       }
+      
       setMessages(prev => [...prev, aiMessage])
       setIsLoading(false)
-    }, 1500)
+    } catch (error) {
+      console.error('Failed to send message:', error)
+      
+      // Fallback message on error
+      const errorMessage: Message = {
+        id: `assistant-${Date.now()}`,
+        role: 'assistant',
+        content: "Sorry, I'm having trouble connecting right now. Please try again in a moment!",
+        timestamp: new Date(),
+      }
+      
+      setMessages(prev => [...prev, errorMessage])
+      setIsLoading(false)
+    }
   }
 
   const handleQuestionSelect = (question: string) => {
@@ -244,7 +283,7 @@ export function BloxWizardDashboard() {
                   Unlock Blox Chat Wizard - your personal AI learning assistant
                 </p>
                 <Button
-                  onClick={() => window.location.href = '/ai-assistant'}
+                  onClick={() => window.location.href = '/blox-wizard'}
                   className="group flex items-center justify-center gap-2 w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-xs"
                 >
                   <span>Learn more</span>
@@ -281,7 +320,7 @@ export function BloxWizardDashboard() {
 
           {/* Full View Link */}
           <div className="text-center">
-            <Link href="/ai-assistant">
+            <Link href="/blox-wizard">
               <Button variant="outline" size="sm" className="text-blox-teal border-blox-teal hover:bg-blox-teal hover:text-white">
                 Open Full Chat View
               </Button>
