@@ -1,6 +1,8 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import type { Session, User as SupabaseUser } from '@supabase/supabase-js'
 
 interface User {
   id: string
@@ -11,76 +13,146 @@ interface User {
   role: 'student' | 'mentor' | 'admin'
   ageRange?: string
   parentEmail?: string
+  // Admin-specific fields
+  adminRole?: 'super_admin' | 'admin' | 'moderator'
+  adminPermissions?: Record<string, boolean>
+  isAdminActive?: boolean
 }
 
 interface AuthContextType {
   user: User | null
   isLoading: boolean
   isAuthenticated: boolean
-  signIn: (provider?: string) => Promise<void>
+  isAdmin: boolean
+  adminRole: string | null
+  signIn: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
   updateUser: (updates: Partial<User>) => void
+  checkAdminStatus: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-// Mock user for development
-const MOCK_USER: User = {
-  id: 'mock-user-123',
-  email: 'developer@bloxbuddy.com',
-  username: 'DevUser',
-  discordId: '123456789',
-  avatar: '/images/avatars/jimmyWizard.jpg',
-  role: 'student',
-  ageRange: '13-17'
-}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [session, setSession] = useState<Session | null>(null)
+  const supabase = createClientComponentClient()
+
+  // Function to check admin status in Supabase
+  const checkAdminStatus = async (userId: string) => {
+    try {
+      const { data: adminData, error } = await supabase
+        .from('admin_users')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('is_active', true)
+        .single()
+
+      if (adminData) {
+        return {
+          adminRole: adminData.role as 'super_admin' | 'admin' | 'moderator',
+          adminPermissions: adminData.permissions || {},
+          isAdminActive: adminData.is_active
+        }
+      }
+      return null
+    } catch (error) {
+      console.error('Error checking admin status:', error)
+      return null
+    }
+  }
 
   useEffect(() => {
-    // Simulate authentication check
-    const initAuth = async () => {
-      setIsLoading(true)
+    // Get initial session
+    const getInitialSession = async () => {
+      const { data: { session: initialSession } } = await supabase.auth.getSession()
+      setSession(initialSession)
       
-      // In development mode, auto-login with mock user
-      if (process.env.NEXT_PUBLIC_DEV_MODE === 'true') {
-        await new Promise(resolve => setTimeout(resolve, 500)) // Simulate network delay
-        setUser(MOCK_USER)
+      if (initialSession?.user) {
+        // Check admin status
+        const adminStatus = await checkAdminStatus(initialSession.user.id)
+        
+        setUser({
+          id: initialSession.user.id,
+          email: initialSession.user.email || '',
+          username: initialSession.user.user_metadata?.full_name || initialSession.user.email?.split('@')[0] || 'User',
+          avatar: initialSession.user.user_metadata?.avatar_url,
+          role: adminStatus ? 'admin' : 'student',
+          adminRole: adminStatus?.adminRole,
+          adminPermissions: adminStatus?.adminPermissions,
+          isAdminActive: adminStatus?.isAdminActive
+        })
       }
       
       setIsLoading(false)
     }
 
-    initAuth()
-  }, [])
+    getInitialSession()
 
-  const signIn = async (provider = 'discord') => {
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        setSession(session)
+        
+        if (session?.user) {
+          const adminStatus = await checkAdminStatus(session.user.id)
+          
+          setUser({
+            id: session.user.id,
+            email: session.user.email || '',
+            username: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'User',
+            avatar: session.user.user_metadata?.avatar_url,
+            role: adminStatus ? 'admin' : 'student',
+            adminRole: adminStatus?.adminRole,
+            adminPermissions: adminStatus?.adminPermissions,
+            isAdminActive: adminStatus?.isAdminActive
+          })
+        } else {
+          setUser(null)
+        }
+        
+        setIsLoading(false)
+      }
+    )
+
+    return () => subscription.unsubscribe()
+  }, [supabase])
+
+  const signIn = async (email: string, password: string) => {
     setIsLoading(true)
     
-    // Simulate sign-in process
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    if (process.env.NEXT_PUBLIC_DEV_MODE === 'true') {
-      setUser(MOCK_USER)
-      console.log(`[Mock Auth] Signed in with ${provider}`)
-    } else {
-      // TODO: Implement real Clerk authentication
-      console.warn('Real authentication not yet implemented')
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      })
+      
+      if (error) {
+        console.error('Sign in error:', error)
+        setIsLoading(false)
+        throw error
+      }
+      // Loading will be set to false by the auth state change listener
+    } catch (error) {
+      console.error('Sign in error:', error)
+      setIsLoading(false)
+      throw error
     }
-    
-    setIsLoading(false)
   }
 
   const signOut = async () => {
     setIsLoading(true)
     
-    // Simulate sign-out process
-    await new Promise(resolve => setTimeout(resolve, 500))
-    
-    setUser(null)
-    console.log('[Mock Auth] Signed out')
+    try {
+      const { error } = await supabase.auth.signOut()
+      if (error) {
+        console.error('Sign out error:', error)
+      }
+    } catch (error) {
+      console.error('Sign out error:', error)
+    }
     
     setIsLoading(false)
   }
@@ -95,9 +167,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     user,
     isLoading,
     isAuthenticated: !!user,
+    isAdmin: !!(user?.role === 'admin' || user?.adminRole),
+    adminRole: user?.adminRole || null,
     signIn,
     signOut,
-    updateUser
+    updateUser,
+    checkAdminStatus
   }
 
   return (

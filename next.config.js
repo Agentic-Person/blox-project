@@ -4,9 +4,9 @@ const nextConfig = {
     domains: ['img.youtube.com', 'i.ytimg.com'],
   },
   
-  // Explicitly configure static file serving
+  // Configure headers including CSP
   async headers() {
-    return [
+    const headers = [
       {
         source: '/images/:path*',
         headers: [
@@ -15,14 +15,28 @@ const nextConfig = {
             value: 'public, max-age=31536000, immutable',
           },
         ],
-      },
+      }
     ]
+    
+    // Only add CSP in production
+    if (process.env.NODE_ENV !== 'development') {
+      headers.push({
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline'; object-src 'none';"
+          },
+        ],
+      })
+    }
+    
+    return headers
   },
   
   // Ensure static files are served from public directory
   experimental: {
-    outputFileTracingRoot: process.cwd(),
-    outputFileTracingIgnores: ['**/*client-reference-manifest.js']
+    outputFileTracingRoot: process.cwd()
   }
 }
 
