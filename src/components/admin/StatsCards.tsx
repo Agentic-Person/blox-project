@@ -58,10 +58,10 @@ export function StatsCards() {
   useEffect(() => {
     const fetchStats = async () => {
       setLoading(true)
-      
+
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1000))
-      
+
       // Mock data - in production this would come from Supabase
       const mockStats: StatsData = {
         totalVideos: 1247,
@@ -73,7 +73,7 @@ export function StatsCards() {
         transcriptsExtracted: 1201,
         embeddingsGenerated: 1187
       }
-      
+
       setStats(mockStats)
       setLoading(false)
     }
@@ -188,16 +188,16 @@ export function StatsCards() {
 
   if (loading) {
     return (
-      <div className=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6\">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[...Array(4)].map((_, index) => (
-          <div key={index} className=\"bg-white rounded-lg shadow-sm border border-gray-200 p-6\">
-            <div className=\"animate-pulse\">
-              <div className=\"flex items-center justify-between mb-4\">
-                <div className=\"h-8 w-8 bg-gray-200 rounded-lg\"></div>
-                <div className=\"h-4 w-16 bg-gray-200 rounded\"></div>
+          <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="animate-pulse">
+              <div className="flex items-center justify-between mb-4">
+                <div className="h-8 w-8 bg-gray-200 rounded-lg"></div>
+                <div className="h-4 w-16 bg-gray-200 rounded"></div>
               </div>
-              <div className=\"h-8 w-20 bg-gray-200 rounded mb-2\"></div>
-              <div className=\"h-4 w-32 bg-gray-200 rounded\"></div>
+              <div className="h-8 w-20 bg-gray-200 rounded mb-2"></div>
+              <div className="h-4 w-32 bg-gray-200 rounded"></div>
             </div>
           </div>
         ))}
@@ -206,38 +206,38 @@ export function StatsCards() {
   }
 
   return (
-    <div className=\"space-y-6\">
+    <div className="space-y-6">
       {/* Main Stats */}
-      <div className=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6\">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {mainStats.map((stat, index) => {
           const Icon = stat.icon
           const ChangeIcon = getChangeIcon(stat.changeType)
-          
+
           return (
             <motion.div
               key={stat.name}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className=\"bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow\"
+              className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow"
             >
-              <div className=\"flex items-center justify-between mb-4\">
+              <div className="flex items-center justify-between mb-4">
                 <div className={`p-2 rounded-lg ${stat.color}`}>
-                  <Icon className=\"h-5 w-5 text-white\" />
+                  <Icon className="h-5 w-5 text-white" />
                 </div>
                 <div className={`flex items-center text-sm font-medium ${getChangeColor(stat.changeType)}`}>
-                  {ChangeIcon && <ChangeIcon className=\"h-4 w-4 mr-1\" />}
+                  {ChangeIcon && <ChangeIcon className="h-4 w-4 mr-1" />}
                   {stat.change}
                 </div>
               </div>
-              
-              <div className=\"mb-2\">
-                <p className=\"text-2xl font-bold text-gray-900\">{stat.value}</p>
+
+              <div className="mb-2">
+                <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
               </div>
-              
+
               <div>
-                <p className=\"text-sm font-medium text-gray-900\">{stat.name}</p>
-                <p className=\"text-xs text-gray-500\">{stat.description}</p>
+                <p className="text-sm font-medium text-gray-900">{stat.name}</p>
+                <p className="text-xs text-gray-500">{stat.description}</p>
               </div>
             </motion.div>
           )
@@ -245,36 +245,36 @@ export function StatsCards() {
       </div>
 
       {/* Detail Stats */}
-      <div className=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6\">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {detailStats.map((stat, index) => {
           const Icon = stat.icon
           const ChangeIcon = getChangeIcon(stat.changeType)
-          
+
           return (
             <motion.div
               key={stat.name}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 + index * 0.1 }}
-              className=\"bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow\"
+              className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow"
             >
-              <div className=\"flex items-center justify-between mb-4\">
+              <div className="flex items-center justify-between mb-4">
                 <div className={`p-2 rounded-lg ${stat.color}`}>
-                  <Icon className=\"h-5 w-5 text-white\" />
+                  <Icon className="h-5 w-5 text-white" />
                 </div>
                 <div className={`flex items-center text-sm font-medium ${getChangeColor(stat.changeType)}`}>
-                  {ChangeIcon && <ChangeIcon className=\"h-4 w-4 mr-1\" />}
+                  {ChangeIcon && <ChangeIcon className="h-4 w-4 mr-1" />}
                   {stat.change}
                 </div>
               </div>
-              
-              <div className=\"mb-2\">
-                <p className=\"text-2xl font-bold text-gray-900\">{stat.value}</p>
+
+              <div className="mb-2">
+                <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
               </div>
-              
+
               <div>
-                <p className=\"text-sm font-medium text-gray-900\">{stat.name}</p>
-                <p className=\"text-xs text-gray-500\">{stat.description}</p>
+                <p className="text-sm font-medium text-gray-900">{stat.name}</p>
+                <p className="text-xs text-gray-500">{stat.description}</p>
               </div>
             </motion.div>
           )

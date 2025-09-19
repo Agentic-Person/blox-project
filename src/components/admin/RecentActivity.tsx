@@ -44,10 +44,10 @@ export function RecentActivity() {
   useEffect(() => {
     const fetchActivities = async () => {
       setLoading(true)
-      
+
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 800))
-      
+
       // Mock activities - in production this would come from admin_activity_logs table
       const mockActivities: ActivityItem[] = [
         {
@@ -55,7 +55,7 @@ export function RecentActivity() {
           type: 'video_processed',
           title: 'Video Processing Complete',
           description: 'Advanced Scripting Tutorial #15 processed successfully',
-          timestamp: new Date(Date.now() - 5 * 60 * 1000), // 5 minutes ago
+          timestamp: new Date(Date.now() - 5 * 60 * 1000),
           status: 'success',
           metadata: {
             videoId: 'dQw4w9WgXcQ',
@@ -67,7 +67,7 @@ export function RecentActivity() {
           type: 'playlist_added',
           title: 'New Playlist Added',
           description: 'Roblox Studio Basics playlist (23 videos) added to queue',
-          timestamp: new Date(Date.now() - 15 * 60 * 1000), // 15 minutes ago
+          timestamp: new Date(Date.now() - 15 * 60 * 1000),
           status: 'info',
           metadata: {
             playlistId: 'PLZ1b66Z1KFKhO7R6Q588cdWxdnVxpPmA8'
@@ -77,8 +77,8 @@ export function RecentActivity() {
           id: '3',
           type: 'video_failed',
           title: 'Video Processing Failed',
-          description: 'Failed to extract transcript from \"UI Design Tutorial\"',
-          timestamp: new Date(Date.now() - 32 * 60 * 1000), // 32 minutes ago
+          description: 'Failed to extract transcript from "UI Design Tutorial"',
+          timestamp: new Date(Date.now() - 32 * 60 * 1000),
           status: 'error',
           metadata: {
             videoId: 'abc123xyz',
@@ -90,7 +90,7 @@ export function RecentActivity() {
           type: 'video_added',
           title: 'Video Added',
           description: 'Game Development Fundamentals added to processing queue',
-          timestamp: new Date(Date.now() - 45 * 60 * 1000), // 45 minutes ago
+          timestamp: new Date(Date.now() - 45 * 60 * 1000),
           status: 'info',
           metadata: {
             videoId: 'xyz789abc',
@@ -102,7 +102,7 @@ export function RecentActivity() {
           type: 'system_event',
           title: 'Queue Worker Restarted',
           description: 'Background processing worker automatically restarted',
-          timestamp: new Date(Date.now() - 62 * 60 * 1000), // 1 hour ago
+          timestamp: new Date(Date.now() - 62 * 60 * 1000),
           status: 'warning'
         },
         {
@@ -110,7 +110,7 @@ export function RecentActivity() {
           type: 'video_processed',
           title: 'Video Processing Complete',
           description: 'Building Your First Game processed successfully',
-          timestamp: new Date(Date.now() - 78 * 60 * 1000), // 1.3 hours ago
+          timestamp: new Date(Date.now() - 78 * 60 * 1000),
           status: 'success',
           metadata: {
             videoId: 'def456ghi',
@@ -118,7 +118,7 @@ export function RecentActivity() {
           }
         }
       ]
-      
+
       setActivities(mockActivities)
       setLoading(false)
     }
@@ -155,20 +155,19 @@ export function RecentActivity() {
     const now = new Date()
     const diffMs = now.getTime() - timestamp.getTime()
     const diffMins = Math.floor(diffMs / (1000 * 60))
-    
+
     if (diffMins < 1) return 'Just now'
     if (diffMins < 60) return `${diffMins}m ago`
-    
+
     const diffHours = Math.floor(diffMins / 60)
     if (diffHours < 24) return `${diffHours}h ago`
-    
+
     const diffDays = Math.floor(diffHours / 24)
     return `${diffDays}d ago`
   }
 
   const handleRefresh = () => {
     setLoading(true)
-    // Trigger refresh
     setTimeout(() => {
       setLoading(false)
     }, 800)
@@ -176,20 +175,20 @@ export function RecentActivity() {
 
   if (loading) {
     return (
-      <div className=\"bg-white rounded-lg shadow-sm border border-gray-200\">
-        <div className=\"px-6 py-4 border-b border-gray-200\">
-          <div className=\"flex items-center justify-between\">
-            <h3 className=\"text-lg font-semibold text-gray-900\">Recent Activity</h3>
-            <div className=\"animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600\"></div>
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div className="px-6 py-4 border-b border-gray-200">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600"></div>
           </div>
         </div>
-        <div className=\"p-6 space-y-4\">
+        <div className="p-6 space-y-4">
           {[...Array(6)].map((_, index) => (
-            <div key={index} className=\"animate-pulse flex items-start space-x-3\">
-              <div className=\"h-8 w-8 bg-gray-200 rounded-full flex-shrink-0\"></div>
-              <div className=\"flex-1\">
-                <div className=\"h-4 bg-gray-200 rounded w-3/4 mb-2\"></div>
-                <div className=\"h-3 bg-gray-200 rounded w-1/2\"></div>
+            <div key={index} className="animate-pulse flex items-start space-x-3">
+              <div className="h-8 w-8 bg-gray-200 rounded-full flex-shrink-0"></div>
+              <div className="flex-1">
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
               </div>
             </div>
           ))}
@@ -199,65 +198,65 @@ export function RecentActivity() {
   }
 
   return (
-    <div className=\"bg-white rounded-lg shadow-sm border border-gray-200 h-fit\">
-      <div className=\"px-6 py-4 border-b border-gray-200\">
-        <div className=\"flex items-center justify-between\">
-          <h3 className=\"text-lg font-semibold text-gray-900\">Recent Activity</h3>
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 h-fit">
+      <div className="px-6 py-4 border-b border-gray-200">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
           <button
             onClick={handleRefresh}
-            className=\"p-2 hover:bg-gray-100 rounded-lg transition-colors\"
-            title=\"Refresh\"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            title="Refresh"
           >
-            <RefreshCw className=\"h-4 w-4 text-gray-600\" />
+            <RefreshCw className="h-4 w-4 text-gray-600" />
           </button>
         </div>
-        <p className=\"text-sm text-gray-600\">Latest system events and admin actions</p>
+        <p className="text-sm text-gray-600">Latest system events and admin actions</p>
       </div>
-      
-      <div className=\"max-h-96 overflow-y-auto\">
-        <div className=\"p-6 space-y-4\">
+
+      <div className="max-h-96 overflow-y-auto">
+        <div className="p-6 space-y-4">
           {activities.map((activity, index) => {
             const Icon = getActivityIcon(activity.type)
-            
+
             return (
               <motion.div
                 key={activity.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className=\"flex items-start space-x-3 group\"
+                className="flex items-start space-x-3 group"
               >
                 <div className={`p-2 rounded-full ${getStatusColor(activity.status)} flex-shrink-0`}>
-                  <Icon className=\"h-4 w-4\" />
+                  <Icon className="h-4 w-4" />
                 </div>
-                
-                <div className=\"flex-1 min-w-0\">
-                  <div className=\"flex items-center justify-between\">
-                    <p className=\"text-sm font-medium text-gray-900 truncate\">
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium text-gray-900 truncate">
                       {activity.title}
                     </p>
-                    <div className=\"flex items-center text-xs text-gray-500 ml-2\">
-                      <Clock className=\"h-3 w-3 mr-1\" />
+                    <div className="flex items-center text-xs text-gray-500 ml-2">
+                      <Clock className="h-3 w-3 mr-1" />
                       {formatTimeAgo(activity.timestamp)}
                     </div>
                   </div>
-                  
-                  <p className=\"text-sm text-gray-600 mt-1\">{activity.description}</p>
-                  
+
+                  <p className="text-sm text-gray-600 mt-1">{activity.description}</p>
+
                   {activity.metadata && (
-                    <div className=\"mt-2 flex flex-wrap gap-2\">
+                    <div className="mt-2 flex flex-wrap gap-2">
                       {activity.metadata.videoId && (
-                        <span className=\"inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-700\">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-700">
                           ID: {activity.metadata.videoId}
                         </span>
                       )}
                       {activity.metadata.duration && (
-                        <span className=\"inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-700\">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-700">
                           {activity.metadata.duration}
                         </span>
                       )}
                       {activity.metadata.error && (
-                        <span className=\"inline-flex items-center px-2 py-1 rounded-full text-xs bg-red-100 text-red-700\">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-red-100 text-red-700">
                           Error: {activity.metadata.error}
                         </span>
                       )}
@@ -269,13 +268,13 @@ export function RecentActivity() {
           })}
         </div>
       </div>
-      
-      <div className=\"px-6 py-4 border-t border-gray-200\">
+
+      <div className="px-6 py-4 border-t border-gray-200">
         <a
-          href=\"/admin/logs\"
-          className=\"w-full flex items-center justify-center px-4 py-2 bg-gray-50 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-100 transition-colors\"
+          href="/admin/logs"
+          className="w-full flex items-center justify-center px-4 py-2 bg-gray-50 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-100 transition-colors"
         >
-          <Activity className=\"h-4 w-4 mr-2\" />
+          <Activity className="h-4 w-4 mr-2" />
           View All Activity
         </a>
       </div>
