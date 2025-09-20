@@ -27,7 +27,7 @@ export default function UnauthorizedPage() {
         </div>
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h1>
         <p className="text-gray-600 mb-6">
-          You don't have permission to access the admin dashboard. 
+          You don't have permission to access the admin dashboard.
           Please contact an administrator if you believe this is an error.
         </p>
         <div className="space-y-3">
