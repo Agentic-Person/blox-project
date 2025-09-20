@@ -164,14 +164,14 @@ export function RecentActivity() {
 
     const diffDays = Math.floor(diffHours / 24)
     return `${diffDays}d ago`
-  }
+  };
 
   const handleRefresh = () => {
     setLoading(true)
     setTimeout(() => {
       setLoading(false)
     }, 800)
-  }
+  };
 
   if (loading) {
     return (
