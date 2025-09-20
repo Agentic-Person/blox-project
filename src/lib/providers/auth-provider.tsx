@@ -26,9 +26,10 @@ interface AuthContextType {
   isAdmin: boolean
   adminRole: string | null
   signIn: (email: string, password: string) => Promise<void>
+  signInWithDiscord: () => Promise<void>
   signOut: () => Promise<void>
   updateUser: (updates: Partial<User>) => void
-  checkAdminStatus: () => Promise<void>
+  checkAdminStatus: (userId: string) => Promise<{ adminRole: 'super_admin' | 'admin' | 'moderator'; adminPermissions: any; isAdminActive: any; } | null>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -144,7 +145,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = async () => {
     setIsLoading(true)
-    
+
     try {
       const { error } = await supabase.auth.signOut()
       if (error) {
@@ -153,8 +154,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error('Sign out error:', error)
     }
-    
+
     setIsLoading(false)
+  }
+
+  const signInWithDiscord = async () => {
+    setIsLoading(true)
+
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'discord'
+      })
+
+      if (error) {
+        console.error('Discord sign in error:', error)
+        setIsLoading(false)
+        throw error
+      }
+      // Loading will be set to false by the auth state change listener
+    } catch (error) {
+      console.error('Discord sign in error:', error)
+      setIsLoading(false)
+      throw error
+    }
   }
 
   const updateUser = (updates: Partial<User>) => {
@@ -170,6 +192,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isAdmin: !!(user?.role === 'admin' || user?.adminRole),
     adminRole: user?.adminRole || null,
     signIn,
+    signInWithDiscord,
     signOut,
     updateUser,
     checkAdminStatus
@@ -197,11 +220,11 @@ export function useUser() {
 }
 
 export function useClerk() {
-  const { signIn, signOut } = useAuth()
-  return { 
-    signIn: () => signIn('discord'),
+  const { signInWithDiscord, signOut } = useAuth()
+  return {
+    signIn: () => signInWithDiscord(),
     signOut,
-    openSignIn: () => signIn('discord'),
-    openSignUp: () => signIn('discord')
+    openSignIn: () => signInWithDiscord(),
+    openSignUp: () => signInWithDiscord()
   }
 }

@@ -28,17 +28,18 @@ export class LearningPathSync {
     description?: string
   ): Promise<ServiceResponse<string>> {
     try {
+      if (!supabase) {
+        throw new Error('Supabase client not available')
+      }
+
       // Create the learning path record
-      const { data: pathRecord, error: pathError } = await supabase
+      const { data: pathRecord, error: pathError } = await (supabase as any)
         .from('learning_paths')
         .insert({
           user_id: userId,
-          title,
+          name: title,
           description,
-          total_videos: videoReferences.length,
-          completed_videos: 0,
-          estimated_hours: this.calculateEstimatedHours(videoReferences),
-          created_from: 'manual',
+          total_estimated_hours: this.calculateEstimatedHours(videoReferences),
           status: 'active',
           created_at: new Date().toISOString()
         })
@@ -63,17 +64,19 @@ export class LearningPathSync {
 
       // Store segments in database
       const segmentRecords = segments.map(segment => ({
-        path_id: pathRecord.id,
-        video_id: segment.videoReferences[0].videoId,
-        youtube_id: segment.videoReferences[0].youtubeId,
-        order_index: segment.order,
-        is_required: true,
-        is_completed: false,
+        learning_path_id: pathRecord.id,
+        step_order: segment.order,
+        step_type: 'video',
+        title: segment.title,
+        description: segment.description,
+        estimated_minutes: segment.estimatedMinutes,
+        video_references: segment.videoReferences as any,
+        status: 'pending',
         created_at: new Date().toISOString()
       }))
 
       const { error: segmentsError } = await supabase
-        .from('learning_path_videos')
+        .from('learning_path_steps')
         .insert(segmentRecords)
 
       if (segmentsError) throw segmentsError
@@ -106,12 +109,16 @@ export class LearningPathSync {
     progressEvent: ProgressSyncEvent
   ): Promise<ServiceResponse<void>> {
     try {
+      if (!supabase) {
+        throw new Error('Supabase client not available')
+      }
+
       // Get current path status
-      const { data: pathVideos, error: pathError } = await supabase
-        .from('learning_path_videos')
+      const { data: pathSteps, error: pathError } = await supabase
+        .from('learning_path_steps')
         .select('*')
-        .eq('path_id', pathId)
-        .order('order_index')
+        .eq('learning_path_id', pathId)
+        .order('step_order')
 
       if (pathError) throw pathError
 
@@ -119,15 +126,18 @@ export class LearningPathSync {
 
       if (progressEvent.type === 'video_watched') {
         // Update video completion in path
-        const videoSegment = pathVideos.find(
-          v => v.youtube_id === progressEvent.data.youtubeId
+        const videoSegment = pathSteps.find(
+          v => {
+            const videoRefs = Array.isArray(v.video_references) ? v.video_references : []
+            return videoRefs.some((ref: any) => ref.youtubeId === progressEvent.data.youtubeId)
+          }
         )
 
         if (videoSegment && progressEvent.data.watchedSeconds >= progressEvent.data.totalSeconds * 0.8) {
           await supabase
-            .from('learning_path_videos')
+            .from('learning_path_steps')
             .update({
-              is_completed: true,
+              status: 'completed',
               completed_at: new Date().toISOString()
             })
             .eq('id', videoSegment.id)
@@ -147,34 +157,41 @@ export class LearningPathSync {
         if (todosError) throw todosError
 
         const completedTodo = pathTodos.find(t => t.id === progressEvent.data.todoId)
-        if (completedTodo?.video_references?.length) {
+        const videoReferences = Array.isArray(completedTodo?.video_references) ? completedTodo.video_references : []
+        if (videoReferences.length) {
           // Mark associated videos as completed
-          for (const videoRef of completedTodo.video_references) {
-            await supabase
-              .from('learning_path_videos')
-              .update({
-                is_completed: true,
-                completed_at: new Date().toISOString()
-              })
-              .eq('path_id', pathId)
-              .eq('youtube_id', videoRef.youtubeId)
+          for (const videoRef of videoReferences) {
+            const stepToUpdate = pathSteps.find(step => {
+              const videoRefs = Array.isArray(step.video_references) ? step.video_references : []
+              return videoRefs.some((ref: any) => ref.youtubeId === (videoRef as any)?.youtubeId)
+            })
 
-            updatedSegments++
+            if (stepToUpdate) {
+              await supabase
+                .from('learning_path_steps')
+                .update({
+                  status: 'completed',
+                  completed_at: new Date().toISOString()
+                })
+                .eq('id', stepToUpdate.id)
+
+              updatedSegments++
+            }
           }
         }
       }
 
       // Update overall path completion
       if (updatedSegments > 0) {
-        const completedCount = pathVideos.filter(v => v.is_completed).length + updatedSegments
-        const progressPercentage = (completedCount / pathVideos.length) * 100
+        const completedCount = pathSteps.filter(s => s.status === 'completed' || s.completed_at !== null).length + updatedSegments
+        const progressPercentage = (completedCount / pathSteps.length) * 100
 
         await supabase
           .from('learning_paths')
           .update({
-            completed_videos: completedCount,
+            progress_percentage: progressPercentage,
             status: progressPercentage >= 100 ? 'completed' : 'active',
-            completed_at: progressPercentage >= 100 ? new Date().toISOString() : null
+            updated_at: new Date().toISOString()
           })
           .eq('id', pathId)
 
@@ -211,13 +228,17 @@ export class LearningPathSync {
     } = {}
   ): Promise<ServiceResponse<CalendarAction[]>> {
     try {
-      // Get path videos that aren't completed
-      const { data: pathVideos, error: pathError } = await supabase
-        .from('learning_path_videos')
+      if (!supabase) {
+        throw new Error('Supabase client not available')
+      }
+
+      // Get path steps that aren't completed
+      const { data: pathSteps, error: pathError } = await supabase
+        .from('learning_path_steps')
         .select('*')
-        .eq('path_id', pathId)
-        .eq('is_completed', false)
-        .order('order_index')
+        .eq('learning_path_id', pathId)
+        .not('status', 'eq', 'completed')
+        .order('step_order')
 
       if (pathError) throw pathError
 
@@ -231,15 +252,15 @@ export class LearningPathSync {
       const calendarActions: CalendarAction[] = []
       const start = new Date(startDate)
 
-      // Schedule videos across the weeks
-      pathVideos.forEach((video, index) => {
+      // Schedule steps across the weeks
+      pathSteps.forEach((step, index) => {
         const sessionIndex = index % sessionsPerWeek
         const weekOffset = Math.floor(index / sessionsPerWeek)
-        
+
         // Calculate session date
         const sessionDate = new Date(start)
         sessionDate.setDate(start.getDate() + (weekOffset * 7) + this.getPreferredDayOffset(sessionIndex, sessionsPerWeek))
-        
+
         // Set preferred time
         const timeSlot = preferredTimes[sessionIndex % preferredTimes.length]
         this.setPreferredTime(sessionDate, timeSlot)
@@ -247,18 +268,22 @@ export class LearningPathSync {
         const endTime = new Date(sessionDate)
         endTime.setMinutes(sessionDate.getMinutes() + sessionDuration)
 
+        // Extract video reference from step
+        const videoRefs = Array.isArray(step.video_references) ? step.video_references : []
+        const firstVideoRef = (videoRefs[0] as any) || {}
+
         calendarActions.push({
           type: 'schedule_video',
-          title: `Learning Path: ${video.video_id}`,
-          description: `Watch and practice video in learning path`,
+          title: `Learning Path: ${step.title}`,
+          description: step.description || `Watch and practice video in learning path`,
           startTime: sessionDate.toISOString(),
           endTime: endTime.toISOString(),
           duration: sessionDuration,
           videoReference: {
-            videoId: video.video_id,
-            youtubeId: video.youtube_id,
-            title: `Learning Path Video ${video.order_index}`,
-            thumbnailUrl: `https://img.youtube.com/vi/${video.youtube_id}/maxresdefault.jpg`
+            videoId: firstVideoRef.videoId || '',
+            youtubeId: firstVideoRef.youtubeId || '',
+            title: step.title || `Learning Path Step ${step.step_order}`,
+            thumbnailUrl: firstVideoRef.youtubeId ? `https://img.youtube.com/vi/${firstVideoRef.youtubeId}/maxresdefault.jpg` : ''
           },
           relatedTodos: [] // Would be populated with generated todos
         })
@@ -294,6 +319,10 @@ export class LearningPathSync {
     estimatedCompletion: string;
   }>> {
     try {
+      if (!supabase) {
+        throw new Error('Supabase client not available')
+      }
+
       // Get path info
       const { data: pathInfo, error: pathError } = await supabase
         .from('learning_paths')
@@ -304,23 +333,23 @@ export class LearningPathSync {
 
       if (pathError) throw pathError
 
-      // Get segment progress
-      const { data: segments, error: segmentsError } = await supabase
-        .from('learning_path_videos')
+      // Get step progress
+      const { data: steps, error: stepsError } = await supabase
+        .from('learning_path_steps')
         .select('*')
-        .eq('path_id', pathId)
-        .order('order_index')
+        .eq('learning_path_id', pathId)
+        .order('step_order')
 
-      if (segmentsError) throw segmentsError
+      if (stepsError) throw stepsError
 
-      const completedSegments = segments.filter(s => s.is_completed)
-      const completionPercentage = (completedSegments.length / segments.length) * 100
-      const currentSegment = segments.find(s => !s.is_completed)
+      const completedSteps = steps.filter(s => s.status === 'completed' || s.completed_at !== null)
+      const completionPercentage = (completedSteps.length / steps.length) * 100
+      const currentSegment = steps.find(s => s.status !== 'completed' && s.completed_at === null)
       
       // Calculate estimated completion based on current pace
       const estimatedCompletion = this.calculateEstimatedCompletion(
-        segments.length - completedSegments.length,
-        pathInfo.estimated_hours
+        steps.length - completedSteps.length,
+        pathInfo.total_estimated_hours || 0
       )
 
       const nextMilestone = this.getNextMilestone(completionPercentage)
@@ -356,6 +385,10 @@ export class LearningPathSync {
     segments: LearningPathSegment[]
   ): Promise<void> {
     try {
+      if (!supabase) {
+        throw new Error('Supabase client not available')
+      }
+
       const todoRecords = segments.map((segment, index) => ({
         user_id: userId,
         title: `Complete: ${segment.title}`,
@@ -364,14 +397,14 @@ export class LearningPathSync {
         priority: 'medium' as const,
         category: 'learn',
         due_date: this.calculateDueDate(index * 2), // Spread over time
-        video_references: segment.videoReferences,
+        video_references: segment.videoReferences as any,
         tags: ['learning-path', pathId],
         estimated_minutes: segment.estimatedMinutes,
         metadata: {
           learningPathId: pathId,
           segmentId: segment.id,
           segmentOrder: segment.order
-        },
+        } as any,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       }))

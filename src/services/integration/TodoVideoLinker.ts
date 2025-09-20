@@ -26,84 +26,12 @@ export class TodoVideoLinker {
     notes?: string
   ): Promise<ServiceResponse<TodoVideoLink>> {
     try {
-      // Create the link record
-      const linkData = {
-        todo_id: todoId,
-        video_id: videoReference.videoId,
-        youtube_id: videoReference.youtubeId,
-        timestamp_start: videoReference.timestamp,
-        timestamp_end: null, // Could be extended for ranges
-        relevance_score: videoReference.confidence || 0.8,
-        link_type: linkType,
-        created_by: 'ai' as const,
-        notes: notes
+      if (!supabase) {
+        throw new Error('Supabase client not available')
       }
 
-      const { data: linkRecord, error: linkError } = await supabase
-        .from('todo_video_links')
-        .insert(linkData)
-        .select()
-        .single()
-
-      if (linkError) throw linkError
-
-      // Update the todo's videoReferences array
-      const { data: todo, error: todoError } = await supabase
-        .from('todos')
-        .select('video_references')
-        .eq('id', todoId)
-        .single()
-
-      if (todoError) throw todoError
-
-      const currentReferences = todo.video_references || []
-      const updatedReferences = [...currentReferences, videoReference]
-
-      const { error: updateError } = await supabase
-        .from('todos')
-        .update({ 
-          video_references: updatedReferences,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', todoId)
-
-      if (updateError) throw updateError
-
-      // Create the TodoVideoLink object
-      const todoVideoLink: TodoVideoLink = {
-        id: linkRecord.id,
-        todoId: todoId,
-        videoReference: videoReference,
-        linkType: linkType,
-        addedAt: linkRecord.created_at,
-        addedBy: 'ai',
-        notes: notes
-      }
-
-      // Log the progress sync event
-      await this.logProgressSync({
-        type: 'video_watched',
-        userId: '', // Will be set by calling service
-        timestamp: new Date().toISOString(),
-        source: 'todo_system',
-        data: {
-          todoId,
-          videoId: videoReference.videoId,
-          youtubeId: videoReference.youtubeId,
-          linkType
-        },
-        relatedEntities: {
-          todoIds: [todoId],
-          videoIds: [videoReference.videoId]
-        }
-      })
-
-      return {
-        success: true,
-        data: todoVideoLink,
-        timestamp: new Date().toISOString(),
-        source: 'TodoVideoLinker'
-      }
+      // TODO: Implement when todo_video_links table is created
+      throw new Error('TodoVideoLinker functionality not yet implemented - missing database tables')
     } catch (error) {
       return {
         success: false,
@@ -119,37 +47,12 @@ export class TodoVideoLinker {
    */
   async getTodoVideoLinks(todoId: string): Promise<ServiceResponse<TodoVideoLink[]>> {
     try {
-      const { data: links, error } = await supabase
-        .from('todo_video_links')
-        .select('*')
-        .eq('todo_id', todoId)
-        .order('created_at', { ascending: false })
-
-      if (error) throw error
-
-      const todoVideoLinks: TodoVideoLink[] = links.map(link => ({
-        id: link.id,
-        todoId: link.todo_id,
-        videoReference: {
-          videoId: link.video_id,
-          youtubeId: link.youtube_id,
-          title: '', // Would be populated from video metadata
-          thumbnailUrl: `https://img.youtube.com/vi/${link.youtube_id}/maxresdefault.jpg`,
-          timestamp: link.timestamp_start,
-          confidence: link.relevance_score
-        },
-        linkType: link.link_type,
-        addedAt: link.created_at,
-        addedBy: link.created_by,
-        notes: link.notes
-      }))
-
-      return {
-        success: true,
-        data: todoVideoLinks,
-        timestamp: new Date().toISOString(),
-        source: 'TodoVideoLinker'
+      if (!supabase) {
+        throw new Error('Supabase client not available')
       }
+
+      // TODO: Implement when todo_video_links table is created
+      throw new Error('TodoVideoLinker functionality not yet implemented - missing database tables')
     } catch (error) {
       return {
         success: false,
@@ -165,21 +68,12 @@ export class TodoVideoLinker {
    */
   async getVideoTodoLinks(youtubeId: string): Promise<ServiceResponse<string[]>> {
     try {
-      const { data: links, error } = await supabase
-        .from('todo_video_links')
-        .select('todo_id')
-        .eq('youtube_id', youtubeId)
-
-      if (error) throw error
-
-      const todoIds = links.map(link => link.todo_id)
-
-      return {
-        success: true,
-        data: todoIds,
-        timestamp: new Date().toISOString(),
-        source: 'TodoVideoLinker'
+      if (!supabase) {
+        throw new Error('Supabase client not available')
       }
+
+      // TODO: Implement when todo_video_links table is created
+      throw new Error('TodoVideoLinker functionality not yet implemented - missing database tables')
     } catch (error) {
       return {
         success: false,
@@ -200,8 +94,12 @@ export class TodoVideoLinker {
     currentPosition: number
   ): Promise<ServiceResponse<void>> {
     try {
-      // Update video progress
-      const { error: progressError } = await supabase
+      if (!supabase) {
+        throw new Error('Supabase client not available')
+      }
+
+      // TODO: Implement when video_progress and todo_video_links tables are created
+      throw new Error('TodoVideoLinker functionality not yet implemented - missing database tables')
         .from('video_progress')
         .upsert({
           user_id: userId,

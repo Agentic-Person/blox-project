@@ -97,12 +97,14 @@ export async function middleware(request: NextRequest) {
         res.headers.set('x-is-admin', 'true')
         
         // Update last login time (fire and forget)
-        supabase
-          .from('admin_users')
-          .update({ last_login: new Date().toISOString() })
-          .eq('user_id', session.user.id)
-          .then(() => {})
-          .catch(err => console.error('Failed to update last login:', err))
+        try {
+          supabase
+            .from('admin_users')
+            .update({ last_login: new Date().toISOString() })
+            .eq('user_id', session.user.id)
+        } catch (err) {
+          console.error('Failed to update last login:', err)
+        }
         
         return res
         

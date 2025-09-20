@@ -10,6 +10,9 @@ export { LearningPathSync } from './LearningPathSync'
 
 // Service factory for easy instantiation
 import { IntegrationConfig } from '../../types/shared'
+import { TodoVideoLinker } from './TodoVideoLinker'
+import { SmartTodoGenerator } from './SmartTodoGenerator'
+import { LearningPathSync } from './LearningPathSync'
 
 export class IntegrationServices {
   public todoVideoLinker: TodoVideoLinker
