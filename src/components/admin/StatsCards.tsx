@@ -184,7 +184,7 @@ export function StatsCards() {
       case 'decrease': return 'text-red-600'
       default: return 'text-gray-600'
     }
-  }
+  };
 
   if (loading) {
     return (

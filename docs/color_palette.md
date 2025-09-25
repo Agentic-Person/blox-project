@@ -1,6 +1,9 @@
 # Blox Buddy Color Palette - Night Mode (Dark Blue Professional)
 
 ## Brand Colors
+dark blue main #0033CC
+highlight blue #33CCFF
+golden yellow #FFCC00
 
 ### Primary Colors
 

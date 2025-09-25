@@ -47,7 +47,7 @@ const navigation: NavigationItem[] = [
   { name: 'Analytics', href: '/admin/analytics', icon: BarChart3, permission: 'analytics.view' },
   { name: 'Users', href: '/admin/users', icon: Users, permission: 'users.view' },
   { name: 'Settings', href: '/admin/settings', icon: Settings, permission: 'system.settings' }
-]
+];
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const { user, isAdmin, adminRole, signOut, isLoading } = useAuth()
@@ -92,9 +92,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     super_admin: 'text-red-600 bg-red-100',
     admin: 'text-blue-600 bg-blue-100',
     moderator: 'text-green-600 bg-green-100'
-  }
+  };
 
-  const roleColor = roleColors[adminRole as keyof typeof roleColors] || roleColors.moderator
+  const roleColor = roleColors[adminRole as keyof typeof roleColors] || roleColors.moderator;
 
   return (
     <div className="h-screen flex overflow-hidden bg-gray-50">
@@ -117,10 +117,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         animate={{ x: sidebarOpen ? 0 : -320 }}
         className="fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl lg:translate-x-0 lg:static lg:inset-0"
       >
-        <div className=\"flex h-full flex-col\">
+        <div className="flex h-full flex-col">
           {/* Sidebar header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-            <div className=\"flex items-center space-x-3\">
+            <div className="flex items-center space-x-3">
               <div className="bg-blue-600 rounded-lg p-2">
                 <Shield className="h-6 w-6 text-white" />
               </div>
@@ -177,7 +177,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   whileTap={{ scale: 0.98 }}
                 >
                   <Icon className="mr-3 h-5 w-5 flex-shrink-0" />
-                  <span className=\"flex-1\">{item.name}</span>
+                  <span className="flex-1">{item.name}</span>
                   {item.badge && (
                     <span className="bg-blue-600 text-white text-xs font-medium px-2 py-1 rounded-full">
                       {item.badge}

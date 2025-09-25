@@ -9,14 +9,14 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 export default function SignInPage() {
-  const { signIn } = useAuth()
+  const { signInWithDiscord } = useAuth()
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSignIn = async () => {
     setIsLoading(true)
     try {
-      await signIn('discord')
+      await signInWithDiscord()
       router.push('/dashboard')
     } catch (error) {
       console.error('Sign in error:', error)
