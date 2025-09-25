@@ -47,6 +47,11 @@ interface QuickAction {
 interface AIChatProps {
   className?: string
   onMessageSend?: (message: string) => void
+  videoContext?: {
+    title: string
+    youtubeId: string
+    currentTime: number
+  }
 }
 
 const quickActions: QuickAction[] = [
