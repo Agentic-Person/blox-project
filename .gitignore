@@ -40,4 +40,5 @@ next-env.d.ts
 
 # private folder - contains API keys and sensitive data
 /.private/
-.private/
+.private/.env*
+.mcp.json

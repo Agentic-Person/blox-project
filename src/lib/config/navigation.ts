@@ -1,4 +1,4 @@
-import { Brain, Users, TrendingUp, MessageCircle, FileText, User, Settings, HelpCircle, Home, Bot, UserCog } from 'lucide-react'
+import { Brain, Users, TrendingUp, MessageCircle, FileText, User, Settings, HelpCircle, Home, Bot, UserCog, Calendar } from 'lucide-react'
 
 export interface NavItem {
   title: string
@@ -32,6 +32,12 @@ export const MAIN_NAV: NavItem[] = [
     href: '/notes',
     icon: FileText,
     description: 'Your learning notes',
+  },
+  {
+    title: 'Calendar',
+    href: '/calendar',
+    icon: Calendar,
+    description: 'Schedule and manage your learning',
   },
   {
     title: 'Discord',

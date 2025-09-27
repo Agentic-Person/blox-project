@@ -63,32 +63,32 @@ const quickActions: QuickAction[] = [
   },
   {
     icon: Target,
-    label: 'Next Step',
-    prompt: 'What should I learn next to progress in my journey?',
+    label: 'Create Todo',
+    prompt: 'Create a todo for my next learning objective',
     color: 'text-green-400'
   },
   {
     icon: HelpCircle,
-    label: 'I\'m Stuck',
-    prompt: 'I\'m having trouble understanding this concept. Can you help?',
+    label: 'Reschedule Tasks',
+    prompt: 'I need to reschedule my overdue tasks to tomorrow',
     color: 'text-yellow-400'
   },
   {
     icon: Code,
-    label: 'Show Code',
-    prompt: 'Show me example code for what I\'m learning',
+    label: 'Show Progress',
+    prompt: 'Show me my learning progress and what I have scheduled',
     color: 'text-purple-400'
   },
   {
     icon: BookOpen,
-    label: 'Explain',
-    prompt: 'Explain this concept in simple terms',
+    label: 'Plan Study Time',
+    prompt: 'Help me plan the best times to study this week',
     color: 'text-pink-400'
   },
   {
     icon: Zap,
-    label: 'Quick Tips',
-    prompt: 'Give me quick tips to improve my current project',
+    label: 'Quick Schedule',
+    prompt: 'Schedule practice time for tomorrow at 3pm',
     color: 'text-orange-400'
   }
 ]

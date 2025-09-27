@@ -33,20 +33,22 @@ export class LearningPathSync {
       }
 
       // Create the learning path record
-      const { data: pathRecord, error: pathError } = await (supabase as any)
-        .from('learning_paths')
-        .insert({
-          user_id: userId,
-          name: title,
-          description,
-          total_estimated_hours: this.calculateEstimatedHours(videoReferences),
-          status: 'active',
-          created_at: new Date().toISOString()
-        })
-        .select()
-        .single()
-
-      if (pathError) throw pathError
+      // TODO: Implement after creating learning_paths table
+      // const { data: pathRecord, error: pathError } = await (supabase as any)
+      //   .from('learning_paths')
+      //   .insert({
+      //     user_id: userId,
+      //     name: title,
+      //     description,
+      //     total_estimated_hours: this.calculateEstimatedHours(videoReferences),
+      //     status: 'active',
+      //     created_at: new Date().toISOString()
+      //   })
+      //   .select()
+      //   .single()
+      //
+      // if (pathError) throw pathError
+      const pathRecord = { id: 'temp-path-id' } // Temporary fallback
 
       // Create learning path segments
       const segments: LearningPathSegment[] = videoReferences.map((video, index) => ({
@@ -75,11 +77,12 @@ export class LearningPathSync {
         created_at: new Date().toISOString()
       }))
 
-      const { error: segmentsError } = await supabase
-        .from('learning_path_steps')
-        .insert(segmentRecords)
-
-      if (segmentsError) throw segmentsError
+      // TODO: Create learning_path_steps table in database schema
+      // const { error: segmentsError } = await supabase
+      //   .from('learning_path_steps')
+      //   .insert(segmentRecords)
+      //
+      // if (segmentsError) throw segmentsError
 
       // Generate todos for each segment
       await this.generatePathTodos(userId, pathRecord.id, segments)
@@ -114,13 +117,15 @@ export class LearningPathSync {
       }
 
       // Get current path status
-      const { data: pathSteps, error: pathError } = await supabase
-        .from('learning_path_steps')
-        .select('*')
-        .eq('learning_path_id', pathId)
-        .order('step_order')
-
-      if (pathError) throw pathError
+      // TODO: Create learning_path_steps table in database schema
+      // const { data: pathSteps, error: pathError } = await supabase
+      //   .from('learning_path_steps')
+      //   .select('*')
+      //   .eq('learning_path_id', pathId)
+      //   .order('step_order')
+      //
+      // if (pathError) throw pathError
+      const pathSteps: any[] = [] // Temporary fallback
 
       let updatedSegments = 0
 
@@ -134,13 +139,14 @@ export class LearningPathSync {
         )
 
         if (videoSegment && progressEvent.data.watchedSeconds >= progressEvent.data.totalSeconds * 0.8) {
-          await supabase
-            .from('learning_path_steps')
-            .update({
-              status: 'completed',
-              completed_at: new Date().toISOString()
-            })
-            .eq('id', videoSegment.id)
+          // TODO: Implement after creating learning_path_steps table
+          // await supabase
+          //   .from('learning_path_steps')
+          //   .update({
+          //     status: 'completed',
+          //     completed_at: new Date().toISOString()
+          //   })
+          //   .eq('id', videoSegment.id)
 
           updatedSegments = 1
         }
@@ -167,13 +173,14 @@ export class LearningPathSync {
             })
 
             if (stepToUpdate) {
-              await supabase
-                .from('learning_path_steps')
-                .update({
-                  status: 'completed',
-                  completed_at: new Date().toISOString()
-                })
-                .eq('id', stepToUpdate.id)
+              // TODO: Implement after creating learning_path_steps table
+              // await supabase
+              //   .from('learning_path_steps')
+              //   .update({
+              //     status: 'completed',
+              //     completed_at: new Date().toISOString()
+              //   })
+              //   .eq('id', stepToUpdate.id)
 
               updatedSegments++
             }
@@ -186,14 +193,15 @@ export class LearningPathSync {
         const completedCount = pathSteps.filter(s => s.status === 'completed' || s.completed_at !== null).length + updatedSegments
         const progressPercentage = (completedCount / pathSteps.length) * 100
 
-        await supabase
-          .from('learning_paths')
-          .update({
-            progress_percentage: progressPercentage,
-            status: progressPercentage >= 100 ? 'completed' : 'active',
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', pathId)
+        // TODO: Implement after creating learning_paths table
+        // await supabase
+        //   .from('learning_paths')
+        //   .update({
+        //     progress_percentage: progressPercentage,
+        //     status: progressPercentage >= 100 ? 'completed' : 'active',
+        //     updated_at: new Date().toISOString()
+        //   })
+        //   .eq('id', pathId)
 
         // Unlock next segment if prerequisites are met
         await this.checkAndUnlockNextSegments(pathId, completedCount)
@@ -233,14 +241,16 @@ export class LearningPathSync {
       }
 
       // Get path steps that aren't completed
-      const { data: pathSteps, error: pathError } = await supabase
-        .from('learning_path_steps')
-        .select('*')
-        .eq('learning_path_id', pathId)
-        .not('status', 'eq', 'completed')
-        .order('step_order')
-
-      if (pathError) throw pathError
+      // TODO: Implement after creating learning_path_steps table
+      // const { data: pathSteps, error: pathError } = await supabase
+      //   .from('learning_path_steps')
+      //   .select('*')
+      //   .eq('learning_path_id', pathId)
+      //   .not('status', 'eq', 'completed')
+      //   .order('step_order')
+      //
+      // if (pathError) throw pathError
+      const pathSteps: any[] = [] // Temporary fallback
 
       const {
         sessionsPerWeek = 3,
@@ -324,23 +334,32 @@ export class LearningPathSync {
       }
 
       // Get path info
-      const { data: pathInfo, error: pathError } = await supabase
-        .from('learning_paths')
-        .select('*')
-        .eq('id', pathId)
-        .eq('user_id', userId)
-        .single()
-
-      if (pathError) throw pathError
+      // TODO: Implement after creating learning_paths table
+      // const { data: pathInfo, error: pathError } = await supabase
+      //   .from('learning_paths')
+      //   .select('*')
+      //   .eq('id', pathId)
+      //   .eq('user_id', userId)
+      //   .single()
+      //
+      // if (pathError) throw pathError
+      const pathInfo = {
+        id: pathId,
+        name: 'Temporary Path',
+        progress_percentage: 0,
+        total_estimated_hours: 0
+      } // Temporary fallback
 
       // Get step progress
-      const { data: steps, error: stepsError } = await supabase
-        .from('learning_path_steps')
-        .select('*')
-        .eq('learning_path_id', pathId)
-        .order('step_order')
-
-      if (stepsError) throw stepsError
+      // TODO: Implement after creating learning_path_steps table
+      // const { data: steps, error: stepsError } = await supabase
+      //   .from('learning_path_steps')
+      //   .select('*')
+      //   .eq('learning_path_id', pathId)
+      //   .order('step_order')
+      //
+      // if (stepsError) throw stepsError
+      const steps: any[] = [] // Temporary fallback
 
       const completedSteps = steps.filter(s => s.status === 'completed' || s.completed_at !== null)
       const completionPercentage = (completedSteps.length / steps.length) * 100

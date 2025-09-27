@@ -17,13 +17,13 @@ CREATE TABLE IF NOT EXISTS public.videos (
   day_id TEXT,
   order_index INTEGER,
   created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-  
-  -- Indexes
-  INDEX idx_videos_youtube_id (youtube_id),
-  INDEX idx_videos_module_week (module_id, week_id),
-  INDEX idx_videos_order (order_index)
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Create indexes for videos
+CREATE INDEX IF NOT EXISTS idx_videos_youtube_id ON public.videos (youtube_id);
+CREATE INDEX IF NOT EXISTS idx_videos_module_week ON public.videos (module_id, week_id);
+CREATE INDEX IF NOT EXISTS idx_videos_order ON public.videos (order_index);
 
 -- Create video_transcripts table for storing full transcript data
 CREATE TABLE IF NOT EXISTS public.video_transcripts (
@@ -35,11 +35,14 @@ CREATE TABLE IF NOT EXISTS public.video_transcripts (
   language TEXT DEFAULT 'en',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   
-  -- Indexes
-  INDEX idx_video_transcripts_video_id (video_id),
-  INDEX idx_video_transcripts_youtube_id (youtube_id),
+
+  -- Constraints
   UNIQUE (video_id, youtube_id)
 );
+
+-- Create indexes for video_transcripts
+CREATE INDEX IF NOT EXISTS idx_video_transcripts_video_id ON public.video_transcripts (video_id);
+CREATE INDEX IF NOT EXISTS idx_video_transcripts_youtube_id ON public.video_transcripts (youtube_id);
 
 -- Create video_transcript_chunks for searchable text segments
 CREATE TABLE IF NOT EXISTS public.video_transcript_chunks (
@@ -56,13 +59,16 @@ CREATE TABLE IF NOT EXISTS public.video_transcript_chunks (
   learning_objectives TEXT[],
   created_at TIMESTAMPTZ DEFAULT NOW(),
   
-  -- Indexes
-  INDEX idx_transcript_chunks_video_id (video_id),
-  INDEX idx_transcript_chunks_youtube_id (youtube_id),
-  INDEX idx_transcript_chunks_time (start_time, end_time),
-  INDEX idx_transcript_chunks_text (text),
+
+  -- Constraints
   UNIQUE (transcript_id, chunk_index)
 );
+
+-- Create indexes for video_transcript_chunks
+CREATE INDEX IF NOT EXISTS idx_transcript_chunks_video_id ON public.video_transcript_chunks (video_id);
+CREATE INDEX IF NOT EXISTS idx_transcript_chunks_youtube_id ON public.video_transcript_chunks (youtube_id);
+CREATE INDEX IF NOT EXISTS idx_transcript_chunks_time ON public.video_transcript_chunks (start_time, end_time);
+CREATE INDEX IF NOT EXISTS idx_transcript_chunks_text ON public.video_transcript_chunks (text);
 
 -- Create video_progress for tracking user watch progress
 CREATE TABLE IF NOT EXISTS public.video_progress (
@@ -77,12 +83,15 @@ CREATE TABLE IF NOT EXISTS public.video_progress (
   completed_at TIMESTAMPTZ,
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   
-  -- Indexes
-  INDEX idx_video_progress_user_id (user_id),
-  INDEX idx_video_progress_video_id (video_id),
-  INDEX idx_video_progress_completed (completed),
+
+  -- Constraints
   UNIQUE (user_id, video_id)
 );
+
+-- Create indexes for video_progress
+CREATE INDEX IF NOT EXISTS idx_video_progress_user_id ON public.video_progress (user_id);
+CREATE INDEX IF NOT EXISTS idx_video_progress_video_id ON public.video_progress (video_id);
+CREATE INDEX IF NOT EXISTS idx_video_progress_completed ON public.video_progress (completed);
 
 -- Enable Row Level Security
 ALTER TABLE public.videos ENABLE ROW LEVEL SECURITY;

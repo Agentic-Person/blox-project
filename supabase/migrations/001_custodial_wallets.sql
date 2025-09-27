@@ -13,12 +13,14 @@ CREATE TABLE IF NOT EXISTS public.user_wallets (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   migrated_at TIMESTAMPTZ, -- When user exported to self-custody
-  
-  -- Indexes for performance
-  CONSTRAINT unique_primary_wallet_per_user UNIQUE (user_id, is_primary),
-  INDEX idx_user_wallets_user_id (user_id),
-  INDEX idx_user_wallets_public_key (public_key)
+
+  -- Constraints
+  CONSTRAINT unique_primary_wallet_per_user UNIQUE (user_id, is_primary)
 );
+
+-- Create indexes for user_wallets
+CREATE INDEX IF NOT EXISTS idx_user_wallets_user_id ON public.user_wallets (user_id);
+CREATE INDEX IF NOT EXISTS idx_user_wallets_public_key ON public.user_wallets (public_key);
 
 -- Create wallet_transactions table for tracking all token movements
 CREATE TABLE IF NOT EXISTS public.wallet_transactions (
@@ -31,13 +33,13 @@ CREATE TABLE IF NOT EXISTS public.wallet_transactions (
   signature TEXT, -- Solana transaction signature
   status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'confirmed', 'failed')),
   metadata JSONB DEFAULT '{}',
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  
-  -- Indexes
-  INDEX idx_wallet_transactions_wallet_id (wallet_id),
-  INDEX idx_wallet_transactions_status (status),
-  INDEX idx_wallet_transactions_created_at (created_at DESC)
+  created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Create indexes for wallet_transactions
+CREATE INDEX IF NOT EXISTS idx_wallet_transactions_wallet_id ON public.wallet_transactions (wallet_id);
+CREATE INDEX IF NOT EXISTS idx_wallet_transactions_status ON public.wallet_transactions (status);
+CREATE INDEX IF NOT EXISTS idx_wallet_transactions_created_at ON public.wallet_transactions (created_at DESC);
 
 -- Create rewards_queue table for pending rewards
 CREATE TABLE IF NOT EXISTS public.rewards_queue (
@@ -50,13 +52,13 @@ CREATE TABLE IF NOT EXISTS public.rewards_queue (
   claimed BOOLEAN DEFAULT false,
   claimed_at TIMESTAMPTZ,
   expires_at TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '30 days'),
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  
-  -- Indexes
-  INDEX idx_rewards_queue_user_id (user_id),
-  INDEX idx_rewards_queue_claimed (claimed),
-  INDEX idx_rewards_queue_expires_at (expires_at)
+  created_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Create indexes for rewards_queue
+CREATE INDEX IF NOT EXISTS idx_rewards_queue_user_id ON public.rewards_queue (user_id);
+CREATE INDEX IF NOT EXISTS idx_rewards_queue_claimed ON public.rewards_queue (claimed);
+CREATE INDEX IF NOT EXISTS idx_rewards_queue_expires_at ON public.rewards_queue (expires_at);
 
 -- Create token_tiers table for tracking user progression
 CREATE TABLE IF NOT EXISTS public.token_tiers (
@@ -68,12 +70,12 @@ CREATE TABLE IF NOT EXISTS public.token_tiers (
   streak_days INTEGER DEFAULT 0,
   last_active_date DATE,
   bonus_multiplier DECIMAL(3, 2) DEFAULT 1.00,
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-  
-  -- Indexes
-  INDEX idx_token_tiers_user_id (user_id),
-  INDEX idx_token_tiers_current_tier (current_tier)
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Create indexes for token_tiers
+CREATE INDEX IF NOT EXISTS idx_token_tiers_user_id ON public.token_tiers (user_id);
+CREATE INDEX IF NOT EXISTS idx_token_tiers_current_tier ON public.token_tiers (current_tier);
 
 -- Enable Row Level Security
 ALTER TABLE public.user_wallets ENABLE ROW LEVEL SECURITY;
