@@ -1,6 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+
+// Force dynamic rendering to prevent SSR/static generation issues with Clerk
+export const dynamic = 'force-dynamic'
 import { motion } from 'framer-motion'
 import {
   Calendar as CalendarIcon,
@@ -25,7 +28,7 @@ import { FullCalendar } from '@/components/calendar/FullCalendar'
 import { CalendarSidebar } from '@/components/calendar/CalendarSidebar'
 import { TodoManager } from '@/components/todos/TodoManager'
 import { useCalendarTodoStore, CalendarEvent, Todo } from '@/store/calendarTodoStore'
-import { useUser } from '@clerk/nextjs'
+import { useUser } from '@/lib/providers'
 
 export default function CalendarPage() {
   const { user } = useUser()

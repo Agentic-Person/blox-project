@@ -71,7 +71,7 @@ import {
   arrayMove
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useUser } from '@clerk/nextjs'
+import { useUser } from '@/lib/providers'
 import { format } from 'date-fns'
 
 interface TodoManagerProps {

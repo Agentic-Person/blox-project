@@ -32,7 +32,7 @@ import {
 import { useCalendarTodoStore, CalendarEvent, Todo } from '@/store/calendarTodoStore'
 import { DndContext, DragEndEvent, DragStartEvent, DragOverlay, useDraggable, useDroppable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
-import { useUser } from '@clerk/nextjs'
+import { useUser } from '@/lib/providers'
 
 interface FullCalendarProps {
   className?: string
