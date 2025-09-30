@@ -44,19 +44,24 @@ export interface ChatCompletionResponse {
 }
 
 class OpenAIService {
-  private openai: OpenAI
+  private openai: OpenAI | null = null
   private readonly model: string
-  
+
   constructor() {
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error('OpenAI API key is not configured. Please set OPENAI_API_KEY in your environment variables.')
-    }
-    
-    this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    })
-    
     this.model = process.env.OPENAI_MODEL || 'gpt-4o-mini'
+  }
+
+  private initializeOpenAI() {
+    if (!this.openai) {
+      if (!process.env.OPENAI_API_KEY) {
+        throw new Error('OpenAI API key is not configured. Please set OPENAI_API_KEY in your environment variables.')
+      }
+
+      this.openai = new OpenAI({
+        apiKey: process.env.OPENAI_API_KEY,
+      })
+    }
+    return this.openai
   }
 
   /**
@@ -84,7 +89,7 @@ class OpenAIService {
       ]
 
       // Call OpenAI
-      const completion = await this.openai.chat.completions.create({
+      const completion = await this.initializeOpenAI().chat.completions.create({
         model: this.model,
         messages: messages,
         temperature: 0.7,
@@ -195,7 +200,7 @@ ${videoContext?.title ? `Current video: "${videoContext.title}"` : ''}
 
 Return only the questions, one per line:`
 
-      const completion = await this.openai.chat.completions.create({
+      const completion = await this.initializeOpenAI().chat.completions.create({
         model: this.model,
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.8,
@@ -295,7 +300,7 @@ Return only the questions, one per line:`
    */
   async healthCheck(): Promise<boolean> {
     try {
-      await this.openai.models.list()
+      await this.initializeOpenAI().models.list()
       return true
     } catch (error) {
       console.error('OpenAI health check failed:', error)
