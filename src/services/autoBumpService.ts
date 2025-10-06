@@ -75,9 +75,13 @@ export class AutoBumpService {
 
   constructor(config?: Partial<AutoBumpConfig>) {
     this.config = { ...DEFAULT_CONFIG, ...config }
+  }
+
+  private checkSupabase() {
     if (!this.supabase) {
       throw new Error('Supabase client is not available')
     }
+    return this.supabase
   }
 
   /**
@@ -93,7 +97,7 @@ export class AutoBumpService {
       console.log(`🔄 Starting auto-bump process for user ${userId}`)
 
       // Get user preferences
-      const { data: preferences } = await this.supabase!
+      const { data: preferences } = await this.checkSupabase()
         .from('calendar_preferences')
         .select('*')
         .eq('user_id', userId)
@@ -180,7 +184,7 @@ export class AutoBumpService {
     const today = format(now, 'yyyy-MM-dd')
 
     // Get todos that are overdue or scheduled for today but incomplete
-    const { data: todos, error } = await this.supabase!
+    const { data: todos, error } = await this.checkSupabase()
       .from('todos')
       .select('*')
       .eq('user_id', userId)
@@ -274,14 +278,14 @@ export class AutoBumpService {
     const endDate = addDays(startDate, 30) // Look ahead 30 days
 
     const [eventsResult, todosResult] = await Promise.all([
-      this.supabase!
+      this.checkSupabase()
         .from('calendar_events')
         .select('*')
         .eq('user_id', userId)
         .gte('start_time', startDate.toISOString())
         .lte('start_time', endDate.toISOString()),
 
-      this.supabase!
+      this.checkSupabase()
         .from('todos')
         .select('*')
         .eq('user_id', userId)
@@ -463,7 +467,7 @@ export class AutoBumpService {
     const now = new Date()
 
     // Update the todo
-    const { error: updateError } = await this.supabase!
+    const { error: updateError } = await this.checkSupabase()
       .from('todos')
       .update({
         scheduled_date: format(candidate.suggestedDate, 'yyyy-MM-dd'),
@@ -481,7 +485,7 @@ export class AutoBumpService {
     }
 
     // Log the bump action
-    const { error: logError } = await this.supabase!
+    const { error: logError } = await this.checkSupabase()
       .from('auto_bump_logs')
       .insert({
         todo_id: candidate.id,
@@ -520,7 +524,7 @@ export class AutoBumpService {
     reason: string = 'manual_reschedule'
   ): Promise<void> {
     // Get the todo
-    const { data: todo, error: fetchError } = await this.supabase!
+    const { data: todo, error: fetchError } = await this.checkSupabase()
       .from('todos')
       .select('*')
       .eq('id', todoId)
@@ -533,7 +537,7 @@ export class AutoBumpService {
 
     // Update the todo
     const now = new Date()
-    const { error: updateError } = await this.supabase!
+    const { error: updateError } = await this.checkSupabase()
       .from('todos')
       .update({
         scheduled_date: format(targetDate, 'yyyy-MM-dd'),
@@ -551,7 +555,7 @@ export class AutoBumpService {
     }
 
     // Log the manual bump
-    await this.supabase!
+    await this.checkSupabase()
       .from('auto_bump_logs')
       .insert({
         todo_id: todoId,
@@ -579,7 +583,7 @@ export class AutoBumpService {
     todoId?: string,
     limit: number = 50
   ): Promise<any[]> {
-    let query = this.supabase!
+    let query = this.checkSupabase()
       .from('auto_bump_logs')
       .select(`
         *,
