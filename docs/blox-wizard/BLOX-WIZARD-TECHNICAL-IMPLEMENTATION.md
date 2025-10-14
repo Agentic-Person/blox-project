@@ -8,12 +8,15 @@
 |-----------|---------|--------|--------|
 | ✅ **AI Chat Interface** | **COMPLETE** | `AIChat.tsx` | Full UI with quick actions, message history |
 | ✅ **Todo System Types** | **COMPLETE** | `todo.ts`, `shared.ts` | Complete type definitions |
-| ✅ **Calendar Integration** | **COMPLETE** | `VideoCalendarEvent.tsx` | Video session scheduling |
+| ✅ **Calendar Integration** | **COMPLETE** | `FullCalendar.tsx`, `CalendarSidebar.tsx` | Full calendar with drag-and-drop |
 | ✅ **Smart Todo Suggestions** | **COMPLETE** | `SmartTodoSuggestion.tsx` | AI-generated task cards |
 | ✅ **Video-Todo Integration** | **COMPLETE** | `TodoDetailWithVideo.tsx` | Embedded video player |
 | ✅ **Transcript Extraction** | **COMPLETE** | `extract-transcripts.py` | yt-dlp pipeline |
-| 🔄 **Backend API Integration** | **PARTIAL** | `/api/chat/blox-wizard` | Mock responses, needs real AI |
-| ❌ **Database Persistence** | **PENDING** | Supabase tables | UI-only, no data storage |
+| ✅ **Backend API Integration** | **COMPLETE** | `/api/chat/blox-wizard` | Real calendar/todo integration |
+| ✅ **Database Persistence** | **COMPLETE** | Supabase tables | Full data storage & auto-bump |
+| ✅ **Todo Management System** | **COMPLETE** | `TodoManager.tsx`, API routes | Complete CRUD with drag-and-drop |
+| ✅ **Auto-Bump System** | **COMPLETE** | `autoBumpService.ts` | Smart task rescheduling |
+| ✅ **Blox Wizard Calendar Integration** | **COMPLETE** | `bloxWizardCalendarService.ts` | Natural language scheduling |
 
 ---
 
