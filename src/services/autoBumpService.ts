@@ -70,14 +70,19 @@ interface BumpCandidate extends Todo {
 }
 
 export class AutoBumpService {
-  private supabase = supabaseClient
+  private supabase: typeof supabaseClient | null = null
   private config: AutoBumpConfig
 
   constructor(config?: Partial<AutoBumpConfig>) {
     this.config = { ...DEFAULT_CONFIG, ...config }
+    // Don't initialize supabase in constructor - lazy init only
   }
 
   private checkSupabase() {
+    // Lazy initialization - only create client when actually needed
+    if (!this.supabase) {
+      this.supabase = supabaseClient
+    }
     if (!this.supabase) {
       throw new Error('Supabase client is not available')
     }
