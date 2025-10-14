@@ -1,5 +1,15 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
-  "installCommand": "npm install"
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "functions": {
+    "api/**/*.js": {
+      "maxDuration": 10
+    },
+    "api/chat/**/*.js": {
+      "maxDuration": 30
+    }
+  }
 }
