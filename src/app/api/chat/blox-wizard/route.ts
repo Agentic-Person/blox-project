@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { openaiService, type ChatMessage, type VideoContext as OpenAIVideoContext } from '@/lib/services/openai-service'
 
+// Configure route for longer timeout (OpenAI can take time)
+export const maxDuration = 30 // seconds
+
 interface BloxWizardRequest {
   message: string
   sessionId: string
