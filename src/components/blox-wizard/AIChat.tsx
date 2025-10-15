@@ -23,6 +23,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { useAIJourney } from '@/hooks/useAIJourney'
+import { useChatSession } from '@/hooks/useChatSession'
 
 interface Message {
   id: string
@@ -35,6 +36,14 @@ interface Message {
     language?: string
   }[]
   suggestions?: string[]
+  videoReferences?: {
+    title: string
+    youtubeId: string
+    timestamp: string
+    relevantSegment: string
+    thumbnailUrl: string
+    confidence: number
+  }[]
 }
 
 interface QuickAction {
@@ -182,22 +191,49 @@ function MessageBubble({ message }: { message: Message }) {
 
 export function AIChat({ className = '', onMessageSend }: AIChatProps) {
   const { journey, getNextAction } = useAIJourney()
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      role: 'assistant',
-      content: `Hello! I'm your AI learning companion. I'm here to help you master ${
-        journey?.gameTitle || 'Roblox development'
-      }. How can I assist you today?`,
-      timestamp: new Date(),
-      suggestions: ['Show my progress', 'What should I learn next?', 'I have a question']
-    }
-  ])
+
+  // Use persistent chat session
+  const {
+    sessionId,
+    messages: persistedMessages,
+    isLoadingHistory,
+    saveMessage,
+    startNewConversation
+  } = useChatSession()
+
+  // Transform persisted messages to component format
+  const messages: Message[] = persistedMessages
+    .filter(msg => msg.role !== 'system') // Filter out system messages
+    .map(msg => ({
+      id: msg.id,
+      role: msg.role as 'user' | 'assistant',
+      content: msg.content,
+      timestamp: msg.timestamp,
+      suggestions: msg.suggestedQuestions,
+      videoReferences: msg.videoReferences
+    }))
+
   const [input, setInput] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const [showQuickActions, setShowQuickActions] = useState(true)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  // Add initial welcome message if empty and not loading
+  useEffect(() => {
+    if (messages.length === 0 && !isLoadingHistory) {
+      const welcomeMessage = {
+        id: 'welcome-' + Date.now(),
+        role: 'assistant' as const,
+        content: `Hello! I'm your AI learning companion. I'm here to help you master ${
+          journey?.gameTitle || 'Roblox development'
+        }. How can I assist you today?`,
+        timestamp: new Date(),
+        suggestedQuestions: ['Show my progress', 'What should I learn next?', 'I have a question']
+      }
+      saveMessage(welcomeMessage)
+    }
+  }, [messages.length, isLoadingHistory, journey?.gameTitle, saveMessage])
   
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -209,22 +245,24 @@ export function AIChat({ className = '', onMessageSend }: AIChatProps) {
   
   const handleSend = async () => {
     if (!input.trim()) return
-    
-    const userMessage: Message = {
+
+    const userMessage = {
       id: Date.now().toString(),
-      role: 'user',
+      role: 'user' as const,
       content: input,
       timestamp: new Date()
     }
-    
-    setMessages(prev => [...prev, userMessage])
+
+    // Save user message to database
+    await saveMessage(userMessage)
+
     setInput('')
     setIsTyping(true)
-    
+
     // Call the actual API
     try {
       const messageToSend = input
-      
+
       const response = await fetch('/api/chat/blox-wizard', {
         method: 'POST',
         headers: {
@@ -232,7 +270,7 @@ export function AIChat({ className = '', onMessageSend }: AIChatProps) {
         },
         body: JSON.stringify({
           message: messageToSend,
-          sessionId: `session_${Date.now()}`,
+          sessionId: sessionId || `session_${Date.now()}`,
           userId: 'user',
           conversationHistory: messages.slice(-10).map(msg => ({
             role: msg.role,
@@ -247,34 +285,37 @@ export function AIChat({ className = '', onMessageSend }: AIChatProps) {
       }
 
       const data = await response.json()
-      
-      const aiMessage: Message = {
+
+      const aiMessage = {
         id: (Date.now() + 1).toString(),
-        role: 'assistant',
+        role: 'assistant' as const,
         content: data.answer,
         timestamp: new Date(),
-        suggestions: data.suggestedQuestions || ['Tell me more', 'Show examples', 'What\'s next?']
+        suggestedQuestions: data.suggestedQuestions || ['Tell me more', 'Show examples', 'What\'s next?'],
+        videoReferences: data.videoReferences
       }
-      
-      setMessages(prev => [...prev, aiMessage])
+
+      // Save AI message to database
+      await saveMessage(aiMessage)
+
       setIsTyping(false)
-      
+
       if (onMessageSend) {
         onMessageSend(messageToSend)
       }
     } catch (error) {
       console.error('Failed to send message:', error)
-      
-      // Fallback message on error
-      const errorMessage: Message = {
+
+      // Fallback message on error - don't save to DB
+      const errorMessage = {
         id: (Date.now() + 1).toString(),
-        role: 'assistant',
+        role: 'assistant' as const,
         content: "Sorry, I'm having trouble connecting right now. Please try again in a moment!",
         timestamp: new Date(),
-        suggestions: ['Try again', 'Ask something else']
+        suggestedQuestions: ['Try again', 'Ask something else']
       }
-      
-      setMessages(prev => [...prev, errorMessage])
+
+      await saveMessage(errorMessage)
       setIsTyping(false)
     }
   }
@@ -284,6 +325,18 @@ export function AIChat({ className = '', onMessageSend }: AIChatProps) {
     setTimeout(() => handleSend(), 100)
   }
   
+  // Show loading indicator while history loads
+  if (isLoadingHistory) {
+    return (
+      <div className={`${className} flex items-center justify-center h-full`}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blox-teal mx-auto mb-4"></div>
+          <p className="text-blox-off-white">Loading conversation...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className={`${className} flex flex-col h-full`}>
       <Card className="glass-card-teal flex-1 flex flex-col">

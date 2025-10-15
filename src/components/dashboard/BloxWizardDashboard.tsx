@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
+import { useChatSession } from '@/hooks/useChatSession'
 
 interface VideoReference {
   title: string
@@ -29,14 +30,27 @@ interface Message {
 }
 
 export function BloxWizardDashboard() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 'welcome-dashboard',
-      role: 'assistant',
-      content: "Hello! I'm Blox Chat Wizard, your AI learning companion. How can I help you today?",
-      timestamp: new Date(),
-    },
-  ])
+  // Use persistent chat session
+  const {
+    sessionId,
+    messages: persistedMessages,
+    isLoadingHistory,
+    saveMessage,
+    startNewConversation
+  } = useChatSession()
+
+  // Transform persisted messages to component format
+  const messages: Message[] = persistedMessages
+    .filter(msg => msg.role !== 'system') // Filter out system messages
+    .map(msg => ({
+      id: msg.id,
+      role: msg.role as 'user' | 'assistant',
+      content: msg.content,
+      timestamp: msg.timestamp,
+      videoReferences: msg.videoReferences,
+      suggestedQuestions: msg.suggestedQuestions
+    }))
+
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isPremium] = useState(true) // No premium restrictions
@@ -44,10 +58,23 @@ export function BloxWizardDashboard() {
   const [isMounted, setIsMounted] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
-  
+
   useEffect(() => {
     setIsMounted(true)
   }, [])
+
+  // Add initial welcome message if empty and not loading
+  useEffect(() => {
+    if (messages.length === 0 && !isLoadingHistory) {
+      const welcomeMessage = {
+        id: 'welcome-dashboard-' + Date.now(),
+        role: 'assistant' as const,
+        content: "Hello! I'm Blox Chat Wizard, your AI learning companion. How can I help you today?",
+        timestamp: new Date(),
+      }
+      saveMessage(welcomeMessage)
+    }
+  }, [messages.length, isLoadingHistory, saveMessage])
 
   // Sample questions like ChatGPT - 6 questions for 2x3 grid
   const sampleQuestions = [
@@ -76,21 +103,23 @@ export function BloxWizardDashboard() {
       return
     }
 
-    const userMessage: Message = {
+    const userMessage = {
       id: `user-${Date.now()}`,
-      role: 'user',
+      role: 'user' as const,
       content: input,
       timestamp: new Date(),
     }
 
-    setMessages(prev => [...prev, userMessage])
+    // Save user message to database
+    await saveMessage(userMessage)
+
     setInput('')
     setIsLoading(true)
 
     // Call the actual API
     try {
       const messageToSend = input
-      
+
       const response = await fetch('/api/chat/blox-wizard', {
         method: 'POST',
         headers: {
@@ -98,7 +127,7 @@ export function BloxWizardDashboard() {
         },
         body: JSON.stringify({
           message: messageToSend,
-          sessionId: `dashboard_session_${Date.now()}`,
+          sessionId: sessionId || `dashboard_session_${Date.now()}`,
           userId: 'user',
           conversationHistory: messages.slice(-10).map(msg => ({
             role: msg.role,
@@ -113,30 +142,32 @@ export function BloxWizardDashboard() {
       }
 
       const data = await response.json()
-      
-      const aiMessage: Message = {
+
+      const aiMessage = {
         id: `assistant-${Date.now()}`,
-        role: 'assistant',
+        role: 'assistant' as const,
         content: data.answer,
         timestamp: new Date(),
         videoReferences: data.videoReferences,
         suggestedQuestions: data.suggestedQuestions
       }
-      
-      setMessages(prev => [...prev, aiMessage])
+
+      // Save AI message to database
+      await saveMessage(aiMessage)
+
       setIsLoading(false)
     } catch (error) {
       console.error('Failed to send message:', error)
-      
+
       // Fallback message on error
-      const errorMessage: Message = {
+      const errorMessage = {
         id: `assistant-${Date.now()}`,
-        role: 'assistant',
+        role: 'assistant' as const,
         content: "Sorry, I'm having trouble connecting right now. Please try again in a moment!",
         timestamp: new Date(),
       }
-      
-      setMessages(prev => [...prev, errorMessage])
+
+      await saveMessage(errorMessage)
       setIsLoading(false)
     }
   }
@@ -152,6 +183,20 @@ export function BloxWizardDashboard() {
     { icon: Zap, title: 'Instant Answers', description: '24/7 support for all your questions' },
     { icon: HelpCircle, title: 'Project Ideas', description: 'Get creative suggestions for your games' },
   ]
+
+  // Show loading indicator while history loads
+  if (isLoadingHistory) {
+    return (
+      <div className="space-y-4">
+        <Card className="bg-blox-black-blue/50 border-blox-teal/20 h-[500px] flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blox-teal mx-auto mb-4"></div>
+            <p className="text-blox-off-white">Loading conversation...</p>
+          </div>
+        </Card>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-4">
