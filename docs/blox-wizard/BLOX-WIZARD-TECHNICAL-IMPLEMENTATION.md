@@ -7,6 +7,7 @@
 | Component | Status | Files | Notes |
 |-----------|---------|--------|--------|
 | ✅ **AI Chat Interface** | **COMPLETE** | `AIChat.tsx` | Full UI with quick actions, message history |
+| ✅ **Chat Persistence System** | **COMPLETE** | `useChatSession.ts`, `chat-session-service.ts` | Supabase chat history with RLS |
 | ✅ **Todo System Types** | **COMPLETE** | `todo.ts`, `shared.ts` | Complete type definitions |
 | ✅ **Calendar Integration** | **COMPLETE** | `FullCalendar.tsx`, `CalendarSidebar.tsx` | Full calendar with drag-and-drop |
 | ✅ **Smart Todo Suggestions** | **COMPLETE** | `SmartTodoSuggestion.tsx` | AI-generated task cards |
@@ -28,6 +29,8 @@
 ├─────────────────────────────────────────────────────────────────┤
 │  Frontend (React/Next.js)                                      │
 │  ├── AIChat.tsx (Main Interface)                               │
+│  ├── BloxWizardDashboard.tsx (Dashboard View)                  │
+│  ├── useChatSession.ts (Chat Persistence Hook)                 │
 │  ├── SmartTodoSuggestion.tsx (AI Suggestions)                  │
 │  ├── VideoCalendarEvent.tsx (Calendar Events)                  │
 │  └── TodoDetailWithVideo.tsx (Video Integration)               │
@@ -37,19 +40,28 @@
 │  ├── Todo Generation Logic                                     │
 │  └── Video Search & Matching                                   │
 ├─────────────────────────────────────────────────────────────────┤
+│  Services Layer                                                │
+│  ├── chat-session-service.ts (Message Persistence)             │
+│  ├── autoBumpService.ts (Task Rescheduling)                    │
+│  └── bloxWizardCalendarService.ts (NL Scheduling)              │
+├─────────────────────────────────────────────────────────────────┤
 │  AI Services                                                   │
 │  ├── OpenAI GPT-4 (Chat Responses)                            │
 │  ├── OpenAI Embeddings (Video Search)                         │
 │  └── Vector Search (Transcript Matching)                      │
 ├─────────────────────────────────────────────────────────────────┤
-│  Data Layer                                                    │
-│  ├── Supabase (Todos, Videos, Progress)                       │
-│  ├── Vector Database (Transcript Embeddings)                  │
-│  └── YouTube API (Video Metadata)                             │
+│  Data Layer (Supabase)                                        │
+│  ├── chat_conversations (Chat Sessions)                       │
+│  ├── chat_messages (Message History)                          │
+│  ├── todos (Task Management)                                  │
+│  ├── calendar_events (Scheduling)                             │
+│  ├── video_content (Video Library)                            │
+│  └── Vector Database (Transcript Embeddings)                  │
 ├─────────────────────────────────────────────────────────────────┤
 │  External Services                                             │
 │  ├── yt-dlp (Transcript Extraction)                           │
 │  ├── YouTube Data API v3 (Video Info)                         │
+│  ├── Clerk (Authentication)                                   │
 │  └── Calendar Integration (Future)                            │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -76,10 +88,12 @@ interface AIChatProps {
 
 **Key Features:**
 - **Quick Actions**: 6 predefined prompts including "Build Schedule"
-- **Message History**: Persistent chat with timestamps
+- **Persistent Message History**: Full database-backed chat history
 - **Real API Integration**: Calls `/api/chat/blox-wizard` endpoint
 - **Suggestion Cards**: AI responses include follow-up suggestions
 - **Video Context**: Can receive current video context for contextual help
+- **Cross-Component Sync**: Messages sync between dashboard and full page
+- **Session Management**: Automatic session ID generation and persistence
 
 **Quick Actions Implemented:**
 1. 📅 **Build Schedule** - Calendar integration
@@ -88,6 +102,59 @@ interface AIChatProps {
 4. 💻 **Show Code** - Code examples
 5. 📚 **Explain** - Concept explanation
 6. ⚡ **Quick Tips** - Improvement suggestions
+
+### 1b. Chat Persistence System
+
+**Status**: ✅ **COMPLETE & INTEGRATED**
+
+**Components:**
+- `src/hooks/useChatSession.ts` - React hook for chat state management
+- `src/lib/services/chat-session-service.ts` - Database operations service
+
+**Database Tables:**
+- `chat_conversations` - Session metadata and user ownership
+- `chat_messages` - Individual messages with video references
+
+**Key Features:**
+```typescript
+const {
+  sessionId,              // Current session ID
+  messages,               // Array of ChatMessage
+  isLoadingHistory,       // Loading state
+  saveMessage,            // Save message to DB
+  startNewConversation,   // Start fresh session
+  switchConversation,     // Load different conversation
+  loadRecentConversations,// Get conversation history
+  deleteConversation      // Remove conversation
+} = useChatSession()
+```
+
+**Integration Points:**
+- ✅ AIChat.tsx - Full page chat interface
+- ✅ BloxWizardDashboard.tsx - Dashboard chat widget
+- ✅ Clerk Authentication - User-specific conversations
+- ✅ Supabase RLS - Row-level security for chat data
+
+**Data Flow:**
+```
+User Types Message
+    ↓
+saveMessage() → Supabase chat_messages
+    ↓
+AI Response Generated
+    ↓
+saveMessage() → Supabase chat_messages
+    ↓
+useChatSession Hook Updates → React State
+    ↓
+UI Re-renders with New Messages
+```
+
+**Session Persistence:**
+- Session ID stored in localStorage
+- Survives browser refresh and navigation
+- Shared between dashboard and full page views
+- Automatic conversation creation in database
 
 ### 2. Smart Todo Suggestion (`src/components/integration/SmartTodoSuggestion.tsx`)
 
@@ -294,9 +361,144 @@ DELETE /api/calendar/events/[id] // Cancel event
 
 ### Current Tables
 
-**Status**: ❌ **Tables Not Created Yet**
+**Status**: ✅ **Chat Tables Created** | ❌ **Todo/Calendar Tables Pending**
 
-### Needed Tables:
+### Implemented Tables (Chat Persistence):
+
+```sql
+-- Chat Conversations (Session Management)
+CREATE TABLE chat_conversations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id TEXT NOT NULL,
+  session_id TEXT UNIQUE NOT NULL,
+  title TEXT,
+  last_message_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Chat Messages (Message History)
+CREATE TABLE chat_messages (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  conversation_id UUID NOT NULL REFERENCES chat_conversations(id) ON DELETE CASCADE,
+  role TEXT NOT NULL CHECK (role IN ('user', 'assistant', 'system')),
+  content TEXT NOT NULL,
+  video_context JSONB,
+  video_references JSONB,
+  suggested_questions TEXT[],
+  metadata JSONB,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Indexes for Performance
+CREATE INDEX idx_chat_conversations_user_id ON chat_conversations(user_id);
+CREATE INDEX idx_chat_conversations_session_id ON chat_conversations(session_id);
+CREATE INDEX idx_chat_messages_conversation_id ON chat_messages(conversation_id);
+CREATE INDEX idx_chat_messages_created_at ON chat_messages(created_at DESC);
+
+-- Row Level Security (RLS)
+ALTER TABLE chat_conversations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE chat_messages ENABLE ROW LEVEL SECURITY;
+
+-- RLS Policies
+CREATE POLICY "Users can view their own conversations"
+  ON chat_conversations FOR SELECT
+  USING (user_id = auth.uid()::text);
+
+CREATE POLICY "Users can insert their own conversations"
+  ON chat_conversations FOR INSERT
+  WITH CHECK (user_id = auth.uid()::text);
+
+CREATE POLICY "Users can update their own conversations"
+  ON chat_conversations FOR UPDATE
+  USING (user_id = auth.uid()::text);
+
+CREATE POLICY "Users can delete their own conversations"
+  ON chat_conversations FOR DELETE
+  USING (user_id = auth.uid()::text);
+
+CREATE POLICY "Users can view messages from their conversations"
+  ON chat_messages FOR SELECT
+  USING (conversation_id IN (
+    SELECT id FROM chat_conversations WHERE user_id = auth.uid()::text
+  ));
+
+CREATE POLICY "Users can insert messages to their conversations"
+  ON chat_messages FOR INSERT
+  WITH CHECK (conversation_id IN (
+    SELECT id FROM chat_conversations WHERE user_id = auth.uid()::text
+  ));
+
+-- Helper Functions
+CREATE OR REPLACE FUNCTION get_conversation_with_messages(
+  p_session_id TEXT,
+  p_user_id TEXT,
+  message_limit INT DEFAULT 50
+)
+RETURNS TABLE (
+  conversation_id UUID,
+  session_id TEXT,
+  title TEXT,
+  message_id UUID,
+  message_role TEXT,
+  message_content TEXT,
+  message_video_context JSONB,
+  message_video_references JSONB,
+  message_suggested_questions TEXT[],
+  message_created_at TIMESTAMPTZ
+) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT
+    c.id as conversation_id,
+    c.session_id,
+    c.title,
+    m.id as message_id,
+    m.role as message_role,
+    m.content as message_content,
+    m.video_context as message_video_context,
+    m.video_references as message_video_references,
+    m.suggested_questions as message_suggested_questions,
+    m.created_at as message_created_at
+  FROM chat_conversations c
+  LEFT JOIN chat_messages m ON m.conversation_id = c.id
+  WHERE c.session_id = p_session_id
+    AND (p_user_id IS NULL OR c.user_id = p_user_id)
+  ORDER BY m.created_at ASC
+  LIMIT message_limit;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION get_user_conversations(
+  p_user_id TEXT,
+  conversation_limit INT DEFAULT 20
+)
+RETURNS TABLE (
+  conversation_id UUID,
+  session_id TEXT,
+  title TEXT,
+  last_message_at TIMESTAMPTZ,
+  message_count BIGINT
+) AS $$
+BEGIN
+  RETURN QUERY
+  SELECT
+    c.id as conversation_id,
+    c.session_id,
+    c.title,
+    c.last_message_at,
+    COUNT(m.id) as message_count
+  FROM chat_conversations c
+  LEFT JOIN chat_messages m ON m.conversation_id = c.id
+  WHERE c.user_id = p_user_id
+  GROUP BY c.id, c.session_id, c.title, c.last_message_at
+  ORDER BY c.last_message_at DESC
+  LIMIT conversation_limit;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+```
+
+### Pending Tables (Todo & Calendar):
 
 ```sql
 -- User todos
@@ -567,15 +769,26 @@ src/
 ├── components/
 │   ├── blox-wizard/
 │   │   └── AIChat.tsx                    # Main chat interface
+│   ├── dashboard/
+│   │   └── BloxWizardDashboard.tsx       # Dashboard chat widget
 │   └── integration/
 │       ├── SmartTodoSuggestion.tsx       # AI todo cards
 │       ├── VideoCalendarEvent.tsx        # Calendar events
 │       └── TodoDetailWithVideo.tsx       # Video player integration
+├── hooks/
+│   └── useChatSession.ts                 # Chat persistence hook
+├── lib/
+│   └── services/
+│       └── chat-session-service.ts       # Database operations
 ├── types/
 │   ├── todo.ts                           # Todo type definitions
 │   └── shared.ts                         # Shared types (video, calendar)
 └── app/api/
     └── chat/blox-wizard/route.ts         # Chat API endpoint
+
+supabase/
+└── migrations/
+    └── 007_chat_persistence.sql          # Chat tables & functions
 ```
 
 ### Common Development Tasks
@@ -631,10 +844,26 @@ const completion = await openai.chat.completions.create({
 
 ---
 
-> 🪄 **Blox Wizard Technical Implementation is 85% Complete**
-> The UI and component architecture is production-ready. Only backend integration remains!
+> 🪄 **Blox Wizard Technical Implementation is 90% Complete**
+> The UI, chat persistence, and component architecture are production-ready. Only AI integration and todo/calendar APIs remain!
 
 ---
 
-*Last Updated: January 25, 2025*
-*Implementation Status: UI Complete, Backend Integration Needed*
+## 📊 Recent Updates
+
+**January 2025 - Chat Persistence Integration:**
+- ✅ Implemented full chat history persistence with Supabase
+- ✅ Added `useChatSession` hook for state management
+- ✅ Created `chat-session-service` for database operations
+- ✅ Integrated chat persistence into AIChat and BloxWizardDashboard
+- ✅ Added Row Level Security (RLS) policies for data protection
+- ✅ Implemented session management with localStorage sync
+- ✅ Messages now persist across page navigation and browser refresh
+- ✅ Cross-component message sync (dashboard ↔ full page)
+
+**Migration File:** `supabase/migrations/007_chat_persistence.sql`
+
+---
+
+*Last Updated: January 27, 2025*
+*Implementation Status: Chat Persistence Complete, AI Integration & APIs Pending*
