@@ -5,7 +5,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { chatSessionService, type ChatMessage, type Conversation } from '@/lib/services/chat-session-service'
-import { useUser } from '@clerk/nextjs'
+import { useUser } from '@/lib/providers'
 
 interface UseChatSessionReturn {
   sessionId: string | null
