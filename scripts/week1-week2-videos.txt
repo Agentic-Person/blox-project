@@ -1,0 +1,46 @@
+# Week 1 & Week 2 Video IDs from Curriculum
+# Extracted from src/data/curriculum.json
+
+# WEEK 1 - Introduction to Roblox Studio
+
+# Day 1: Getting Started with Roblox Studio
+p005iduooyw
+
+# Day 2: Beginner Guide to Roblox Scripting
+P2ECl-mLmvY
+
+# Day 3: Roblox Building, Low Polys, and Lighting
+OAW81QZpvRY
+D2LrlxWk8kc
+
+# Day 4: Roblox Terrain
+-xQBxTYq2m8
+b_31P1MEOlc
+CippiATeZ54
+mk6iVm95D0U
+fz-0n9ed9xU
+
+# Day 5: Blender Modeling Guide and Roblox Development
+99C5K1cdql8
+W337AL7n3dc
+
+# WEEK 2 - Blender 4.X Beginner Basic Complete Crash Course
+
+# Day 6: Complete Blender Beginner Course (CG Cookie Blender 4.5 Basics)
+qZIOA7mFaRg
+i8wO5PEDO1c
+zkupB5S3sUQ
+lYr25_YeuL8
+ACdtFVSbDZo
+vlR6qAbIlR0
+eJH0hxlhd5M
+HFstA5lM4BM
+PfBO0Gfla_Y
+fPXT6-6Z7pU
+2cQROA13T04
+g5WCcHsgWf4
+Iyk1rBNFMDg
+IjsugFxhB1w
+JiQuGealRrs
+eVRiJYhE0Wk
+5dRvcq0rLzU

@@ -1,0 +1,29 @@
+# Starter Video IDs for Testing
+# Format: One video ID per line (or full YouTube URL)
+# Lines starting with # are comments and will be ignored
+
+# VERIFIED - Roblox Studio Basics (39 min)
+p005iduooyw
+
+# ADD MORE VIDEO IDs BELOW
+# To find good videos:
+# 1. Search YouTube for "Roblox Studio tutorial" or "Blender tutorial for beginners"
+# 2. Filter by: Subtitles/CC enabled
+# 3. Copy the video ID (the part after ?v= in the URL)
+# 4. Add it to this file
+# 5. Test with: node scripts/find-videos-with-transcripts.js --file scripts/starter-video-ids.txt
+
+# Popular Roblox Tutorial Channels (try searching their channels):
+# - SmartyRBX (verified to have captions)
+# - TheDevKing
+# - Roblox
+# - AlvinBlox
+
+# Popular Blender Tutorial Channels:
+# - Blender Guru
+# - Grant Abbitt
+# - CG Cookie
+# - Ducky 3D
+
+# Once you have 10-15 video IDs with verified transcripts, process them with:
+# node scripts/process-videos-to-supabase.js --file valid-video-ids.txt
