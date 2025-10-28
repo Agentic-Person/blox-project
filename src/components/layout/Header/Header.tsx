@@ -14,16 +14,17 @@ interface HeaderProps {
 
 export function Header({ isLearningPage = false, onBackToDashboard }: HeaderProps) {
   const { user, signOut } = useAuth()
-  const { totalHoursWatched, totalXP } = useLearningStore()
+  const { totalHoursWatched } = useLearningStore()
   const [showDropdown, setShowDropdown] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
   const router = useRouter()
-  
+
   // Mock BLOX token balance for now (will be fetched from blockchain later)
-  const bloxBalance = 450
-  // Mock stats for videos watched and day streak
+  const bloxBalance = 1250
+  // Mock XP and stats
+  const totalXP = 325
   const videosWatched = 39
   const dayStreak = 7
 

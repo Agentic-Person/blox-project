@@ -256,7 +256,27 @@ export function WeekPreview({
                           >
                             {/* Enhanced Video Thumbnail */}
                             <div className="relative w-32 h-20 bg-blox-very-dark-blue rounded-lg overflow-hidden flex-shrink-0 shadow-lg">
-                              {video.youtubeId ? (
+                              {(video as any).type === 'assignment' && (video as any).thumbnails?.[0] ? (
+                                <>
+                                  <img
+                                    src={(video as any).thumbnails[0]}
+                                    alt={video.title}
+                                    className="w-full h-full object-cover"
+                                  />
+                                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div className={cn("rounded-full p-2", playButtonColors[moduleIndex])}>
+                                      <Play className="h-6 w-6 text-white fill-white" />
+                                    </div>
+                                  </div>
+                                  {/* Assignment Badge */}
+                                  <div className="absolute top-1 right-1 bg-blox-teal/90 px-1.5 py-0.5 rounded text-xs text-white font-bold">
+                                    ASSIGNMENT
+                                  </div>
+                                  <div className="absolute bottom-1 right-1 bg-black/80 px-1.5 py-0.5 rounded text-xs text-white">
+                                    {video.duration}
+                                  </div>
+                                </>
+                              ) : video.youtubeId ? (
                                 <>
                                   <img
                                     src={`https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`}

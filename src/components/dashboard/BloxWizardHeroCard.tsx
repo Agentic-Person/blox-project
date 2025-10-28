@@ -1,14 +1,13 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Bot, FolderOpen, Search, Video, MessageSquare, Code, ExternalLink, ArrowRight } from 'lucide-react'
+import { Bot, FolderOpen, Search, Video, MessageSquare, Code, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import Link from 'next/link'
 
 interface BloxWizardHeroCardProps {
-  onStartChat: () => void
-  onOpenCommandCenter?: () => void
+  // No props needed anymore
 }
 
 const features = [
@@ -18,7 +17,7 @@ const features = [
     description: 'Keep your projects and tasks perfectly organized'
   },
   {
-    icon: Search, 
+    icon: Search,
     title: 'Tutorial Discovery',
     description: 'Find the exact tutorials you need, when you need them'
   },
@@ -34,12 +33,17 @@ const features = [
   },
   {
     icon: Code,
-    title: 'Code Assistant', 
+    title: 'Code Assistant',
     description: 'Get help with scripts, debug issues, and learn best practices'
+  },
+  {
+    icon: Bot,
+    title: 'Smart Learning',
+    description: 'Personalized guidance based on your progress'
   }
 ]
 
-export function BloxWizardHeroCard({ onStartChat }: BloxWizardHeroCardProps) {
+export function BloxWizardHeroCard() {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -87,30 +91,19 @@ export function BloxWizardHeroCard({ onStartChat }: BloxWizardHeroCardProps) {
                 Search videos, chat with content, and get personalized development assistance.
               </motion.p>
 
-              {/* Action Buttons */}
+              {/* Action Button */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="flex flex-col sm:flex-row gap-4"
               >
-                <Button
-                  onClick={onStartChat}
-                  className="bg-gradient-to-r from-blox-teal to-blox-teal-dark hover:from-blox-teal-dark hover:to-blox-teal 
-                    px-6 py-3 text-lg font-semibold text-white border-0 hover:scale-105 transition-all duration-300"
-                >
-                  Start Chatting
-                  <MessageSquare className="ml-2 h-5 w-5" />
-                </Button>
-                
                 <Link href="/blox-wizard">
                   <Button
-                    variant="outline"
-                    className="w-full sm:w-auto border-blox-teal/50 text-blox-teal hover:bg-blox-teal/10 hover:border-blox-teal 
-                      px-6 py-3 text-lg font-semibold hover:scale-105 transition-all duration-300"
+                    className="bg-gradient-to-r from-blox-teal to-blox-teal-dark hover:from-blox-teal-dark hover:to-blox-teal
+                      px-6 py-3 text-lg font-semibold text-white border-0 hover:scale-105 transition-all duration-300 w-full sm:w-auto"
                   >
-                    Open Command Center
-                    <ExternalLink className="ml-2 h-5 w-5" />
+                    Start Chatting
+                    <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
               </motion.div>
@@ -128,7 +121,7 @@ export function BloxWizardHeroCard({ onStartChat }: BloxWizardHeroCardProps) {
               </motion.h3>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
-                {features.slice(0, 4).map((feature, index) => (
+                {features.map((feature, index) => (
                   <motion.div
                     key={feature.title}
                     initial={{ opacity: 0, y: 10 }}
@@ -154,25 +147,6 @@ export function BloxWizardHeroCard({ onStartChat }: BloxWizardHeroCardProps) {
                   </motion.div>
                 ))}
               </div>
-              
-              {/* Show More Feature Hint */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.0 }}
-                className="mt-4 text-center"
-              >
-                <Link href="/blox-wizard">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-blox-off-white/60 hover:text-blox-teal text-xs"
-                  >
-                    View all features in Command Center
-                    <ArrowRight className="ml-1 h-3 w-3" />
-                  </Button>
-                </Link>
-              </motion.div>
             </div>
           </div>
         </CardContent>

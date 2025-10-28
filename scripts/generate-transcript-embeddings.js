@@ -4,7 +4,7 @@ const { createClient } = require('@supabase/supabase-js');
 const OpenAI = require('openai');
 
 // Load environment variables
-require('dotenv').config({ path: path.join(__dirname, '../.env') });
+require('dotenv').config({ path: path.join(__dirname, '../.env.local') });
 
 // Configuration
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -65,15 +65,32 @@ async function generateEmbedding(text, retries = 0) {
 // Get all transcript chunks that need embeddings
 async function getTranscriptChunksWithoutEmbeddings() {
   console.log('Fetching transcript chunks without embeddings...');
-  
+
   const { data, error } = await supabase
-    .from('video_transcript_chunks')
-    .select('id, youtube_id, chunk_index, text, video:videos(title)')
+    .from('transcript_chunks')
+    .select('id, transcript_id, chunk_index, chunk_text')
     .is('embedding', null)
-    .order('youtube_id, chunk_index');
+    .order('transcript_id, chunk_index');
 
   if (error) {
     throw new Error(`Error fetching transcript chunks: ${error.message}`);
+  }
+
+  // Get video titles for each unique transcript_id
+  if (data && data.length > 0) {
+    const transcriptIds = [...new Set(data.map(d => d.transcript_id))];
+    const { data: videos, error: videosError } = await supabase
+      .from('video_transcripts')
+      .select('id, title')
+      .in('id', transcriptIds);
+
+    if (!videosError && videos) {
+      // Map video titles to chunks
+      const videoMap = new Map(videos.map(v => [v.id, v.title]));
+      data.forEach(chunk => {
+        chunk.video_title = videoMap.get(chunk.transcript_id) || 'Unknown';
+      });
+    }
   }
 
   console.log(`Found ${data.length} chunks without embeddings`);
@@ -83,7 +100,7 @@ async function getTranscriptChunksWithoutEmbeddings() {
 // Update chunk with embedding
 async function updateChunkEmbedding(chunkId, embedding) {
   const { error } = await supabase
-    .from('video_transcript_chunks')
+    .from('transcript_chunks')
     .update({ embedding })
     .eq('id', chunkId);
 
@@ -125,14 +142,14 @@ async function processEmbeddings() {
       const batchPromises = batch.map(async (chunk) => {
         try {
           // Generate embedding
-          const embedding = await generateEmbedding(chunk.text);
-          
+          const embedding = await generateEmbedding(chunk.chunk_text);
+
           // Update in database
           await updateChunkEmbedding(chunk.id, embedding);
-          
+
           processed++;
-          console.log(`  ✅ ${chunk.video?.title || 'Unknown'} - Chunk ${chunk.chunk_index}`);
-          
+          console.log(`  ✅ ${chunk.video_title || 'Unknown'} - Chunk ${chunk.chunk_index}`);
+
         } catch (error) {
           errors++;
           console.error(`  ❌ Error processing chunk ${chunk.id}:`, error.message);
@@ -208,12 +225,12 @@ async function getEmbeddingStats() {
 
     // Total chunks
     const { count: totalChunks } = await supabase
-      .from('video_transcript_chunks')
+      .from('transcript_chunks')
       .select('*', { count: 'exact', head: true });
 
     // Chunks with embeddings
     const { count: chunksWithEmbeddings } = await supabase
-      .from('video_transcript_chunks')
+      .from('transcript_chunks')
       .select('*', { count: 'exact', head: true })
       .not('embedding', 'is', null);
 
@@ -228,15 +245,27 @@ async function getEmbeddingStats() {
     // Get some sample embedded chunks
     if (chunksWithEmbeddings > 0) {
       const { data: sampleChunks } = await supabase
-        .from('video_transcript_chunks')
-        .select('youtube_id, chunk_index, text, video:videos(title)')
+        .from('transcript_chunks')
+        .select('transcript_id, chunk_index, chunk_text')
         .not('embedding', 'is', null)
         .limit(3);
 
-      console.log('\\nSample embedded chunks:');
-      sampleChunks?.forEach((chunk, i) => {
-        console.log(`  ${i + 1}. ${chunk.video?.title} - Chunk ${chunk.chunk_index}`);
-      });
+      if (sampleChunks && sampleChunks.length > 0) {
+        // Get video titles
+        const transcriptIds = sampleChunks.map(c => c.transcript_id);
+        const { data: videos } = await supabase
+          .from('video_transcripts')
+          .select('id, title')
+          .in('id', transcriptIds);
+
+        const videoMap = new Map(videos?.map(v => [v.id, v.title]) || []);
+
+        console.log('\\nSample embedded chunks:');
+        sampleChunks.forEach((chunk, i) => {
+          const title = videoMap.get(chunk.transcript_id) || 'Unknown';
+          console.log(`  ${i + 1}. ${title} - Chunk ${chunk.chunk_index}`);
+        });
+      }
     }
 
   } catch (error) {

@@ -2,9 +2,9 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Send, 
-  Bot, 
+import {
+  Send,
+  Bot,
   User,
   Sparkles,
   Code,
@@ -16,7 +16,8 @@ import {
   HelpCircle,
   BookOpen,
   Zap,
-  ChevronDown
+  ChevronDown,
+  AlertCircle
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -24,6 +25,8 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { useAIJourney } from '@/hooks/useAIJourney'
 import { useChatSession } from '@/hooks/useChatSession'
+import { useUser } from '@/lib/providers'
+import toast from 'react-hot-toast'
 
 interface Message {
   id: string
@@ -175,12 +178,71 @@ function MessageBubble({ message }: { message: Message }) {
                   key={idx}
                   size="sm"
                   variant="outline"
-                  className="text-xs border-blox-teal/30 hover:border-blox-teal 
+                  className="text-xs border-blox-teal/30 hover:border-blox-teal
                     hover:bg-blox-teal/10"
                 >
                   {suggestion}
                 </Button>
               ))}
+            </div>
+          )}
+
+          {/* Video References */}
+          {message.videoReferences && message.videoReferences.length > 0 && !isUser && (
+            <div className="mt-3 space-y-2 max-w-md">
+              <p className="text-xs text-blox-off-white/60 mb-2">📹 Recommended Videos:</p>
+              {message.videoReferences.map((video, idx) => {
+                // Calculate timestamp in seconds (safely)
+                const timestampSeconds = video.timestamp
+                  ? video.timestamp.split(':').reduce((acc, time) => (60 * acc) + parseInt(time || '0'), 0)
+                  : 0
+
+                return (
+                  <motion.a
+                    key={idx}
+                    href={`https://www.youtube.com/watch?v=${video.youtubeId}${timestampSeconds > 0 ? `&t=${timestampSeconds}s` : ''}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex gap-3 p-3 rounded-lg bg-blox-second-dark-blue/50 border border-blox-off-white/10
+                      hover:border-blox-teal/50 hover:bg-blox-second-dark-blue/70 transition-all group"
+                  >
+                    {/* Thumbnail */}
+                    <div className="flex-shrink-0 w-32 h-20 rounded overflow-hidden bg-blox-off-white/5">
+                      <img
+                        src={video.thumbnailUrl || `https://img.youtube.com/vi/${video.youtubeId}/maxresdefault.jpg`}
+                        alt={video.title || 'Video'}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                      />
+                    </div>
+
+                    {/* Video Info */}
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-sm font-medium text-blox-white mb-1 line-clamp-2 group-hover:text-blox-teal transition-colors">
+                        {video.title || 'Untitled Video'}
+                      </h4>
+                      <div className="flex items-center gap-2 mb-1">
+                        {video.timestamp && (
+                          <Badge variant="outline" className="text-xs border-blox-teal/30 text-blox-teal">
+                            {video.timestamp}
+                          </Badge>
+                        )}
+                        {video.confidence && (
+                          <span className="text-xs text-blox-off-white/50">
+                            {Math.round(video.confidence * 100)}% match
+                          </span>
+                        )}
+                      </div>
+                      {video.relevantSegment && (
+                        <p className="text-xs text-blox-off-white/60 line-clamp-2">
+                          {video.relevantSegment}
+                        </p>
+                      )}
+                    </div>
+                  </motion.a>
+                )
+              })}
             </div>
           )}
         </div>
@@ -191,6 +253,9 @@ function MessageBubble({ message }: { message: Message }) {
 
 export function AIChat({ className = '', onMessageSend }: AIChatProps) {
   const { journey, getNextAction } = useAIJourney()
+
+  // Get authenticated user
+  const { user, isLoaded } = useUser()
 
   // Use persistent chat session
   const {
@@ -246,6 +311,15 @@ export function AIChat({ className = '', onMessageSend }: AIChatProps) {
   const handleSend = async () => {
     if (!input.trim()) return
 
+    // Check if user is authenticated
+    if (!user?.id) {
+      toast.error('Please log in to use the AI Chat', {
+        icon: '🔒',
+        duration: 4000
+      })
+      return
+    }
+
     const userMessage = {
       id: Date.now().toString(),
       role: 'user' as const,
@@ -253,15 +327,25 @@ export function AIChat({ className = '', onMessageSend }: AIChatProps) {
       timestamp: new Date()
     }
 
-    // Save user message to database
-    await saveMessage(userMessage)
-
     setInput('')
+
+    // Save user message to database
+    const userSaved = await saveMessage(userMessage)
+
+    if (!userSaved) {
+      toast.error('Failed to save your message. Please check your connection.', {
+        icon: '⚠️',
+        duration: 4000
+      })
+      console.error('[AIChat] User message failed to save')
+      return
+    }
+
     setIsTyping(true)
 
     // Call the actual API
     try {
-      const messageToSend = input
+      const messageToSend = userMessage.content
 
       const response = await fetch('/api/chat/blox-wizard', {
         method: 'POST',
@@ -271,7 +355,7 @@ export function AIChat({ className = '', onMessageSend }: AIChatProps) {
         body: JSON.stringify({
           message: messageToSend,
           sessionId: sessionId || `session_${Date.now()}`,
-          userId: 'user',
+          userId: user.id,
           conversationHistory: messages.slice(-10).map(msg => ({
             role: msg.role,
             content: msg.content
@@ -296,7 +380,15 @@ export function AIChat({ className = '', onMessageSend }: AIChatProps) {
       }
 
       // Save AI message to database
-      await saveMessage(aiMessage)
+      const aiSaved = await saveMessage(aiMessage)
+
+      if (!aiSaved) {
+        toast.error('AI response received but failed to save', {
+          icon: '⚠️',
+          duration: 4000
+        })
+        console.error('[AIChat] AI message failed to save')
+      }
 
       setIsTyping(false)
 
@@ -304,9 +396,14 @@ export function AIChat({ className = '', onMessageSend }: AIChatProps) {
         onMessageSend(messageToSend)
       }
     } catch (error) {
-      console.error('Failed to send message:', error)
+      console.error('[AIChat] Failed to send message:', error)
 
-      // Fallback message on error - don't save to DB
+      toast.error('Failed to get AI response. Please try again.', {
+        icon: '❌',
+        duration: 5000
+      })
+
+      // Fallback message on error
       const errorMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant' as const,

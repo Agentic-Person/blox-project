@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect, Suspense } from 'react'
+import { useEffect, Suspense } from 'react'
 
 // Force dynamic rendering to avoid SSG issues with useSearchParams
 export const dynamic = 'force-dynamic'
@@ -13,26 +13,24 @@ import { QuickActions } from '@/components/dashboard/QuickActions'
 import { RecentActivity } from '@/components/dashboard/RecentActivity'
 import { TodaySchedule } from '@/components/dashboard/TodaySchedule'
 import { BloxTokenCard } from '@/components/dashboard/BloxTokenCard'
-import { BloxWizardDashboard } from '@/components/dashboard/BloxWizardDashboard'
 import { BloxWizardHeroCard } from '@/components/dashboard/BloxWizardHeroCard'
 import { AIWelcomeOverlay } from '@/components/dashboard/AIWelcomeOverlay'
 import { useAIJourney } from '@/hooks/useAIJourney'
 
 function DashboardContent() {
-  const bloxWizardRef = useRef<HTMLDivElement>(null)
   const searchParams = useSearchParams()
   const { forceShowWelcomeOverlay } = useAIJourney()
-  
+
   // Check if this is a first visit from landing page
   const isFirstVisit = searchParams?.get('firstVisit') === 'true'
-  
+
   useEffect(() => {
     if (isFirstVisit) {
       // Force show overlay for first-time users
       forceShowWelcomeOverlay()
     }
   }, [isFirstVisit, forceShowWelcomeOverlay])
-  
+
   // Mock data for continue learning
   const currentModule = {
     id: 'module-3',
@@ -42,13 +40,6 @@ function DashboardContent() {
     timeRemaining: '18:45 remaining',
     xpToEarn: 450,
     week: 10
-  }
-
-  const handleStartChat = () => {
-    bloxWizardRef.current?.scrollIntoView({ 
-      behavior: 'smooth',
-      block: 'start'
-    })
   }
 
   return (
@@ -72,12 +63,7 @@ function DashboardContent() {
       
 
       {/* Blox Wizard Hero Card - Prominent introduction */}
-      <BloxWizardHeroCard onStartChat={handleStartChat} />
-
-      {/* Blox Wizard AI Assistant - Primary feature at top */}
-      <div ref={bloxWizardRef}>
-        <BloxWizardDashboard />
-      </div>
+      <BloxWizardHeroCard />
 
       {/* Main Dashboard Grid */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">

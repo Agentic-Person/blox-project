@@ -425,7 +425,7 @@ export function VideoPlayer({
             <CardContent className="space-y-4">
               <div>
                 <p className="text-blox-off-white text-sm mb-3">{practiceTask}</p>
-                
+
                 <div className="flex items-center justify-between">
                   {estimatedTime && (
                     <div className="text-sm text-blox-off-white">
@@ -440,26 +440,6 @@ export function VideoPlayer({
             </CardContent>
           </Card>
         )}
-
-        {/* Suggested Questions */}
-        <Card className="card-hover mt-6">
-          <CardHeader>
-            <CardTitle className="text-blox-white">Suggested Questions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <Button variant="ghost" className="w-full justify-start text-left h-auto p-3 hover:bg-blox-second-dark-blue/50">
-                <span className="text-blox-off-white">How do I make epic lighting effects?</span>
-              </Button>
-              <Button variant="ghost" className="w-full justify-start text-left h-auto p-3 hover:bg-blox-second-dark-blue/50">
-                <span className="text-blox-off-white">What's the coolest hack you found?</span>
-              </Button>
-              <Button variant="ghost" className="w-full justify-start text-left h-auto p-3 hover:bg-blox-second-dark-blue/50">
-                <span className="text-blox-off-white">How can I make my builds go viral on Roblox?</span>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   )

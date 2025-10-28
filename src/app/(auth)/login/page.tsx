@@ -3,6 +3,12 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/providers/auth-provider'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import Link from 'next/link'
+import { Bot } from 'lucide-react'
 
 export default function LoginPage() {
   const { signIn, user, isLoading } = useAuth()
@@ -16,7 +22,7 @@ export default function LoginPage() {
     // If already authenticated, redirect
     if (user) {
       const returnUrl = new URLSearchParams(window.location.search).get('returnUrl')
-      router.push(returnUrl || '/admin')
+      router.push(returnUrl || '/dashboard')
     }
   }, [user, router])
 
@@ -24,106 +30,117 @@ export default function LoginPage() {
     e.preventDefault()
     setSigning(true)
     setError('')
-    
+
     try {
       await signIn(email, password)
+      // Redirect will happen automatically via useEffect
     } catch (error: any) {
       console.error('Sign in error:', error)
-      setError(error.message || 'Sign in failed')
+      setError(error.message || 'Invalid email or password')
       setSigning(false)
     }
   }
 
-  if (isLoading || signing) {
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blox-dark-blue via-blox-black-blue to-blox-second-dark-blue flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blox-teal mx-auto"></div>
+          <p className="mt-4 text-blox-off-white">Loading...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to Admin Dashboard
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Admin access required
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-blox-dark-blue via-blox-black-blue to-blox-second-dark-blue flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        {/* Logo/Branding */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blox-teal to-blox-purple rounded-2xl mb-4">
+            <Bot className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-blox-teal to-blox-purple bg-clip-text text-transparent">
+            Blox Buddy
+          </h1>
+          <p className="text-blox-off-white mt-2">Welcome back to your learning journey</p>
         </div>
-        
-        <form className="mt-8 space-y-6" onSubmit={handleSignIn}>
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Enter your email"
-              />
-            </div>
-            
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Enter your password"
-              />
-            </div>
-          </div>
 
-          {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-              <p className="text-sm text-red-700">{error}</p>
-            </div>
-          )}
+        <Card className="bg-blox-black-blue/50 border-blox-teal/20 backdrop-blur-sm">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl text-blox-white">Sign In</CardTitle>
+            <CardDescription className="text-blox-off-white">
+              Enter your credentials to continue
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSignIn} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-blox-white">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="bg-blox-second-dark-blue border-blox-off-white/20 text-blox-white"
+                  disabled={signing}
+                />
+              </div>
 
-          <div>
-            <button
-              type="submit"
-              disabled={signing || !email || !password}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {signing ? (
-                <div className="flex items-center">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Signing in...
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-blox-white">
+                  Password
+                </Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="bg-blox-second-dark-blue border-blox-off-white/20 text-blox-white"
+                  disabled={signing}
+                />
+              </div>
+
+              {error && (
+                <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-md">
+                  <p className="text-sm text-red-400">{error}</p>
                 </div>
-              ) : (
-                'Sign in'
               )}
-            </button>
-          </div>
-          
-          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-md">
-            <h3 className="text-sm font-medium text-blue-800">Note</h3>
-            <p className="text-sm text-blue-700 mt-1">
-              Use your existing Supabase account credentials. You need to be added as an admin user to access the dashboard.
-            </p>
-          </div>
-        </form>
+
+              <Button
+                type="submit"
+                className="w-full bg-gradient-to-r from-blox-teal to-blox-purple hover:opacity-90"
+                disabled={signing || !email || !password}
+              >
+                {signing ? (
+                  <div className="flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Signing in...
+                  </div>
+                ) : (
+                  'Sign In'
+                )}
+              </Button>
+
+              <div className="text-center text-sm text-blox-off-white">
+                Don't have an account?{' '}
+                <Link href="/signup" className="text-blox-teal hover:underline font-medium">
+                  Sign up
+                </Link>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )

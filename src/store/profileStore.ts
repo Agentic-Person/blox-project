@@ -1,5 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { uploadFile, uploadMultipleFiles, STORAGE_BUCKETS } from '@/lib/supabase/storage'
 
 export interface ProfileImage {
   id: string
@@ -242,15 +244,23 @@ export const useProfileStore = create<ProfileStore>()(
       updateProfile: async (updates) => {
         set({ isLoading: true, error: null })
         try {
-          // In production, this would call Supabase
-          await new Promise(resolve => setTimeout(resolve, 500))
-          
-          set((state) => ({
-            profile: state.profile ? { ...state.profile, ...updates } : null,
-            isLoading: false
-          }))
-        } catch (error) {
-          set({ error: 'Failed to update profile', isLoading: false })
+          const supabase = createClientComponentClient()
+          const userRes = await supabase.auth.getUser()
+          const userId = userRes.data.user?.id
+          if (!userId) throw new Error('Not authenticated')
+
+          // Merge with current in-memory profile
+          const nextProfile = get().profile ? { ...get().profile!, ...updates } : { userId, ...updates } as any
+
+          const { error } = await supabase
+            .from('user_profiles')
+            .upsert({ user_id: userId, data: nextProfile }, { onConflict: 'user_id' })
+
+          if (error) throw error
+
+          set({ profile: nextProfile, isLoading: false })
+        } catch (error: any) {
+          set({ error: error.message || 'Failed to update profile', isLoading: false })
           throw error
         }
       },
@@ -258,11 +268,27 @@ export const useProfileStore = create<ProfileStore>()(
       loadProfile: async (userId) => {
         set({ isLoading: true, error: null })
         try {
-          // In production, fetch from Supabase
-          await new Promise(resolve => setTimeout(resolve, 500))
-          set({ profile: mockProfile, isLoading: false })
-        } catch (error) {
-          set({ error: 'Failed to load profile', isLoading: false })
+          const supabase = createClientComponentClient()
+          const { data, error } = await supabase
+            .from('user_profiles')
+            .select('data')
+            .eq('user_id', userId)
+            .maybeSingle()
+          if (error) throw error
+
+          if (data?.data) {
+            set({ profile: data.data as any, isLoading: false })
+          } else {
+            // Seed a starter profile on first load
+            const starter = { ...mockProfile, userId }
+            const { error: upsertError } = await supabase
+              .from('user_profiles')
+              .upsert({ user_id: userId, data: starter }, { onConflict: 'user_id' })
+            if (upsertError) throw upsertError
+            set({ profile: starter, isLoading: false })
+          }
+        } catch (error: any) {
+          set({ error: error.message || 'Failed to load profile', isLoading: false })
           throw error
         }
       },
@@ -271,20 +297,24 @@ export const useProfileStore = create<ProfileStore>()(
       uploadAvatar: async (file) => {
         set({ uploadProgress: 0 })
         try {
-          // Simulate upload progress
-          for (let i = 0; i <= 100; i += 20) {
-            set({ uploadProgress: i })
-            await new Promise(resolve => setTimeout(resolve, 200))
-          }
-          
-          // In production, upload to Supabase Storage
-          const avatarUrl = URL.createObjectURL(file)
-          
+          const supabase = createClientComponentClient()
+          const { data } = await supabase.auth.getUser()
+          const userId = data.user?.id
+          if (!userId) throw new Error('Not authenticated')
+
+          const avatarUrl = await uploadFile(
+            STORAGE_BUCKETS.AVATARS,
+            file,
+            userId,
+            (p) => set({ uploadProgress: Math.round(p) })
+          )
+
           set((state) => ({
             profile: state.profile ? { ...state.profile, avatarUrl } : null,
             uploadProgress: 0
           }))
-          
+
+          await get().updateProfile({ avatarUrl })
           return avatarUrl
         } catch (error) {
           set({ uploadProgress: 0 })
@@ -293,54 +323,55 @@ export const useProfileStore = create<ProfileStore>()(
       },
       
       removeAvatar: async () => {
-        // In production, delete from Supabase Storage
         set((state) => ({
           profile: state.profile ? { ...state.profile, avatarUrl: undefined } : null
         }))
+        await get().updateProfile({ avatarUrl: undefined as unknown as string })
       },
       
       // Image Management
       uploadImage: async (file, isRecentWork = false) => {
         set({ uploadProgress: 0 })
         try {
-          // Simulate upload
-          for (let i = 0; i <= 100; i += 25) {
-            set({ uploadProgress: i })
-            await new Promise(resolve => setTimeout(resolve, 150))
-          }
-          
-          const imageUrl = URL.createObjectURL(file)
+          const supabase = createClientComponentClient()
+          const { data } = await supabase.auth.getUser()
+          const userId = data.user?.id
+          if (!userId) throw new Error('Not authenticated')
+
+          const bucket = isRecentWork ? STORAGE_BUCKETS.RECENT_WORK : STORAGE_BUCKETS.PORTFOLIO
+          const imageUrl = await uploadFile(
+            bucket,
+            file,
+            userId,
+            (p) => set({ uploadProgress: Math.round(p) })
+          )
+
           const newImage: ProfileImage = {
             id: `img-${Date.now()}`,
             url: imageUrl,
-            thumbnailUrl: imageUrl, // In production, generate thumbnail
+            thumbnailUrl: imageUrl,
             title: file.name,
             uploadedAt: new Date().toISOString(),
             isRecentWork,
             order: isRecentWork ? get().profile?.recentWork.length || 0 : undefined
           }
-          
-          set((state) => {
-            if (!state.profile) return { uploadProgress: 0 }
-            
-            if (isRecentWork) {
-              // Add to recent work, keep only 12 most recent
-              const recentWork = [newImage, ...state.profile.recentWork].slice(0, 12)
-              return {
-                profile: { ...state.profile, recentWork },
-                uploadProgress: 0
-              }
-            } else {
-              return {
-                profile: {
-                  ...state.profile,
-                  portfolioImages: [...state.profile.portfolioImages, newImage]
-                },
-                uploadProgress: 0
-              }
-            }
-          })
-          
+
+          if (isRecentWork) {
+            const recentWork = [newImage, ...(get().profile?.recentWork || [])].slice(0, 12)
+            set((state) => ({
+              profile: state.profile ? { ...state.profile, recentWork } : null,
+              uploadProgress: 0
+            }))
+            await get().updateProfile({ recentWork })
+          } else {
+            const portfolioImages = [...(get().profile?.portfolioImages || []), newImage]
+            set((state) => ({
+              profile: state.profile ? { ...state.profile, portfolioImages } : null,
+              uploadProgress: 0
+            }))
+            await get().updateProfile({ portfolioImages })
+          }
+
           return newImage
         } catch (error) {
           set({ uploadProgress: 0 })
@@ -349,27 +380,49 @@ export const useProfileStore = create<ProfileStore>()(
       },
       
       uploadMultipleImages: async (files, isRecentWork = false) => {
-        const images: ProfileImage[] = []
-        for (const file of files) {
-          const image = await get().uploadImage(file, isRecentWork)
-          images.push(image)
+        const supabase = createClientComponentClient()
+        const { data } = await supabase.auth.getUser()
+        const userId = data.user?.id
+        if (!userId) throw new Error('Not authenticated')
+
+        const bucket = isRecentWork ? STORAGE_BUCKETS.RECENT_WORK : STORAGE_BUCKETS.PORTFOLIO
+        const urls = await uploadMultipleFiles(
+          bucket,
+          files,
+          userId,
+          (p) => set({ uploadProgress: Math.round(p) })
+        )
+
+        const images: ProfileImage[] = urls.map((url, i) => ({
+          id: `img-${Date.now()}-${i}`,
+          url,
+          thumbnailUrl: url,
+          title: files[i]?.name || `Image ${i + 1}`,
+          uploadedAt: new Date().toISOString(),
+          isRecentWork,
+          order: isRecentWork ? (get().profile?.recentWork.length || 0) + i : undefined
+        }))
+
+        if (isRecentWork) {
+          const recentWork = [...images, ...(get().profile?.recentWork || [])].slice(0, 12)
+          set((state) => ({ profile: state.profile ? { ...state.profile, recentWork } : null, uploadProgress: 0 }))
+          await get().updateProfile({ recentWork })
+        } else {
+          const portfolioImages = [...(get().profile?.portfolioImages || []), ...images]
+          set((state) => ({ profile: state.profile ? { ...state.profile, portfolioImages } : null, uploadProgress: 0 }))
+          await get().updateProfile({ portfolioImages })
         }
+
         return images
       },
       
       deleteImage: async (imageId) => {
-        // In production, delete from Supabase Storage
-        set((state) => {
-          if (!state.profile) return {}
-          
-          return {
-            profile: {
-              ...state.profile,
-              portfolioImages: state.profile.portfolioImages.filter(img => img.id !== imageId),
-              recentWork: state.profile.recentWork.filter(img => img.id !== imageId)
-            }
-          }
-        })
+        const current = get().profile
+        if (!current) return
+        const portfolioImages = current.portfolioImages.filter(img => img.id !== imageId)
+        const recentWork = current.recentWork.filter(img => img.id !== imageId)
+        set({ profile: { ...current, portfolioImages, recentWork } })
+        await get().updateProfile({ portfolioImages, recentWork } as Partial<ProfileData> as any)
       },
       
       reorderImages: (images, isRecentWork = false) => {

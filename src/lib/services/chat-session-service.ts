@@ -2,15 +2,17 @@
  * Chat Session Service
  * Handles persistent chat conversation storage for Blox Wizard
  * Stores messages in Supabase and maintains session state
+ *
+ * IMPORTANT: Uses authenticated Supabase client to pass RLS policies
+ * This ensures auth.uid() is set correctly for database operations
  */
 
-import { createClient } from '@supabase/supabase-js'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-
-// Initialize Supabase client
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// Initialize authenticated Supabase client
+// This client automatically includes the user's auth session from cookies
+// Required for RLS policies that check auth.uid()
+const getSupabaseClient = () => createClientComponentClient()
 
 export interface ChatMessage {
   id: string
@@ -106,6 +108,7 @@ class ChatSessionService {
     userId: string,
     sessionId: string
   ): Promise<void> {
+    const supabase = getSupabaseClient()
     const { error } = await supabase
       .from('chat_conversations')
       .insert({
@@ -117,6 +120,7 @@ class ChatSessionService {
     if (error) {
       // Ignore duplicate key errors (conversation already exists)
       if (!error.message.includes('duplicate')) {
+        console.error('[ChatSession] Failed to create conversation:', error)
         throw error
       }
     }
@@ -130,7 +134,14 @@ class ChatSessionService {
     userId?: string
   ): Promise<boolean> {
     try {
+      const supabase = getSupabaseClient()
       const sessionId = await this.getOrCreateSessionId(userId)
+
+      // Verify user is authenticated
+      if (!userId) {
+        console.warn('[ChatSession] Cannot save message: User not authenticated')
+        return false
+      }
 
       // Get or create conversation
       const { data: conversation, error: convError } = await supabase
@@ -140,14 +151,14 @@ class ChatSessionService {
         .maybeSingle()
 
       if (convError && !convError.message.includes('No rows')) {
-        console.error('Error fetching conversation:', convError)
+        console.error('[ChatSession] Error fetching conversation:', convError)
         return false
       }
 
       let conversationId = conversation?.id
 
       // Create conversation if it doesn't exist
-      if (!conversationId && userId) {
+      if (!conversationId) {
         const { data: newConv, error: createError } = await supabase
           .from('chat_conversations')
           .insert({
@@ -159,17 +170,17 @@ class ChatSessionService {
           .single()
 
         if (createError) {
-          console.error('Error creating conversation:', createError)
+          console.error('[ChatSession] Error creating conversation:', createError)
+          console.error('[ChatSession] Details:', {
+            userId,
+            sessionId,
+            error: createError
+          })
           return false
         }
 
         conversationId = newConv.id
-      }
-
-      // If still no conversation ID, user might not be authenticated
-      if (!conversationId) {
-        console.warn('Cannot save message: No conversation ID and no user authenticated')
-        return false
+        console.log('[ChatSession] Created new conversation:', conversationId)
       }
 
       // Save message
@@ -187,13 +198,19 @@ class ChatSessionService {
         })
 
       if (messageError) {
-        console.error('Error saving message:', messageError)
+        console.error('[ChatSession] Error saving message:', messageError)
+        console.error('[ChatSession] Details:', {
+          conversationId,
+          role: message.role,
+          contentLength: message.content.length
+        })
         return false
       }
 
+      console.log('[ChatSession] Message saved successfully:', message.id)
       return true
     } catch (error) {
-      console.error('Unexpected error saving message:', error)
+      console.error('[ChatSession] Unexpected error saving message:', error)
       return false
     }
   }
@@ -207,6 +224,7 @@ class ChatSessionService {
     limit: number = 50
   ): Promise<ChatMessage[]> {
     try {
+      const supabase = getSupabaseClient()
       const targetSessionId = sessionId || await this.getOrCreateSessionId(userId)
 
       const { data, error } = await supabase
@@ -217,11 +235,12 @@ class ChatSessionService {
         })
 
       if (error) {
-        console.error('Error loading conversation history:', error)
+        console.error('[ChatSession] Error loading conversation history:', error)
         return []
       }
 
       if (!data || data.length === 0) {
+        console.log('[ChatSession] No history found for session:', targetSessionId)
         return []
       }
 
@@ -238,9 +257,10 @@ class ChatSessionService {
           suggestedQuestions: row.message_suggested_questions
         }))
 
+      console.log('[ChatSession] Loaded', messages.length, 'messages from history')
       return messages
     } catch (error) {
-      console.error('Unexpected error loading conversation:', error)
+      console.error('[ChatSession] Unexpected error loading conversation:', error)
       return []
     }
   }
@@ -277,6 +297,7 @@ class ChatSessionService {
     limit: number = 20
   ): Promise<Conversation[]> {
     try {
+      const supabase = getSupabaseClient()
       const { data, error } = await supabase
         .rpc('get_user_conversations', {
           p_user_id: userId,
@@ -284,7 +305,7 @@ class ChatSessionService {
         })
 
       if (error) {
-        console.error('Error fetching user conversations:', error)
+        console.error('[ChatSession] Error fetching user conversations:', error)
         return []
       }
 
@@ -297,7 +318,7 @@ class ChatSessionService {
         messageCount: parseInt(row.message_count)
       }))
     } catch (error) {
-      console.error('Unexpected error fetching conversations:', error)
+      console.error('[ChatSession] Unexpected error fetching conversations:', error)
       return []
     }
   }
@@ -321,6 +342,7 @@ class ChatSessionService {
     userId: string
   ): Promise<boolean> {
     try {
+      const supabase = getSupabaseClient()
       const { error } = await supabase
         .from('chat_conversations')
         .delete()
@@ -328,9 +350,11 @@ class ChatSessionService {
         .eq('user_id', userId)
 
       if (error) {
-        console.error('Error deleting conversation:', error)
+        console.error('[ChatSession] Error deleting conversation:', error)
         return false
       }
+
+      console.log('[ChatSession] Deleted conversation:', sessionId)
 
       // If deleted conversation was current, start new one
       if (this.currentSessionId === sessionId) {
@@ -339,7 +363,7 @@ class ChatSessionService {
 
       return true
     } catch (error) {
-      console.error('Unexpected error deleting conversation:', error)
+      console.error('[ChatSession] Unexpected error deleting conversation:', error)
       return false
     }
   }

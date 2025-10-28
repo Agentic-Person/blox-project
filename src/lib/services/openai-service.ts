@@ -66,6 +66,7 @@ class OpenAIService {
 
   /**
    * Generate a chat completion with context awareness
+   * NEW ARCHITECTURE: Search database FIRST, then respond with video-aware context
    */
   async generateChatCompletion({
     message,
@@ -78,9 +79,19 @@ class OpenAIService {
     const startTime = Date.now()
 
     try {
-      // Build system prompt based on context
-      const systemPrompt = this.buildSystemPrompt(videoContext, responseStyle)
-      
+      // STEP 1: SEARCH DATABASE FIRST - Find relevant video references BEFORE calling GPT
+      console.log('[OpenAI] Searching database for relevant videos...')
+      const videoReferences = await this.findRelevantVideoReferences(message, videoContext)
+      console.log(`[OpenAI] Found ${videoReferences.length} video references`)
+
+      // STEP 2: Build system prompt WITH search results - GPT now knows what videos exist
+      const systemPrompt = await this.buildSystemPromptWithVideos(
+        videoReferences,
+        videoContext,
+        responseStyle,
+        message
+      )
+
       // Prepare conversation history
       const messages: ChatMessage[] = [
         { role: 'system', content: systemPrompt },
@@ -88,7 +99,7 @@ class OpenAIService {
         { role: 'user', content: message }
       ]
 
-      // Call OpenAI
+      // STEP 3: Call OpenAI - GPT responds knowing what videos are available
       const completion = await this.initializeOpenAI().chat.completions.create({
         model: this.model,
         messages: messages,
@@ -98,25 +109,22 @@ class OpenAIService {
       })
 
       const aiResponse = completion.choices[0]?.message?.content || "I'm having trouble processing your request right now. Please try again!"
-      
+
       // Generate suggested questions based on the response
       const suggestedQuestions = await this.generateSuggestedQuestions(message, aiResponse, videoContext)
-      
-      // Get real video references from Supabase transcript search
-      const videoReferences = await this.findRelevantVideoReferences(message, videoContext)
 
       const responseTime = Date.now() - startTime
 
       return {
         answer: aiResponse,
-        videoReferences,
+        videoReferences, // Already fetched in Step 1
         suggestedQuestions,
         responseTime,
         tokensUsed: completion.usage?.total_tokens
       }
     } catch (error) {
       console.error('OpenAI API error:', error)
-      
+
       // Fallback response
       return {
         answer: "I'm having trouble connecting to my AI brain right now. Please try again in a moment! In the meantime, you can ask me about Roblox scripting, building, or game design concepts.",
@@ -132,7 +140,105 @@ class OpenAIService {
   }
 
   /**
-   * Build context-aware system prompt
+   * Build context-aware system prompt WITH video search results
+   * NEW: GPT knows what videos exist BEFORE responding
+   */
+  private async buildSystemPromptWithVideos(
+    videoReferences: VideoReference[],
+    videoContext?: VideoContext,
+    responseStyle: string = 'beginner',
+    userQuestion?: string
+  ): Promise<string> {
+    let prompt = `You are Blox Wizard, the AI learning companion for Blox Buddy - a platform that helps young developers (ages 10-25) learn Roblox game development.
+
+PERSONALITY:
+- Enthusiastic, encouraging, and patient mentor
+- Use age-appropriate language (teen-friendly but not childish)
+- Be supportive and celebrate small wins
+- Make learning fun and engaging
+
+EXPERTISE:
+- Roblox Studio and development
+- Lua scripting fundamentals to advanced
+- Game design principles
+- Building and modeling in Roblox
+- UI/UX design for games
+- Publishing and monetization
+
+RESPONSE STYLE: ${responseStyle}
+${responseStyle === 'beginner' ? '- Explain concepts step-by-step\n- Use simple analogies\n- Provide practical examples' : ''}
+${responseStyle === 'advanced' ? '- Go deeper into technical details\n- Assume familiarity with basics\n- Focus on best practices and optimization' : ''}
+
+GUIDELINES:
+- Keep responses concise but helpful (2-3 paragraphs max)
+- Always provide actionable advice
+- Encourage hands-on practice
+- If asked about non-Roblox topics, gently redirect to game development
+- Never provide inappropriate content - this is for young learners`
+
+    // Add video context if available
+    if (videoContext?.title) {
+      prompt += `\n\nCURRENT VIDEO CONTEXT:
+- Video: "${videoContext.title}"
+- YouTube ID: ${videoContext.youtubeId || 'N/A'}`
+
+      if (videoContext.currentTime) {
+        prompt += `\n- Current timestamp: ${Math.floor(videoContext.currentTime / 60)}:${(videoContext.currentTime % 60).toString().padStart(2, '0')}`
+      }
+
+      if (videoContext.transcript) {
+        prompt += `\n- Transcript context: ${videoContext.transcript.slice(0, 500)}...`
+      }
+
+      prompt += `\n\nUse this video context to provide more relevant and specific answers. Reference the video content when appropriate.`
+    }
+
+    // CRITICAL: Add search results to prompt - GPT now knows what videos exist!
+    if (videoReferences.length > 0) {
+      prompt += `\n\n🎯 AVAILABLE VIDEO RESOURCES (I searched our database for the user's question):\n`
+      prompt += `I found ${videoReferences.length} relevant video(s) in our library:\n\n`
+
+      videoReferences.forEach((video, index) => {
+        prompt += `${index + 1}. "${video.title}"\n`
+        prompt += `   - YouTube ID: ${video.youtubeId}\n`
+        if (video.timestamp) {
+          prompt += `   - Relevant timestamp: ${video.timestamp}\n`
+        }
+        if (video.relevantSegment) {
+          prompt += `   - Content preview: "${video.relevantSegment.slice(0, 150)}..."\n`
+        }
+        if (video.confidence) {
+          prompt += `   - Match confidence: ${Math.round(video.confidence * 100)}%\n`
+        }
+        prompt += `\n`
+      })
+
+      prompt += `IMPORTANT: Reference these specific videos in your response! Tell the user about these videos by name and explain why they're helpful for their question. Don't give generic internet advice - use our actual video library!\n`
+    } else {
+      // No videos found - get available topics and explain what we DO have
+      const availableTopics = await this.getAvailableVideoTopics()
+
+      prompt += `\n\n⚠️ VIDEO SEARCH RESULT: No exact matches found\n`
+      prompt += `I searched our video database for content related to: "${userQuestion}"\n`
+      prompt += `Unfortunately, we don't have videos specifically about this topic yet.\n\n`
+
+      if (availableTopics.length > 0) {
+        prompt += `However, our video library currently includes these topics:\n`
+        availableTopics.forEach(topic => {
+          prompt += `- ${topic}\n`
+        })
+        prompt += `\nIMPORTANT: Let the user know we don't have videos on their specific question yet, but suggest related topics from our library above that might help. Be honest that this content isn't available yet, and offer alternatives.\n`
+      } else {
+        prompt += `IMPORTANT: Our video database appears to be empty or unavailable. Let the user know that video recommendations are temporarily unavailable, but still provide helpful general guidance about Roblox development.\n`
+      }
+    }
+
+    return prompt
+  }
+
+  /**
+   * Legacy method - kept for backward compatibility
+   * @deprecated Use buildSystemPromptWithVideos instead
    */
   private buildSystemPrompt(videoContext?: VideoContext, responseStyle: string = 'beginner'): string {
     let prompt = `You are Blox Wizard, the AI learning companion for Blox Buddy - a platform that helps young developers (ages 10-25) learn Roblox game development.
@@ -167,15 +273,15 @@ GUIDELINES:
       prompt += `\n\nCURRENT VIDEO CONTEXT:
 - Video: "${videoContext.title}"
 - YouTube ID: ${videoContext.youtubeId || 'N/A'}`
-      
+
       if (videoContext.currentTime) {
         prompt += `\n- Current timestamp: ${Math.floor(videoContext.currentTime / 60)}:${(videoContext.currentTime % 60).toString().padStart(2, '0')}`
       }
-      
+
       if (videoContext.transcript) {
         prompt += `\n- Transcript context: ${videoContext.transcript.slice(0, 500)}...`
       }
-      
+
       prompt += `\n\nUse this video context to provide more relevant and specific answers. Reference the video content when appropriate.`
     }
 
@@ -230,6 +336,39 @@ Return only the questions, one per line:`
   }
 
   /**
+   * Get available video topics from database when search finds nothing
+   * Provides fallback information to tell users what content IS available
+   */
+  private async getAvailableVideoTopics(): Promise<string[]> {
+    try {
+      // Get unique video titles from the database to show what's available
+      const videos = await supabaseTranscriptService.getAllVideoTitles()
+
+      if (videos && videos.length > 0) {
+        // Return unique titles (limit to 10 for brevity)
+        return videos.slice(0, 10)
+      }
+
+      // Fallback: Return known Module 1 topics if database query fails
+      return [
+        "Roblox Studio Basics",
+        "Lua Programming Fundamentals",
+        "Game Design Principles",
+        "Building and Modeling Techniques",
+        "Scripting for Beginners"
+      ]
+    } catch (error) {
+      console.error('Error getting available video topics:', error)
+      // Return generic Roblox topics as ultimate fallback
+      return [
+        "Roblox Studio Basics",
+        "Lua Programming Fundamentals",
+        "Game Design Principles"
+      ]
+    }
+  }
+
+  /**
    * Find relevant video references using Supabase transcript search
    */
   private async findRelevantVideoReferences(
@@ -238,6 +377,7 @@ Return only the questions, one per line:`
   ): Promise<VideoReference[]> {
     try {
       // Search for relevant video segments based on the user's message
+      // Lower threshold to 0.3 for more results (was 0.6 in supabaseTranscriptService)
       const videoReferences = await supabaseTranscriptService.findRelevantVideoSegments(message, 5)
       
       // If we found relevant videos, return them

@@ -317,7 +317,13 @@ export function ModuleOverview({ module }: ModuleOverviewProps) {
                           {sampleVideos.map((video, videoIndex) => (
                             <div key={video.id} className="flex gap-3 p-2 rounded-lg bg-blox-second-dark-blue/30 hover:bg-blox-second-dark-blue/50 transition-colors">
                               <div className="w-16 h-12 bg-blox-very-dark-blue rounded overflow-hidden flex-shrink-0">
-                                {video.youtubeId && video.youtubeId !== 'YOUTUBE_ID_PLACEHOLDER' ? (
+                                {(video as any).type === 'assignment' && (video as any).thumbnails?.[0] ? (
+                                  <img
+                                    src={(video as any).thumbnails[0]}
+                                    alt={video.title}
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : video.youtubeId && video.youtubeId !== 'YOUTUBE_ID_PLACEHOLDER' ? (
                                   <img
                                     src={`https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`}
                                     alt={video.title}

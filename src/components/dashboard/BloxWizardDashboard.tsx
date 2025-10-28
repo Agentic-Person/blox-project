@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Bot, Send, Sparkles, Crown, MessageSquare, Zap, Brain, Code, HelpCircle, Lock, ArrowRight } from 'lucide-react'
+import { Bot, Send, Sparkles, Crown, MessageSquare, Zap, Brain, Code, HelpCircle, Lock, ArrowRight, AlertCircle } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,6 +9,8 @@ import { Badge } from '@/components/ui/badge'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useChatSession } from '@/hooks/useChatSession'
+import { useUser } from '@/lib/providers'
+import toast from 'react-hot-toast'
 
 interface VideoReference {
   title: string
@@ -30,6 +32,9 @@ interface Message {
 }
 
 export function BloxWizardDashboard() {
+  // Get authenticated user
+  const { user, isLoaded } = useUser()
+
   // Use persistent chat session
   const {
     sessionId,
@@ -98,8 +103,21 @@ export function BloxWizardDashboard() {
   const handleSend = async () => {
     if (!input.trim() || isLoading) return
 
+    // Check if user is authenticated
+    if (!user?.id) {
+      toast.error('Please log in to use the AI Chat', {
+        icon: '🔒',
+        duration: 4000
+      })
+      return
+    }
+
     // Check usage limits for free users
     if (!isPremium && remainingQuestions <= 0) {
+      toast.error('You\'ve reached your question limit. Upgrade to Premium!', {
+        icon: '⭐',
+        duration: 5000
+      })
       return
     }
 
@@ -110,15 +128,25 @@ export function BloxWizardDashboard() {
       timestamp: new Date(),
     }
 
-    // Save user message to database
-    await saveMessage(userMessage)
-
     setInput('')
+
+    // Save user message to database
+    const userSaved = await saveMessage(userMessage)
+
+    if (!userSaved) {
+      toast.error('Failed to save your message. Please check your connection.', {
+        icon: '⚠️',
+        duration: 4000
+      })
+      console.error('[Dashboard] User message failed to save')
+      return
+    }
+
     setIsLoading(true)
 
     // Call the actual API
     try {
-      const messageToSend = input
+      const messageToSend = userMessage.content
 
       const response = await fetch('/api/chat/blox-wizard', {
         method: 'POST',
@@ -128,7 +156,7 @@ export function BloxWizardDashboard() {
         body: JSON.stringify({
           message: messageToSend,
           sessionId: sessionId || `dashboard_session_${Date.now()}`,
-          userId: 'user',
+          userId: user.id,
           conversationHistory: messages.slice(-10).map(msg => ({
             role: msg.role,
             content: msg.content
@@ -153,11 +181,24 @@ export function BloxWizardDashboard() {
       }
 
       // Save AI message to database
-      await saveMessage(aiMessage)
+      const aiSaved = await saveMessage(aiMessage)
+
+      if (!aiSaved) {
+        toast.error('AI response received but failed to save', {
+          icon: '⚠️',
+          duration: 4000
+        })
+        console.error('[Dashboard] AI message failed to save')
+      }
 
       setIsLoading(false)
     } catch (error) {
-      console.error('Failed to send message:', error)
+      console.error('[Dashboard] Failed to send message:', error)
+
+      toast.error('Failed to get AI response. Please try again.', {
+        icon: '❌',
+        duration: 5000
+      })
 
       // Fallback message on error
       const errorMessage = {

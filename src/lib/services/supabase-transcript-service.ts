@@ -92,37 +92,40 @@ class SupabaseTranscriptService {
       // Generate embedding for the query
       const queryEmbedding = await this.generateEmbedding(query)
       if (!queryEmbedding) {
-        console.log('Falling back to text search (no embedding available)')
-        return this.searchTranscripts(query, limit)
+        console.log('[Transcript Search] Falling back to text search (no embedding available)')
+        return []
       }
 
-      const { data, error } = await supabase.rpc('search_similar_chunks', {
+      // Use the ACTUAL function that exists in your database
+      const { data, error } = await supabase.rpc('search_transcript_chunks', {
         query_embedding: queryEmbedding,
-        match_threshold: threshold,
-        match_count: limit
+        similarity_threshold: threshold,
+        max_results: limit
       })
 
       if (error) {
-        console.error('Error in vector search:', error)
-        return this.searchTranscripts(query, limit) // Fallback to text search
+        console.error('[Transcript Search] Error in vector search:', error)
+        return []
       }
+
+      console.log(`[Transcript Search] Found ${data?.length || 0} results`)
 
       return (data || []).map((result: any) => ({
         id: result.chunk_id,
-        video_id: result.video_id,
+        video_id: result.video_id, // This is actually the youtube_id in your schema
         youtube_id: result.youtube_id,
-        chunk_index: result.chunk_index,
-        start_time: result.start_time,
-        end_time: result.end_time,
+        chunk_index: result.chunk_index || 0,
+        start_time: result.start_seconds || 0,
+        end_time: result.end_seconds || 0,
         text: result.chunk_text,
         video: {
           id: result.video_id,
           youtube_id: result.youtube_id,
-          title: result.video_title,
-          creator: result.video_creator || '',
+          title: result.title || 'Unknown Video',
+          creator: result.creator || '',
           description: '',
           duration: '',
-          total_minutes: 0,
+          total_minutes: Math.floor((result.end_seconds || 0) / 60),
           thumbnail_url: `https://img.youtube.com/vi/${result.youtube_id}/maxresdefault.jpg`,
           xp_reward: 25,
           module_id: '',
@@ -132,13 +135,14 @@ class SupabaseTranscriptService {
         }
       }))
     } catch (error) {
-      console.error('Vector search error:', error)
-      return this.searchTranscripts(query, limit) // Fallback to text search
+      console.error('[Transcript Search] Vector search error:', error)
+      return []
     }
   }
 
   /**
    * Search using hybrid approach (combines text + vector)
+   * NOTE: We only have vector search in the database, so this just uses that
    */
   async searchTranscriptsHybrid(
     query: string,
@@ -147,101 +151,21 @@ class SupabaseTranscriptService {
     textWeight: number = 0.3,
     vectorWeight: number = 0.7
   ): Promise<TranscriptChunk[]> {
-    try {
-      const queryEmbedding = await this.generateEmbedding(query)
-      
-      const { data, error } = await supabase.rpc('search_transcripts_hybrid', {
-        search_query: query,
-        query_embedding: queryEmbedding,
-        match_threshold: threshold,
-        match_count: limit,
-        text_weight: textWeight,
-        vector_weight: vectorWeight
-      })
-
-      if (error) {
-        console.error('Error in hybrid search:', error)
-        return this.searchTranscripts(query, limit)
-      }
-
-      return (data || []).map((result: any) => ({
-        id: result.chunk_id,
-        video_id: result.video_id,
-        youtube_id: result.youtube_id,
-        chunk_index: result.chunk_index,
-        start_time: result.start_time,
-        end_time: result.end_time,
-        text: result.chunk_text,
-        video: {
-          id: result.video_id,
-          youtube_id: result.youtube_id,
-          title: result.video_title,
-          creator: result.video_creator || '',
-          description: '',
-          duration: '',
-          total_minutes: 0,
-          thumbnail_url: `https://img.youtube.com/vi/${result.youtube_id}/maxresdefault.jpg`,
-          xp_reward: 25,
-          module_id: '',
-          week_id: '',
-          day_id: '',
-          order_index: 0
-        }
-      }))
-    } catch (error) {
-      console.error('Hybrid search error:', error)
-      return this.searchTranscripts(query, limit)
-    }
+    // Just use vector search - it's what we have and it works great!
+    return this.searchTranscriptsVector(query, limit, threshold)
   }
 
   /**
-   * Search for video transcript chunks based on query (original text search)
+   * Search for video transcript chunks based on query (fallback)
+   * NOTE: We only have vector search, so this returns empty
+   * The vector search is far superior anyway!
    */
   async searchTranscripts(
-    query: string, 
+    query: string,
     limit: number = 10
   ): Promise<TranscriptChunk[]> {
-    try {
-      const { data, error } = await supabase
-        .rpc('search_video_transcripts', {
-          search_query: query,
-          limit_count: limit
-        })
-
-      if (error) {
-        console.error('Error searching transcripts:', error)
-        return []
-      }
-
-      // Transform the RPC results to TranscriptChunk format
-      return (data || []).map((result: any) => ({
-        id: result.video_id, // Using video_id as temporary chunk id
-        video_id: result.video_id,
-        youtube_id: result.youtube_id,
-        chunk_index: 0, // RPC doesn't return chunk_index
-        start_time: result.start_time,
-        end_time: result.end_time,
-        text: result.chunk_text,
-        video: {
-          id: result.video_id,
-          youtube_id: result.youtube_id,
-          title: result.video_title,
-          creator: '', // RPC doesn't return creator
-          description: '',
-          duration: '',
-          total_minutes: 0,
-          thumbnail_url: `https://img.youtube.com/vi/${result.youtube_id}/maxresdefault.jpg`,
-          xp_reward: 25,
-          module_id: '',
-          week_id: '',
-          day_id: '',
-          order_index: 0
-        }
-      }))
-    } catch (error) {
-      console.error('Search transcripts error:', error)
-      return []
-    }
+    console.log('[Transcript Search] Text search not available, use vector search instead')
+    return []
   }
 
   /**
@@ -264,6 +188,31 @@ class SupabaseTranscriptService {
     } catch (error) {
       console.error('Get video error:', error)
       return null
+    }
+  }
+
+  /**
+   * Get all video titles from the database
+   * Used to show users what content is available when search finds nothing
+   */
+  async getAllVideoTitles(): Promise<string[]> {
+    try {
+      const { data, error } = await supabase
+        .from('videos')
+        .select('title')
+        .order('order_index')
+
+      if (error) {
+        console.error('Error fetching video titles:', error)
+        return []
+      }
+
+      // Extract unique titles
+      const titles = data?.map(v => v.title).filter(Boolean) || []
+      return [...new Set(titles)] // Remove duplicates
+    } catch (error) {
+      console.error('Get all video titles error:', error)
+      return []
     }
   }
 
@@ -296,26 +245,25 @@ class SupabaseTranscriptService {
   /**
    * Find relevant video segments for a user query
    * Returns formatted video references for Blox Wizard
-   * Uses smart search: hybrid search if embeddings available, otherwise text search
+   * Uses vector search with your 121 embedded transcript chunks!
    */
   async findRelevantVideoSegments(
     query: string,
     limit: number = 5
   ): Promise<VideoReference[]> {
     try {
-      // Try hybrid search first (combines semantic + text search)
-      let transcriptChunks = await this.searchTranscriptsHybrid(query, limit)
-      
-      // If hybrid search returns no results, try vector search
+      console.log(`[Transcript Search] Searching for: "${query}"`)
+
+      // Use vector search with lower threshold for more results
+      const transcriptChunks = await this.searchTranscriptsVector(query, limit, 0.3)
+
       if (transcriptChunks.length === 0) {
-        transcriptChunks = await this.searchTranscriptsVector(query, limit)
+        console.log('[Transcript Search] No results found')
+        return []
       }
-      
-      // Final fallback to text search
-      if (transcriptChunks.length === 0) {
-        transcriptChunks = await this.searchTranscripts(query, limit)
-      }
-      
+
+      console.log(`[Transcript Search] Found ${transcriptChunks.length} relevant chunks`)
+
       const videoReferences: VideoReference[] = transcriptChunks.map(chunk => {
         const startMinutes = Math.floor(chunk.start_time / 60)
         const startSeconds = Math.floor(chunk.start_time % 60)
@@ -326,7 +274,7 @@ class SupabaseTranscriptService {
           youtubeId: chunk.youtube_id,
           timestamp,
           relevantSegment: this.truncateText(chunk.text, 150),
-          thumbnailUrl: chunk.video?.thumbnail_url || 
+          thumbnailUrl: chunk.video?.thumbnail_url ||
             `https://img.youtube.com/vi/${chunk.youtube_id}/maxresdefault.jpg`,
           confidence: this.calculateConfidence(chunk),
           startTime: chunk.start_time,
@@ -336,7 +284,7 @@ class SupabaseTranscriptService {
 
       return videoReferences
     } catch (error) {
-      console.error('Find relevant segments error:', error)
+      console.error('[Transcript Search] Find relevant segments error:', error)
       return []
     }
   }

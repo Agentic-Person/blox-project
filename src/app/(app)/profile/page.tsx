@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { User, Edit, Trophy, Users, BookOpen, MapPin, Calendar, Target, QrCode, Upload } from 'lucide-react'
@@ -25,8 +26,15 @@ export default function ProfilePage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
-    // Load profile on mount
-    loadProfile('user-1')
+    const init = async () => {
+      const supabase = createClientComponentClient()
+      const { data } = await supabase.auth.getUser()
+      const userId = data.user?.id
+      if (userId) {
+        await loadProfile(userId)
+      }
+    }
+    init()
   }, [])
 
   const handleSaveProfile = async (newData: any) => {

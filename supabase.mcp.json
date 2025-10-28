@@ -8,7 +8,7 @@
         "--read-only"
       ],
       "env": {
-        "SUPABASE_ACCESS_TOKEN": "${SUPABASE_ACCESS_KEY}"
+        "SUPABASE_ACCESS_TOKEN": "${SUPABASE_ACCESS_TOKEN}"
       }
     }
   }

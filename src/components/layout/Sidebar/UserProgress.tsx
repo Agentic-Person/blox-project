@@ -21,14 +21,9 @@ export function UserProgress() {
       <div className="progress-bar">
         <div className="progress-fill" style={{ width: `${progressPercent}%` }} />
       </div>
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-1">
-          <Coins className="w-3 h-3 text-blox-success" />
-          <p className="text-xs text-blox-success font-semibold">{bloxTokens.toLocaleString()} BLOX</p>
-        </div>
-        <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-blox-success/20 text-blox-success text-xs font-semibold border border-blox-success/30">
-          +50 BLOX
-        </span>
+      <div className="flex items-center gap-1">
+        <Coins className="w-3 h-3 text-blox-success" />
+        <p className="text-xs text-blox-success font-semibold">{bloxTokens.toLocaleString()} BLOX</p>
       </div>
     </div>
   )

@@ -7,20 +7,34 @@ import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-// Admin routes that require authentication
+// Admin routes that require authentication + admin privileges
 const ADMIN_ROUTES = ['/admin']
 const ADMIN_API_ROUTES = ['/api/admin']
+
+// Protected routes that require authentication (but not admin privileges)
+const PROTECTED_ROUTES = [
+  '/dashboard',
+  '/blox-wizard',
+  '/learning',
+  '/teams',
+  '/profile',
+  '/settings',
+  '/notes'
+]
 
 // Public routes that don't require authentication
 const PUBLIC_ROUTES = [
   '/',
   '/login',
   '/signup',
+  '/sign-up',
+  '/sign-in',
   '/about',
   '/pricing',
   '/contact',
   '/privacy',
-  '/terms'
+  '/terms',
+  '/auth/callback'
 ]
 
 export async function middleware(request: NextRequest) {
@@ -32,6 +46,7 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   const isAdminRoute = ADMIN_ROUTES.some(route => pathname.startsWith(route))
   const isAdminAPIRoute = ADMIN_API_ROUTES.some(route => pathname.startsWith(route))
+  const isProtectedRoute = PROTECTED_ROUTES.some(route => pathname.startsWith(route))
   const isPublicRoute = PUBLIC_ROUTES.some(route => pathname === route || pathname.startsWith(route))
   
   // Skip middleware for static files and API routes that aren't admin routes
@@ -50,12 +65,26 @@ export async function middleware(request: NextRequest) {
     
     if (sessionError) {
       console.error('Session error in middleware:', sessionError)
-      if (isAdminRoute || isAdminAPIRoute) {
+      if (isAdminRoute || isAdminAPIRoute || isProtectedRoute) {
         return redirectToLogin(request)
       }
       return res
     }
-    
+
+    // Handle protected routes (require authentication but not admin)
+    if (isProtectedRoute) {
+      if (!session) {
+        return redirectToLogin(request)
+      }
+
+      // User is authenticated, add session info to headers
+      res.headers.set('x-user-id', session.user.id)
+      res.headers.set('x-user-email', session.user.email || '')
+      res.headers.set('x-is-authenticated', 'true')
+
+      return res
+    }
+
     // Handle admin routes
     if (isAdminRoute || isAdminAPIRoute) {
       // Check if user is authenticated
