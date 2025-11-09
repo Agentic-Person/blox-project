@@ -3,7 +3,8 @@
     "allow": [
       "Bash(git add:*)",
       "Bash(npm run build:*)",
-      "mcp__github__search_code"
+      "mcp__github__search_code",
+      "Bash(ping:*)"
     ],
     "deny": [],
     "ask": []
