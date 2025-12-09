@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { currentUser } from '@clerk/nextjs/server'
 import { createClient } from '@/lib/supabase/server'
-import { autoBumpService } from '@/services/autoBumpService'
 
 export async function GET(request: NextRequest) {
   try {
@@ -15,10 +14,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
 
     // Parse query parameters
-    const status = searchParams.get('status')
     const priority = searchParams.get('priority')
-    const category = searchParams.get('category')
-    const scheduledDate = searchParams.get('scheduled_date')
     const dueBefore = searchParams.get('due_before')
     const dueAfter = searchParams.get('due_after')
     const limit = parseInt(searchParams.get('limit') || '100')
@@ -31,28 +27,17 @@ export async function GET(request: NextRequest) {
       .from('todos')
       .select('*')
       .eq('user_id', userId)
-      .order('order_index')
+      .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1)
 
     // Apply filters
-    if (status && !includeCompleted) {
-      const statuses = status.split(',') as ('pending' | 'in_progress' | 'completed' | 'blocked' | 'cancelled' | 'archived')[]
-      query = query.in('status', statuses)
-    } else if (!includeCompleted) {
-      query = query.not('status', 'eq', 'completed')
+    if (!includeCompleted) {
+      query = query.eq('completed', false)
     }
 
     if (priority) {
-      const priorities = priority.split(',') as ('low' | 'medium' | 'high' | 'urgent')[]
+      const priorities = priority.split(',')
       query = query.in('priority', priorities)
-    }
-
-    if (category) {
-      query = query.eq('category', category)
-    }
-
-    if (scheduledDate) {
-      query = query.eq('scheduled_date', scheduledDate)
     }
 
     if (dueBefore) {
@@ -102,47 +87,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 })
     }
 
-    // Prepare todo data
+    // Prepare todo data - only fields that exist in the schema
     const todoData = {
       user_id: userId,
       title: body.title,
       description: body.description || null,
       priority: body.priority || 'medium',
-      status: body.status || 'pending',
-      estimated_minutes: body.estimated_minutes || null,
-      actual_minutes: body.actual_minutes || null,
       due_date: body.due_date || null,
-      scheduled_date: body.scheduled_date || null,
-      scheduled_time: body.scheduled_time || null,
-      category: body.category || null,
-      tags: body.tags || [],
-      order_index: body.order_index || 0,
-      parent_todo_id: body.parent_todo_id || null,
-      auto_bumped: body.auto_bumped || false,
-      bump_count: body.bump_count || 0,
-      last_bumped_at: body.last_bumped_at || null,
-      original_due_date: body.original_due_date || null,
-      generated_from: body.generated_from || null,
-      confidence: body.confidence || null,
-      auto_generated: body.auto_generated || false,
-      learning_objectives: body.learning_objectives || [],
-      prerequisites: body.prerequisites || [],
-      video_references: body.video_references || [],
-      created_by: userId,
-      assigned_to: body.assigned_to || userId
-    }
-
-    // If no order_index provided, get the next available index
-    if (todoData.order_index === 0) {
-      const { data: lastTodo } = await supabase
-        .from('todos')
-        .select('order_index')
-        .eq('user_id', userId)
-        .order('order_index', { ascending: false })
-        .limit(1)
-        .single()
-
-      todoData.order_index = (lastTodo?.order_index || 0) + 1
+      completed: body.completed || false,
+      auto_bump: body.auto_bump || false
     }
 
     const { data: todo, error } = await supabase

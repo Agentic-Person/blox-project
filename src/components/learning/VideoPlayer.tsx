@@ -413,33 +413,7 @@ export function VideoPlayer({
           </CardContent>
         </Card>
 
-        {/* Practice Task */}
-        {practiceTask && (
-          <Card className="card-hover border-blox-teal/20">
-            <CardHeader>
-              <div className="flex items-center space-x-2">
-                <Book className="h-5 w-5 text-blox-teal" />
-                <CardTitle className="text-blox-white">Practice Task</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <p className="text-blox-off-white text-sm mb-3">{practiceTask}</p>
-
-                <div className="flex items-center justify-between">
-                  {estimatedTime && (
-                    <div className="text-sm text-blox-off-white">
-                      Estimated time: {estimatedTime}
-                    </div>
-                  )}
-                  <Button size="sm" className="bg-blox-teal hover:bg-blox-teal-light ml-auto">
-                    Start Practice
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        {/* Practice Task - Removed: was blocking chat interface */}
       </div>
     </div>
   )

@@ -22,18 +22,6 @@ export const uploadFile = async (
   userId: string,
   onProgress?: (progress: number) => void
 ): Promise<string> => {
-  // Mock implementation for development
-  if (!supabase || process.env.NEXT_PUBLIC_USE_MOCK_SUPABASE === 'true') {
-    // Simulate upload progress
-    if (onProgress) {
-      for (let i = 0; i <= 100; i += 20) {
-        onProgress(i)
-        await new Promise(resolve => setTimeout(resolve, 100))
-      }
-    }
-    return URL.createObjectURL(file)
-  }
-
   const fileName = generateFileName(file.name, userId)
   
   const { data, error } = await supabase.storage
@@ -89,12 +77,6 @@ export const deleteFile = async (
   bucket: string,
   filePath: string
 ): Promise<void> => {
-  // Mock implementation for development
-  if (!supabase || process.env.NEXT_PUBLIC_USE_MOCK_SUPABASE === 'true') {
-    await new Promise(resolve => setTimeout(resolve, 500))
-    return
-  }
-
   const { error } = await supabase.storage
     .from(bucket)
     .remove([filePath])
@@ -110,11 +92,6 @@ export const getSignedUrl = async (
   filePath: string,
   expiresIn: number = 3600
 ): Promise<string> => {
-  // Mock implementation for development
-  if (!supabase || process.env.NEXT_PUBLIC_USE_MOCK_SUPABASE === 'true') {
-    return filePath // Return the original URL in mock mode
-  }
-
   const { data, error } = await supabase.storage
     .from(bucket)
     .createSignedUrl(filePath, expiresIn)
@@ -132,11 +109,6 @@ export const listFiles = async (
   folder?: string,
   limit: number = 100
 ): Promise<any[]> => {
-  // Mock implementation for development
-  if (!supabase || process.env.NEXT_PUBLIC_USE_MOCK_SUPABASE === 'true') {
-    return []
-  }
-
   const { data, error } = await supabase.storage
     .from(bucket)
     .list(folder, {
@@ -239,11 +211,6 @@ export const validateFile = (
 
 // Create storage buckets (run once during setup)
 export const createStorageBuckets = async (): Promise<void> => {
-  if (!supabase || process.env.NEXT_PUBLIC_USE_MOCK_SUPABASE === 'true') {
-    console.log('Mock mode: Skipping bucket creation')
-    return
-  }
-
   const buckets = Object.values(STORAGE_BUCKETS)
   
   for (const bucketName of buckets) {

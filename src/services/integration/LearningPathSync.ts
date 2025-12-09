@@ -5,7 +5,10 @@
  * Core service for the AI-Powered Learning System integration
  */
 
-import { supabase } from '../../lib/supabase/client'
+import { supabase as typedSupabase } from '../../lib/supabase/client'
+
+// Cast to any to bypass schema mismatches - learning path sync needs extended schema
+const supabase = typedSupabase as any
 import { 
   UnifiedVideoReference, 
   LearningPathSegment,
@@ -162,7 +165,7 @@ export class LearningPathSync {
 
         if (todosError) throw todosError
 
-        const completedTodo = pathTodos.find(t => t.id === progressEvent.data.todoId)
+        const completedTodo = pathTodos.find((t: any) => t.id === progressEvent.data.todoId)
         const videoReferences = Array.isArray(completedTodo?.video_references) ? completedTodo.video_references : []
         if (videoReferences.length) {
           // Mark associated videos as completed

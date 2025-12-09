@@ -1,8 +1,89 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { openaiService, type ChatMessage, type VideoContext as OpenAIVideoContext } from '@/lib/services/openai-service'
+import { createClient } from '@/lib/supabase/server'
 
 // Configure route for longer timeout (OpenAI can take time)
 export const maxDuration = 30 // seconds
+
+// Server-side helper functions for rate limiting
+async function canUserAskQuestion(userId: string) {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .rpc('get_user_ai_usage', { p_user_id: userId })
+    .single()
+
+  if (error || !data) {
+    console.error('[Rate Limit] Error checking usage:', error)
+    return {
+      allowed: false,
+      reason: 'Unable to verify usage. Please try again.',
+      remainingQuestions: 0,
+      isPremium: false
+    }
+  }
+
+  const remaining = data.remaining_questions || 0
+  const isPremium = data.is_premium || false
+
+  if (remaining <= 0) {
+    return {
+      allowed: false,
+      reason: isPremium
+        ? 'Daily limit reached (10/10). Try again tomorrow!'
+        : 'Daily limit reached (3/3). Upgrade to Premium for more questions!',
+      remainingQuestions: 0,
+      isPremium
+    }
+  }
+
+  return {
+    allowed: true,
+    remainingQuestions: remaining,
+    isPremium
+  }
+}
+
+async function incrementUsage(userId: string) {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .rpc('increment_ai_usage', { p_user_id: userId })
+    .single()
+
+  if (error || !data) {
+    console.error('[Rate Limit] Error incrementing usage:', error)
+    return null
+  }
+
+  return {
+    success: data.success || false,
+    newCount: data.new_count || 0,
+    remaining: data.remaining || 0,
+    message: data.message || ''
+  }
+}
+
+async function getUserDailyUsage(userId: string) {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .rpc('get_user_ai_usage', { p_user_id: userId })
+    .single()
+
+  if (error || !data) {
+    console.error('[Rate Limit] Error fetching usage:', error)
+    return null
+  }
+
+  return {
+    questionCount: data.question_count || 0,
+    dailyLimit: data.daily_limit || 3,
+    remainingQuestions: data.remaining_questions || 0,
+    isPremium: data.is_premium || false,
+    date: data.date
+  }
+}
 
 interface BloxWizardRequest {
   message: string
@@ -28,6 +109,8 @@ interface BloxWizardResponse {
   suggestedQuestions: string[]
   usageRemaining: number
   responseTime: string
+  isPremium?: boolean
+  dailyLimit?: number
   citations?: Array<{
     id: number
     videoTitle: string
@@ -60,10 +143,10 @@ const mockVideoReferences: VideoReference[] = [
 export async function POST(request: NextRequest) {
   try {
     const startTime = Date.now()
-    const { 
-      message, 
-      sessionId, 
-      userId = 'anonymous', 
+    const {
+      message,
+      sessionId,
+      userId = 'anonymous',
       videoContext,
       conversationHistory = [],
       responseStyle = 'beginner'
@@ -74,6 +157,30 @@ export async function POST(request: NextRequest) {
         { error: 'Message and sessionId are required' },
         { status: 400 }
       )
+    }
+
+    // Verify user authentication
+    if (!userId || userId === 'anonymous') {
+      return NextResponse.json(
+        { error: 'Authentication required. Please log in to use AI Chat.' },
+        { status: 401 }
+      )
+    }
+
+    // CRITICAL: Check rate limits BEFORE calling OpenAI
+    const rateLimitCheck = await canUserAskQuestion(userId)
+
+    if (!rateLimitCheck.allowed) {
+      const usage = await getUserDailyUsage(userId)
+
+      return NextResponse.json({
+        error: 'Rate limit exceeded',
+        message: rateLimitCheck.reason,
+        usageRemaining: 0,
+        dailyLimit: usage?.dailyLimit || 3,
+        isPremium: rateLimitCheck.isPremium || false,
+        upgradeRequired: !rateLimitCheck.isPremium
+      }, { status: 429 })
     }
 
     try {
@@ -99,11 +206,23 @@ export async function POST(request: NextRequest) {
 
       const responseTime = `${Date.now() - startTime}ms`
 
+      // Increment usage count AFTER successful OpenAI response
+      const incrementResult = await incrementUsage(userId)
+
+      if (!incrementResult) {
+        console.error('[Blox Wizard] Failed to increment usage count')
+      }
+
+      // Get updated usage info
+      const usage = await getUserDailyUsage(userId)
+
       const response: BloxWizardResponse = {
         answer: openaiResponse.answer,
         videoReferences,
         suggestedQuestions: openaiResponse.suggestedQuestions,
-        usageRemaining: 10, // No limits for now
+        usageRemaining: usage?.remainingQuestions || 0,
+        dailyLimit: usage?.dailyLimit || 3,
+        isPremium: usage?.isPremium || false,
         responseTime
       }
 
@@ -113,7 +232,7 @@ export async function POST(request: NextRequest) {
       console.error('OpenAI service error:', openaiError)
       
       // Fall back to mock response if OpenAI fails
-      return generateMockResponse(message, startTime)
+      return await generateMockResponse(message, startTime)
     }
 
   } catch (error) {
@@ -128,7 +247,7 @@ export async function POST(request: NextRequest) {
 /**
  * Generate mock response as fallback when N8n is unavailable
  */
-function generateMockResponse(message: string, startTime: number): NextResponse {
+async function generateMockResponse(message: string, startTime: number): Promise<NextResponse> {
   let answer = "I understand you're asking about Roblox development. Let me help you with that!"
   let videoReferences: VideoReference[] = []
   let suggestedQuestions: string[] = []
@@ -165,11 +284,17 @@ function generateMockResponse(message: string, startTime: number): NextResponse 
 
   const responseTime = `${Date.now() - startTime}ms`
 
+  // Even for mock responses, we should track usage
+  // But for fallback/error cases, we might be lenient
+  const usage = await getUserDailyUsage('mock-user')
+
   const response: BloxWizardResponse = {
     answer,
     videoReferences,
     suggestedQuestions,
-    usageRemaining: 2,
+    usageRemaining: usage?.remainingQuestions || 0,
+    dailyLimit: usage?.dailyLimit || 3,
+    isPremium: usage?.isPremium || false,
     responseTime
   }
 

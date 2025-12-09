@@ -26,6 +26,7 @@ import { Badge } from '@/components/ui/badge'
 import { useAIJourney } from '@/hooks/useAIJourney'
 import { useChatSession } from '@/hooks/useChatSession'
 import { useUser } from '@/lib/providers'
+import { getUserDailyUsage, type UserAIUsage } from '@/lib/services/ai-usage-service'
 import toast from 'react-hot-toast'
 
 interface Message {
@@ -281,8 +282,26 @@ export function AIChat({ className = '', onMessageSend }: AIChatProps) {
   const [input, setInput] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const [showQuickActions, setShowQuickActions] = useState(true)
+  const [usage, setUsage] = useState<UserAIUsage | null>(null)
+  const [isLoadingUsage, setIsLoadingUsage] = useState(true)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  // Load user's daily usage
+  useEffect(() => {
+    async function loadUsage() {
+      if (!user?.id) {
+        setIsLoadingUsage(false)
+        return
+      }
+
+      const usageData = await getUserDailyUsage(user.id)
+      setUsage(usageData)
+      setIsLoadingUsage(false)
+    }
+
+    loadUsage()
+  }, [user?.id])
 
   // Add initial welcome message if empty and not loading
   useEffect(() => {
@@ -364,11 +383,43 @@ export function AIChat({ className = '', onMessageSend }: AIChatProps) {
         })
       })
 
+      const data = await response.json()
+
+      // Handle rate limit errors
+      if (response.status === 429) {
+        const errorMessage = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant' as const,
+          content: data.message || 'You\'ve reached your daily question limit. Please try again tomorrow!',
+          timestamp: new Date(),
+          suggestedQuestions: data.upgradeRequired
+            ? ['How do I upgrade to Premium?', 'What are Premium benefits?']
+            : ['Tell me more about Roblox', 'What can I learn here?']
+        }
+
+        await saveMessage(errorMessage)
+        setIsTyping(false)
+
+        // Update usage state
+        setUsage({
+          questionCount: data.dailyLimit || 3,
+          dailyLimit: data.dailyLimit || 3,
+          remainingQuestions: 0,
+          isPremium: data.isPremium || false,
+          date: new Date().toISOString().split('T')[0]
+        })
+
+        toast.error(data.message, {
+          icon: data.upgradeRequired ? '⚡' : '⏰',
+          duration: 6000
+        })
+
+        return
+      }
+
       if (!response.ok) {
         throw new Error(`API error: ${response.status}`)
       }
-
-      const data = await response.json()
 
       const aiMessage = {
         id: (Date.now() + 1).toString(),
@@ -388,6 +439,17 @@ export function AIChat({ className = '', onMessageSend }: AIChatProps) {
           duration: 4000
         })
         console.error('[AIChat] AI message failed to save')
+      }
+
+      // Update usage state with response data
+      if (data.usageRemaining !== undefined) {
+        setUsage({
+          questionCount: (data.dailyLimit || 3) - data.usageRemaining,
+          dailyLimit: data.dailyLimit || 3,
+          remainingQuestions: data.usageRemaining,
+          isPremium: data.isPremium || false,
+          date: new Date().toISOString().split('T')[0]
+        })
       }
 
       setIsTyping(false)
@@ -452,6 +514,23 @@ export function AIChat({ className = '', onMessageSend }: AIChatProps) {
             </div>
             
             <div className="flex items-center gap-2">
+              {/* Usage Badge */}
+              {!isLoadingUsage && usage && (
+                <Badge
+                  variant="outline"
+                  className={`text-xs ${
+                    usage.remainingQuestions <= 0
+                      ? 'border-red-500/30 text-red-400'
+                      : usage.remainingQuestions <= 1
+                      ? 'border-yellow-500/30 text-yellow-400'
+                      : 'border-blox-teal/30 text-blox-teal'
+                  }`}
+                >
+                  {usage.remainingQuestions}/{usage.dailyLimit} questions
+                  {usage.isPremium && ' (Premium)'}
+                </Badge>
+              )}
+
               <Badge variant="outline" className="text-xs">
                 <div className="w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse" />
                 Online
@@ -588,16 +667,77 @@ export function AIChat({ className = '', onMessageSend }: AIChatProps) {
               
               <Button
                 onClick={handleSend}
-                disabled={!input.trim() || isTyping}
+                disabled={!input.trim() || isTyping || (usage?.remainingQuestions === 0)}
                 className="bg-gradient-to-r from-blox-teal to-blox-teal-dark"
+                title={usage?.remainingQuestions === 0 ? 'Daily limit reached' : 'Send message'}
               >
                 <Send className="h-4 w-4" />
               </Button>
             </div>
-            
-            <p className="text-xs text-blox-off-white/40 mt-2 text-center">
-              AI responses are context-aware based on your learning progress
-            </p>
+
+            {/* Usage Info & Upgrade Prompt */}
+            <div className="mt-2">
+              {usage && usage.remainingQuestions === 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-start gap-2 p-3 rounded-lg bg-gradient-to-r from-red-500/10 to-orange-500/10
+                    border border-red-500/20"
+                >
+                  <AlertCircle className="h-4 w-4 text-red-400 flex-shrink-0 mt-0.5" />
+                  <div className="flex-1">
+                    <p className="text-xs text-red-400 font-medium">
+                      {usage.isPremium
+                        ? 'Daily limit reached (10/10). Try again tomorrow!'
+                        : 'Free limit reached (3/3)'}
+                    </p>
+                    {!usage.isPremium && (
+                      <p className="text-xs text-blox-off-white/60 mt-1">
+                        Upgrade to Premium for 10 questions per day!
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-auto p-0 ml-2 text-blox-teal hover:bg-transparent"
+                          onClick={() => {
+                            toast.success('Premium upgrade coming soon!', {
+                              icon: '⚡',
+                              duration: 3000
+                            })
+                          }}
+                        >
+                          Learn More →
+                        </Button>
+                      </p>
+                    )}
+                  </div>
+                </motion.div>
+              )}
+
+              {usage && usage.remainingQuestions > 0 && usage.remainingQuestions <= 2 && !usage.isPremium && (
+                <motion.div
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-start gap-2 p-3 rounded-lg bg-gradient-to-r from-yellow-500/10 to-orange-500/10
+                    border border-yellow-500/20"
+                >
+                  <Sparkles className="h-4 w-4 text-yellow-400 flex-shrink-0 mt-0.5" />
+                  <div className="flex-1">
+                    <p className="text-xs text-yellow-400 font-medium">
+                      Only {usage.remainingQuestions} question{usage.remainingQuestions > 1 ? 's' : ''} remaining today
+                    </p>
+                    <p className="text-xs text-blox-off-white/60 mt-1">
+                      Upgrade to Premium for 10 daily questions!
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+
+              {!usage?.remainingQuestions || usage.remainingQuestions > 2 ? (
+                <p className="text-xs text-blox-off-white/40 text-center">
+                  AI responses are context-aware based on your learning progress
+                </p>
+              ) : null}
+            </div>
           </div>
         </CardContent>
       </Card>

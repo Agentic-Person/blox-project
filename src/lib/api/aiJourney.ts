@@ -1,8 +1,12 @@
 // AI Journey API Layer
 // Handles all database operations for AI Journey system
 
-import { createClient } from '@supabase/supabase-js'
-import type { 
+import { supabase as typedSupabase } from '@/lib/supabase/client'
+
+// Use untyped supabase for ai_journeys since tables don't exist yet
+// This allows the code to compile while the feature is in development
+const supabase = typedSupabase as any
+import type {
   Database,
   AIJourneyRow,
   AIJourneyInsert,
@@ -28,29 +32,10 @@ import type {
   RealtimePayload
 } from '@/types/supabase-ai-journey'
 import { AIJourneyAPIError } from '@/types/supabase-ai-journey'
+import { FEATURES } from '@/lib/config/features'
 
 // Check if we're in mock mode
-const USE_MOCK_SUPABASE = process.env.NEXT_PUBLIC_USE_MOCK_SUPABASE === 'true'
-
-// Initialize Supabase client only if not in mock mode and credentials are available
-let supabase: any = null
-const initializeSupabase = () => {
-  if (USE_MOCK_SUPABASE) {
-    return null
-  }
-  
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  
-  if (supabaseUrl && supabaseKey) {
-    return createClient<Database>(supabaseUrl, supabaseKey)
-  }
-  
-  return null
-}
-
-// Initialize once
-supabase = initializeSupabase()
+const USE_MOCK_SUPABASE = FEATURES.USE_MOCK_DATA
 
 // Error handling utility
 const handleError = (error: any, operation: string): never => {
@@ -138,7 +123,7 @@ export const aiJourneyAPI = {
   async createJourney(request: CreateJourneyRequest): Promise<APIResponse<AIJourneyWithSkills>> {
     try {
       // Return mock data if in mock mode
-      if (USE_MOCK_SUPABASE || !supabase) {
+      if (USE_MOCK_SUPABASE) {
         console.log('🎭 Mock Mode: Creating mock journey')
         const mockJourney = createMockJourney(request)
         return {
@@ -226,7 +211,7 @@ export const aiJourneyAPI = {
   async getJourney(userId: string): Promise<APIResponse<AIJourneyWithSkills | null>> {
     try {
       // Return mock data if in mock mode
-      if (USE_MOCK_SUPABASE || !supabase) {
+      if (USE_MOCK_SUPABASE) {
         console.log('🎭 Mock Mode: No existing journey found')
         return {
           success: true,
@@ -302,7 +287,7 @@ export const aiJourneyAPI = {
   async updateProgress(request: UpdateJourneyProgressRequest): Promise<APIResponse<AIJourneyRow>> {
     try {
       // Return mock response if in mock mode
-      if (USE_MOCK_SUPABASE || !supabase) {
+      if (USE_MOCK_SUPABASE) {
         console.log('🎭 Mock Mode: Progress update simulated')
         return {
           success: true,
@@ -673,11 +658,11 @@ export const aiJourneyAPI = {
 export const aiJourneySubscriptions = {
   // Subscribe to journey changes
   subscribeToJourney(journeyId: string, callback: (payload: RealtimePayload<AIJourneyRow>) => void) {
-    if (USE_MOCK_SUPABASE || !supabase) {
+    if (USE_MOCK_SUPABASE) {
       console.log('🎭 Mock Mode: Journey subscription simulated')
       return { unsubscribe: () => console.log('🎭 Mock journey subscription unsubscribed') }
     }
-    
+
     return supabase
       .channel(`journey-${journeyId}`)
       .on('postgres_changes', {
@@ -730,7 +715,7 @@ export const aiJourneySubscriptions = {
 
   // Unsubscribe from all channels
   unsubscribeAll() {
-    if (USE_MOCK_SUPABASE || !supabase) {
+    if (USE_MOCK_SUPABASE) {
       console.log('🎭 Mock Mode: All subscriptions unsubscribed')
       return Promise.resolve()
     }

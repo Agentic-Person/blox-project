@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { xpToBLOX, calculateStreakBonus } from '@/lib/learning/xp-to-blox'
 import curriculumData from '@/data/curriculum.json'
+import { progressService } from '@/lib/services/progress-service'
 
 interface ModuleProgress {
   status: 'not_started' | 'in_progress' | 'completed'
@@ -49,6 +50,7 @@ interface LearningState {
   totalBLOXEarned: number
   currentStreak: number
   lastActivityDate: string | null
+  isHydrated: boolean
   // Day-level actions
   markDayComplete: (dayId: string) => void
   markDayIncomplete: (dayId: string) => void
@@ -58,6 +60,9 @@ interface LearningState {
   markVideoIncomplete: (videoId: string) => void
   isVideoCompleted: (videoId: string) => boolean
   updateVideoProgress: (videoId: string, watchedDuration: number, totalDuration: number) => void
+  // Supabase sync actions
+  loadProgressFromSupabase: () => Promise<void>
+  setHydrated: (hydrated: boolean) => void
   // Legacy lesson actions (for backward compatibility)
   markLessonComplete: (lessonId: string, xpReward?: number) => void
   markLessonIncomplete: (lessonId: string) => void
@@ -95,7 +100,48 @@ export const useLearningStore = create<LearningState>()(
       totalBLOXEarned: 0,
       currentStreak: 0,
       lastActivityDate: null,
-      
+      isHydrated: false,
+
+      // Supabase sync actions
+      loadProgressFromSupabase: async () => {
+        try {
+          console.log('Loading progress from Supabase...')
+          const progressData = await progressService.loadUserProgress()
+
+          if (Object.keys(progressData).length > 0) {
+            const completedVideos: string[] = []
+            const videoProgress: Record<string, VideoProgress> = {}
+
+            // Convert Supabase progress to store format
+            Object.entries(progressData).forEach(([youtubeId, progress]) => {
+              videoProgress[youtubeId] = {
+                videoId: youtubeId,
+                completed: progress.completed,
+                watchedDuration: progress.lastPosition,
+                totalDuration: progress.totalDuration,
+                xpEarned: 0, // XP is calculated when marking complete
+                completedAt: progress.completedAt
+              }
+
+              if (progress.completed) {
+                completedVideos.push(youtubeId)
+              }
+            })
+
+            set({
+              videoProgress,
+              completedVideos: Array.from(new Set([...get().completedVideos, ...completedVideos]))
+            })
+
+            console.log(`Loaded progress for ${"${Object.keys(progressData).length}"} videos from Supabase`)
+          }
+        } catch (error) {
+          console.error('Error loading progress from Supabase:', error)
+        }
+      },
+
+      setHydrated: (hydrated: boolean) => set({ isHydrated: hydrated }),
+
       // Day-level actions
       markDayComplete: (dayId: string) =>
         set((state) => ({
@@ -112,27 +158,32 @@ export const useLearningStore = create<LearningState>()(
       },
       
       // Video-level actions
-      markVideoComplete: (videoId: string, xpReward: number) =>
-        set((state) => {
-          const bloxReward = xpToBLOX(xpReward)
-          const bonusBlox = calculateStreakBonus(bloxReward, state.currentStreak)
-          
-          return {
-            completedVideos: Array.from(new Set([...state.completedVideos, videoId])),
-            videoProgress: {
-              ...state.videoProgress,
-              [videoId]: {
-                ...state.videoProgress[videoId],
-                videoId,
-                completed: true,
-                xpEarned: xpReward,
-                completedAt: new Date()
-              }
-            },
-            totalXP: state.totalXP + xpReward,
-            totalBLOXEarned: state.totalBLOXEarned + bonusBlox
-          }
-        }),
+      markVideoComplete: (videoId: string, xpReward: number) => {
+        const state = get()
+        const bloxReward = xpToBLOX(xpReward)
+        const bonusBlox = calculateStreakBonus(bloxReward, state.currentStreak)
+
+        // Sync to Supabase
+        const currentProgress = state.videoProgress[videoId]
+        const totalDuration = currentProgress?.totalDuration || 0
+        progressService.markComplete(videoId, totalDuration)
+
+        set({
+          completedVideos: Array.from(new Set([...state.completedVideos, videoId])),
+          videoProgress: {
+            ...state.videoProgress,
+            [videoId]: {
+              ...state.videoProgress[videoId],
+              videoId,
+              completed: true,
+              xpEarned: xpReward,
+              completedAt: new Date()
+            }
+          },
+          totalXP: state.totalXP + xpReward,
+          totalBLOXEarned: state.totalBLOXEarned + bonusBlox
+        })
+      },
       
       markVideoIncomplete: (videoId: string) =>
         set((state) => ({
@@ -151,7 +202,10 @@ export const useLearningStore = create<LearningState>()(
         return get().completedVideos.includes(videoId)
       },
       
-      updateVideoProgress: (videoId: string, watchedDuration: number, totalDuration: number) =>
+      updateVideoProgress: (videoId: string, watchedDuration: number, totalDuration: number) => {
+        // Sync to Supabase
+        progressService.updateProgress(videoId, watchedDuration, totalDuration)
+
         set((state) => ({
           videoProgress: {
             ...state.videoProgress,
@@ -163,8 +217,9 @@ export const useLearningStore = create<LearningState>()(
               completed: watchedDuration >= totalDuration * 0.9 // 90% completion threshold
             }
           }
-        })),
-      
+        }))
+      },
+
       // Legacy lesson actions (for backward compatibility)
       markLessonComplete: (lessonId: string, xpReward: number = 100) =>
         set((state) => {
@@ -463,7 +518,14 @@ export const useLearningStore = create<LearningState>()(
         totalBLOXEarned: state.totalBLOXEarned,
         currentStreak: state.currentStreak,
         lastActivityDate: state.lastActivityDate
-      })
+      }),
+      onRehydrateStorage: () => (state) => {
+        // After rehydration, load progress from Supabase
+        if (state) {
+          state.setHydrated(true)
+          state.loadProgressFromSupabase()
+        }
+      }
     }
   )
 )

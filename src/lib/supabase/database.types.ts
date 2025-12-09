@@ -7,75 +7,23 @@ export type Json =
   | Json[]
 
 export type Database = {
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
       auto_bump_logs: {
         Row: {
-          ai_suggested: boolean | null
-          bump_context: Json | null
-          bump_reason: string
-          created_at: string | null
+          bumped_at: string
           id: string
-          new_due_date: string | null
-          new_scheduled_date: string | null
-          old_due_date: string | null
-          old_scheduled_date: string | null
-          todo_id: string | null
-          user_confirmed: boolean | null
-          user_id: string | null
+          todo_id: string
         }
         Insert: {
-          ai_suggested?: boolean | null
-          bump_context?: Json | null
-          bump_reason: string
-          created_at?: string | null
+          bumped_at?: string
           id?: string
-          new_due_date?: string | null
-          new_scheduled_date?: string | null
-          old_due_date?: string | null
-          old_scheduled_date?: string | null
-          todo_id?: string | null
-          user_confirmed?: boolean | null
-          user_id?: string | null
+          todo_id: string
         }
         Update: {
-          ai_suggested?: boolean | null
-          bump_context?: Json | null
-          bump_reason?: string
-          created_at?: string | null
+          bumped_at?: string
           id?: string
-          new_due_date?: string | null
-          new_scheduled_date?: string | null
-          old_due_date?: string | null
-          old_scheduled_date?: string | null
-          todo_id?: string | null
-          user_confirmed?: boolean | null
-          user_id?: string | null
+          todo_id?: string
         }
         Relationships: [
           {
@@ -89,237 +37,222 @@ export type Database = {
       }
       calendar_events: {
         Row: {
-          all_day: boolean | null
+          all_day: boolean
           color: string | null
-          created_at: string | null
-          created_by: string | null
+          created_at: string
           description: string | null
           end_time: string
           id: string
-          location: string | null
-          parent_event_id: string | null
-          recurrence_exception: boolean | null
-          recurring_config: Json | null
-          related_todo_ids: string[] | null
-          reminder_minutes: number[] | null
+          recurrence_rule: string | null
           start_time: string
-          status: string | null
-          timezone: string | null
           title: string
-          type: Database["public"]["Enums"]["calendar_event_type_enum"] | null
-          updated_at: string | null
-          url: string | null
-          user_id: string | null
-          video_reference: Json | null
-          visibility: string | null
+          updated_at: string
+          user_id: string
         }
         Insert: {
-          all_day?: boolean | null
+          all_day?: boolean
           color?: string | null
-          created_at?: string | null
-          created_by?: string | null
+          created_at?: string
           description?: string | null
           end_time: string
           id?: string
-          location?: string | null
-          parent_event_id?: string | null
-          recurrence_exception?: boolean | null
-          recurring_config?: Json | null
-          related_todo_ids?: string[] | null
-          reminder_minutes?: number[] | null
+          recurrence_rule?: string | null
           start_time: string
-          status?: string | null
-          timezone?: string | null
           title: string
-          type?: Database["public"]["Enums"]["calendar_event_type_enum"] | null
-          updated_at?: string | null
-          url?: string | null
-          user_id?: string | null
-          video_reference?: Json | null
-          visibility?: string | null
+          updated_at?: string
+          user_id: string
         }
         Update: {
-          all_day?: boolean | null
+          all_day?: boolean
           color?: string | null
-          created_at?: string | null
-          created_by?: string | null
+          created_at?: string
           description?: string | null
           end_time?: string
           id?: string
-          location?: string | null
-          parent_event_id?: string | null
-          recurrence_exception?: boolean | null
-          recurring_config?: Json | null
-          related_todo_ids?: string[] | null
-          reminder_minutes?: number[] | null
+          recurrence_rule?: string | null
           start_time?: string
-          status?: string | null
-          timezone?: string | null
           title?: string
-          type?: Database["public"]["Enums"]["calendar_event_type_enum"] | null
-          updated_at?: string | null
-          url?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      calendar_preferences: {
+        Row: {
+          default_view: string
+          enable_auto_bump: boolean
+          id: string
+          show_completed_todos: boolean
+          todo_default_duration: number
+          updated_at: string
+          user_id: string
+          week_starts_on: number
+          working_hours_end: string
+          working_hours_start: string
+        }
+        Insert: {
+          default_view?: string
+          enable_auto_bump?: boolean
+          id?: string
+          show_completed_todos?: boolean
+          todo_default_duration?: number
+          updated_at?: string
+          user_id: string
+          week_starts_on?: number
+          working_hours_end?: string
+          working_hours_start?: string
+        }
+        Update: {
+          default_view?: string
+          enable_auto_bump?: boolean
+          id?: string
+          show_completed_todos?: boolean
+          todo_default_duration?: number
+          updated_at?: string
+          user_id?: string
+          week_starts_on?: number
+          working_hours_end?: string
+          working_hours_start?: string
+        }
+        Relationships: []
+      }
+      chat_conversations: {
+        Row: {
+          id: string
+          user_id: string | null
+          session_id: string
+          title: string | null
+          last_message_at: string | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
           user_id?: string | null
-          video_reference?: Json | null
-          visibility?: string | null
+          session_id: string
+          title?: string | null
+          last_message_at?: string | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          session_id?: string
+          title?: string | null
+          last_message_at?: string | null
+          created_at?: string | null
+        }
+        Relationships: []
+      }
+      chat_messages: {
+        Row: {
+          id: string
+          conversation_id: string | null
+          role: string
+          content: string
+          video_context: Json | null
+          video_references: Json | null
+          suggested_questions: Json | null
+          metadata: Json | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          conversation_id?: string | null
+          role: string
+          content: string
+          video_context?: Json | null
+          video_references?: Json | null
+          suggested_questions?: Json | null
+          metadata?: Json | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          conversation_id?: string | null
+          role?: string
+          content?: string
+          video_context?: Json | null
+          video_references?: Json | null
+          suggested_questions?: Json | null
+          metadata?: Json | null
+          created_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "calendar_events_parent_event_id_fkey"
-            columns: ["parent_event_id"]
+            foreignKeyName: "chat_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
             isOneToOne: false
-            referencedRelation: "calendar_events"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "calendar_events_parent_event_id_fkey"
-            columns: ["parent_event_id"]
-            isOneToOne: false
-            referencedRelation: "upcoming_events"
+            referencedRelation: "chat_conversations"
             referencedColumns: ["id"]
           },
         ]
       }
-      calendar_preferences: {
-        Row: {
-          ai_scheduling_enabled: boolean | null
-          ai_suggestion_frequency: string | null
-          auto_bump_time: string | null
-          auto_reschedule: boolean | null
-          created_at: string | null
-          daily_summary: boolean | null
-          default_view: string | null
-          email_reminders: boolean | null
-          enable_auto_bump: boolean | null
-          max_bumps_per_task: number | null
-          preferred_study_times: string[] | null
-          push_notifications: boolean | null
-          start_of_week: number | null
-          time_format: string | null
-          updated_at: string | null
-          user_id: string
-          work_days: number[] | null
-          work_end_time: string | null
-          work_start_time: string | null
-        }
-        Insert: {
-          ai_scheduling_enabled?: boolean | null
-          ai_suggestion_frequency?: string | null
-          auto_bump_time?: string | null
-          auto_reschedule?: boolean | null
-          created_at?: string | null
-          daily_summary?: boolean | null
-          default_view?: string | null
-          email_reminders?: boolean | null
-          enable_auto_bump?: boolean | null
-          max_bumps_per_task?: number | null
-          preferred_study_times?: string[] | null
-          push_notifications?: boolean | null
-          start_of_week?: number | null
-          time_format?: string | null
-          updated_at?: string | null
-          user_id: string
-          work_days?: number[] | null
-          work_end_time?: string | null
-          work_start_time?: string | null
-        }
-        Update: {
-          ai_scheduling_enabled?: boolean | null
-          ai_suggestion_frequency?: string | null
-          auto_bump_time?: string | null
-          auto_reschedule?: boolean | null
-          created_at?: string | null
-          daily_summary?: boolean | null
-          default_view?: string | null
-          email_reminders?: boolean | null
-          enable_auto_bump?: boolean | null
-          max_bumps_per_task?: number | null
-          preferred_study_times?: string[] | null
-          push_notifications?: boolean | null
-          start_of_week?: number | null
-          time_format?: string | null
-          updated_at?: string | null
-          user_id?: string
-          work_days?: number[] | null
-          work_end_time?: string | null
-          work_start_time?: string | null
-        }
-        Relationships: []
-      }
       rewards_queue: {
         Row: {
-          activity_type: string
           amount: number
-          claimed: boolean | null
-          claimed_at: string | null
-          created_at: string | null
-          expires_at: string | null
+          created_at: string
           id: string
+          processed: boolean
+          processed_at: string | null
           reason: string
-          user_id: string | null
-          xp_earned: number | null
+          user_id: string
+          wallet_id: string | null
         }
         Insert: {
-          activity_type: string
           amount: number
-          claimed?: boolean | null
-          claimed_at?: string | null
-          created_at?: string | null
-          expires_at?: string | null
+          created_at?: string
           id?: string
+          processed?: boolean
+          processed_at?: string | null
           reason: string
-          user_id?: string | null
-          xp_earned?: number | null
+          user_id: string
+          wallet_id?: string | null
         }
         Update: {
-          activity_type?: string
           amount?: number
-          claimed?: boolean | null
-          claimed_at?: string | null
-          created_at?: string | null
-          expires_at?: string | null
+          created_at?: string
           id?: string
+          processed?: boolean
+          processed_at?: string | null
           reason?: string
-          user_id?: string | null
-          xp_earned?: number | null
-        }
-        Relationships: []
-      }
-      todo_calendar_links: {
-        Row: {
-          created_at: string | null
-          event_id: string | null
-          id: string
-          link_type: string | null
-          todo_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          event_id?: string | null
-          id?: string
-          link_type?: string | null
-          todo_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          event_id?: string | null
-          id?: string
-          link_type?: string | null
-          todo_id?: string | null
+          user_id?: string
+          wallet_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "todo_calendar_links_event_id_fkey"
-            columns: ["event_id"]
+            foreignKeyName: "rewards_queue_wallet_id_fkey"
+            columns: ["wallet_id"]
             isOneToOne: false
-            referencedRelation: "calendar_events"
+            referencedRelation: "user_wallets"
             referencedColumns: ["id"]
           },
+        ]
+      }
+      todo_calendar_links: {
+        Row: {
+          calendar_event_id: string
+          created_at: string
+          id: string
+          todo_id: string
+        }
+        Insert: {
+          calendar_event_id: string
+          created_at?: string
+          id?: string
+          todo_id: string
+        }
+        Update: {
+          calendar_event_id?: string
+          created_at?: string
+          id?: string
+          todo_id?: string
+        }
+        Relationships: [
           {
-            foreignKeyName: "todo_calendar_links_event_id_fkey"
-            columns: ["event_id"]
+            foreignKeyName: "todo_calendar_links_calendar_event_id_fkey"
+            columns: ["calendar_event_id"]
             isOneToOne: false
-            referencedRelation: "upcoming_events"
+            referencedRelation: "calendar_events"
             referencedColumns: ["id"]
           },
           {
@@ -333,222 +266,383 @@ export type Database = {
       }
       todos: {
         Row: {
-          actual_minutes: number | null
-          assigned_to: string | null
-          auto_bumped: boolean | null
-          auto_generated: boolean | null
-          bump_count: number | null
-          category: string | null
+          auto_bump: boolean
+          completed: boolean
           completed_at: string | null
-          confidence: number | null
-          created_at: string | null
-          created_by: string | null
+          created_at: string
           description: string | null
           due_date: string | null
-          estimated_minutes: number | null
-          generated_from: string | null
           id: string
-          last_bumped_at: string | null
-          learning_objectives: string[] | null
-          order_index: number | null
-          original_due_date: string | null
-          parent_todo_id: string | null
-          prerequisites: string[] | null
-          priority: Database["public"]["Enums"]["todo_priority_enum"] | null
-          scheduled_date: string | null
-          scheduled_time: string | null
-          status: Database["public"]["Enums"]["todo_status_enum"] | null
-          tags: string[] | null
+          priority: string
           title: string
-          updated_at: string | null
-          user_id: string | null
-          video_references: Json | null
+          updated_at: string
+          user_id: string
         }
         Insert: {
-          actual_minutes?: number | null
-          assigned_to?: string | null
-          auto_bumped?: boolean | null
-          auto_generated?: boolean | null
-          bump_count?: number | null
-          category?: string | null
+          auto_bump?: boolean
+          completed?: boolean
           completed_at?: string | null
-          confidence?: number | null
-          created_at?: string | null
-          created_by?: string | null
+          created_at?: string
           description?: string | null
           due_date?: string | null
-          estimated_minutes?: number | null
-          generated_from?: string | null
           id?: string
-          last_bumped_at?: string | null
-          learning_objectives?: string[] | null
-          order_index?: number | null
-          original_due_date?: string | null
-          parent_todo_id?: string | null
-          prerequisites?: string[] | null
-          priority?: Database["public"]["Enums"]["todo_priority_enum"] | null
-          scheduled_date?: string | null
-          scheduled_time?: string | null
-          status?: Database["public"]["Enums"]["todo_status_enum"] | null
-          tags?: string[] | null
+          priority?: string
           title: string
-          updated_at?: string | null
-          user_id?: string | null
-          video_references?: Json | null
+          updated_at?: string
+          user_id: string
         }
         Update: {
-          actual_minutes?: number | null
-          assigned_to?: string | null
-          auto_bumped?: boolean | null
-          auto_generated?: boolean | null
-          bump_count?: number | null
-          category?: string | null
+          auto_bump?: boolean
+          completed?: boolean
           completed_at?: string | null
-          confidence?: number | null
-          created_at?: string | null
-          created_by?: string | null
+          created_at?: string
           description?: string | null
           due_date?: string | null
-          estimated_minutes?: number | null
-          generated_from?: string | null
           id?: string
-          last_bumped_at?: string | null
-          learning_objectives?: string[] | null
-          order_index?: number | null
-          original_due_date?: string | null
-          parent_todo_id?: string | null
-          prerequisites?: string[] | null
-          priority?: Database["public"]["Enums"]["todo_priority_enum"] | null
-          scheduled_date?: string | null
-          scheduled_time?: string | null
-          status?: Database["public"]["Enums"]["todo_status_enum"] | null
-          tags?: string[] | null
+          priority?: string
           title?: string
-          updated_at?: string | null
-          user_id?: string | null
-          video_references?: Json | null
+          updated_at?: string
+          user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "todos_parent_todo_id_fkey"
-            columns: ["parent_todo_id"]
-            isOneToOne: false
-            referencedRelation: "todos"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       token_tiers: {
         Row: {
-          bonus_multiplier: number | null
-          current_tier: string | null
+          benefits: Json
+          created_at: string
           id: string
-          last_active_date: string | null
-          streak_days: number | null
-          total_earned: number | null
-          total_spent: number | null
-          updated_at: string | null
-          user_id: string | null
+          max_tokens: number | null
+          min_tokens: number
+          name: string
+          updated_at: string
         }
         Insert: {
-          bonus_multiplier?: number | null
-          current_tier?: string | null
+          benefits?: Json
+          created_at?: string
           id?: string
-          last_active_date?: string | null
-          streak_days?: number | null
-          total_earned?: number | null
-          total_spent?: number | null
-          updated_at?: string | null
-          user_id?: string | null
+          max_tokens?: number | null
+          min_tokens: number
+          name: string
+          updated_at?: string
         }
         Update: {
-          bonus_multiplier?: number | null
-          current_tier?: string | null
+          benefits?: Json
+          created_at?: string
           id?: string
-          last_active_date?: string | null
-          streak_days?: number | null
-          total_earned?: number | null
-          total_spent?: number | null
-          updated_at?: string | null
-          user_id?: string | null
+          max_tokens?: number | null
+          min_tokens?: number
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_ai_usage: {
+        Row: {
+          id: string
+          user_id: string
+          date: string
+          question_count: number
+          last_question_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          date?: string
+          question_count?: number
+          last_question_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          date?: string
+          question_count?: number
+          last_question_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_profiles: {
+        Row: {
+          user_id: string
+          data: Json
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          data?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          user_id?: string
+          data?: Json
+          created_at?: string
+          updated_at?: string
         }
         Relationships: []
       }
       user_wallets: {
         Row: {
-          balance: number | null
-          created_at: string | null
-          encrypted_private_key: string | null
+          created_at: string
           id: string
-          is_primary: boolean | null
-          migrated_at: string | null
-          public_key: string
-          updated_at: string | null
-          user_id: string | null
-          wallet_type: string | null
+          is_primary: boolean
+          solana_address: string
+          updated_at: string
+          user_id: string
         }
         Insert: {
-          balance?: number | null
-          created_at?: string | null
-          encrypted_private_key?: string | null
+          created_at?: string
           id?: string
-          is_primary?: boolean | null
-          migrated_at?: string | null
-          public_key: string
-          updated_at?: string | null
-          user_id?: string | null
-          wallet_type?: string | null
+          is_primary?: boolean
+          solana_address: string
+          updated_at?: string
+          user_id: string
         }
         Update: {
-          balance?: number | null
-          created_at?: string | null
-          encrypted_private_key?: string | null
+          created_at?: string
           id?: string
-          is_primary?: boolean | null
-          migrated_at?: string | null
-          public_key?: string
-          updated_at?: string | null
-          user_id?: string | null
-          wallet_type?: string | null
+          is_primary?: boolean
+          solana_address?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
+      }
+      videos: {
+        Row: {
+          id: string
+          youtube_id: string
+          title: string
+          creator: string | null
+          description: string | null
+          duration: string | null
+          total_minutes: number | null
+          thumbnail_url: string | null
+          xp_reward: number | null
+          module_id: string | null
+          week_id: string | null
+          day_id: string | null
+          order_index: number | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          youtube_id: string
+          title: string
+          creator?: string | null
+          description?: string | null
+          duration?: string | null
+          total_minutes?: number | null
+          thumbnail_url?: string | null
+          xp_reward?: number | null
+          module_id?: string | null
+          week_id?: string | null
+          day_id?: string | null
+          order_index?: number | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          youtube_id?: string
+          title?: string
+          creator?: string | null
+          description?: string | null
+          duration?: string | null
+          total_minutes?: number | null
+          thumbnail_url?: string | null
+          xp_reward?: number | null
+          module_id?: string | null
+          week_id?: string | null
+          day_id?: string | null
+          order_index?: number | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      video_progress: {
+        Row: {
+          id: string
+          user_id: string | null
+          video_id: string | null
+          youtube_id: string
+          watch_progress: number | null
+          last_position: number | null
+          total_duration: number | null
+          completed: boolean | null
+          completed_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          video_id?: string | null
+          youtube_id: string
+          watch_progress?: number | null
+          last_position?: number | null
+          total_duration?: number | null
+          completed?: boolean | null
+          completed_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          video_id?: string | null
+          youtube_id?: string
+          watch_progress?: number | null
+          last_position?: number | null
+          total_duration?: number | null
+          completed?: boolean | null
+          completed_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_progress_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: false
+            referencedRelation: "videos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      video_transcripts: {
+        Row: {
+          id: string
+          video_id: string | null
+          youtube_id: string
+          full_transcript: Json | null
+          segment_count: number | null
+          language: string | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          video_id?: string | null
+          youtube_id: string
+          full_transcript?: Json | null
+          segment_count?: number | null
+          language?: string | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          video_id?: string | null
+          youtube_id?: string
+          full_transcript?: Json | null
+          segment_count?: number | null
+          language?: string | null
+          created_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_transcripts_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: false
+            referencedRelation: "videos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      video_transcript_chunks: {
+        Row: {
+          id: string
+          video_id: string | null
+          transcript_id: string | null
+          youtube_id: string
+          chunk_index: number
+          start_time: number
+          end_time: number
+          text: string
+          embedding: string | null
+          todo_suggestions: string[] | null
+          learning_objectives: string[] | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          video_id?: string | null
+          transcript_id?: string | null
+          youtube_id: string
+          chunk_index: number
+          start_time: number
+          end_time: number
+          text: string
+          embedding?: string | null
+          todo_suggestions?: string[] | null
+          learning_objectives?: string[] | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          video_id?: string | null
+          transcript_id?: string | null
+          youtube_id?: string
+          chunk_index?: number
+          start_time?: number
+          end_time?: number
+          text?: string
+          embedding?: string | null
+          todo_suggestions?: string[] | null
+          learning_objectives?: string[] | null
+          created_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_transcript_chunks_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: false
+            referencedRelation: "videos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "video_transcript_chunks_transcript_id_fkey"
+            columns: ["transcript_id"]
+            isOneToOne: false
+            referencedRelation: "video_transcripts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       wallet_transactions: {
         Row: {
           amount: number
-          created_at: string | null
-          from_wallet: string
+          created_at: string
           id: string
-          metadata: Json | null
+          reason: string | null
           signature: string | null
-          status: string | null
-          to_wallet: string
-          transaction_type: string
-          wallet_id: string | null
+          status: string
+          type: string
+          wallet_id: string
         }
         Insert: {
           amount: number
-          created_at?: string | null
-          from_wallet: string
+          created_at?: string
           id?: string
-          metadata?: Json | null
+          reason?: string | null
           signature?: string | null
-          status?: string | null
-          to_wallet: string
-          transaction_type: string
-          wallet_id?: string | null
+          status?: string
+          type: string
+          wallet_id: string
         }
         Update: {
           amount?: number
-          created_at?: string | null
-          from_wallet?: string
+          created_at?: string
           id?: string
-          metadata?: Json | null
+          reason?: string | null
           signature?: string | null
-          status?: string | null
-          to_wallet?: string
-          transaction_type?: string
-          wallet_id?: string | null
+          status?: string
+          type?: string
+          wallet_id?: string
         }
         Relationships: [
           {
@@ -562,104 +656,136 @@ export type Database = {
       }
     }
     Views: {
-      upcoming_events: {
+      conversation_summaries: {
         Row: {
-          all_day: boolean | null
-          color: string | null
-          created_at: string | null
-          created_by: string | null
-          description: string | null
-          end_time: string | null
           id: string | null
-          location: string | null
-          parent_event_id: string | null
-          recurrence_exception: boolean | null
-          recurring_config: Json | null
-          related_todo_ids: string[] | null
-          related_todo_titles: string[] | null
-          reminder_minutes: number[] | null
-          start_time: string | null
-          status: string | null
-          timezone: string | null
+          user_id: string | null
+          session_id: string | null
           title: string | null
-          type: Database["public"]["Enums"]["calendar_event_type_enum"] | null
-          updated_at: string | null
-          url: string | null
-          user_id: string | null
-          video_reference: Json | null
-          visibility: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "calendar_events_parent_event_id_fkey"
-            columns: ["parent_event_id"]
-            isOneToOne: false
-            referencedRelation: "calendar_events"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "calendar_events_parent_event_id_fkey"
-            columns: ["parent_event_id"]
-            isOneToOne: false
-            referencedRelation: "upcoming_events"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_todo_summary: {
-        Row: {
-          auto_bumped_todos: number | null
-          avg_completion_time: number | null
-          completed_todos: number | null
-          in_progress_todos: number | null
-          overdue_todos: number | null
-          pending_todos: number | null
-          total_todos: number | null
-          user_id: string | null
+          last_message_at: string | null
+          created_at: string | null
+          total_messages: number | null
+          user_messages: number | null
+          assistant_messages: number | null
+          last_message_created_at: string | null
         }
         Relationships: []
       }
     }
     Functions: {
-      add_reward: {
-        Args: {
-          p_activity_type: string
-          p_amount: number
-          p_reason: string
-          p_user_id: string
-          p_xp_earned?: number
-        }
-        Returns: string
+      cleanup_old_ai_usage: {
+        Args: Record<PropertyKey, never>
+        Returns: number
       }
-      claim_rewards: {
-        Args: { p_user_id: string }
+      generate_conversation_title: {
+        Args: Record<PropertyKey, never>
+        Returns: unknown
+      }
+      get_conversation_with_messages: {
+        Args: {
+          p_session_id: string
+          p_user_id: string
+          message_limit?: number
+        }
         Returns: {
-          claimed_amount: number
-          transaction_id: string
+          conversation_id: string
+          session_id: string
+          conversation_title: string
+          last_message_at: string
+          message_id: string
+          message_role: string
+          message_content: string
+          message_video_context: Json
+          message_video_references: Json
+          message_suggested_questions: Json
+          message_created_at: string
         }[]
       }
-      update_user_tier: {
-        Args: { p_user_id: string }
-        Returns: string
+      get_user_ai_usage: {
+        Args: {
+          p_user_id: string
+        }
+        Returns: {
+          question_count: number
+          daily_limit: number
+          remaining_questions: number
+          is_premium: boolean
+          date: string
+        }[]
+      }
+      get_user_conversations: {
+        Args: {
+          p_user_id: string
+          conversation_limit?: number
+        }
+        Returns: {
+          conversation_id: string
+          session_id: string
+          title: string
+          last_message_at: string
+          message_count: number
+        }[]
+      }
+      increment_ai_usage: {
+        Args: {
+          p_user_id: string
+        }
+        Returns: {
+          success: boolean
+          new_count: number
+          remaining: number
+          message: string
+        }[]
+      }
+      search_similar_chunks: {
+        Args: {
+          query_embedding: string
+          match_threshold?: number
+          match_count?: number
+        }
+        Returns: {
+          chunk_id: string
+          video_id: string
+          youtube_id: string
+          video_title: string
+          video_creator: string
+          chunk_index: number
+          start_time: number
+          end_time: number
+          chunk_text: string
+          similarity: number
+        }[]
+      }
+      search_video_transcripts: {
+        Args: {
+          search_query: string
+          limit_count?: number
+        }
+        Returns: {
+          video_id: string
+          youtube_id: string
+          video_title: string
+          chunk_text: string
+          start_time: number
+          end_time: number
+          relevance: number
+        }[]
+      }
+      set_updated_at: {
+        Args: Record<PropertyKey, never>
+        Returns: unknown
+      }
+      update_conversation_timestamp: {
+        Args: Record<PropertyKey, never>
+        Returns: unknown
+      }
+      update_video_completion: {
+        Args: Record<PropertyKey, never>
+        Returns: unknown
       }
     }
     Enums: {
-      calendar_event_type_enum:
-        | "video"
-        | "practice"
-        | "project"
-        | "review"
-        | "meeting"
-        | "break"
-        | "custom"
-      todo_priority_enum: "low" | "medium" | "high" | "urgent"
-      todo_status_enum:
-        | "pending"
-        | "in_progress"
-        | "completed"
-        | "blocked"
-        | "cancelled"
-        | "archived"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -667,33 +793,25 @@ export type Database = {
   }
 }
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
-
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
-
 export type Tables<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+  PublicTableNameOrOptions extends
+    | keyof (Database["public"]["Tables"] & Database["public"]["Views"])
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+        Database[PublicTableNameOrOptions["schema"]]["Views"])
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof (Database["public"]["Tables"] &
+        Database["public"]["Views"])
+    ? (Database["public"]["Tables"] &
+        Database["public"]["Views"])[PublicTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -701,24 +819,20 @@ export type Tables<
     : never
 
 export type TablesInsert<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+  PublicTableNameOrOptions extends
+    | keyof Database["public"]["Tables"]
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
+    ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -726,24 +840,20 @@ export type TablesInsert<
     : never
 
 export type TablesUpdate<
-  DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+  PublicTableNameOrOptions extends
+    | keyof Database["public"]["Tables"]
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof Database["public"]["Tables"]
+    ? Database["public"]["Tables"][PublicTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -751,64 +861,29 @@ export type TablesUpdate<
     : never
 
 export type Enums<
-  DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+  PublicEnumNameOrOptions extends
+    | keyof Database["public"]["Enums"]
+    | { schema: keyof Database },
+  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
-> = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+> = PublicEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : PublicEnumNameOrOptions extends keyof Database["public"]["Enums"]
+    ? Database["public"]["Enums"][PublicEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
+    | keyof Database["public"]["CompositeTypes"]
+    | { schema: keyof Database },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
+    schema: keyof Database
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
-> = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof Database["public"]["CompositeTypes"]
+    ? Database["public"]["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
-
-export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
-  public: {
-    Enums: {
-      calendar_event_type_enum: [
-        "video",
-        "practice",
-        "project",
-        "review",
-        "meeting",
-        "break",
-        "custom",
-      ],
-      todo_priority_enum: ["low", "medium", "high", "urgent"],
-      todo_status_enum: [
-        "pending",
-        "in_progress",
-        "completed",
-        "blocked",
-        "cancelled",
-        "archived",
-      ],
-    },
-  },
-} as const
-
