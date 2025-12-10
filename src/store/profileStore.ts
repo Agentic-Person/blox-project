@@ -230,8 +230,8 @@ const mockProfile: ProfileData = {
 export const useProfileStore = create<ProfileStore>()(
   persist(
     (set, get) => ({
-      // Initial state
-      profile: mockProfile,
+      // Initial state - null until authenticated user loads their profile
+      profile: null,
       isLoading: false,
       error: null,
       uploadProgress: 0,
@@ -279,13 +279,36 @@ export const useProfileStore = create<ProfileStore>()(
           if (data?.data) {
             set({ profile: data.data as any, isLoading: false })
           } else {
-            // Seed a starter profile on first load
-            const starter = { ...mockProfile, userId }
+            // Create a new empty profile for first-time users
+            const newProfile: ProfileData = {
+              userId,
+              username: '',
+              fullName: '',
+              email: '',
+              joinDate: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+              background: '',
+              currentStatus: '',
+              goals: '',
+              socialLinks: [],
+              portfolioImages: [],
+              recentWork: [],
+              skills: [],
+              achievements: [],
+              videosWatched: 0,
+              projectsCompleted: 0,
+              teamsJoined: 0,
+              xpEarned: 0,
+              bloxTokens: 0,
+              profileVisibility: 'public',
+              showEmail: false,
+              showLocation: true,
+              allowMessages: true
+            }
             const { error: upsertError } = await supabase
               .from('user_profiles')
-              .upsert({ user_id: userId, data: starter }, { onConflict: 'user_id' })
+              .upsert({ user_id: userId, data: newProfile }, { onConflict: 'user_id' })
             if (upsertError) throw upsertError
-            set({ profile: starter, isLoading: false })
+            set({ profile: newProfile, isLoading: false })
           }
         } catch (error: any) {
           set({ error: error.message || 'Failed to load profile', isLoading: false })

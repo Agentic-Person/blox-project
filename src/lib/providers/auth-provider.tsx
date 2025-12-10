@@ -151,6 +151,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (error) {
         console.error('Sign out error:', error)
       }
+
+      // Clear all Zustand persisted stores from localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('profile-storage')
+        localStorage.removeItem('learning-storage')
+        localStorage.removeItem('calendar-todo-storage')
+        // Clear any other persisted stores
+        const keys = Object.keys(localStorage)
+        keys.forEach(key => {
+          if (key.includes('blox') || key.includes('storage')) {
+            localStorage.removeItem(key)
+          }
+        })
+      }
+
+      // Clear the user state
+      setUser(null)
+
+      // Redirect to login page
+      window.location.href = '/login'
     } catch (error) {
       console.error('Sign out error:', error)
     }

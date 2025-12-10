@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { User, Edit, Trophy, Users, BookOpen, MapPin, Calendar, Target, QrCode, Upload } from 'lucide-react'
+import { User, Edit, Trophy, Users, BookOpen, MapPin, Calendar, Target, QrCode, Upload, LogOut } from 'lucide-react'
 import { ProfileEditModal } from '@/components/profile/ProfileEditModal'
 import { PortfolioSection } from '@/components/profile/PortfolioSection'
 import { AvatarUpload } from '@/components/profile/AvatarUpload'
@@ -13,10 +13,12 @@ import { QRCodeUpload } from '@/components/profile/QRCodeUpload'
 import { ImageLightbox } from '@/components/profile/ImageLightbox'
 import { useProfileStore } from '@/store/profileStore'
 import type { ProfileImage } from '@/store/profileStore'
+import { useAuth } from '@/lib/providers/auth-provider'
 
 
 export default function ProfilePage() {
   const { profile, loadProfile, updateProfile, uploadImage, setActiveImage } = useProfileStore()
+  const { signOut, isLoading: isAuthLoading } = useAuth()
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [isQRModalOpen, setIsQRModalOpen] = useState(false)
   const [isLightboxOpen, setIsLightboxOpen] = useState(false)
@@ -74,13 +76,24 @@ export default function ProfilePage() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-blox-white">Profile</h1>
-        <Button
-          onClick={() => setIsEditModalOpen(true)}
-          className="flex items-center gap-2"
-        >
-          <Edit className="h-4 w-4" />
-          Edit Profile
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button
+            onClick={() => setIsEditModalOpen(true)}
+            className="flex items-center gap-2"
+          >
+            <Edit className="h-4 w-4" />
+            Edit Profile
+          </Button>
+          <Button
+            onClick={signOut}
+            variant="outline"
+            disabled={isAuthLoading}
+            className="flex items-center gap-2 border-red-500/50 text-red-400 hover:bg-red-500/10 hover:text-red-300"
+          >
+            <LogOut className="h-4 w-4" />
+            {isAuthLoading ? 'Signing out...' : 'Sign Out'}
+          </Button>
+        </div>
       </div>
 
       {/* Hidden file input for uploads */}
