@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { Sidebar } from '@/components/layout/Sidebar/Sidebar'
 import { Header } from '@/components/layout/Header/Header'
 import { ResizableSidebar, ResizableSidebarHandle } from '@/components/layout/ResizableSidebar'
+import { RequireAuth } from '@/components/auth/RequireAuth'
 import { cn } from '@/lib/utils/cn'
 
 function AppLayoutContent({ children }: { children: React.ReactNode }) {
@@ -154,19 +155,21 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <Suspense fallback={
-      <div className="h-screen bg-blox-black-blue flex">
-        <div className="w-64 bg-blox-very-dark-blue animate-pulse"></div>
-        <div className="flex-1 bg-blox-black-blue animate-pulse">
-          <div className="h-16 bg-blox-second-dark-blue"></div>
-          <div className="p-6">
-            <div className="h-8 bg-blox-second-dark-blue rounded w-1/3 mb-4"></div>
-            <div className="h-64 bg-blox-second-dark-blue rounded"></div>
+    <RequireAuth>
+      <Suspense fallback={
+        <div className="h-screen bg-blox-black-blue flex">
+          <div className="w-64 bg-blox-very-dark-blue animate-pulse"></div>
+          <div className="flex-1 bg-blox-black-blue animate-pulse">
+            <div className="h-16 bg-blox-second-dark-blue"></div>
+            <div className="p-6">
+              <div className="h-8 bg-blox-second-dark-blue rounded w-1/3 mb-4"></div>
+              <div className="h-64 bg-blox-second-dark-blue rounded"></div>
+            </div>
           </div>
         </div>
-      </div>
-    }>
-      <AppLayoutContent>{children}</AppLayoutContent>
-    </Suspense>
+      }>
+        <AppLayoutContent>{children}</AppLayoutContent>
+      </Suspense>
+    </RequireAuth>
   )
 }
