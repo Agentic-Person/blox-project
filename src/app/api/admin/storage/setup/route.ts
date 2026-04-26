@@ -9,7 +9,7 @@ const REQUIRED_BUCKETS = [
 
 export async function POST() {
   try {
-    const supabase = createClient()
+    const supabase = await createClient()
 
     // Check auth via service role only for server route
     // Create buckets if not present

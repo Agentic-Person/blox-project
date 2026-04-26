@@ -4,8 +4,9 @@ import { createClient } from '@/lib/supabase/server'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     const user = await currentUser()
     if (!user) {
@@ -13,11 +14,11 @@ export async function GET(
     }
     const userId = user.id
 
-    const supabase = createClient()
+    const supabase = await createClient()
     const { data: todo, error } = await supabase
       .from('todos')
       .select('*')
-      .eq('id', params.id)
+      .eq('id', id)
       .eq('user_id', userId)
       .single()
 
@@ -38,8 +39,9 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     const user = await currentUser()
     if (!user) {
@@ -47,11 +49,11 @@ export async function PUT(
     }
     const userId = user.id
 
-    const supabase = createClient()
+    const supabase = await createClient()
     const body = await request.json()
 
     // Remove fields that shouldn't be updated
-    const { id, user_id, created_at, created_by, ...updateData } = body
+    const { id: _bodyId, user_id, created_at, created_by, ...updateData } = body
 
     // Add updated_at timestamp
     updateData.updated_at = new Date().toISOString()
@@ -66,7 +68,7 @@ export async function PUT(
     const { data: todo, error } = await supabase
       .from('todos')
       .update(updateData)
-      .eq('id', params.id)
+      .eq('id', id)
       .eq('user_id', userId)
       .select()
       .single()
@@ -88,8 +90,9 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     const user = await currentUser()
     if (!user) {
@@ -97,13 +100,13 @@ export async function DELETE(
     }
     const userId = user.id
 
-    const supabase = createClient()
+    const supabase = await createClient()
 
     // First check if todo exists and belongs to user
     const { data: existingTodo } = await supabase
       .from('todos')
       .select('id, title')
-      .eq('id', params.id)
+      .eq('id', id)
       .eq('user_id', userId)
       .single()
 
@@ -115,7 +118,7 @@ export async function DELETE(
     const { error } = await supabase
       .from('todos')
       .delete()
-      .eq('id', params.id)
+      .eq('id', id)
       .eq('user_id', userId)
 
     if (error) {

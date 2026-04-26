@@ -1,4 +1,5 @@
 'use client'
+import { use } from 'react'
 
 import { VideoPlayer } from '@/components/learning/VideoPlayer'
 import { useLearningStore } from '@/store/learningStore'
@@ -7,15 +8,16 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 
 interface PageProps {
-  params: {
+  params: Promise<{
     moduleId: string
     weekId: string
     dayId: string
     videoId: string
-  }
+  }>
 }
 
-export default function LearningVideoPage({ params }: PageProps) {
+export default function LearningVideoPage({ params: paramsPromise }: PageProps) {
+  const params = use(paramsPromise)
   const router = useRouter()
 
   // Find the current module, week, and day from curriculum data

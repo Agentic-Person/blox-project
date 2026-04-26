@@ -1,4 +1,5 @@
 'use client'
+import { use } from 'react'
 
 import { DayView } from '@/components/learning/DayView'
 import { Breadcrumb } from '@/components/learning/Breadcrumb'
@@ -8,14 +9,15 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 
 interface PageProps {
-  params: {
+  params: Promise<{
     moduleId: string
     weekId: string
     dayId: string
-  }
+  }>
 }
 
-export default function LearningDayPage({ params }: PageProps) {
+export default function LearningDayPage({ params: paramsPromise }: PageProps) {
+  const params = use(paramsPromise)
   const router = useRouter()
   
   // Find the current module, week, and day from curriculum data

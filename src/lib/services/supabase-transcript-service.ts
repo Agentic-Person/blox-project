@@ -3,14 +3,20 @@
  * Handles video and transcript data retrieval for Blox Wizard
  */
 
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import OpenAI from 'openai'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 const openaiApiKey = process.env.OPENAI_API_KEY!
 
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+let _supabase: SupabaseClient | null = null
+function getSupabase(): SupabaseClient {
+  if (!_supabase) {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    _supabase = createClient(url, key)
+  }
+  return _supabase
+}
 
 // Initialize OpenAI client (only if API key is available)
 let openai: OpenAI | null = null
@@ -97,7 +103,7 @@ class SupabaseTranscriptService {
       }
 
       // Use the ACTUAL function that exists in your database
-      const { data, error } = await supabase.rpc('search_transcript_chunks', {
+      const { data, error } = await (getSupabase() as any).rpc('search_transcript_chunks', {
         query_embedding: queryEmbedding,
         similarity_threshold: threshold,
         max_results: limit
@@ -173,7 +179,7 @@ class SupabaseTranscriptService {
    */
   async getVideoByYouTubeId(youtubeId: string): Promise<VideoRecord | null> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (getSupabase() as any)
         .from('videos')
         .select('*')
         .eq('youtube_id', youtubeId)
@@ -197,7 +203,7 @@ class SupabaseTranscriptService {
    */
   async getAllVideoTitles(): Promise<string[]> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (getSupabase() as any)
         .from('videos')
         .select('title')
         .order('order_index')
@@ -208,7 +214,7 @@ class SupabaseTranscriptService {
       }
 
       // Extract unique titles
-      const titles = data?.map(v => v.title).filter(Boolean) || []
+      const titles = (data as any[])?.map((v: any) => v.title).filter(Boolean) || []
       return [...new Set(titles)] // Remove duplicates
     } catch (error) {
       console.error('Get all video titles error:', error)
@@ -221,7 +227,7 @@ class SupabaseTranscriptService {
    */
   async getVideoTranscriptChunks(youtubeId: string): Promise<TranscriptChunk[]> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (getSupabase() as any)
         .from('video_transcript_chunks')
         .select(`
           *,
@@ -317,7 +323,7 @@ class SupabaseTranscriptService {
     weekId?: string
   ): Promise<VideoRecord[]> {
     try {
-      let query = supabase
+      let query = (getSupabase() as any)
         .from('videos')
         .select('*')
         .eq('module_id', moduleId)
@@ -349,7 +355,7 @@ class SupabaseTranscriptService {
     youtubeId?: string
   ): Promise<any[]> {
     try {
-      let query = supabase
+      let query = (getSupabase() as any)
         .from('video_progress')
         .select(`
           *,
@@ -395,7 +401,7 @@ class SupabaseTranscriptService {
         return false
       }
 
-      const { error } = await supabase
+      const { error } = await (getSupabase() as any)
         .from('video_progress')
         .upsert({
           user_id: userId,
@@ -428,7 +434,7 @@ class SupabaseTranscriptService {
     limit: number = 5
   ): Promise<VideoRecord[]> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (getSupabase() as any)
         .rpc('get_video_recommendations', {
           p_user_id: userId,
           limit_count: limit

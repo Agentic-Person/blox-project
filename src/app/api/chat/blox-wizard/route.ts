@@ -7,7 +7,7 @@ export const maxDuration = 30 // seconds
 
 // Server-side helper functions for rate limiting
 async function canUserAskQuestion(userId: string) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data, error } = await supabase
     .rpc('get_user_ai_usage', { p_user_id: userId })
@@ -45,7 +45,7 @@ async function canUserAskQuestion(userId: string) {
 }
 
 async function incrementUsage(userId: string) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data, error } = await supabase
     .rpc('increment_ai_usage', { p_user_id: userId })
@@ -65,7 +65,7 @@ async function incrementUsage(userId: string) {
 }
 
 async function getUserDailyUsage(userId: string) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data, error } = await supabase
     .rpc('get_user_ai_usage', { p_user_id: userId })

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react'
 import { ModuleOverview } from '@/components/learning/ModuleOverview'
 import { WeekPreview } from '@/components/learning/WeekPreview'
 import { useLearningStore } from '@/store/learningStore'
@@ -9,12 +9,13 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 
 interface PageProps {
-  params: {
+  params: Promise<{
     moduleId: string
-  }
+  }>
 }
 
-export default function ModuleLearningPage({ params }: PageProps) {
+export default function ModuleLearningPage({ params: paramsPromise }: PageProps) {
+  const params = use(paramsPromise)
   const router = useRouter()
   const { isVideoCompleted } = useLearningStore()
   

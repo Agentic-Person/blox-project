@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, use } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
@@ -84,7 +84,8 @@ const mockTeam = {
   ]
 }
 
-export default function TeamDashboardPage({ params }: { params: { teamId: string } }) {
+export default function TeamDashboardPage({ params: paramsPromise }: { params: Promise<{ teamId: string }> }) {
+  const params = use(paramsPromise)
   const [activeTab, setActiveTab] = useState('info')
   const [showComingSoonModal, setShowComingSoonModal] = useState(true)
 

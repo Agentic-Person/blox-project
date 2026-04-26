@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react'
 import { WeekPreview } from '@/components/learning/WeekPreview'
 import { useLearningStore } from '@/store/learningStore'
 import curriculumData from '@/data/curriculum.json'
@@ -8,13 +8,14 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 
 interface PageProps {
-  params: {
+  params: Promise<{
     moduleId: string
     weekId: string
-  }
+  }>
 }
 
-export default function WeekLearningPage({ params }: PageProps) {
+export default function WeekLearningPage({ params: paramsPromise }: PageProps) {
+  const params = use(paramsPromise)
   const router = useRouter()
   const { isVideoCompleted } = useLearningStore()
   

@@ -68,9 +68,7 @@ const nextConfig = {
   },
   
   // Ensure static files are served from public directory
-  experimental: {
-    outputFileTracingRoot: process.cwd()
-  }
+  outputFileTracingRoot: process.cwd(),
 }
 
 module.exports = nextConfig
