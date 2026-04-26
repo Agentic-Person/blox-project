@@ -3,7 +3,7 @@
  * Protects admin routes and API endpoints with authentication and authorization
  */
 
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
+import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
@@ -38,17 +38,40 @@ const PUBLIC_ROUTES = [
 ]
 
 export async function middleware(request: NextRequest) {
-  const res = NextResponse.next()
-  
-  // Create Supabase client
-  const supabase = createMiddlewareClient({ req: request, res })
-  
+  let res = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  })
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) =>
+            request.cookies.set(name, value)
+          )
+          res = NextResponse.next({
+            request,
+          })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            res.cookies.set(name, value, options)
+          )
+        },
+      },
+    }
+  )
+
   const pathname = request.nextUrl.pathname
   const isAdminRoute = ADMIN_ROUTES.some(route => pathname.startsWith(route))
   const isAdminAPIRoute = ADMIN_API_ROUTES.some(route => pathname.startsWith(route))
   const isProtectedRoute = PROTECTED_ROUTES.some(route => pathname.startsWith(route))
-  const isPublicRoute = PUBLIC_ROUTES.some(route => pathname === route || pathname.startsWith(route))
-  
+
   // Skip middleware for static files and API routes that aren't admin routes
   if (
     pathname.startsWith('/_next') ||
@@ -58,11 +81,11 @@ export async function middleware(request: NextRequest) {
   ) {
     return res
   }
-  
+
   try {
     // Get session
     const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-    
+
     if (sessionError) {
       console.error('Session error in middleware:', sessionError)
       if (isAdminRoute || isAdminAPIRoute || isProtectedRoute) {
@@ -97,7 +120,7 @@ export async function middleware(request: NextRequest) {
         }
         return redirectToLogin(request)
       }
-      
+
       // Check admin status in database
       try {
         const { data: adminData, error: adminError } = await supabase
@@ -106,10 +129,10 @@ export async function middleware(request: NextRequest) {
           .eq('user_id', session.user.id)
           .eq('is_active', true)
           .single()
-        
+
         if (adminError || !adminData) {
           console.log('User not found in admin_users table:', session.user.email)
-          
+
           if (isAdminAPIRoute) {
             return new NextResponse(
               JSON.stringify({ error: 'Admin privileges required' }),
@@ -118,13 +141,13 @@ export async function middleware(request: NextRequest) {
           }
           return NextResponse.redirect(new URL('/unauthorized', request.url))
         }
-        
+
         // User is valid admin - add headers for use in components
         res.headers.set('x-user-id', session.user.id)
         res.headers.set('x-user-email', session.user.email || '')
         res.headers.set('x-admin-role', adminData.role)
         res.headers.set('x-is-admin', 'true')
-        
+
         // Update last login time (fire and forget)
         try {
           supabase
@@ -134,12 +157,12 @@ export async function middleware(request: NextRequest) {
         } catch (err) {
           console.error('Failed to update last login:', err)
         }
-        
+
         return res
-        
+
       } catch (error) {
         console.error('Error checking admin status in middleware:', error)
-        
+
         if (isAdminAPIRoute) {
           return new NextResponse(
             JSON.stringify({ error: 'Internal server error' }),
@@ -149,23 +172,23 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/error', request.url))
       }
     }
-    
+
     // For non-admin routes, just add session info to headers if available
     if (session) {
       res.headers.set('x-user-id', session.user.id)
       res.headers.set('x-user-email', session.user.email || '')
     }
-    
+
     return res
-    
+
   } catch (error) {
     console.error('Middleware error:', error)
-    
+
     // For admin routes, redirect to error page
     if (isAdminRoute) {
       return NextResponse.redirect(new URL('/error', request.url))
     }
-    
+
     // For admin API routes, return error response
     if (isAdminAPIRoute) {
       return new NextResponse(
@@ -173,7 +196,7 @@ export async function middleware(request: NextRequest) {
         { status: 500, headers: { 'Content-Type': 'application/json' } }
       )
     }
-    
+
     return res
   }
 }
