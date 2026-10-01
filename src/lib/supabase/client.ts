@@ -13,7 +13,9 @@ export const supabase = new Proxy({} as ReturnType<typeof createClient<Database>
           'Missing Supabase environment variables. Please check your .env.local file for NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY'
         )
       }
-      _supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
+      _supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+        schema: 'bloxbuddy',
+      } as any)
     }
     return (_supabase as any)[prop]
   }

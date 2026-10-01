@@ -10,6 +10,7 @@ export const createClient = async () => {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
+      schema: 'bloxbuddy',
       cookies: {
         get(name: string) {
           return cookieStore.get(name)?.value

@@ -12,7 +12,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 // Initialize authenticated Supabase client
 // This client automatically includes the user's auth session from cookies
 // Required for RLS policies that check auth.uid()
-const getSupabaseClient = () => createClientComponentClient()
+const getSupabaseClient = () => createClientComponentClient({ schema: 'bloxbuddy' } as any)
 
 export interface ChatMessage {
   id: string

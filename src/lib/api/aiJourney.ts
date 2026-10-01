@@ -667,7 +667,7 @@ export const aiJourneySubscriptions = {
       .channel(`journey-${journeyId}`)
       .on('postgres_changes', {
         event: '*',
-        schema: 'public',
+        schema: 'bloxbuddy',
         table: 'ai_journeys',
         filter: `id=eq.${journeyId}`
       }, callback)
@@ -680,7 +680,7 @@ export const aiJourneySubscriptions = {
       .channel(`skills-${journeyId}`)
       .on('postgres_changes', {
         event: '*',
-        schema: 'public',
+        schema: 'bloxbuddy',
         table: 'ai_journey_skills',
         filter: `journey_id=eq.${journeyId}`
       }, callback)
@@ -693,7 +693,7 @@ export const aiJourneySubscriptions = {
       .channel(`schedule-${journeyId}`)
       .on('postgres_changes', {
         event: '*',
-        schema: 'public',
+        schema: 'bloxbuddy',
         table: 'ai_journey_schedule',
         filter: `journey_id=eq.${journeyId}`
       }, callback)
@@ -706,7 +706,7 @@ export const aiJourneySubscriptions = {
       .channel(`insights-${journeyId}`)
       .on('postgres_changes', {
         event: 'INSERT',
-        schema: 'public',
+        schema: 'bloxbuddy',
         table: 'ai_journey_insights',
         filter: `journey_id=eq.${journeyId}`
       }, callback)

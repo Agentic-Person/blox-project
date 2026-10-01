@@ -144,7 +144,7 @@ export const useProfileStore = create<ProfileStore>()(
       updateProfile: async (updates) => {
         set({ isLoading: true, error: null })
         try {
-          const supabase = createClientComponentClient()
+          const supabase = createClientComponentClient({ schema: 'bloxbuddy' } as any)
           const userRes = await supabase.auth.getUser()
           const userId = userRes.data.user?.id
           if (!userId) throw new Error('Not authenticated')
@@ -168,7 +168,7 @@ export const useProfileStore = create<ProfileStore>()(
       loadProfile: async (userId) => {
         set({ isLoading: true, error: null })
         try {
-          const supabase = createClientComponentClient()
+          const supabase = createClientComponentClient({ schema: 'bloxbuddy' } as any)
           const { data, error } = await supabase
             .from('user_profiles')
             .select('data')
@@ -220,7 +220,7 @@ export const useProfileStore = create<ProfileStore>()(
       uploadAvatar: async (file) => {
         set({ uploadProgress: 0 })
         try {
-          const supabase = createClientComponentClient()
+          const supabase = createClientComponentClient({ schema: 'bloxbuddy' } as any)
           const { data } = await supabase.auth.getUser()
           const userId = data.user?.id
           if (!userId) throw new Error('Not authenticated')
@@ -256,7 +256,7 @@ export const useProfileStore = create<ProfileStore>()(
       uploadImage: async (file, isRecentWork = false) => {
         set({ uploadProgress: 0 })
         try {
-          const supabase = createClientComponentClient()
+          const supabase = createClientComponentClient({ schema: 'bloxbuddy' } as any)
           const { data } = await supabase.auth.getUser()
           const userId = data.user?.id
           if (!userId) throw new Error('Not authenticated')
@@ -303,7 +303,7 @@ export const useProfileStore = create<ProfileStore>()(
       },
       
       uploadMultipleImages: async (files, isRecentWork = false) => {
-        const supabase = createClientComponentClient()
+        const supabase = createClientComponentClient({ schema: 'bloxbuddy' } as any)
         const { data } = await supabase.auth.getUser()
         const userId = data.user?.id
         if (!userId) throw new Error('Not authenticated')

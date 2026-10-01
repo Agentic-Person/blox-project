@@ -29,7 +29,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const init = async () => {
-      const supabase = createClientComponentClient()
+      const supabase = createClientComponentClient({ schema: 'bloxbuddy' } as any)
       const { data } = await supabase.auth.getUser()
       const userId = data.user?.id
       if (userId) {

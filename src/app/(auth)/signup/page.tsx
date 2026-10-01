@@ -44,7 +44,7 @@ export default function SignUpPage() {
     try {
       // Use Supabase signUp
       const { createClientComponentClient } = await import('@supabase/auth-helpers-nextjs')
-      const supabase = createClientComponentClient()
+      const supabase = createClientComponentClient({ schema: 'bloxbuddy' } as any)
 
       const { data, error: signUpError } = await supabase.auth.signUp({
         email: formData.email,

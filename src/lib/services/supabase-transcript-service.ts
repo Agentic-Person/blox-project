@@ -13,7 +13,7 @@ function getSupabase(): SupabaseClient {
   if (!_supabase) {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
     const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    _supabase = createClient(url, key)
+    _supabase = createClient(url, key, { schema: 'bloxbuddy' })
   }
   return _supabase
 }
