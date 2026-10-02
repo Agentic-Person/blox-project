@@ -1,0 +1,413 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Blox Buddy Audit</title>
+<script>
+try { var t = localStorage.getItem('bb-audit-theme'); if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Lexend:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column (~72ch) with wide tables in their own scroll boxes; each section carries its own accent. */
+:root {
+  --bg: #fbfbfc; --panel: #ffffff; --fg: #1f2228; --head: #111318; --muted: #5b606b; --line: #e2e4e9;
+  --blue: #2159d6;   --blue-soft: #ebf1fd;
+  --violet: #6d3fd1; --violet-soft: #f1ecfc;
+  --amber: #a35a06;  --amber-soft: #fdf3e3;
+  --cyan: #0c6f86;   --cyan-soft: #e5f5f8;
+  --coral: #c93a2e;  --coral-soft: #fdecea;
+  --pink: #b3175a;   --pink-soft: #fce9f1;
+  --slate: #4b5565;  --slate-soft: #eef0f3;
+  --font-display: "Chakra Petch", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Lexend", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", Consolas, "Courier New", monospace;
+  --acc: var(--blue); --acc-soft: var(--blue-soft);
+}
+:root[data-theme="dark"] {
+  --bg: #121316; --panel: #1c1e22; --fg: #d9d9d6; --head: #f2f2f2; --muted: #a2a5ac; --line: #2f3238;
+  --blue: #86aeff;   --blue-soft: #1d2433;
+  --violet: #bba2ff; --violet-soft: #251f35;
+  --amber: #f3b75c;  --amber-soft: #2d2517;
+  --cyan: #6fd2e6;   --cyan-soft: #1a2529;
+  --coral: #ff8f80;  --coral-soft: #321f1d;
+  --pink: #f590c0;   --pink-soft: #321d28;
+  --slate: #aeb7c6;  --slate-soft: #24272d;
+  color-scheme: dark;
+}
+@media print {
+  :root, :root[data-theme="dark"] {
+    --bg: #ffffff; --panel: #ffffff; --fg: #1f2228; --head: #111318; --muted: #5b606b; --line: #d9dce2;
+    --blue: #2159d6; --blue-soft: #ebf1fd; --violet: #6d3fd1; --violet-soft: #f1ecfc; --amber: #a35a06; --amber-soft: #fdf3e3;
+    --cyan: #0c6f86; --cyan-soft: #e5f5f8; --coral: #c93a2e; --coral-soft: #fdecea; --pink: #b3175a; --pink-soft: #fce9f1;
+    --slate: #4b5565; --slate-soft: #eef0f3; color-scheme: light;
+  }
+  .theme-toggle { display: none !important; }
+  .tbl { overflow: visible !important; }
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15.5px; line-height: 1.6; margin: 0; }
+.wrap { max-width: 920px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 64px; display: flex; flex-direction: column; gap: 40px; }
+h1, h2, h3 { font-family: var(--font-display); color: var(--head); text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: clamp(2rem, 5vw, 2.8rem); letter-spacing: 0.01em; }
+h2 { font-size: 1.55rem; display: flex; align-items: center; gap: 10px; color: var(--acc); }
+h3 { font-size: 1.1rem; }
+p { margin: 0; max-width: 70ch; }
+ul, ol { margin: 0; padding-left: 1.25em; display: flex; flex-direction: column; gap: 6px; }
+li { max-width: 72ch; }
+code, .path { font-family: var(--font-mono); font-size: 0.86em; }
+.path { word-break: break-all; }
+a { color: var(--blue); }
+strong { color: var(--head); font-weight: 600; }
+
+.topbar { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.eyebrow { font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.theme-toggle { flex: none; display: inline-flex; align-items: center; gap: 8px; font: 500 0.85rem var(--font-body); color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+.theme-toggle:hover { border-color: var(--muted); }
+.theme-toggle:focus-visible, a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.theme-toggle svg { width: 16px; height: 16px; }
+.icon-moon { display: none; }
+:root[data-theme="dark"] .icon-sun { display: none; }
+:root[data-theme="dark"] .icon-moon { display: inline; }
+
+header.hero { display: flex; flex-direction: column; gap: 14px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 18px; color: var(--muted); font-size: 0.88rem; }
+
+section { display: flex; flex-direction: column; gap: 16px; }
+section > .lede { color: var(--muted); }
+.s-blue   { --acc: var(--blue);   --acc-soft: var(--blue-soft); }
+.s-cyan   { --acc: var(--cyan);   --acc-soft: var(--cyan-soft); }
+.s-coral  { --acc: var(--coral);  --acc-soft: var(--coral-soft); }
+.s-violet { --acc: var(--violet); --acc-soft: var(--violet-soft); }
+.s-amber  { --acc: var(--amber);  --acc-soft: var(--amber-soft); }
+.s-pink   { --acc: var(--pink);   --acc-soft: var(--pink-soft); }
+.s-slate  { --acc: var(--slate);  --acc-soft: var(--slate-soft); }
+.badge { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; background: var(--acc-soft); color: var(--acc); flex: none; }
+.badge svg { width: 18px; height: 18px; }
+
+.verdict { background: var(--acc-soft); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; display: flex; flex-direction: column; gap: 12px; }
+.verdict p { max-width: none; }
+.verdict .big { font-family: var(--font-display); font-size: 1.3rem; color: var(--head); line-height: 1.35; }
+
+.meters { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.meter { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+.meter .num { font-family: var(--font-display); font-size: 1.7rem; color: var(--head); font-variant-numeric: tabular-nums; line-height: 1; }
+.meter .lbl { font-size: 0.82rem; color: var(--muted); }
+.bar { height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--acc); }
+
+.blockers { counter-reset: b; list-style: none; padding: 0; gap: 12px; }
+.blockers li { counter-increment: b; display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; max-width: none; }
+.blockers li::before { content: counter(b); font-family: var(--font-display); font-weight: 700; color: var(--coral); background: var(--coral-soft); border-radius: 8px; width: 30px; height: 30px; display: grid; place-items: center; }
+
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--acc); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.card p { font-size: 0.93rem; }
+.card .ev { font-size: 0.82rem; color: var(--muted); }
+
+.group { display: flex; flex-direction: column; gap: 12px; }
+.group-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.group-head h3 { color: var(--acc); }
+.item { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; padding: 12px 14px; background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--acc); border-radius: 8px; }
+.item p { max-width: none; font-size: 0.94rem; }
+.item .fix { color: var(--muted); font-size: 0.88rem; }
+.item .fix b { color: var(--acc); font-weight: 600; }
+
+.chip { display: inline-flex; align-items: center; font: 600 0.72rem var(--font-body); letter-spacing: 0.04em; text-transform: uppercase; border-radius: 999px; padding: 2px 10px; white-space: nowrap; }
+.c-works   { color: var(--cyan);   background: var(--cyan-soft); }
+.c-partial { color: var(--amber);  background: var(--amber-soft); }
+.c-mock    { color: var(--slate);  background: var(--slate-soft); }
+.c-broken  { color: var(--coral);  background: var(--coral-soft); }
+.c-stub    { color: var(--violet); background: var(--violet-soft); }
+.c-rec     { color: var(--blue);   background: var(--blue-soft); }
+.c-s { color: var(--cyan); background: var(--cyan-soft); }
+.c-m { color: var(--amber); background: var(--amber-soft); }
+.c-l { color: var(--coral); background: var(--coral-soft); }
+
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { background: var(--acc-soft); color: var(--acc); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.nowrap { white-space: nowrap; }
+
+/* 24-week course map */
+.map { display: flex; flex-direction: column; gap: 10px; }
+.map-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
+.mod { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.mod-name { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.weeks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; }
+.wk { aspect-ratio: 1; max-width: 100%; border-radius: 5px; display: grid; place-items: center; font: 600 0.7rem var(--font-mono); font-variant-numeric: tabular-nums; }
+.wk.real { background: var(--cyan); color: var(--panel); }
+.wk.mixed { background: var(--coral); color: var(--panel); }
+.wk.off { background: var(--amber); color: var(--panel); }
+.wk.ph { background: var(--slate-soft); color: var(--muted); border: 1px dashed var(--line); }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 0.82rem; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+.phase { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px; padding: 16px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
+.phase .when { font-family: var(--font-display); color: var(--acc); font-size: 1rem; line-height: 1.3; }
+.phase ol li { max-width: none; }
+.phase .step { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+
+.paths { list-style: none; padding: 0; gap: 4px; }
+.paths li { font-family: var(--font-mono); font-size: 0.82rem; word-break: break-all; max-width: none; }
+.note { font-size: 0.86rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; }
+
+@media (max-width: 760px) {
+  .meters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cards { grid-template-columns: minmax(0, 1fr); }
+  .map-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .phase { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+}
+@media (max-width: 420px) {
+  .wrap { padding-inline: 16px; }
+  .map-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+
+  <div class="topbar">
+    <span class="eyebrow">Codebase audit · 30 Sep 2026</span>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch between light and dark theme">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+      <span id="theme-label">Light</span>
+    </button>
+  </div>
+
+  <header class="hero">
+    <h1>Blox Buddy Audit</h1>
+    <p>A review of the Blox Buddy code, the rebuilt Supabase database and the course syllabus. The question behind it: can a 10-year-old use this as a homeschool "intro to building video games" course, and what would it take to get there?</p>
+    <div class="meta">
+      <span>Repo: <span class="path">D:\agent-services\projects\blox-project</span></span>
+      <span>Branch: <code>main</code> @ <code>e718a32</code></span>
+      <span>~258 source files · ~48,000 lines TypeScript</span>
+    </div>
+  </header>
+
+  <!-- EXECUTIVE SUMMARY -->
+  <section class="s-blue" id="summary">
+    <h2><span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg></span>Executive summary</h2>
+    <div class="verdict">
+      <p class="big">The app is well structured and its screens look finished. It is not ready for your son yet: he can't log in, the new database doesn't match the code, and most of the syllabus is empty.</p>
+      <p>The parts a homeschool course needs most already work on local data: the course browser, the YouTube player, progress and XP, whiteboard notes and daily screen-time limits. The fastest safe route is a <strong>kid mode</strong>: skip the login, hide the crypto, payments, teams and Discord features, and keep the course to a short, hand-checked first unit. Then fix the backend properly behind it.</p>
+    </div>
+
+    <div class="meters">
+      <div class="meter s-cyan"><span class="num">~85%</span><div class="bar"><i style="width:85%"></i></div><span class="lbl">Interface built</span></div>
+      <div class="meter s-amber"><span class="num">~35%</span><div class="bar"><i style="width:35%"></i></div><span class="lbl">Backend wired up</span></div>
+      <div class="meter s-pink"><span class="num">~35%</span><div class="bar"><i style="width:35%"></i></div><span class="lbl">Course content real (85 of 244 video slots)</span></div>
+      <div class="meter s-blue"><span class="num">~45%</span><div class="bar"><i style="width:45%"></i></div><span class="lbl">Working product overall</span></div>
+    </div>
+
+    <h3>What blocks him today</h3>
+    <ol class="blockers">
+      <li><div><strong>He can't get in.</strong> Every learning page needs a real Supabase login, and <code>.env.local</code> still points at the dead cloud project. The value is a dashboard link, not an API address. The <code>USE_MOCK_*</code> flags in <code>.env.local</code> look like a way around this, but the code never reads them.</div></li>
+      <li><div><strong>The rebuilt database doesn't match the app.</strong> The Hermes rebuild created a <code>bloxbuddy</code> schema, but nothing in the app points to it. It also left out 13 tables and several functions the code calls, including the search behind the Blox Wizard AI tutor. The to-do table's columns have different names from the ones the code uses.</div></li>
+      <li><div><strong>The syllabus is mostly empty, and parts of it are unsafe.</strong> 159 of 244 video slots are placeholders. Only Weeks 1–3 have real, relevant videos. Week 4 has off-topic clips picked up by an automated keyword search, including a Wi-Fi router buyer's guide and a horror short.</div></li>
+      <li><div><strong>Some features aren't suitable for a child.</strong> Profiles are public by default and show location and social links. The AI chat has no content moderation. Every new account gets a crypto wallet. The only social login is Discord, which requires users to be 13 or older.</div></li>
+    </ol>
+  </section>
+
+  <!-- DONE WELL -->
+  <section class="s-cyan" id="done-well">
+    <h2><span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6.5 7 .8-5.2 4.8 1.5 7L12 17.5 5.7 21l1.5-7L2 9.3l7-.8z"/></svg></span>What we did well</h2>
+    <div class="cards">
+      <div class="card"><h3>A clean course model</h3><p>The course is organised as modules, then weeks, days and videos, with a practice task for each day. The folder layout splits the app into four clear areas: the main app, login, admin and the public site.</p><span class="ev">src\data\curriculum.json · src\app\(app), (auth), (admin), (marketing)</span></div>
+      <div class="card"><h3>A good video player</h3><p>It uses the real YouTube player, marks a video complete at 90% watched, and falls back to a "Watch on YouTube" link when a video is dead.</p><span class="ev">src\components\learning\VideoPlayer.tsx</span></div>
+      <div class="card"><h3>Kid-friendly time limits</h3><p>A 150-minute daily limit and a break reminder every 45 minutes are already built in.</p><span class="ev">src\store\timeManagementStore.ts</span></div>
+      <div class="card"><h3>Strict TypeScript</h3><p>Strict mode is on. The build is not told to ignore type or lint errors, and there are no <code>@ts-ignore</code> comments. The database types are generated from the schema.</p><span class="ev">tsconfig.json · next.config.js</span></div>
+      <div class="card"><h3>Good security basics</h3><p>Next.js is patched against the middleware CVE, and login cookies are handled the correct way. The to-do and calendar routes only return the caller's own data. Every rebuilt table has owner-only access rules. No real secrets were found anywhere in the git history.</p><span class="ev">src\middleware.ts · rebuild\00_combined_bloxbuddy.sql</span></div>
+      <div class="card"><h3>Solid Week 1–2 content and tooling</h3><p>The Week 1–2 videos are good beginner material from SmartyRBX, CG Cookie and Grant Abbitt. There are ready-made scripts to check and replace videos. Commit messages follow a consistent format.</p><span class="ev">scripts\verify-videos.js · git log</span></div>
+    </div>
+  </section>
+
+  <!-- DO BETTER -->
+  <section id="do-better">
+    <div class="s-coral"><h2><span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></span>What we could do better</h2></div>
+    <p class="lede" style="color:var(--muted)">The findings fall into three groups: fixes needed before your son uses the app, code to simplify, and things that were missed.</p>
+
+    <div class="group s-coral">
+      <div class="group-head"><h3>1 · Fix before your son uses it</h3><span class="chip c-broken">Critical</span></div>
+      <div class="item"><p><strong>Unsafe and off-topic videos are in the course.</strong> Week 4 ("AI Tools for 3D") contains "My daughter's ghost haunts me #shorts", a Wi-Fi 7 mesh router buyer's guide, AI news clips and a "Proompt Engineer" skit. Every Week 4 duration is a fake 20:00.</p><p class="fix"><b>Fix:</b> remove Week 4's off-topic entries and hide every placeholder day. <span class="chip c-s">S</span></p></div>
+      <div class="item"><p><strong>Anyone can use the AI tutor for free, and nothing checks what it says.</strong> The chat route accepts whatever user ID the request sends, so the daily limit can be bypassed with a made-up ID, with no login. The only safety measure is one line in the prompt ("Never provide inappropriate content"). Nothing checks the child's messages or the AI's replies, and the browser can slip in its own "system" instructions.</p><p class="fix"><b>Fix:</b> take the user from the server login, run the OpenAI moderation check on messages in both directions, write a kid-safe prompt, reject "system" messages sent from the browser, and keep a chat log a parent can read. <span class="chip c-m">M</span></p></div>
+      <div class="item"><p><strong>The rebuild created risks on the shared VPS.</strong> A crypto-wallet trigger is attached to the server's shared user table, so it fires on every sign-up for every project on that server. If it ever errors, sign-ups on your other sites could fail. On top of that:</p><ul><li>The whole schema grants read access to the public (anon) key.</li><li>Three database views ignore the per-user access rules.</li><li>Several elevated-permission functions can be called by anyone. Given a user ID, they can read that user's chats, credit tokens or use up that user's AI allowance.</li></ul><p class="fix"><b>Fix:</b> drop the wallet trigger (or the whole wallet migration), revoke anon access, set the views to <code>security_invoker</code>, and lock the functions to the logged-in user. If step 9 of the rebuild plan has already made <code>bloxbuddy</code> reachable through the API, do this now. <span class="chip c-m">M</span></p></div>
+      <div class="item"><p><strong>Child privacy (COPPA, the US law on children's data).</strong> There is no age check and no parental consent. Profiles start public, showing location, social links and allowing messages, and portfolio images are publicly readable. The app shows Stripe "upgrade" prompts. Users can also make themselves Premium, because the Premium flag sits in a profile field they can edit.</p><p class="fix"><b>Fix:</b> make profiles private by default, hide location, links and email, remove wallet, tokens, Stripe, Teams and Discord for this use case, and run the app for your family only until a consent flow exists. <span class="chip c-s">S</span></p></div>
+      <div class="item"><p><strong>The YouTube API key is sent to the browser.</strong> It is stored as <code>NEXT_PUBLIC_YOUTUBE_API_KEY</code>, so anyone who opens the site can copy it and use up your quota.</p><p class="fix"><b>Fix:</b> move it to the server, or restrict it to your domain in Google Cloud. <span class="chip c-s">S</span></p></div>
+    </div>
+
+    <div class="group s-violet">
+      <div class="group-head"><h3>2 · Tangled code we can simplify</h3><span class="chip c-stub">Simplify</span></div>
+      <div class="item"><p><strong>Four login systems, one of which is live.</strong> Supabase Auth is the live one. Five to-do and calendar API routes call Clerk, but Clerk is never set up, so those routes fail at runtime. There are fake Clerk hooks kept "for compatibility", a dead auth store, and two pairs of duplicate pages: <code>/login</code> vs <code>/sign-in</code> and <code>/signup</code> vs <code>/sign-up</code>.</p><p class="fix"><b>Fix:</b> keep Supabase Auth and remove Clerk completely. The database's user-ID columns already expect Supabase users. <span class="chip c-m">M</span></p></div>
+      <div class="item"><p><strong>Five different ways to create a database connection.</strong> The main server connection uses the all-powerful service key for every request, which quietly bypasses the database's per-user rules. Six files still use the deprecated <code>@supabase/auth-helpers-nextjs</code> package, even though commit <code>7645d92</code> says it was replaced.</p><p class="fix"><b>Fix:</b> keep one browser connection and one server connection that act as the logged-in user, plus a separate, explicit admin connection. <span class="chip c-m">M</span></p></div>
+      <div class="item"><p><strong>About 10,000 lines of dead code.</strong> Around 39 modules are never imported (about 7,100 lines), and another 2,700 lines are reachable only through unused index files. There are three chat interfaces, and only one is used. Four API folders are empty, and there are also <code>.disabled</code> migrations and six curriculum backup files.</p><p class="fix"><b>Fix:</b> delete them. Git keeps the history. <span class="chip c-s">S</span></p></div>
+      <div class="item"><p><strong>Services scattered across four folders.</strong> They live in <code>src\lib\services</code>, <code>src\services</code>, <code>src\lib\api</code> and <code>src\lib\learning</code>. Two YouTube helper files are almost identical, the duration formatter is defined four times, and core types such as Module, Video and Todo are defined two or three times each.</p><p class="fix"><b>Fix:</b> move everything to one services folder and one types folder. <span class="chip c-m">M</span></p></div>
+      <div class="item"><p><strong>Two data paths for to-dos.</strong> The browser store writes straight to the database, while the <code>/api/todos</code> routes are never called. All nine app stores save to browser storage, and the Teams store saves hard-coded sample teams as if they were real data.</p><p class="fix"><b>Fix:</b> pick one path and delete the other. <span class="chip c-m">M</span></p></div>
+      <div class="item"><p><strong>Unused packages and small leftovers.</strong> About 14 packages are never used, including the Solana wallet adapters, axios, react-player, react-big-calendar and stripe. The 163 KB curriculum file loads on every app page. The toast pop-ups are never mounted, so every "saved" or "error" message is invisible.</p><p class="fix"><b>Fix:</b> trim the packages, mount <code>&lt;Toaster /&gt;</code>, and load the curriculum on the server. <span class="chip c-s">S</span></p></div>
+    </div>
+
+    <div class="group s-amber">
+      <div class="group-head"><h3>3 · What we missed</h3><span class="chip c-partial">Gaps</span></div>
+      <div class="item"><p><strong>Everything a homeschool course needs.</strong> There is no parent view, no reliable log of time spent, and no printable progress report. Lessons have no learning objectives, quizzes or hands-on "build it" checkpoints, there is no portfolio, and the capstone is a placeholder. The <code>/progress</code> page shows made-up numbers (23%, 21h, 8 achievements), and <code>/settings</code> doesn't save anything.</p></div>
+      <div class="item"><p><strong>"Mark as Watched" works on videos that won't play.</strong> Placeholder videos show "Video Unavailable" but still award XP when marked watched.</p></div>
+      <div class="item"><p><strong>Gaps in the rebuild plan.</strong></p><ul><li>It skipped migration 010 as "superseded by 004", but 004 doesn't create <code>search_transcript_chunks</code>, the function Blox Wizard uses to find videos.</li><li>It left out <code>admin_users</code>, the six <code>ai_journey*</code> tables, <code>learning_paths</code>, <code>learning_path_steps</code> and <code>chat_todo_suggestions</code>. The code still uses all of them.</li><li>No storage buckets were created.</li></ul><p>One piece of good news: the plan worried the app logs in with Clerk. It actually logs in with Supabase Auth, so the database's per-user rules will work once the app is connected.</p></div>
+      <div class="item"><p><strong>Connecting to the new server will need config changes.</strong></p><ul><li>The production security policy only allows <code>*.supabase.co</code>, so it will block <code>supabase.agenticpersonnel.com</code>.</li><li>After login, the app sends every user to <code>/admin</code>, so a student lands on "Unauthorized".</li><li>None of the curriculum videos have transcripts yet, so the AI tutor has nothing to search.</li></ul></div>
+      <div class="item"><p><strong>No working tests.</strong> There are five test files, but the test tool they need (Vitest) isn't installed, there's no test script, and the tests cover code that is now dead. There's no ESLint config either, so <code>npm run lint</code> will stop at a setup prompt.</p></div>
+      <div class="item"><p><strong>Docs have drifted.</strong></p><ul><li>The README describes a different product (an "AI training platform for coaches").</li><li>The Quick Start points at the dead cloud project.</li><li><code>CLAUDE.md</code> names <code>rebuild-version-001</code> as the active branch, but that branch is 62 commits behind <code>main</code>.</li><li>About 20 one-off debug notes and reports clutter the repo root.</li><li>Your uncommitted <code>.gitignore</code> change adds <code>.env*</code>, which also matches <code>.env.example</code>. Add <code>!.env.example</code> so the example file stays tracked.</li></ul></div>
+      <div class="item"><p><strong>Readability for a 10-year-old.</strong> The app is dark-only with light gray text. Extra-small text is used 424 times, and the whole codebase has only three accessibility labels. Some wording is aimed at adults ("tokenomics", "AI Journey").</p></div>
+    </div>
+  </section>
+
+  <!-- FUNCTIONALITY -->
+  <section class="s-slate" id="functionality">
+    <h2><span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>Overall functionality</h2>
+    <p>This is what each area does today. The statuses assume someone could log in. With the current settings nobody can, so only the landing, login and About pages are reachable.</p>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Area</th><th>Status</th><th>What that means</th></tr></thead>
+        <tbody>
+          <tr><td>Login</td><td class="nowrap"><span class="chip c-broken">Broken</span></td><td>Points at the dead cloud project. There's no working mock mode. After login, users are sent to <code>/admin</code>.</td></tr>
+          <tr><td>Course browser + video player</td><td class="nowrap"><span class="chip c-works">Works</span></td><td>Works from local data. Only Weeks 1–3 have real, relevant videos.</td></tr>
+          <tr><td>Progress + XP</td><td class="nowrap"><span class="chip c-partial">Partial</span></td><td>Saved in this browser only. Cloud sync sends the wrong ID. The <code>/progress</code> page is static.</td></tr>
+          <tr><td>Whiteboard notes</td><td class="nowrap"><span class="chip c-works">Works</span></td><td>Saved in the browser. Text notes say "coming soon".</td></tr>
+          <tr><td>Daily time limit + breaks</td><td class="nowrap"><span class="chip c-works">Works</span></td><td>Set to 150 min/day with a break every 45 min. Browser only.</td></tr>
+          <tr><td>Blox Wizard AI tutor</td><td class="nowrap"><span class="chip c-partial">Partial</span></td><td>Real OpenAI calls, but no transcripts to search, a missing search function, a user ID anyone can fake, and no moderation.</td></tr>
+          <tr><td>Calendar + to-dos</td><td class="nowrap"><span class="chip c-broken">Broken</span></td><td>The API routes call Clerk, which isn't set up, and use column names the new table doesn't have.</td></tr>
+          <tr><td>AI Journey planner</td><td class="nowrap"><span class="chip c-broken">Broken</span></td><td>Its six tables weren't included in the rebuild.</td></tr>
+          <tr><td>Profile + uploads</td><td class="nowrap"><span class="chip c-partial">Partial</span></td><td>Needs the database and uses the deprecated auth package. The QR phone upload can never validate.</td></tr>
+          <tr><td>Admin</td><td class="nowrap"><span class="chip c-broken">Broken</span></td><td>The <code>admin_users</code> table is in a disabled migration.</td></tr>
+          <tr><td>Teams, wallet, tokenomics</td><td class="nowrap"><span class="chip c-mock">Mock</span></td><td>Sample data only. Not suitable for this use case.</td></tr>
+          <tr><td>Discord, help, about, settings</td><td class="nowrap"><span class="chip c-stub">Stub</span></td><td>"Coming soon" pages or static placeholders.</td></tr>
+          <tr><td>Build</td><td class="nowrap"><span class="chip c-mock">Unverified</span></td><td>Not run. Dependencies aren't installed, and your project rules say to ask before installing. <code>src\app\auth\callback\route.ts</code> will probably fail a Next 15 type check.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SYLLABUS -->
+  <section class="s-pink" id="syllabus">
+    <h2><span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5V21h16"/></svg></span>The syllabus, for a 10-year-old</h2>
+    <p>The live course is <span class="path">D:\agent-services\projects\blox-project\src\data\curriculum.json</span>. It has 6 modules, 24 weeks, 120 days and 244 video slots. Each square below is one week.</p>
+    <div class="map" role="img" aria-label="Course map: weeks 1 to 3 have real videos, week 4 is mixed with off-topic clips, weeks 5 to 24 are placeholders">
+      <div class="map-grid">
+        <div class="mod"><span class="mod-name">M1 Foundations</span><div class="weeks"><span class="wk real">1</span><span class="wk real">2</span><span class="wk off">3</span><span class="wk mixed">4</span></div></div>
+        <div class="mod"><span class="mod-name">M2 Scripting</span><div class="weeks"><span class="wk ph">5</span><span class="wk ph">6</span><span class="wk ph">7</span><span class="wk ph">8</span></div></div>
+        <div class="mod"><span class="mod-name">M3 Game design</span><div class="weeks"><span class="wk ph">9</span><span class="wk ph">10</span><span class="wk ph">11</span><span class="wk ph">12</span></div></div>
+        <div class="mod"><span class="mod-name">M4 UI / UX</span><div class="weeks"><span class="wk ph">13</span><span class="wk ph">14</span><span class="wk ph">15</span><span class="wk ph">16</span></div></div>
+        <div class="mod"><span class="mod-name">M5 Advanced</span><div class="weeks"><span class="wk ph">17</span><span class="wk ph">18</span><span class="wk ph">19</span><span class="wk ph">20</span></div></div>
+        <div class="mod"><span class="mod-name">M6 Publishing</span><div class="weeks"><span class="wk ph">21</span><span class="wk ph">22</span><span class="wk ph">23</span><span class="wk ph">24</span></div></div>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--cyan)"></i>Real, relevant videos</span>
+        <span><i style="background:var(--amber)"></i>Real Unity 6 + C# videos: fits the plan, steep for age 10</span>
+        <span><i style="background:var(--coral)"></i>Mixed: off-topic or unsuitable clips</span>
+        <span><i style="background:var(--slate-soft);border:1px dashed var(--line)"></i>Placeholder: no video yet</span>
+      </div>
+    </div>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Week</th><th>What's in it</th><th>Fit for age 10</th></tr></thead>
+        <tbody>
+          <tr><td class="nowrap">1 · Roblox Studio</td><td>SmartyRBX beginner guides to Studio, terrain, building and lighting. Day 2 jumps straight to scripting (48 min).</td><td><span class="chip c-works">Good</span></td></tr>
+          <tr><td class="nowrap">2 · Blender</td><td>About 25 hours of Blender (CG Cookie's 21 parts, Grant Abbitt). Days 8–9 repeat Week 1's videos.</td><td><span class="chip c-partial">Too long</span></td></tr>
+          <tr><td class="nowrap">3 · Unity 6</td><td>A 20-part Jimmy Vegas Unity series. It fits the multi-engine course, but the C# is a big step for a 10-year-old.</td><td><span class="chip c-partial">Fits, steep</span></td></tr>
+          <tr><td class="nowrap">4 · AI tools</td><td>A router buyer's guide, AI news, a horror short, and a few real Blender/AI clips.</td><td><span class="chip c-broken">Remove</span></td></tr>
+          <tr><td class="nowrap">5–24</td><td>Placeholders only. The Module 2 day titles ("Variables and Data Types") don't match their listed videos ("UV Unwrapping"). Later topics include anti-cheat, monetization and influencer outreach.</td><td><span class="chip c-mock">Empty</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="verdict">
+      <p><strong>Verdict:</strong> use this file as a skeleton, not a course. The overall order (build, then script, then design, then publish) is sound. The pacing isn't: planned days run 2–8 hours, and a 10-year-old needs 30–60 minutes. Past Week 2 the topics are aimed at older teens. <span class="chip c-rec">Recommendation</span> Replace it with the multi-engine Intro to Video Game Design syllabus that has already been written (Unity, 3D modelling and engine comparisons), keeping days to 30–60 minutes. Check every video by hand, and give each lesson one "build it" task. The handoff plan is in <span class="path">D:\agent-services\projects\blox-project\docs\NEXT-STEPS-game-design-course.md</span>.</p>
+    </div>
+  </section>
+
+  <!-- PATH FORWARD -->
+  <section class="s-blue" id="path">
+    <h2><span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>Recommended path</h2>
+    <p>The phases are in order. S, M and L are rough effort sizes. The first phase gets your son started safely without waiting on the database.</p>
+
+    <div class="phase">
+      <div class="when">Phase 1<br>Get him started</div>
+      <ol>
+        <li><span class="step">Install dependencies and run the type check and build, so the real errors are visible. This needs your OK under the project rules. <span class="chip c-s">S</span></span></li>
+        <li><span class="step">Add a kid mode that skips login with a fixed local user. <span class="chip c-s">S</span></span></li>
+        <li><span class="step">Hide wallet, tokenomics, teams, Discord, admin and the upgrade card from the menu. <span class="chip c-s">S</span></span></li>
+        <li><span class="step">Remove the Week 4 content, hide the placeholder days, and only allow "Mark as Watched" after the video has actually played. <span class="chip c-s">S</span></span></li>
+        <li><span class="step">Connect <code>/progress</code> to the real progress data as a simple parent view. <span class="chip c-s">S</span></span></li>
+      </ol>
+    </div>
+    <div class="phase">
+      <div class="when">Phase 2<br>Make it a course</div>
+      <ol>
+        <li><span class="step">Rewrite the syllabus for age 10 (12–16 weeks, 30–60 min a day), with an objective and a "build it" checkpoint for each lesson. <span class="chip c-m">M</span></span></li>
+        <li><span class="step">Add a short quiz after each lesson, a screenshot or portfolio upload, and a small capstone game at the end. <span class="chip c-m">M</span></span></li>
+        <li><span class="step">Add a printable parent report showing time spent, lessons done with dates, and objectives met. <span class="chip c-m">M</span></span></li>
+      </ol>
+    </div>
+    <div class="phase">
+      <div class="when">Phase 3<br>Real backend</div>
+      <ol>
+        <li><span class="step">Harden the <code>bloxbuddy</code> schema first: drop the wallet trigger, revoke anon access, fix the views and lock down the functions. <span class="chip c-m">M</span></span></li>
+        <li><span class="step">Point the app at the VPS: set the URL and keys, set <code>db.schema = 'bloxbuddy'</code>, update the security policy, and regenerate the types. <span class="chip c-m">M</span></span></li>
+        <li><span class="step">Keep only Supabase Auth, and fix the to-do column names. Then either add the missing tables or delete the code that uses them. <span class="chip c-m">M</span></span></li>
+        <li><span class="step">Make the AI tutor safe (server-side user, moderation, kid-safe prompt, parent-readable log), and rebuild its video search. <span class="chip c-m">M</span></span></li>
+      </ol>
+    </div>
+    <div class="phase">
+      <div class="when">Phase 4<br>Clean up</div>
+      <ol>
+        <li><span class="step">Delete the roughly 10,000 lines of dead code, about 14 unused packages and the loose files in the repo root. <span class="chip c-s">S</span></span></li>
+        <li><span class="step">Merge the service folders and duplicate types, and rewrite the README and Quick Start. <span class="chip c-m">M</span></span></li>
+        <li><span class="step">Add a working test runner and an ESLint config. <span class="chip c-m">M</span></span></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- FILES -->
+  <section class="s-slate" id="files">
+    <h2><span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span>Key files</h2>
+    <ul class="paths">
+      <li>D:\agent-services\projects\blox-project\docs\blox-buddy-audit-2026-09-30.html</li>
+      <li>D:\agent-services\projects\blox-project\docs\NEXT-STEPS-game-design-course.md</li>
+      <li>D:\agent-services\projects\blox-project\src\data\curriculum.json</li>
+      <li>D:\agent-services\projects\blox-project\rebuild\00_combined_bloxbuddy.sql</li>
+      <li>D:\agent-services\projects\blox-project\docs\rebuild-plan.md</li>
+      <li>D:\agent-services\projects\blox-project\.env.local</li>
+      <li>D:\agent-services\projects\blox-project\src\middleware.ts</li>
+      <li>D:\agent-services\projects\blox-project\src\lib\supabase\server.ts</li>
+      <li>D:\agent-services\projects\blox-project\src\lib\supabase\client.ts</li>
+      <li>D:\agent-services\projects\blox-project\src\app\api\chat\blox-wizard\route.ts</li>
+      <li>D:\agent-services\projects\blox-project\src\lib\services\openai-service.ts</li>
+      <li>D:\agent-services\projects\blox-project\src\app\auth\callback\route.ts</li>
+      <li>D:\agent-services\projects\blox-project\src\app\api\todos\route.ts</li>
+      <li>D:\agent-services\projects\blox-project\src\components\learning\VideoPlayer.tsx</li>
+      <li>D:\agent-services\projects\blox-project\src\store\learningStore.ts</li>
+      <li>D:\agent-services\projects\blox-project\src\store\profileStore.ts</li>
+      <li>D:\agent-services\projects\blox-project\src\app\(app)\progress\page.tsx</li>
+      <li>D:\agent-services\projects\blox-project\src\lib\config\features.ts</li>
+      <li>D:\agent-services\projects\blox-project\next.config.js</li>
+    </ul>
+    <p class="note">How this audit was done: the code, the rebuild SQL and the course data were reviewed read-only. The most serious findings were then checked by hand against the source. Nothing was installed, built or run. The audit did not connect to the VPS database, so it can't confirm which rebuild steps were actually applied. The 73 real YouTube videos haven't been re-checked for dead links in the past year.</p>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('theme-toggle');
+  var label = document.getElementById('theme-label');
+  function current() { return root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light'; }
+  function paint() { label.textContent = current() === 'dark' ? 'Dark' : 'Light'; }
+  btn.addEventListener('click', function () {
+    var next = current() === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('bb-audit-theme', next); } catch (e) {}
+    paint();
+  });
+  paint();
+})();
+</script>
