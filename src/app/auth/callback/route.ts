@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
 
   if (code) {
     const cookieStore = cookies()
-    const supabase = createRouteHandlerClient({ cookies: () => cookieStore }, { schema: 'bloxbuddy' })
+    const supabase = createRouteHandlerClient<any, 'bloxbuddy'>({ cookies: () => cookieStore }, { options: { db: { schema: 'bloxbuddy' } } })
     
     try {
       await supabase.auth.exchangeCodeForSession(code)

@@ -114,7 +114,7 @@ export const defaultPermissions: Record<AdminRole, Partial<AdminPermissions>> = 
 }
 
 export class AdminAuthService {
-  private supabase = createClientComponentClient({ schema: 'bloxbuddy' } as any)
+  private supabase = createClientComponentClient({ db: { schema: 'bloxbuddy' } } as any)
 
   /**
    * Check if current user is an admin

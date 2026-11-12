@@ -5,17 +5,20 @@
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import OpenAI from 'openai'
+import type { Database } from '../supabase/database.types'
 
 const openaiApiKey = process.env.OPENAI_API_KEY!
 
-let _supabase: SupabaseClient | null = null
-function getSupabase(): SupabaseClient {
+type Supabase = SupabaseClient<Database, 'bloxbuddy'>
+
+let _supabase: Supabase | null = null
+function getSupabase(): Supabase {
   if (!_supabase) {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL!
     const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    _supabase = createClient(url, key, { schema: 'bloxbuddy' })
+    _supabase = createClient<Database, 'bloxbuddy'>(url, key, { db: { schema: 'bloxbuddy' } })
   }
-  return _supabase
+  return _supabase!
 }
 
 // Initialize OpenAI client (only if API key is available)

@@ -6,11 +6,11 @@ import type { Database } from './database.types'
 export const createClient = async () => {
   const cookieStore = await cookies()
 
-  return createServerClient<Database>(
+  return createServerClient<Database, 'bloxbuddy'>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
-      schema: 'bloxbuddy',
+      db: { schema: 'bloxbuddy' },
       cookies: {
         get(name: string) {
           return cookieStore.get(name)?.value

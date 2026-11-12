@@ -14,7 +14,7 @@ export const supabase = new Proxy({} as ReturnType<typeof createClient<Database>
         )
       }
       _supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
-        schema: 'bloxbuddy',
+        db: { schema: 'bloxbuddy' },
       } as any)
     }
     return (_supabase as any)[prop]
